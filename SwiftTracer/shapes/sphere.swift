@@ -13,7 +13,7 @@ class Sphere: Shape {
     }
     
     func aabb() {
-        
+        var result = AABB()
     }
     
     func sampleDirect() {
