@@ -8,9 +8,16 @@
 import Foundation
 
 protocol Shape {
-    func hit()
-    func aabb()
-    func sampleDirect()
-    func pdfDirect()
-    func material()
+    func hit(r: Ray) -> Intersection?
+    func aabb() -> AABB
+    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample
+    func pdfDirect(p: Point3, y: Point3, n: Vec3) -> Float
+    
+    var material: Material { get }
+}
+
+extension Shape {
+    static func from(json: Data) -> Shape? {
+        return nil
+    }
 }

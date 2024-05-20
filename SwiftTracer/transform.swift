@@ -62,4 +62,11 @@ struct Transform {
     func point(_ p: Point3) -> Point3 {
         return Point3.fromHomogeneous(vector: self.m * p.toHomogeneous())
     }
+    
+    func ray(_ r: Ray) -> Ray {
+        return Ray(
+            origin: self.point(r.o),
+            direction: self.vector(r.d)
+        ).withinRange(min: r.t.min, max: r.t.max)
+    }
 }

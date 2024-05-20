@@ -11,6 +11,13 @@
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
 		19BBA7232BF82CE800981204 /* ray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7222BF82CE800981204 /* ray.swift */; };
+		19BBA7252BF97A9700981204 /* path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7242BF97A9700981204 /* path.swift */; };
+		19BBA7272BF97AAA00981204 /* integrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7262BF97AAA00981204 /* integrator.swift */; };
+		19BBA7292BFBAFC200981204 /* intersection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7282BFBAFC200981204 /* intersection.swift */; };
+		19BBA72B2BFBB24900981204 /* emitterSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72A2BFBB24900981204 /* emitterSample.swift */; };
+		19BBA72D2BFBB48100981204 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72C2BFBB48100981204 /* utils.swift */; };
+		19BBA72F2BFC089A00981204 /* sampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72E2BFC089A00981204 /* sampling.swift */; };
+		19BBA7312BFC0C7100981204 /* texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7302BFC0C7100981204 /* texture.swift */; };
 		19E8082F2B2B664400A37D37 /* render.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8082E2B2B664400A37D37 /* render.swift */; };
 		19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 19E808382B2B698900A37D37 /* ArgumentParser */; };
 		19E8083E2B2B6DE900A37D37 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
@@ -38,6 +45,13 @@
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
 		19BBA71E2BF7D70800981204 /* mathError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathError.swift; sourceTree = "<group>"; };
 		19BBA7222BF82CE800981204 /* ray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ray.swift; sourceTree = "<group>"; };
+		19BBA7242BF97A9700981204 /* path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = path.swift; sourceTree = "<group>"; };
+		19BBA7262BF97AAA00981204 /* integrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = integrator.swift; sourceTree = "<group>"; };
+		19BBA7282BFBAFC200981204 /* intersection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = intersection.swift; sourceTree = "<group>"; };
+		19BBA72A2BFBB24900981204 /* emitterSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = emitterSample.swift; sourceTree = "<group>"; };
+		19BBA72C2BFBB48100981204 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
+		19BBA72E2BFC089A00981204 /* sampling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sampling.swift; sourceTree = "<group>"; };
+		19BBA7302BFC0C7100981204 /* texture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = texture.swift; sourceTree = "<group>"; };
 		19E8082B2B2B664400A37D37 /* SwiftTracer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SwiftTracer; sourceTree = BUILT_PRODUCTS_DIR; };
 		19E8082E2B2B664400A37D37 /* render.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = render.swift; sourceTree = "<group>"; };
 		19E8083D2B2B6DE900A37D37 /* material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = material.swift; sourceTree = "<group>"; };
@@ -66,6 +80,8 @@
 				19E808412B2B6F2600A37D37 /* vector.swift */,
 				19BBA71C2BF7D3A400981204 /* matrix.swift */,
 				19BBA71E2BF7D70800981204 /* mathError.swift */,
+				19BBA72C2BFBB48100981204 /* utils.swift */,
+				19BBA72E2BFC089A00981204 /* sampling.swift */,
 			);
 			path = math;
 			sourceTree = "<group>";
@@ -97,6 +113,7 @@
 				19E808472B2B730600A37D37 /* aabb.swift */,
 				19BBA7192BF7D32F00981204 /* transform.swift */,
 				19BBA7222BF82CE800981204 /* ray.swift */,
+				19BBA7302BFC0C7100981204 /* texture.swift */,
 			);
 			path = SwiftTracer;
 			sourceTree = "<group>";
@@ -115,6 +132,8 @@
 			children = (
 				19E808432B2B728C00A37D37 /* sphere.swift */,
 				19E808452B2B729700A37D37 /* shape.swift */,
+				19BBA7282BFBAFC200981204 /* intersection.swift */,
+				19BBA72A2BFBB24900981204 /* emitterSample.swift */,
 			);
 			path = shapes;
 			sourceTree = "<group>";
@@ -122,6 +141,8 @@
 		19E8083C2B2B6DCA00A37D37 /* integrators */ = {
 			isa = PBXGroup;
 			children = (
+				19BBA7242BF97A9700981204 /* path.swift */,
+				19BBA7262BF97AAA00981204 /* integrator.swift */,
 			);
 			path = integrators;
 			sourceTree = "<group>";
@@ -190,16 +211,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19BBA7292BFBAFC200981204 /* intersection.swift in Sources */,
 				19E808442B2B728C00A37D37 /* sphere.swift in Sources */,
 				19E808462B2B729700A37D37 /* shape.swift in Sources */,
+				19BBA7272BF97AAA00981204 /* integrator.swift in Sources */,
 				19BBA71F2BF7D70800981204 /* mathError.swift in Sources */,
 				19E8083E2B2B6DE900A37D37 /* material.swift in Sources */,
+				19BBA72F2BFC089A00981204 /* sampling.swift in Sources */,
 				19E808482B2B730600A37D37 /* aabb.swift in Sources */,
+				19BBA72D2BFBB48100981204 /* utils.swift in Sources */,
 				19E8082F2B2B664400A37D37 /* render.swift in Sources */,
 				19E808422B2B6F2600A37D37 /* vector.swift in Sources */,
+				19BBA7312BFC0C7100981204 /* texture.swift in Sources */,
 				19BBA7232BF82CE800981204 /* ray.swift in Sources */,
+				19BBA72B2BFBB24900981204 /* emitterSample.swift in Sources */,
 				19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */,
 				19BBA71A2BF7D32F00981204 /* transform.swift in Sources */,
+				19BBA7252BF97A9700981204 /* path.swift in Sources */,
 				19E808402B2B6E7000A37D37 /* diffuse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

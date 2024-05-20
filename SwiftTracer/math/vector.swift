@@ -9,6 +9,7 @@ import Foundation
 import simd
 
 typealias Point3 = simd_float3
+typealias Vec2 = simd_float2
 typealias Vec3 = simd_float3
 typealias Vec4 = simd_float4
 typealias Color = simd_float3
@@ -49,6 +50,12 @@ struct Frame {
 }
 
 extension Vec3 {
+    enum Axis {
+        case x
+        case y
+        case z
+    }
+
     var length: Float {
         return simd.length(self)
     }
@@ -61,12 +68,20 @@ extension Vec3 {
         return simd_cross(self, other)
     }
     
-    func normalized(_ vector: Vec3) -> Vec3 {
-        return simd_normalize(vector)
+    func normalized() -> Vec3 {
+        return simd_normalize(self)
     }
     
     func extend(scalar: Float) -> Vec4 {
         return Vec4(self[0], self[1], self[2], scalar)
+    }
+    
+    static func unit(_ axis: Axis) -> Vec3 {
+        switch axis {
+        case .x: return Vec3(1, 0, 0)
+        case .y: return Vec3(0, 1, 0)
+        case .z: return Vec3(0, 0, 1)
+        }
     }
 }
 
@@ -81,6 +96,10 @@ extension Point3 {
         return simd_distance(self, other)
     }
     
+    func distance2(_ other: Vec3) -> Scalar {
+        return simd_distance_squared(self, other)
+    }
+    
     static func fromHomogeneous(vector v: Vec4) -> Point3 {
         let e = v.truncate() * (1 / v.w)
         return Point3(e.x, e.y, e.z)
@@ -91,7 +110,7 @@ extension Point3 {
     }
 }
 
-extension Color {
+extension Color: SummableMultipliable {
     var luminance: Float {
         return self.dot(Color(0.212671, 0.715160, 0.072169))
     }
