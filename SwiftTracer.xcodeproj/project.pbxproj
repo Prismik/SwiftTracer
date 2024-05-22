@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		193E42502BFE5EA300D96A37 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
+		193E42512BFE71DF00D96A37 /* texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7302BFC0C7100981204 /* texture.swift */; };
+		193E42522BFE737F00D96A37 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
+		193E42532BFE738F00D96A37 /* ray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7222BF82CE800981204 /* ray.swift */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
@@ -18,6 +22,10 @@
 		19BBA72D2BFBB48100981204 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72C2BFBB48100981204 /* utils.swift */; };
 		19BBA72F2BFC089A00981204 /* sampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72E2BFC089A00981204 /* sampling.swift */; };
 		19BBA7312BFC0C7100981204 /* texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7302BFC0C7100981204 /* texture.swift */; };
+		19BBA7332BFD4F0000981204 /* scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7322BFD4F0000981204 /* scene.swift */; };
+		19BBA73B2BFD531B00981204 /* SwiftTracerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA73A2BFD531B00981204 /* SwiftTracerTest.swift */; };
+		19BBA73F2BFD54C100981204 /* vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808412B2B6F2600A37D37 /* vector.swift */; };
+		19BBA7402BFD5AD600981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19E8082F2B2B664400A37D37 /* render.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8082E2B2B664400A37D37 /* render.swift */; };
 		19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 19E808382B2B698900A37D37 /* ArgumentParser */; };
 		19E8083E2B2B6DE900A37D37 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
@@ -26,6 +34,10 @@
 		19E808442B2B728C00A37D37 /* sphere.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808432B2B728C00A37D37 /* sphere.swift */; };
 		19E808462B2B729700A37D37 /* shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808452B2B729700A37D37 /* shape.swift */; };
 		19E808482B2B730600A37D37 /* aabb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808472B2B730600A37D37 /* aabb.swift */; };
+		19EFB3B02BFE7A6A005CC488 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
+		19EFB3B12BFE7A7A005CC488 /* diffuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083F2B2B6E7000A37D37 /* diffuse.swift */; };
+		19EFB3B22BFE7B82005CC488 /* sampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72E2BFC089A00981204 /* sampling.swift */; };
+		19EFB3B32BFE7B92005CC488 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72C2BFBB48100981204 /* utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,6 +53,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		193E424F2BFE5EA300D96A37 /* camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = camera.swift; sourceTree = "<group>"; };
 		19BBA7192BF7D32F00981204 /* transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transform.swift; sourceTree = "<group>"; };
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
 		19BBA71E2BF7D70800981204 /* mathError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathError.swift; sourceTree = "<group>"; };
@@ -52,6 +65,9 @@
 		19BBA72C2BFBB48100981204 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		19BBA72E2BFC089A00981204 /* sampling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sampling.swift; sourceTree = "<group>"; };
 		19BBA7302BFC0C7100981204 /* texture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = texture.swift; sourceTree = "<group>"; };
+		19BBA7322BFD4F0000981204 /* scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scene.swift; sourceTree = "<group>"; };
+		19BBA7382BFD531B00981204 /* SwiftTracerTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftTracerTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		19BBA73A2BFD531B00981204 /* SwiftTracerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftTracerTest.swift; sourceTree = "<group>"; };
 		19E8082B2B2B664400A37D37 /* SwiftTracer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SwiftTracer; sourceTree = BUILT_PRODUCTS_DIR; };
 		19E8082E2B2B664400A37D37 /* render.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = render.swift; sourceTree = "<group>"; };
 		19E8083D2B2B6DE900A37D37 /* material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = material.swift; sourceTree = "<group>"; };
@@ -63,6 +79,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		19BBA7352BFD531B00981204 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		19E808282B2B664400A37D37 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -86,10 +109,19 @@
 			path = math;
 			sourceTree = "<group>";
 		};
+		19BBA7392BFD531B00981204 /* SwiftTracerTest */ = {
+			isa = PBXGroup;
+			children = (
+				19BBA73A2BFD531B00981204 /* SwiftTracerTest.swift */,
+			);
+			path = SwiftTracerTest;
+			sourceTree = "<group>";
+		};
 		19E808222B2B664400A37D37 = {
 			isa = PBXGroup;
 			children = (
 				19E8082D2B2B664400A37D37 /* SwiftTracer */,
+				19BBA7392BFD531B00981204 /* SwiftTracerTest */,
 				19E8082C2B2B664400A37D37 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				19E8082B2B2B664400A37D37 /* SwiftTracer */,
+				19BBA7382BFD531B00981204 /* SwiftTracerTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -114,6 +147,8 @@
 				19BBA7192BF7D32F00981204 /* transform.swift */,
 				19BBA7222BF82CE800981204 /* ray.swift */,
 				19BBA7302BFC0C7100981204 /* texture.swift */,
+				19BBA7322BFD4F0000981204 /* scene.swift */,
+				193E424F2BFE5EA300D96A37 /* camera.swift */,
 			);
 			path = SwiftTracer;
 			sourceTree = "<group>";
@@ -150,6 +185,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		19BBA7372BFD531B00981204 /* SwiftTracerTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19BBA73C2BFD531B00981204 /* Build configuration list for PBXNativeTarget "SwiftTracerTest" */;
+			buildPhases = (
+				19BBA7342BFD531B00981204 /* Sources */,
+				19BBA7352BFD531B00981204 /* Frameworks */,
+				19BBA7362BFD531B00981204 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwiftTracerTest;
+			productName = SwiftTracerTest;
+			productReference = 19BBA7382BFD531B00981204 /* SwiftTracerTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		19E8082A2B2B664400A37D37 /* SwiftTracer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 19E808322B2B664400A37D37 /* Build configuration list for PBXNativeTarget "SwiftTracer" */;
@@ -180,6 +232,9 @@
 				LastSwiftUpdateCheck = 1410;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
+					19BBA7372BFD531B00981204 = {
+						CreatedOnToolsVersion = 14.1;
+					};
 					19E8082A2B2B664400A37D37 = {
 						CreatedOnToolsVersion = 14.1;
 					};
@@ -202,11 +257,39 @@
 			projectRoot = "";
 			targets = (
 				19E8082A2B2B664400A37D37 /* SwiftTracer */,
+				19BBA7372BFD531B00981204 /* SwiftTracerTest */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		19BBA7362BFD531B00981204 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		19BBA7342BFD531B00981204 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19EFB3B32BFE7B92005CC488 /* utils.swift in Sources */,
+				19EFB3B22BFE7B82005CC488 /* sampling.swift in Sources */,
+				19EFB3B12BFE7A7A005CC488 /* diffuse.swift in Sources */,
+				19EFB3B02BFE7A6A005CC488 /* material.swift in Sources */,
+				193E42532BFE738F00D96A37 /* ray.swift in Sources */,
+				193E42522BFE737F00D96A37 /* transform.swift in Sources */,
+				193E42512BFE71DF00D96A37 /* texture.swift in Sources */,
+				19BBA7402BFD5AD600981204 /* matrix.swift in Sources */,
+				19BBA73F2BFD54C100981204 /* vector.swift in Sources */,
+				19BBA73B2BFD531B00981204 /* SwiftTracerTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		19E808272B2B664400A37D37 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -223,18 +306,55 @@
 				19E8082F2B2B664400A37D37 /* render.swift in Sources */,
 				19E808422B2B6F2600A37D37 /* vector.swift in Sources */,
 				19BBA7312BFC0C7100981204 /* texture.swift in Sources */,
+				193E42502BFE5EA300D96A37 /* camera.swift in Sources */,
 				19BBA7232BF82CE800981204 /* ray.swift in Sources */,
 				19BBA72B2BFBB24900981204 /* emitterSample.swift in Sources */,
 				19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */,
 				19BBA71A2BF7D32F00981204 /* transform.swift in Sources */,
 				19BBA7252BF97A9700981204 /* path.swift in Sources */,
 				19E808402B2B6E7000A37D37 /* diffuse.swift in Sources */,
+				19BBA7332BFD4F0000981204 /* scene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		19BBA73D2BFD531B00981204 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fbp.SwiftTracerTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 16.1;
+			};
+			name = Debug;
+		};
+		19BBA73E2BFD531B00981204 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fbp.SwiftTracerTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 16.1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		19E808302B2B664400A37D37 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -369,6 +489,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		19BBA73C2BFD531B00981204 /* Build configuration list for PBXNativeTarget "SwiftTracerTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19BBA73D2BFD531B00981204 /* Debug */,
+				19BBA73E2BFD531B00981204 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		19E808262B2B664400A37D37 /* Build configuration list for PBXProject "SwiftTracer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

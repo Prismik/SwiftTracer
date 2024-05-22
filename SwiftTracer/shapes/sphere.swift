@@ -101,7 +101,7 @@ class Sphere: Shape {
     }
     
     private func sampleSpherical(p: Point3, sample: Vec2) -> EmitterSample {
-        let uniform = Vec3.sphericalSampleFrom(sample: sample)
+        let uniform = Sample.spherical(sample: sample)
         var y = uniform * self.radius
         y = self.transform.point(Point3(y))
         let n = self.transform.normal(uniform.normalized()).normalized()

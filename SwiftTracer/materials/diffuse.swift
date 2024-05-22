@@ -7,13 +7,13 @@
 
 import Foundation
 
-class Diffuse: Material {
+final class Diffuse: Material {
     let hasEmission = false
     let isMedia = false
     let density: Float = 0
     let texture: Texture<Color>
-    init(json: Data) {
-        self.texture = Texture.constant(value: Color(255, 0, 0))
+    init(texture: Texture<Color>) {
+        self.texture = texture
     }
 
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection? {
@@ -49,5 +49,17 @@ class Diffuse: Material {
     
     func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color {
         return Color()
+    }
+}
+
+extension Diffuse {
+    enum CodingKeys: String, CodingKey {
+        case albedo
+    }
+
+    convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let texture = try container.decode(Texture<Color>.self, forKey: .albedo)
+        self.init(texture: texture)
     }
 }

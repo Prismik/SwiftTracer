@@ -14,6 +14,11 @@ typealias Vec3 = simd_float3
 typealias Vec4 = simd_float4
 typealias Color = simd_float3
 
+protocol SummableMultipliable: Equatable {
+    static func +(lhs: Self, rhs: Self) -> Self
+    static func *(lhs: Self, rhs: Self) -> Self
+}
+
 struct Frame {
     let x: Vec3
     let y: Vec3
@@ -46,6 +51,13 @@ struct Frame {
             v.dot(self.y),
             v.dot(self.z)
         )
+    }
+}
+
+extension Vec2 {
+    enum CodingKeys: String, CodingKey {
+        case x
+        case y
     }
 }
 
@@ -114,4 +126,8 @@ extension Color: SummableMultipliable {
     var luminance: Float {
         return self.dot(Color(0.212671, 0.715160, 0.072169))
     }
+}
+
+extension Float: SummableMultipliable {
+    
 }

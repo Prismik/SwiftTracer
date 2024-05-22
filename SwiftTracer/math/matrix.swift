@@ -11,28 +11,45 @@ import simd
 typealias Mat3 = simd_float3x3
 typealias Mat4 = simd_float4x4
 
-extension Mat3 {
-    init(someVAl: Int) {
-        self.init()
+extension Mat3: Codable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.unkeyedContainer()
+        let transpose = self.transpose
+        try container.encode(contentsOf: [transpose[0], transpose[1], transpose[2]])
     }
-
-    /*
-    static func * (lhs: Self, rhs: Vec3) -> Vec3 {
-        return Vec3(
-            lhs[0][0] * rhs[0] + lhs[1][0] * rhs[1] + lhs[2][0] * rhs[2],
-            lhs[0][1] * rhs[0] + lhs[1][1] * rhs[1] + lhs[2][1] * rhs[2],
-            lhs[0][2] * rhs[0] + lhs[1][2] * rhs[1] + lhs[2][2] * rhs[2]
-        )
+    
+    public init(from decoder: Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        var rows: [Vec3] = []
+        rows.append(try container.decode(Vec3.self))
+        rows.append(try container.decode(Vec3.self))
+        rows.append(try container.decode(Vec3.self))
+        self.init(rows: rows)
     }
-     */
+    
+    static func identity() -> Mat3 {
+        return Mat3(diagonal: Vec3(repeating: 1))
+    }
 }
 
-extension Mat4 {
-    func inverse() throws -> Mat4 {
-        if self.determinant == 0 {
-            throw MathError.notInvertible
-        }
-        
-        return self.inverse
+extension Mat4: Codable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.unkeyedContainer()
+        let transpose = self.transpose
+        try container.encode(contentsOf: [transpose[0], transpose[1], transpose[2], transpose[3]])
+    }
+    
+    public init(from decoder: Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        var rows: [Vec4] = []
+        rows.append(try container.decode(Vec4.self))
+        rows.append(try container.decode(Vec4.self))
+        rows.append(try container.decode(Vec4.self))
+        rows.append(try container.decode(Vec4.self))
+        self.init(rows: rows)
+    }
+    
+    static func identity() -> Mat4 {
+        return Mat4(diagonal: Vec4(repeating: 1))
     }
 }
