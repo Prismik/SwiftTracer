@@ -14,6 +14,10 @@ struct SampledDirection {
 }
 
 struct AnyMaterial: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case type
+    }
+
     let type: String
     
     static func unwrap(material data: Data, using decoder: JSONDecoder) throws -> Material {

@@ -7,19 +7,18 @@
 
 import Foundation
 
-class Sphere: Shape {
+final class Sphere: Shape {
     let radius: Float
     let transform: Transform
-    let material: Material
+    var material: Material!
     let solidAngle: Bool
     let center: Point3
 
-    init(data: Data, material: Material) {
-        self.radius = 1.0 // todo load from json
-        self.transform = Transform(m: Mat4()) // todo load from json
+    init(r: Float, t: Transform, solidAngle: Bool) {
+        self.radius = r
+        self.transform = t
         self.center = Point3(0, 0, 0)
-        self.material = material
-        self.solidAngle = false // todo solid angle
+        self.solidAngle = solidAngle
     }
 
     func hit(r: Ray) -> Intersection? {
@@ -130,5 +129,21 @@ class Sphere: Shape {
     
     private func pdfSolidAngle() -> Float {
         return 0
+    }
+}
+
+extension Sphere {
+    enum CodingKeys: String, CodingKey {
+        case radius
+        case transform
+        case solidAngle
+    }
+
+    convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let radius = try container.decode(Float.self, forKey: .radius)
+        let transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4())
+        let solidAngle = try container.decodeIfPresent(Bool.self, forKey: .solidAngle) ?? false
+        self.init(r: radius, t: transform, solidAngle: solidAngle)
     }
 }

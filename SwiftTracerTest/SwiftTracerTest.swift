@@ -121,4 +121,31 @@ final class SwiftTracerTest: XCTestCase {
         let diffuse = try XCTUnwrap(any as? Diffuse)
         XCTAssertEqual(diffuse.texture.get(uv: Vec2(), p: Point3()), Color(0.1, 0.2, 0.3))
     }
+    
+    func testShapeDecoding() throws {
+        let sphereData = """
+        {
+            "type": "sphere",
+            "radius": 5,
+            "transform": {
+                "o": [0, -1, 0],
+                "x": [1, 0, 0],
+                "y": [0, 0, -1],
+                "z": [0, 1, 0]
+            },
+            "solidAngle": true,
+            "material": "diffuse"
+        }
+        """
+        
+        let material = Diffuse(texture: Texture<Color>.constant(value: Color()))
+        let materials = ["diffuse": material]
+        let json = Data(sphereData.utf8)
+        
+        let decoder = JSONDecoder()
+        let any = try XCTUnwrap(try? AnyShape.unwrap(shape: json, using: decoder, materials: materials))
+        let sphere = try XCTUnwrap(any as? Sphere)
+        XCTAssertEqual(sphere.radius, 5)
+        XCTAssertEqual(sphere.solidAngle, true)
+    }
 }

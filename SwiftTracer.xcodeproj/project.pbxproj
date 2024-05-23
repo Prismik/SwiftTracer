@@ -38,6 +38,11 @@
 		19EFB3B12BFE7A7A005CC488 /* diffuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083F2B2B6E7000A37D37 /* diffuse.swift */; };
 		19EFB3B22BFE7B82005CC488 /* sampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72E2BFC089A00981204 /* sampling.swift */; };
 		19EFB3B32BFE7B92005CC488 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72C2BFBB48100981204 /* utils.swift */; };
+		19EFB3B42BFFC5E5005CC488 /* shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808452B2B729700A37D37 /* shape.swift */; };
+		19EFB3B52BFFC5E9005CC488 /* sphere.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808432B2B728C00A37D37 /* sphere.swift */; };
+		19EFB3B62BFFC6B0005CC488 /* aabb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808472B2B730600A37D37 /* aabb.swift */; };
+		19EFB3B72BFFC6B4005CC488 /* intersection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7282BFBAFC200981204 /* intersection.swift */; };
+		19EFB3B82BFFC6BF005CC488 /* emitterSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72A2BFBB24900981204 /* emitterSample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -277,6 +282,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19EFB3B82BFFC6BF005CC488 /* emitterSample.swift in Sources */,
+				19EFB3B72BFFC6B4005CC488 /* intersection.swift in Sources */,
+				19EFB3B62BFFC6B0005CC488 /* aabb.swift in Sources */,
+				19EFB3B52BFFC5E9005CC488 /* sphere.swift in Sources */,
+				19EFB3B42BFFC5E5005CC488 /* shape.swift in Sources */,
 				19EFB3B32BFE7B92005CC488 /* utils.swift in Sources */,
 				19EFB3B22BFE7B82005CC488 /* sampling.swift in Sources */,
 				19EFB3B12BFE7A7A005CC488 /* diffuse.swift in Sources */,

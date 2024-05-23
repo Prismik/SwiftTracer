@@ -18,16 +18,16 @@ final class Camera {
     private let dv: Vec3
     
     init(
-        transform: Transform,
+        t: Transform,
         firstPixel: Point3,
         du: Vec3,
         dv: Vec3,
-        resolution: Vec2 = Vec2(512, 512),
-        focalDistance: Float = 1,
-        origin: Point3 = Point3()
+        resolution: Vec2,
+        focalDistance: Float,
+        origin: Point3
     ) {
         self.resolution = resolution
-        self.transform = transform
+        self.transform = t
         self.focalDistance = focalDistance
         self.du = du
         self.dv = dv
@@ -44,8 +44,41 @@ final class Camera {
 }
 
 extension Camera: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case transform
+        case fov
+        case fdist
+        case aperture
+        case resolution
+    }
+
     convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let transform = try container.decode(Transform.self, forKey: .transform)
+        let fov = try container.decodeIfPresent(Float.self, forKey: .fov) ?? 90
+        let resolution = try container.decodeIfPresent(Vec2.self, forKey: .resolution) ?? Vec2(512, 512)
+        let lensRadius = try (container.decodeIfPresent(Float.self, forKey: .aperture) ?? 0) / 2.0
+        let focalDistance = try container.decodeIfPresent(Float.self, forKey: .fdist) ?? 1.0
         
-        self.init(transform: Transform(m: Mat4.identity()), firstPixel: Point3(), du: Vec3(), dv: Vec3())
+        let aspectRatio = resolution.x / resolution.y
+        let viewportHeight = 2 * tan(fov / 2) * focalDistance
+        let viewportWidth = aspectRatio * viewportHeight
+        let origin = transform.point(Point3())
+        let horizontal = transform.vector(Vec3(viewportWidth, 0, 0))
+        let vertical = transform.vector(Vec3(0, -viewportHeight, 0))
+        let firstPixel = origin
+            - transform.vector(Vec3(0, 0, focalDistance))
+            - horizontal / 2
+            - vertical / 2
+
+        self.init(
+            t: transform,
+            firstPixel: firstPixel,
+            du: horizontal / resolution.x,
+            dv: vertical / resolution.y,
+            resolution: resolution,
+            focalDistance: focalDistance,
+            origin: origin
+        )
     }
 }

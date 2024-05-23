@@ -48,7 +48,7 @@ extension Texture: Decodable {
                 )
             }
         } catch {
-            var container = try decoder.singleValueContainer()
+            let container = try decoder.singleValueContainer()
             self = .constant(value: try container.decode(T.self))
         }
     }
