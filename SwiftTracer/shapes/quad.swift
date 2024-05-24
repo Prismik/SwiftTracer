@@ -1,0 +1,88 @@
+//
+//  quad.swift
+//  SwiftTracer
+//
+//  Created by Francis Beauchamp on 2024-05-24.
+//
+
+import Foundation
+
+final class Quad: Shape {
+    let halfSize: Vec2
+    let transform: Transform
+    var material: Material!
+    
+    init(halfSize: Vec2, transform: Transform) {
+        self.halfSize = halfSize
+        self.transform = transform
+    }
+    
+    func hit(r: Ray) -> Intersection? {
+        let ray = self.transform.inverse().ray(r)
+        
+        // If the ray direction is parallel to the plane, no intersections happen
+        guard ray.d.z != 0 else { return nil }
+        
+        // Intersection distance
+        let t = -ray.o.z / ray.d.z
+        guard ray.t.range.contains(t) else { return nil }
+        
+        let p = ray.pointAt(t: t)
+        // Check if the x and y component of the intersection point is inside the quad
+        guard abs(p.x) <= halfSize.x && abs(p.y) <= halfSize.y else { return nil }
+        
+        return Intersection(
+            t: t,
+            p: transform.point(Point3(p.x, p.y, 0)), // Force the point to be on the plane
+            n: transform.normal(Vec3.unit(.z)),
+            material: material,
+            shape: self
+        )
+    }
+    
+    func aabb() -> AABB {
+        var result = AABB()
+        let min = transform.point(Point3(-halfSize.x, -halfSize.y, -1e-2))
+        let max = transform.point(Point3(halfSize.x, halfSize.y, 1e-2))
+        result.extend(with: min)
+        result.extend(with: max)
+        return result.sanitized()
+    }
+    
+    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
+        let n = self.transform.normal(Vec3.unit(.z)).normalized()
+        var y = Point3(
+            sample.x * halfSize.x * 2 - halfSize.x,
+            sample.y * halfSize.y * 2 - halfSize.y,
+            0
+        )
+        y = self.transform.point(y)
+        return EmitterSample(y: y, n: n, uv: Vec2(), pdf: pdfDirect(p: p, y: y, n: n))
+    }
+    
+    func pdfDirect(p: Point3, y: Point3, n: Vec3) -> Float {
+        let sqDistance = y.distance2(p)
+        let wi = (p - y).normalized()
+        let cos = abs(n.dot(wi))
+        let area = halfSize.x * halfSize.y * 4
+        return sqDistance / (cos * area) // TODO seems to give 1 / cos -> check
+    }
+    
+    private func uv(p: Point3) -> Vec2 {
+        return (Vec2(p.x, p.y) + halfSize) / (halfSize * 2)
+    }
+}
+
+extension Quad: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case halfSize
+        case transform
+    }
+    
+    convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let halfSize = try container.decode(Vec2.self, forKey: .halfSize)
+        let t = try container.decode(Transform.self, forKey: .transform)
+        self.init(halfSize: halfSize, transform: t)
+    }
+}

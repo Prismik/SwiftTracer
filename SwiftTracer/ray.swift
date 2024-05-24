@@ -11,6 +11,8 @@ class Ray {
     struct Distance {
         let min: Float
         let max: Float
+        
+        var range: ClosedRange<Float> { min ... max }
     }
 
     /// Origin

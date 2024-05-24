@@ -104,11 +104,11 @@ extension Vec4 {
 }
 
 extension Point3 {
-    func distance(_ other: Vec3) -> Scalar {
+    func distance(_ other: Point3) -> Scalar {
         return simd_distance(self, other)
     }
     
-    func distance2(_ other: Vec3) -> Scalar {
+    func distance2(_ other: Point3) -> Scalar {
         return simd_distance_squared(self, other)
     }
     
