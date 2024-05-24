@@ -57,10 +57,10 @@ final class Quad: Shape {
             0
         )
         y = self.transform.point(y)
-        return EmitterSample(y: y, n: n, uv: Vec2(), pdf: pdfDirect(p: p, y: y, n: n))
+        return EmitterSample(y: y, n: n, uv: Vec2(), pdf: pdfDirect(shape: self, p: p, y: y, n: n))
     }
     
-    func pdfDirect(p: Point3, y: Point3, n: Vec3) -> Float {
+    func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {
         let sqDistance = y.distance2(p)
         let wi = (p - y).normalized()
         let cos = abs(n.dot(wi))
@@ -70,19 +70,5 @@ final class Quad: Shape {
     
     private func uv(p: Point3) -> Vec2 {
         return (Vec2(p.x, p.y) + halfSize) / (halfSize * 2)
-    }
-}
-
-extension Quad: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case halfSize
-        case transform
-    }
-    
-    convenience init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let halfSize = try container.decode(Vec2.self, forKey: .halfSize)
-        let t = try container.decode(Transform.self, forKey: .transform)
-        self.init(halfSize: halfSize, transform: t)
     }
 }

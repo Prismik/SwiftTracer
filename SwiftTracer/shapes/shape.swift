@@ -36,31 +36,64 @@ struct Intersection {
 
 /// Box type for protocol of shape. Material gets decoded and assigned during unwraping.
 struct AnyShape: Decodable {
-    let type: String
-    let material: String
-    static func unwrap(shape data: Data, using decoder: JSONDecoder, materials: [String: Material]) throws -> Shape {
-        let box = try decoder.decode(AnyShape.self, from: data)
-        guard let material = materials[box.material] else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "Invalid material in \(box.type)"))
-        }
-        switch box.type {
-        case "sphere":
-            let sphere = try decoder.decode(Sphere.self, from: data)
-            sphere.material = material
-            return sphere
-        default:
-            throw DecodingError.dataCorrupted(
-                DecodingError.Context(codingPath: [], debugDescription: "Invalid shape type")
+    enum TypeIdentifier: String, Codable {
+        case sphere
+        case quad
+    }
+
+    enum CodingKeys: String, CodingKey {
+        // Generic
+        case transform
+        case material
+        case type
+
+        // Sphere
+        case radius
+        case solidAngle
+        
+        // Quad
+        case size
+    }
+
+    let type: TypeIdentifier
+    let material: AnyMaterial.TypeIdentifier
+    private var wrapped: Shape
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.type = try container.decode(TypeIdentifier.self, forKey: .type)
+        let transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4())
+        self.material = try container.decode(AnyMaterial.TypeIdentifier.self, forKey: .material)
+        switch type {
+        case .sphere:
+            self.wrapped = Sphere(
+                r: try container.decode(Float.self, forKey: .radius),
+                t: transform,
+                solidAngle: try container.decodeIfPresent(Bool.self, forKey: .solidAngle) ?? false
+            )
+        case .quad:
+            // TODO Support rectangle
+            let size = try container.decode(Float.self, forKey: .size)
+            self.wrapped = Quad(
+                halfSize: Vec2(size / 2, size / 2),
+                transform: transform
             )
         }
     }
+    
+    func unwrapped(materials: [AnyMaterial.TypeIdentifier: Material]) -> Shape {
+        var shape = self.wrapped
+        shape.material = materials[material]
+        return shape
+    }
 }
 
-protocol Shape: Decodable {
+protocol Shape {
     func hit(r: Ray) -> Intersection?
     func aabb() -> AABB
     func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample
-    func pdfDirect(p: Point3, y: Point3, n: Vec3) -> Float // TODO What is y
+    /// For groups, provide the appropriate shape
+    func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float // TODO What is y
     
-    var material: Material! { get }
+    var material: Material! { get set }
 }

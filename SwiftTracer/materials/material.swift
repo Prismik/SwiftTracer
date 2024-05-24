@@ -14,26 +14,32 @@ struct SampledDirection {
 }
 
 struct AnyMaterial: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case type
+    enum TypeIdentifier: String, Decodable {
+        case diffuse
     }
 
-    let type: String
+    enum CodingKeys: String, CodingKey {
+        // Generic
+        case type
+        
+        // Diffuse
+        case albedo
+    }
+
+    let type: TypeIdentifier
+    private(set) var wrapped: Material
     
-    static func unwrap(material data: Data, using decoder: JSONDecoder) throws -> Material {
-        let box = try decoder.decode(AnyMaterial.self, from: data)
-        switch box.type {
-        case "diffuse":
-            return try decoder.decode(Diffuse.self, from: data)
-        default:
-            throw DecodingError.dataCorrupted(
-                DecodingError.Context(codingPath: [], debugDescription: "Invalid material type")
-            )
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.type = try container.decode(TypeIdentifier.self, forKey: .type)
+        switch type {
+        case .diffuse:
+            self.wrapped = Diffuse(texture: try container.decode(Texture<Color>.self, forKey: .albedo))
         }
     }
 }
 
-protocol Material: Decodable {
+protocol Material {
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection?
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color
     func pdf(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Float

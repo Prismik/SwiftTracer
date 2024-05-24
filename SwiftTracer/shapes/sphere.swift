@@ -90,7 +90,7 @@ final class Sphere: Shape {
             : sampleSpherical(p: p, sample: sample)
     }
     
-    func pdfDirect(p: Point3, y: Point3, n: Vec3) -> Float {
+    func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {
         return solidAngle
             ? pdfSolidAngle()
             : pdfSpherical(p: p, y: y, n: n)
@@ -119,7 +119,7 @@ final class Sphere: Shape {
             y: y,
             n: n,
             uv: uv(center: center, p: p),
-            pdf: pdfDirect(p: p, y: y, n: n)
+            pdf: pdfDirect(shape: self, p: p, y: y, n: n)
         )
     }
     
@@ -138,21 +138,5 @@ final class Sphere: Shape {
     
     private func pdfSolidAngle() -> Float {
         return 0
-    }
-}
-
-extension Sphere {
-    enum CodingKeys: String, CodingKey {
-        case radius
-        case transform
-        case solidAngle
-    }
-
-    convenience init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let radius = try container.decode(Float.self, forKey: .radius)
-        let transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4())
-        let solidAngle = try container.decodeIfPresent(Bool.self, forKey: .solidAngle) ?? false
-        self.init(r: radius, t: transform, solidAngle: solidAngle)
     }
 }

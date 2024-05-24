@@ -8,15 +8,15 @@
 import XCTest
 
 final class SwiftTracerTest: XCTestCase {
-
+    
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
-
+    
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
+    
     func testVec2JsonConversion() throws {
         let v = """
         [
@@ -24,7 +24,7 @@ final class SwiftTracerTest: XCTestCase {
             0.111
         ]
         """
-
+        
         let jsonVec = Data(v.utf8)
         let decoder = JSONDecoder()
         let v2 = try XCTUnwrap(try? decoder.decode(Vec2.self, from: jsonVec))
@@ -40,7 +40,7 @@ final class SwiftTracerTest: XCTestCase {
             888
         ]
         """
-
+        
         let jsonVec = Data(v.utf8)
         let decoder = JSONDecoder()
         let v2 = try XCTUnwrap(try? decoder.decode(Vec3.self, from: jsonVec))
@@ -84,7 +84,7 @@ final class SwiftTracerTest: XCTestCase {
         XCTAssertEqual(m2[2], [9, 10, 11, 12])
         XCTAssertEqual(m2[3], [13, 14, 15, 16])
     }
-
+    
     func testTextureDecoding() throws {
         let colorTextureData = """
             [0.1, 0.2, 0.3]
@@ -117,8 +117,8 @@ final class SwiftTracerTest: XCTestCase {
         let json = Data(diffuseData.utf8)
         
         let decoder = JSONDecoder()
-        let any = try XCTUnwrap(try? AnyMaterial.unwrap(material: json, using: decoder))
-        let diffuse = try XCTUnwrap(any as? Diffuse)
+        let any = try decoder.decode(AnyMaterial.self, from: json)
+        let diffuse = try XCTUnwrap(any.wrapped as? Diffuse)
         XCTAssertEqual(diffuse.texture.get(uv: Vec2(), p: Point3()), Color(0.1, 0.2, 0.3))
     }
     
@@ -139,13 +139,64 @@ final class SwiftTracerTest: XCTestCase {
         """
         
         let material = Diffuse(texture: Texture<Color>.constant(value: Color()))
-        let materials = ["diffuse": material]
+        let materials = [AnyMaterial.TypeIdentifier.diffuse: material]
         let json = Data(sphereData.utf8)
         
         let decoder = JSONDecoder()
-        let any = try XCTUnwrap(try? AnyShape.unwrap(shape: json, using: decoder, materials: materials))
-        let sphere = try XCTUnwrap(any as? Sphere)
+        let any = try decoder.decode(AnyShape.self, from: json)
+        let shape = any.unwrapped(materials: materials)
+        let sphere = try XCTUnwrap(shape as? Sphere)
         XCTAssertEqual(sphere.radius, 5)
         XCTAssertEqual(sphere.solidAngle, true)
+    }
+    
+    func testShapeListDecoding() throws {
+        let shapesData = """
+        [
+            {
+                "type": "sphere",
+                "radius": 5,
+                "transform": {
+                    "o": [0, -1, 0],
+                    "x": [1, 0, 0],
+                    "y": [0, 0, -1],
+                    "z": [0, 1, 0]
+                },
+                "solidAngle": true,
+                "material": "diffuse"
+            },
+            {
+                "type": "quad",
+                "transform": {
+                    "o": [0, -1, 0],
+                    "x": [1, 0, 0],
+                    "y": [0, 0, -1],
+                    "z": [0, 1, 0]
+                },
+                "size": 100,
+                "material": "diffuse"
+            }
+        ]
+        """
+        let material = Diffuse(texture: Texture<Color>.constant(value: Color()))
+        let materials = [AnyMaterial.TypeIdentifier.diffuse: material]
+        let json = Data(shapesData.utf8)
+        
+        let decoder = JSONDecoder()
+        let anyShapes = try decoder.decode([AnyShape].self, from: json)
+        for a in anyShapes {
+            let shape = a.unwrapped(materials: materials)
+            switch a.type {
+            case .sphere:
+                let concrete = try XCTUnwrap(shape as? Sphere)
+                XCTAssertEqual(concrete.radius, 5)
+                XCTAssertEqual(concrete.solidAngle, true)
+            case .quad:
+                let concrete = try XCTUnwrap(shape as? Quad)
+                XCTAssertEqual(concrete.halfSize, Vec2(50, 50))
+            }
+            
+        }
+        
     }
 }

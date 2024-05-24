@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Scene {
+final class Scene {
     let root: Shape
     let materials: [String: Material]
     let camera: Camera
@@ -24,8 +24,24 @@ class Scene {
 }
 
 extension Scene: Decodable {
-    required init(from decoder: Decoder) throws {
+    enum CodingKeys: String, CodingKey {
+        case camera
+        case background
+        case materials
+        case shapes
+        case maxDepth
+    }
+
+    convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let camera = try container.decode(Camera.self, forKey: .camera)
+        let background = try container.decodeIfPresent(Color.self, forKey: .background) ?? Color(1, 1, 1)
+        let maxDepth = try container.decodeIfPresent(UInt.self, forKey: .maxDepth) ?? 16
+        let anyMaterials = try container.decode([AnyMaterial].self, forKey: .materials)
+        let anyShapes = try container.decode([AnyShape].self, forKey: .shapes)
+        let s = try container.nestedUnkeyedContainer(forKey: .shapes)
         
+        self.init(root: try ShapeGroup(from: decoder), materials: [:], camera: camera, background: background, maxDepth: maxDepth)
     }
 }
 

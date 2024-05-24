@@ -12,6 +12,14 @@ class Ray {
         let min: Float
         let max: Float
         
+        func with(min: Float) -> Distance {
+            return Distance(min: min, max: max)
+        }
+        
+        func with(max: Float) -> Distance {
+            return Distance(min: min, max: max)
+        }
+
         var range: ClosedRange<Float> { min ... max }
     }
 
@@ -19,7 +27,8 @@ class Ray {
     let o: Point3
     /// Direction
     let d: Vec3
-    private(set) var t: Distance
+    
+    var t: Distance
     
     convenience init() {
         self.init(origin: Point3(0, 0, 0), direction: Vec3())

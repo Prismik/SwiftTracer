@@ -51,15 +51,3 @@ final class Diffuse: Material {
         return Color()
     }
 }
-
-extension Diffuse {
-    enum CodingKeys: String, CodingKey {
-        case albedo
-    }
-
-    convenience init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let texture = try container.decode(Texture<Color>.self, forKey: .albedo)
-        self.init(texture: texture)
-    }
-}
