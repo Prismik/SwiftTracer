@@ -43,6 +43,11 @@
 		19EFB3BC2C00EF44005CC488 /* mathTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3BB2C00EF44005CC488 /* mathTest.swift */; };
 		19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3BD2C00F63E005CC488 /* shapeGroup.swift */; };
 		19EFB3BF2C010440005CC488 /* quad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3B92C00EBCF005CC488 /* quad.swift */; };
+		19EFB3C22C010833005CC488 /* sampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C12C010833005CC488 /* sampler.swift */; };
+		19EFB3C42C01085F005CC488 /* independant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C32C01085F005CC488 /* independant.swift */; };
+		19EFB3C62C010CB8005CC488 /* array2d.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C52C010CB8005CC488 /* array2d.swift */; };
+		19EFB3C82C0274D2005CC488 /* array2dTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C72C0274D2005CC488 /* array2dTest.swift */; };
+		19EFB3C92C0274FD005CC488 /* array2d.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C52C010CB8005CC488 /* array2d.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -82,6 +87,10 @@
 		19EFB3B92C00EBCF005CC488 /* quad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = quad.swift; sourceTree = "<group>"; };
 		19EFB3BB2C00EF44005CC488 /* mathTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathTest.swift; sourceTree = "<group>"; };
 		19EFB3BD2C00F63E005CC488 /* shapeGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shapeGroup.swift; sourceTree = "<group>"; };
+		19EFB3C12C010833005CC488 /* sampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sampler.swift; sourceTree = "<group>"; };
+		19EFB3C32C01085F005CC488 /* independant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = independant.swift; sourceTree = "<group>"; };
+		19EFB3C52C010CB8005CC488 /* array2d.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = array2d.swift; sourceTree = "<group>"; };
+		19EFB3C72C0274D2005CC488 /* array2dTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = array2dTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +129,7 @@
 			children = (
 				19BBA73A2BFD531B00981204 /* swiftTracerTest.swift */,
 				19EFB3BB2C00EF44005CC488 /* mathTest.swift */,
+				19EFB3C72C0274D2005CC488 /* array2dTest.swift */,
 			);
 			path = SwiftTracerTest;
 			sourceTree = "<group>";
@@ -145,6 +155,7 @@
 		19E8082D2B2B664400A37D37 /* SwiftTracer */ = {
 			isa = PBXGroup;
 			children = (
+				19EFB3C02C010827005CC488 /* samplers */,
 				19BBA71B2BF7D35F00981204 /* math */,
 				19E8083C2B2B6DCA00A37D37 /* integrators */,
 				19E8083B2B2B6DC300A37D37 /* shapes */,
@@ -156,6 +167,7 @@
 				19BBA7302BFC0C7100981204 /* texture.swift */,
 				19BBA7322BFD4F0000981204 /* scene.swift */,
 				193E424F2BFE5EA300D96A37 /* camera.swift */,
+				19EFB3C52C010CB8005CC488 /* array2d.swift */,
 			);
 			path = SwiftTracer;
 			sourceTree = "<group>";
@@ -187,6 +199,15 @@
 				19BBA7262BF97AAA00981204 /* integrator.swift */,
 			);
 			path = integrators;
+			sourceTree = "<group>";
+		};
+		19EFB3C02C010827005CC488 /* samplers */ = {
+			isa = PBXGroup;
+			children = (
+				19EFB3C12C010833005CC488 /* sampler.swift */,
+				19EFB3C32C01085F005CC488 /* independant.swift */,
+			);
+			path = samplers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -284,7 +305,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19EFB3C92C0274FD005CC488 /* array2d.swift in Sources */,
 				19EFB3BF2C010440005CC488 /* quad.swift in Sources */,
+				19EFB3C82C0274D2005CC488 /* array2dTest.swift in Sources */,
 				19EFB3B62BFFC6B0005CC488 /* aabb.swift in Sources */,
 				19EFB3B52BFFC5E9005CC488 /* sphere.swift in Sources */,
 				19EFB3B42BFFC5E5005CC488 /* shape.swift in Sources */,
@@ -306,9 +329,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19EFB3C42C01085F005CC488 /* independant.swift in Sources */,
 				19E808442B2B728C00A37D37 /* sphere.swift in Sources */,
 				19E808462B2B729700A37D37 /* shape.swift in Sources */,
 				19BBA7272BF97AAA00981204 /* integrator.swift in Sources */,
+				19EFB3C22C010833005CC488 /* sampler.swift in Sources */,
 				19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */,
 				19BBA71F2BF7D70800981204 /* mathError.swift in Sources */,
 				19E8083E2B2B6DE900A37D37 /* material.swift in Sources */,
@@ -318,6 +343,7 @@
 				19E8082F2B2B664400A37D37 /* render.swift in Sources */,
 				19E808422B2B6F2600A37D37 /* vector.swift in Sources */,
 				19EFB3BA2C00EBCF005CC488 /* quad.swift in Sources */,
+				19EFB3C62C010CB8005CC488 /* array2d.swift in Sources */,
 				19BBA7312BFC0C7100981204 /* texture.swift in Sources */,
 				193E42502BFE5EA300D96A37 /* camera.swift in Sources */,
 				19BBA7232BF82CE800981204 /* ray.swift in Sources */,

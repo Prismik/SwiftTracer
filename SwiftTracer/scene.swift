@@ -9,12 +9,12 @@ import Foundation
 
 final class Scene {
     let root: Shape
-    let materials: [String: Material]
+    let materials: [AnyMaterial.TypeIdentifier: Material]
     let camera: Camera
     let background: Color
     let maxDepth: UInt
 
-    init(root: Shape, materials: [String : Material], camera: Camera, background: Color, maxDepth: UInt) {
+    init(root: Shape, materials: [AnyMaterial.TypeIdentifier: Material], camera: Camera, background: Color, maxDepth: UInt) {
         self.root = root
         self.materials = materials
         self.camera = camera
@@ -39,9 +39,29 @@ extension Scene: Decodable {
         let maxDepth = try container.decodeIfPresent(UInt.self, forKey: .maxDepth) ?? 16
         let anyMaterials = try container.decode([AnyMaterial].self, forKey: .materials)
         let anyShapes = try container.decode([AnyShape].self, forKey: .shapes)
+        
+        var materials: [AnyMaterial.TypeIdentifier: Material] = [:]
+        for m in anyMaterials {
+            materials[m.type] = m.wrapped
+        }
+        
+        let root = ShapeGroup()
+        for s in anyShapes {
+            root.add(shape: s.unwrapped(materials: materials))
+        }
         let s = try container.nestedUnkeyedContainer(forKey: .shapes)
         
-        self.init(root: try ShapeGroup(from: decoder), materials: [:], camera: camera, background: background, maxDepth: maxDepth)
+        self.init(
+            root: root,
+            materials: materials,
+            camera: camera,
+            background: background,
+            maxDepth: maxDepth
+        )
+    }
+    
+    func hit(r: Ray) -> Intersection? {
+        return root.hit(r: r)
     }
 }
 

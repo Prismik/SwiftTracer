@@ -197,6 +197,5 @@ final class SwiftTracerTest: XCTestCase {
             }
             
         }
-        
     }
 }

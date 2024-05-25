@@ -58,6 +58,7 @@ final class Sphere: Shape {
             t: t,
             p: transform.point(p),
             n: transform.normal(n),
+            uv: uv(center: center, p: p),
             material: material,
             shape: self
         )

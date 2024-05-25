@@ -59,7 +59,7 @@ final class ShapeGroup: Shape {
         return marginal * conditional
     }
     
-    private func add(shape: Shape) {
+    func add(shape: Shape) {
         if shape.material.hasEmission {
             lightIndexes.append(shapes.count)
         }

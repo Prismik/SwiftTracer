@@ -35,6 +35,7 @@ final class Quad: Shape {
             t: t,
             p: transform.point(Point3(p.x, p.y, 0)), // Force the point to be on the plane
             n: transform.normal(Vec3.unit(.z)),
+            uv: uv(p: p),
             material: material,
             shape: self
         )

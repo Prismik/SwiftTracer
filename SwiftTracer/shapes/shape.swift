@@ -29,6 +29,8 @@ struct Intersection {
     /// Surface normal
     let n: Vec3
     
+    let uv: Vec2
+    
     let material: Material
     
     let shape: Shape
