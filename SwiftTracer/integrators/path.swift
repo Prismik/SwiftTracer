@@ -7,14 +7,14 @@
 
 import Foundation
 
-final class Path: Integrator {
+final class PathIntegrator: Integrator {
     let maxDepth = 16
-    func render(scene: Scene, sampler: Sampler) {
-        
+    func render(scene: Scene, sampler: Sampler) -> Array2d<Color> {
+        return SwiftTracer.render(integrator: self, scene: scene, sampler: sampler)
     }
 }
 
-extension Path: SamplerIntegrator {
+extension PathIntegrator: SamplerIntegrator {
     func preprocess(scene: Scene, sampler: Sampler) {
         
     }

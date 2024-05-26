@@ -58,14 +58,14 @@ struct AnyShape: Decodable {
     }
 
     let type: TypeIdentifier
-    let material: AnyMaterial.TypeIdentifier
+    let material: String
     private var wrapped: Shape
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.type = try container.decode(TypeIdentifier.self, forKey: .type)
         let transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4())
-        self.material = try container.decode(AnyMaterial.TypeIdentifier.self, forKey: .material)
+        self.material = try container.decode(String.self, forKey: .material)
         switch type {
         case .sphere:
             self.wrapped = Sphere(
@@ -83,7 +83,7 @@ struct AnyShape: Decodable {
         }
     }
     
-    func unwrapped(materials: [AnyMaterial.TypeIdentifier: Material]) -> Shape {
+    func unwrapped(materials: [String: Material]) -> Shape {
         var shape = self.wrapped
         shape.material = materials[material]
         return shape

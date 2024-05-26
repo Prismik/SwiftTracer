@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class Independant: Sampler {
+final class IndependantSampler: Sampler {
     let nbSamples: Int = 16
 
     func next() -> Float {
@@ -19,6 +19,6 @@ final class Independant: Sampler {
     }
     
     private func gen() -> Float {
-        Float.random(in: 0 ... Float.greatestFiniteMagnitude)
+        Float.random(in: 0 ... 1)
     }
 }

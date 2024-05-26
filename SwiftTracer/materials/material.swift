@@ -14,6 +14,8 @@ struct SampledDirection {
 }
 
 struct AnyMaterial: Decodable {
+    let name: String
+
     enum TypeIdentifier: String, Decodable {
         case diffuse
     }
@@ -21,7 +23,8 @@ struct AnyMaterial: Decodable {
     enum CodingKeys: String, CodingKey {
         // Generic
         case type
-        
+        case name
+
         // Diffuse
         case albedo
     }
@@ -32,6 +35,7 @@ struct AnyMaterial: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.type = try container.decode(TypeIdentifier.self, forKey: .type)
+        self.name = try container.decode(String.self, forKey: .name)
         switch type {
         case .diffuse:
             self.wrapped = Diffuse(texture: try container.decode(Texture<Color>.self, forKey: .albedo))

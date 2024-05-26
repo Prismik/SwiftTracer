@@ -9,12 +9,12 @@ import Foundation
 
 final class Scene {
     let root: Shape
-    let materials: [AnyMaterial.TypeIdentifier: Material]
+    let materials: [String: Material]
     let camera: Camera
     let background: Color
     let maxDepth: UInt
 
-    init(root: Shape, materials: [AnyMaterial.TypeIdentifier: Material], camera: Camera, background: Color, maxDepth: UInt) {
+    init(root: Shape, materials: [String: Material], camera: Camera, background: Color, maxDepth: UInt) {
         self.root = root
         self.materials = materials
         self.camera = camera
@@ -40,17 +40,16 @@ extension Scene: Decodable {
         let anyMaterials = try container.decode([AnyMaterial].self, forKey: .materials)
         let anyShapes = try container.decode([AnyShape].self, forKey: .shapes)
         
-        var materials: [AnyMaterial.TypeIdentifier: Material] = [:]
+        var materials: [String: Material] = [:]
         for m in anyMaterials {
-            materials[m.type] = m.wrapped
+            materials[m.name] = m.wrapped
         }
         
         let root = ShapeGroup()
         for s in anyShapes {
             root.add(shape: s.unwrapped(materials: materials))
         }
-        let s = try container.nestedUnkeyedContainer(forKey: .shapes)
-        
+
         self.init(
             root: root,
             materials: materials,
