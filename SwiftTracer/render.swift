@@ -36,7 +36,7 @@ enum Render {
         let decoder = JSONDecoder()
         do {
             let scene = try decoder.decode(Scene.self, from: example)
-            let integrator = PathIntegrator()
+            let integrator = NormalIntegrator()
             let sampler = IndependantSampler()
             let pixels = integrator.render(scene: scene, sampler: sampler)
             let image = Image(array: pixels)

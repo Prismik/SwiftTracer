@@ -57,7 +57,7 @@ final class Sphere: Shape {
         return Intersection(
             t: t,
             p: transform.point(p),
-            n: transform.normal(n),
+            n: transform.normal(n).normalized(),
             uv: uv(center: center, p: p),
             material: material,
             shape: self

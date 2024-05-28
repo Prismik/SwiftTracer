@@ -21,3 +21,9 @@ enum Utils {
         return (atan2f(-direction.y, -direction.x) + Float.pi, acos(direction.z))
     }
 }
+
+extension Float {
+    func toRadians() -> Self {
+        return self * Float.pi / 180
+    }
+}

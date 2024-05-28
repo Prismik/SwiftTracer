@@ -37,9 +37,9 @@ final class Camera {
     }
 
     func createRay(from positionInImage: Vec2) -> Ray {
-        let pixelCenter = self.firstPixel + positionInImage.x * self.du + positionInImage.y * self.dv
-        let direction = pixelCenter - self.origin
-        return Ray(origin: self.origin, direction: direction)
+        let pixelCenter = firstPixel + positionInImage.x * du + positionInImage.y * dv
+        let direction = pixelCenter - origin
+        return Ray(origin: origin, direction: direction)
     }
 }
 
@@ -57,11 +57,11 @@ extension Camera: Decodable {
         let transform = try container.decode(Transform.self, forKey: .transform)
         let fov = try container.decodeIfPresent(Float.self, forKey: .fov) ?? 90
         let resolution = try container.decodeIfPresent(Vec2.self, forKey: .resolution) ?? Vec2(512, 512)
-        let lensRadius = try (container.decodeIfPresent(Float.self, forKey: .aperture) ?? 0) / 2.0
+        let _ = try (container.decodeIfPresent(Float.self, forKey: .aperture) ?? 0) / 2.0
         let focalDistance = try container.decodeIfPresent(Float.self, forKey: .fdist) ?? 1.0
         
         let aspectRatio = resolution.x / resolution.y
-        let viewportHeight = 2 * tan(fov / 2) * focalDistance
+        let viewportHeight = 2 * tan(fov.toRadians() / 2) * focalDistance
         let viewportWidth = aspectRatio * viewportHeight
         let origin = transform.point(Point3())
         let horizontal = transform.vector(Vec3(viewportWidth, 0, 0))

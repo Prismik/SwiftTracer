@@ -52,21 +52,22 @@ struct Transform {
     }
     
     func vector(_ v: Vec3) -> Vec3 {
-        return (self.m * v.extend(scalar: 0)).truncate()
+        return (m * v.extend(scalar: 0)).truncate()
     }
     
     func normal(_ n: Vec3) -> Vec3 {
-        return (self.mInv.transpose * n.extend(scalar: 0)).truncate()
+        return (mInv.transpose * n.extend(scalar: 0)).truncate()
     }
     
     func point(_ p: Point3) -> Point3 {
-        return Point3.fromHomogeneous(vector: self.m * p.toHomogeneous())
+        let v = m * p.toHomogeneous()
+        return Point3.fromHomogeneous(vector: v)
     }
     
     func ray(_ r: Ray) -> Ray {
         return Ray(
-            origin: self.point(r.o),
-            direction: self.vector(r.d)
+            origin: point(r.o),
+            direction: vector(r.d)
         ).withinRange(min: r.t.min, max: r.t.max)
     }
 }

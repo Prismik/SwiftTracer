@@ -47,11 +47,12 @@ extension Mat4: Decodable {
             let y = try container.decodeIfPresent(Vec3.self, forKey: .y) ?? Vec3.unit(.y)
             let z = try container.decodeIfPresent(Vec3.self, forKey: .z) ?? Vec3.unit(.z)
             
-            var columns: [Vec4] = [Vec4(0, 0, 0, 1)]
-            for i in (0...2).reversed() {
-                let v = Vec4(x[i], y[i], z[i], o[i])
-                columns.insert(v, at: 0)
-            }
+            var columns: [Vec4] = [
+                Vec4(x.x, x.y, x.z, 0),
+                Vec4(y.x, y.y, y.z, 0),
+                Vec4(z.x, z.y, z.z, 0),
+                Vec4(o.x, o.y, o.z, 1)
+            ]
             self.init(columns)
         } else {
             var container = try decoder.unkeyedContainer()
