@@ -72,14 +72,10 @@ struct Transform {
 }
 
 extension Transform: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case m
-    }
-    
+    // TODO Move into custom mat4 decoding?
     init(from decoder: Decoder) throws {
         do {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            let matrix = try container.decode(Mat4.self, forKey: .m)
+            let matrix = try Mat4(from: decoder)
             self.init(m: matrix)
         } catch {
             self.init(m: Mat4.identity(), mInv: Mat4.identity())

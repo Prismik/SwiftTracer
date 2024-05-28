@@ -32,21 +32,36 @@ extension Mat3: Codable {
     }
 }
 
-extension Mat4: Codable {
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.unkeyedContainer()
-        let transpose = self.transpose
-        try container.encode(contentsOf: [transpose[0], transpose[1], transpose[2], transpose[3]])
+extension Mat4: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case o
+        case x
+        case y
+        case z
     }
-    
+
     public init(from decoder: Decoder) throws {
-        var container = try decoder.unkeyedContainer()
-        var rows: [Vec4] = []
-        rows.append(try container.decode(Vec4.self))
-        rows.append(try container.decode(Vec4.self))
-        rows.append(try container.decode(Vec4.self))
-        rows.append(try container.decode(Vec4.self))
-        self.init(rows: rows)
+        if let container = try? decoder.container(keyedBy: CodingKeys.self) {
+            let o = try container.decodeIfPresent(Vec3.self, forKey: .o) ?? Vec3()
+            let x = try container.decodeIfPresent(Vec3.self, forKey: .x) ?? Vec3.unit(.x)
+            let y = try container.decodeIfPresent(Vec3.self, forKey: .y) ?? Vec3.unit(.y)
+            let z = try container.decodeIfPresent(Vec3.self, forKey: .z) ?? Vec3.unit(.z)
+            
+            var columns: [Vec4] = [Vec4(0, 0, 0, 1)]
+            for i in (0...2).reversed() {
+                let v = Vec4(x[i], y[i], z[i], o[i])
+                columns.insert(v, at: 0)
+            }
+            self.init(columns)
+        } else {
+            var container = try decoder.unkeyedContainer()
+            var rows: [Vec4] = []
+            rows.append(try container.decode(Vec4.self))
+            rows.append(try container.decode(Vec4.self))
+            rows.append(try container.decode(Vec4.self))
+            rows.append(try container.decode(Vec4.self))
+            self.init(rows: rows)
+        }
     }
     
     static func identity() -> Mat4 {

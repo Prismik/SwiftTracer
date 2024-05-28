@@ -139,7 +139,7 @@ final class SwiftTracerTest: XCTestCase {
         """
         
         let material = Diffuse(texture: Texture<Color>.constant(value: Color()))
-        let materials = [AnyMaterial.TypeIdentifier.diffuse: material]
+        let materials = ["diffuse": material]
         let json = Data(sphereData.utf8)
         
         let decoder = JSONDecoder()
@@ -179,7 +179,7 @@ final class SwiftTracerTest: XCTestCase {
         ]
         """
         let material = Diffuse(texture: Texture<Color>.constant(value: Color()))
-        let materials = [AnyMaterial.TypeIdentifier.diffuse: material]
+        let materials = ["diffuse": material]
         let json = Data(shapesData.utf8)
         
         let decoder = JSONDecoder()
