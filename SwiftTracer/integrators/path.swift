@@ -25,7 +25,9 @@ extension PathIntegrator: SamplerIntegrator {
         var currentRay = ray
         while depth != maxDepth {
             depth += 1
-            guard currentRay.d.length.isFinite else { return Color() }
+            guard currentRay.d.length.isFinite else {
+                return Color()
+            }
             if let intersection = scene.hit(r: currentRay) {
                 let frame = Frame(n: intersection.n)
                 let wo = frame.toLocal(v: -currentRay.d)

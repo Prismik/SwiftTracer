@@ -6,7 +6,7 @@
 //
 
 import XCTest
-
+import simd
 final class MathTest: XCTestCase {
     
     override func setUpWithError() throws {
@@ -25,5 +25,14 @@ final class MathTest: XCTestCase {
         XCTAssertEqual(v1 * v2, Vec3(5*5, 6*6, 7*7))
         XCTAssertEqual(v1 + v2, Vec3(5+5, 6+6, 7+7))
         XCTAssertEqual(v1 - v2, Vec3(0, 0, 0))
+    }
+    
+    func testSign() {
+        let negSign = sign(-999.987125125)
+        let posSign = sign(0.000000000000000001)
+        let nullSign = sign(0.0)
+        XCTAssertEqual(Float(negSign), Float(-1))
+        XCTAssertEqual(Float(posSign), Float(1))
+        XCTAssertEqual(Float(nullSign), Float(0))
     }
 }

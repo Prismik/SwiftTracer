@@ -19,6 +19,6 @@ final class IndependantSampler: Sampler {
     }
     
     private func gen() -> Float {
-        Float.random(in: 0 ... 1)
+        Float.random(in: 0 ... 18446744073709551616)
     }
 }
