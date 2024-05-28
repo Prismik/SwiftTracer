@@ -8,7 +8,7 @@
 import Foundation
 
 final class PathIntegrator: Integrator {
-    let maxDepth = 16
+    let maxDepth = 8
     func render(scene: Scene, sampler: Sampler) -> Array2d<Color> {
         return SwiftTracer.render(integrator: self, scene: scene, sampler: sampler)
     }

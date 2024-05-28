@@ -194,6 +194,7 @@ final class SwiftTracerTest: XCTestCase {
             case .quad:
                 let concrete = try XCTUnwrap(shape as? Quad)
                 XCTAssertEqual(concrete.halfSize, Vec2(50, 50))
+                XCTAssertEqual(concrete.transform.m, Mat4(Vec4(1, 0, 0, 0), Vec4(0, 0, -1, 0), Vec4(0, 1, 0, 0), Vec4(0, -1, 0, 1)))
             }
             
         }
