@@ -24,6 +24,7 @@
 		19BBA73B2BFD531B00981204 /* swiftTracerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA73A2BFD531B00981204 /* swiftTracerTest.swift */; };
 		19BBA73F2BFD54C100981204 /* vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808412B2B6F2600A37D37 /* vector.swift */; };
 		19BBA7402BFD5AD600981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
+		19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A70E2C06AA8400A7A0FD /* bvh.swift */; };
 		19E8082F2B2B664400A37D37 /* render.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8082E2B2B664400A37D37 /* render.swift */; };
 		19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 19E808382B2B698900A37D37 /* ArgumentParser */; };
 		19E8083E2B2B6DE900A37D37 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
@@ -80,6 +81,7 @@
 		19BBA7322BFD4F0000981204 /* scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scene.swift; sourceTree = "<group>"; };
 		19BBA7382BFD531B00981204 /* SwiftTracerTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftTracerTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		19BBA73A2BFD531B00981204 /* swiftTracerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftTracerTest.swift; sourceTree = "<group>"; };
+		19C0A70E2C06AA8400A7A0FD /* bvh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bvh.swift; sourceTree = "<group>"; };
 		19E8082B2B2B664400A37D37 /* SwiftTracer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SwiftTracer; sourceTree = BUILT_PRODUCTS_DIR; };
 		19E8082E2B2B664400A37D37 /* render.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = render.swift; sourceTree = "<group>"; };
 		19E8083D2B2B6DE900A37D37 /* material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = material.swift; sourceTree = "<group>"; };
@@ -142,6 +144,14 @@
 			path = SwiftTracerTest;
 			sourceTree = "<group>";
 		};
+		19C0A70D2C06AA7300A7A0FD /* accelerators */ = {
+			isa = PBXGroup;
+			children = (
+				19C0A70E2C06AA8400A7A0FD /* bvh.swift */,
+			);
+			path = accelerators;
+			sourceTree = "<group>";
+		};
 		19E808222B2B664400A37D37 = {
 			isa = PBXGroup;
 			children = (
@@ -163,6 +173,7 @@
 		19E8082D2B2B664400A37D37 /* SwiftTracer */ = {
 			isa = PBXGroup;
 			children = (
+				19C0A70D2C06AA7300A7A0FD /* accelerators */,
 				19EFB3C02C010827005CC488 /* samplers */,
 				19BBA71B2BF7D35F00981204 /* math */,
 				19E8083C2B2B6DCA00A37D37 /* integrators */,
@@ -345,6 +356,7 @@
 				19E808442B2B728C00A37D37 /* sphere.swift in Sources */,
 				19E808462B2B729700A37D37 /* shape.swift in Sources */,
 				19BBA7272BF97AAA00981204 /* integrator.swift in Sources */,
+				19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */,
 				19EFB3C22C010833005CC488 /* sampler.swift in Sources */,
 				19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */,
 				19BBA71F2BF7D70800981204 /* mathError.swift in Sources */,

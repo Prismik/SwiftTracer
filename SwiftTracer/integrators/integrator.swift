@@ -41,7 +41,6 @@ private struct Block {
     var rayCount: Int
 }
 
-// TODO Parralel computation of image by blocks
 func render<T: SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler) -> Array2d<Color> {
     integrator.preprocess(scene: scene, sampler: sampler)
     
