@@ -10,7 +10,8 @@ import CoreGraphics
 import ImageIO
 import UniformTypeIdentifiers
 
-
+/// Based on "SwiftRay" by Renaud Pradenc
+/// https://github.com/Ceroce/SwiftRay/blob/master/SwiftRay/SwiftRay/Bitmap.swift
 class Image {
     private struct BitmapPixel {
         let r: UInt8
@@ -68,6 +69,7 @@ class Image {
             pixels.storeBytes(of: BitmapPixel(from: pixel), toByteOffset: offset, as: BitmapPixel.self)
         }
 
+        // TODO Better url handling at a given folder
         guard let url = URL(string: "file:///Users/fbp/code/\(filename)") else { return false }
         guard let img = context.makeImage() else { return false }
         guard let destination = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else { return false }

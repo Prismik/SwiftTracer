@@ -30,7 +30,7 @@ struct Frame {
     /// Max Liani, and Ryusuke Villemin
     /// https://graphics.pixar.com/library/OrthonormalB/paper.pdf
     init(n: Vec3) {
-        var sign = n.z >= 0 ? 1.0 : -1.0
+        let sign: Float = n.z >= 0 ? 1.0 : -1.0
         let a = -1 / (sign + n.z)
         let b = n.x * n.y * a
         let x = Vec3(1 + sign * n.x * n.x * a, sign * b, -sign * n.x)

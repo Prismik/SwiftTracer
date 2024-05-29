@@ -9,7 +9,7 @@ import Foundation
 
 final class NormalIntegrator: Integrator {
     func render(scene: Scene, sampler: Sampler) -> Array2d<Color> {
-        SwiftTracer.render(integrator: self, scene: scene, sampler: sampler)
+        return SwiftTracer.render(integrator: self, scene: scene, sampler: sampler)
     }
 }
 

@@ -38,17 +38,15 @@ enum Render {
             let scene = try decoder.decode(Scene.self, from: example)
             let integrator = PathIntegrator()
             let sampler = IndependantSampler()
-            let pixels = integrator.render(scene: scene, sampler: sampler)
-            let image = Image(array: pixels)
-            if image.save(to: "test.png") {
-                print("Success")
-            } else {
-                print("Failure")
-            }
+                let pixels = integrator.render(scene: scene, sampler: sampler)
+                let image = Image(array: pixels)
+                if image.save(to: "test.png") {
+                    print("Success")
+                } else {
+                    print("Failure")
+                }
         } catch {
             print("Error while parsing scene")
         }
-        
-        
     }
 }
