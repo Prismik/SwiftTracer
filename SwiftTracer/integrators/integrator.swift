@@ -42,8 +42,10 @@ private struct Block {
 }
 
 func render<T: SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler) -> Array2d<Color> {
+    print("Integrator preprocessing ...")
     integrator.preprocess(scene: scene, sampler: sampler)
 
+    print("Rendering ...")
     let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
     let gcd = DispatchGroup()
     gcd.enter()

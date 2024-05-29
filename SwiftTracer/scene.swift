@@ -45,10 +45,13 @@ extension Scene: Decodable {
             materials[m.name] = m.wrapped
         }
         
-        let root = ShapeGroup()
+        let root = BVH(builderType: .sah)
         for s in anyShapes {
             root.add(shape: s.unwrapped(materials: materials))
         }
+        
+        print("Building acceleration structures ...")
+        root.build()
 
         self.init(
             root: root,
