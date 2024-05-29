@@ -108,6 +108,15 @@ class BVH {
     let currentAxis: Axis
     let lightIndexes: [Int]
 
+    init() {
+        self.axisSelection = .roundRobin
+        self.builder = .esah
+        self.nodes = []
+        self.shapes = []
+        self.currentAxis = .x
+        self.lightIndexes = []
+    }
+
     func hitBvh(r: Ray, node: BVH.Node) -> Intersection? {
         switch node.info {
         case let .leaf(firstPrimitive, primitiveCount):

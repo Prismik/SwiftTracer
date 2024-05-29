@@ -43,70 +43,79 @@ private struct Block {
 
 func render<T: SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler) -> Array2d<Color> {
     integrator.preprocess(scene: scene, sampler: sampler)
-    
+
     let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
     let gcd = DispatchGroup()
     gcd.enter()
     Task {
         defer { gcd.leave() }
-        let blockSize = 32
-        let blocks = await withTaskGroup(of: Block.self) { group in
-            for x in stride(from: 0, to: Int(scene.camera.resolution.x), by: blockSize) {
-                for y in stride(from: 0, to: Int(scene.camera.resolution.y), by: blockSize) {
-                    let size = Vec2(
-                        min(scene.camera.resolution.x - Float(x), Float(blockSize)),
-                        min(scene.camera.resolution.y - Float(y), Float(blockSize))
-                    )
-                    
-                    group.addTask {
-                        let partialImage = Array2d(x: Int(size.x), y: Int(size.y), value: Color())
-                        var block = Block(position: Vec2(Float(x), Float(y)), size: size, sample: sampler, image: partialImage, intersectionCount: 0, rayCount: 0)
-                        
-                        for lx in 0 ..< Int(block.size.x) {
-                            for ly in 0 ..< Int(block.size.y) {
-                                let x = lx + Int(block.position.x)
-                                let y = ly + Int(block.position.y)
-                                
-                                // Monte carlo
-                                var avg = Color()
-                                for _ in (0 ..< sampler.nbSamples) {
-                                    let pos = Vec2(Float(x), Float(y)) + sampler.next2()
-                                    let ray = scene.camera.createRay(from: pos)
-                                    let value = integrator.li(ray: ray, scene: scene, sampler: sampler)
-                                    avg += value
-                                }
-                                
-                                partialImage.set(value: avg / Float(sampler.nbSamples), lx, ly)
-                            }
-                        }
-                        
-                        block.image = partialImage
-                        return block
-                    }
-                    
-                    
-                }
-            }
-            
-            var blocks: [Block] = []
-            for await block in group {
-                blocks.append(block)
-            }
-            
-            return blocks
-        }
-        
-        for block in blocks {
-            for x in (0 ..< Int(block.size.x)) {
-                for y in (0 ..< Int(block.size.y)) {
-                    image.set(value: block.image.get(x, y), x + Int(block.position.x), y + Int(block.position.y))
-                }
-            }
-        }
-        
-        return image
+
+        let blocks = await renderBlocks(blockSize: 32, scene: scene, integrator: integrator, sampler: sampler)
+        return assemble(renderBlocks: blocks, image: image)
     }
 
     gcd.wait()
     return image
+}
+
+private func assemble(renderBlocks: [Block], image: Array2d<Color>) -> Array2d<Color> {
+    for block in renderBlocks {
+        for x in (0 ..< Int(block.size.x)) {
+            for y in (0 ..< Int(block.size.y)) {
+                image.set(value: block.image.get(x, y), x + Int(block.position.x), y + Int(block.position.y))
+            }
+        }
+    }
+    
+    return image
+}
+
+private func renderBlocks(blockSize: Int = 32, scene: Scene, integrator: SamplerIntegrator, sampler: Sampler) async -> [Block] {
+    return await withTaskGroup(of: Block.self) { group in
+        for x in stride(from: 0, to: Int(scene.camera.resolution.x), by: blockSize) {
+            for y in stride(from: 0, to: Int(scene.camera.resolution.y), by: blockSize) {
+                let size = Vec2(
+                    min(scene.camera.resolution.x - Float(x), Float(blockSize)),
+                    min(scene.camera.resolution.y - Float(y), Float(blockSize))
+                )
+                
+                group.addTask {
+                    return renderMonteCarlo(scene: scene, integrator: integrator, size: size, x: x, y: y, sampler: sampler)
+                }
+            }
+        }
+        
+        var blocks: [Block] = []
+        for await block in group {
+            blocks.append(block)
+        }
+        
+        return blocks
+    }
+}
+
+private func renderMonteCarlo(scene: Scene, integrator: SamplerIntegrator, size: Vec2, x: Int, y: Int, sampler: Sampler) -> Block {
+    let partialImage = Array2d(x: Int(size.x), y: Int(size.y), value: Color())
+    var block = Block(position: Vec2(Float(x), Float(y)), size: size, sample: sampler, image: partialImage, intersectionCount: 0, rayCount: 0)
+    
+    for lx in 0 ..< Int(block.size.x) {
+        for ly in 0 ..< Int(block.size.y) {
+            let x = lx + Int(block.position.x)
+            let y = ly + Int(block.position.y)
+            
+            // Monte carlo
+            var avg = Color()
+            for _ in (0 ..< sampler.nbSamples) {
+                let pos = Vec2(Float(x), Float(y)) + sampler.next2()
+                let ray = scene.camera.createRay(from: pos)
+                let value = integrator.li(ray: ray, scene: scene, sampler: sampler)
+                avg += value
+            }
+            
+            partialImage.set(value: avg / Float(sampler.nbSamples), lx, ly)
+        }
+    }
+    
+    block.image = partialImage
+    return block
 }
