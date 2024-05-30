@@ -32,20 +32,27 @@ enum Render {
         print(output)
         print(String(spp))
         
-        let example = Scene.Example.simple.create()
+        let example = Scene.Example.threeSphere.create()
         let decoder = JSONDecoder()
         do {
             let scene = try decoder.decode(Scene.self, from: example)
-            let integrator = PathIntegrator()
+            let integrator = NormalIntegrator()
             let sampler = IndependantSampler()
+            let clock = ContinuousClock()
+            let time = clock.measure {
                 let pixels = integrator.render(scene: scene, sampler: sampler)
                 let image = Image(array: pixels)
                 if image.save(to: "test.png") {
-                    print("Success")
+                    print("#Intersection: \(Scene.NB_INTERSECTION)")
+                    print("#rays: \(Scene.NB_TRACED_RAYS)")
+                    print("ratio: \(Scene.NB_INTERSECTION / Scene.NB_TRACED_RAYS)")
                 } else {
                     print("Failure")
                 }
+            }
+            print("Render time: \(time)")
         } catch {
+            print(error)
             print("Error while parsing scene")
         }
     }

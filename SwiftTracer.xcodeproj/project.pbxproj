@@ -25,6 +25,11 @@
 		19BBA73F2BFD54C100981204 /* vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808412B2B6F2600A37D37 /* vector.swift */; };
 		19BBA7402BFD5AD600981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A70E2C06AA8400A7A0FD /* bvh.swift */; };
+		19C0A7112C08EECE00A7A0FD /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
+		19C0A7122C08F56700A7A0FD /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
+		19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
+		19C0A7152C08FA3200A7A0FD /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
+		19C0A7182C08FB1B00A7A0FD /* diffuseLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */; };
 		19E8082F2B2B664400A37D37 /* render.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8082E2B2B664400A37D37 /* render.swift */; };
 		19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 19E808382B2B698900A37D37 /* ArgumentParser */; };
 		19E8083E2B2B6DE900A37D37 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
@@ -82,6 +87,9 @@
 		19BBA7382BFD531B00981204 /* SwiftTracerTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftTracerTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		19BBA73A2BFD531B00981204 /* swiftTracerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftTracerTest.swift; sourceTree = "<group>"; };
 		19C0A70E2C06AA8400A7A0FD /* bvh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bvh.swift; sourceTree = "<group>"; };
+		19C0A7102C08EECE00A7A0FD /* metal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = metal.swift; sourceTree = "<group>"; };
+		19C0A7132C08F5EE00A7A0FD /* dielectric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dielectric.swift; sourceTree = "<group>"; };
+		19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = diffuseLight.swift; sourceTree = "<group>"; };
 		19E8082B2B2B664400A37D37 /* SwiftTracer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SwiftTracer; sourceTree = BUILT_PRODUCTS_DIR; };
 		19E8082E2B2B664400A37D37 /* render.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = render.swift; sourceTree = "<group>"; };
 		19E8083D2B2B6DE900A37D37 /* material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = material.swift; sourceTree = "<group>"; };
@@ -152,6 +160,14 @@
 			path = accelerators;
 			sourceTree = "<group>";
 		};
+		19C0A7162C08FB0F00A7A0FD /* lights */ = {
+			isa = PBXGroup;
+			children = (
+				19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */,
+			);
+			path = lights;
+			sourceTree = "<group>";
+		};
 		19E808222B2B664400A37D37 = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +189,7 @@
 		19E8082D2B2B664400A37D37 /* SwiftTracer */ = {
 			isa = PBXGroup;
 			children = (
+				19C0A7162C08FB0F00A7A0FD /* lights */,
 				19C0A70D2C06AA7300A7A0FD /* accelerators */,
 				19EFB3C02C010827005CC488 /* samplers */,
 				19BBA71B2BF7D35F00981204 /* math */,
@@ -197,6 +214,8 @@
 			children = (
 				19E8083D2B2B6DE900A37D37 /* material.swift */,
 				19E8083F2B2B6E7000A37D37 /* diffuse.swift */,
+				19C0A7102C08EECE00A7A0FD /* metal.swift */,
+				19C0A7132C08F5EE00A7A0FD /* dielectric.swift */,
 			);
 			path = materials;
 			sourceTree = "<group>";
@@ -326,6 +345,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19C0A7152C08FA3200A7A0FD /* dielectric.swift in Sources */,
+				19C0A7122C08F56700A7A0FD /* metal.swift in Sources */,
 				19EFB3D02C064A7F005CC488 /* image.swift in Sources */,
 				19EFB3C92C0274FD005CC488 /* array2d.swift in Sources */,
 				19EFB3CF2C0648B1005CC488 /* imageTest.swift in Sources */,
@@ -354,6 +375,7 @@
 			files = (
 				19EFB3C42C01085F005CC488 /* independant.swift in Sources */,
 				19E808442B2B728C00A37D37 /* sphere.swift in Sources */,
+				19C0A7182C08FB1B00A7A0FD /* diffuseLight.swift in Sources */,
 				19E808462B2B729700A37D37 /* shape.swift in Sources */,
 				19BBA7272BF97AAA00981204 /* integrator.swift in Sources */,
 				19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */,
@@ -362,6 +384,7 @@
 				19BBA71F2BF7D70800981204 /* mathError.swift in Sources */,
 				19E8083E2B2B6DE900A37D37 /* material.swift in Sources */,
 				19BBA72F2BFC089A00981204 /* sampling.swift in Sources */,
+				19C0A7112C08EECE00A7A0FD /* metal.swift in Sources */,
 				19E808482B2B730600A37D37 /* aabb.swift in Sources */,
 				19BBA72D2BFBB48100981204 /* utils.swift in Sources */,
 				19E8082F2B2B664400A37D37 /* render.swift in Sources */,
@@ -374,6 +397,7 @@
 				19EFB3CB2C03B88B005CC488 /* image.swift in Sources */,
 				19BBA7232BF82CE800981204 /* ray.swift in Sources */,
 				19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */,
+				19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */,
 				19BBA71A2BF7D32F00981204 /* transform.swift in Sources */,
 				19BBA7252BF97A9700981204 /* path.swift in Sources */,
 				19E808402B2B6E7000A37D37 /* diffuse.swift in Sources */,
@@ -517,6 +541,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

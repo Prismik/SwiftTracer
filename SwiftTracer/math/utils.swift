@@ -18,12 +18,36 @@ enum Utils {
     }
     
     static func sphericalCoordinatesFrom(direction: Vec3) -> (Float, Float) {
-        return (atan2f(-direction.y, -direction.x) + Float.pi, acos(direction.z))
+        return (atan2f(-direction.y, -direction.x) + Float.pi, direction.z.acos())
     }
 }
 
 extension Float {
     func toRadians() -> Self {
         return self * Float.pi / 180
+    }
+    
+    func clamped(_ lower: Float, _ upper: Float) -> Float {
+        return min(max(lower, self), upper)
+    }
+    
+    func pow(_ n: Float) -> Float {
+        return Darwin.pow(self, n)
+    }
+    
+    func acos() -> Float {
+        return Darwin.acos(self)
+    }
+    
+    func cos() -> Float {
+        return Darwin.cos(self)
+    }
+    
+    func sin() -> Float {
+        return Darwin.sin(self)
+    }
+    
+    func abs() -> Float {
+        return Swift.abs(self)
     }
 }

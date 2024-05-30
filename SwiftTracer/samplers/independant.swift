@@ -8,7 +8,7 @@
 import Foundation
 
 final class IndependantSampler: Sampler {
-    let nbSamples: Int = 8
+    let nbSamples: Int = 1
 
     func next() -> Float {
         return gen()

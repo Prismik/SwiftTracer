@@ -106,9 +106,10 @@ final class SwiftTracerTest: XCTestCase {
         XCTAssertEqual(t2.get(uv: Vec2(), p: Point3()), 0.6)
     }
     
-    func testMaterialDecoding() throws {
+    func testDiffuseDecoding() throws {
         let diffuseData = """
         {
+            "name": "d",
             "type": "diffuse",
             "albedo": [0.1, 0.2, 0.3]
         }
@@ -120,6 +121,46 @@ final class SwiftTracerTest: XCTestCase {
         let any = try decoder.decode(AnyMaterial.self, from: json)
         let diffuse = try XCTUnwrap(any.wrapped as? Diffuse)
         XCTAssertEqual(diffuse.texture.get(uv: Vec2(), p: Point3()), Color(0.1, 0.2, 0.3))
+    }
+    
+    func testMetalDecoding() throws {
+        let metalData = """
+        {
+            "name": "m",
+            "type": "metal",
+            "ks": [0.1, 0.2, 0.3],
+            "roughness": 0.7
+        }
+        """
+        
+        let json = Data(metalData.utf8)
+        
+        let decoder = JSONDecoder()
+        let any = try decoder.decode(AnyMaterial.self, from: json)
+        let metal = try XCTUnwrap(any.wrapped as? Metal)
+        XCTAssertEqual(metal.texture.get(uv: Vec2(), p: Point3()), Color(0.1, 0.2, 0.3))
+        XCTAssertEqual(metal.roughness.get(uv: Vec2(), p: Point3()), 0.7)
+    }
+    
+    func testDielectricDecoding() throws {
+        let dielectricData = """
+        {
+            "name": "m",
+            "type": "dielectric",
+            "ks": [0.1, 0.2, 0.3],
+            "etaExt": 0.9,
+            "etaInt": 1.1
+        }
+        """
+        
+        let json = Data(dielectricData.utf8)
+        
+        let decoder = JSONDecoder()
+        let any = try decoder.decode(AnyMaterial.self, from: json)
+        let dielectric = try XCTUnwrap(any.wrapped as? Dielectric)
+        XCTAssertEqual(dielectric.texture.get(uv: Vec2(), p: Point3()), Color(0.1, 0.2, 0.3))
+        XCTAssertEqual(dielectric.etaExterior, 0.9)
+        XCTAssertEqual(dielectric.etaInterior, 1.1)
     }
     
     func testShapeDecoding() throws {

@@ -11,22 +11,28 @@ import Foundation
 /// Contains sampler functions
 enum Sample {
     static func spherical(sample: Vec2) -> Vec3 {
-        let theta = acos(2 * sample.x - 1)
+        let theta = (2 * sample.x - 1).acos()
         let phi = 2 * Float.pi * sample.y
         
         return Utils.directionFrom(phi: phi, theta: theta)
     }
     
     static func hemisphere(sample: Vec2) -> Vec3 {
-        let theta = acos(sample.x)
+        let theta = sample.x.acos()
         let phi = 2 * Float.pi * sample.y
         
         return Utils.directionFrom(phi: phi, theta: theta)
     }
     
     static func cosineHemisphere(sample: Vec2) -> Vec3 {
-        let theta = acos(sample.x.squareRoot())
+        let theta = sample.x.squareRoot().acos()
         let phi = 2 * Float.pi * sample.y
+        return Utils.directionFrom(phi: phi, theta: theta)
+    }
+    
+    static func cosineHemispherePower(sample: Vec2, power: Float) -> Vec3 {
+        let theta = sample.x.pow(1 / (1 + power)).acos()
+        let phi: Float = 2 * .pi * sample.y
         return Utils.directionFrom(phi: phi, theta: theta)
     }
 }
@@ -46,5 +52,11 @@ enum Pdf {
         guard v.z >= 0 else { return 0 }
         let (_, theta) = Utils.sphericalCoordinatesFrom(direction: v)
         return cos(theta) / Float.pi
+    }
+    
+    static func cosineHemispherePower(v: Vec3, power: Float) -> Float {
+        guard v.z >= 0 else { return 0 }
+        let (_, theta) = Utils.sphericalCoordinatesFrom(direction: v)
+        return (1 + power) * theta.cos().pow(power) / (2 * .pi)
     }
 }

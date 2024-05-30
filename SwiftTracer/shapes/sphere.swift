@@ -22,7 +22,7 @@ final class Sphere: Shape {
     }
 
     func hit(r: Ray) -> Intersection? {
-        // NUMBER_INTERSECTIONS.with(|f| *f.borrow_mut() += 1);
+        Scene.NB_INTERSECTION += 1
         
         let ray = transform.inverse().ray(r)
         let o = ray.o - center
@@ -100,7 +100,7 @@ final class Sphere: Shape {
     private func uv(center: Point3, p: Point3) -> Vec2 {
         let v = p - center
         var phi = atan2(v.y, v.x)
-        let theta = acos(v.z / radius)
+        let theta = (v.z / radius).acos()
         if phi < 0 {
             phi += 2 * Float.pi
         }

@@ -8,7 +8,7 @@
 import Foundation
 
 final class PathIntegrator: Integrator {
-    let maxDepth = 8
+    let maxDepth = 16
     func render(scene: Scene, sampler: Sampler) -> Array2d<Color> {
         return SwiftTracer.render(integrator: self, scene: scene, sampler: sampler)
     }
@@ -43,6 +43,8 @@ extension PathIntegrator: SamplerIntegrator {
                 } else {
                     return throughput * intersection.material.emission(wo: wo, uv: intersection.uv, p: intersection.p)
                 }
+            } else {
+                return throughput * scene.background
             }
         }
         

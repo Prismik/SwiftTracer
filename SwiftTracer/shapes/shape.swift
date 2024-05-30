@@ -64,12 +64,23 @@ struct AnyShape: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.type = try container.decode(TypeIdentifier.self, forKey: .type)
-        let transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
+        let transform: Transform
+        if let transforms = try? container.decode([Transform].self, forKey: .transform) {
+            var m = Mat4.identity()
+            for t in transforms {
+                m = m * t.m
+            }
+            
+            transform = Transform(m: m)
+        }
+        else  {
+            transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
+        }
         self.material = try container.decode(String.self, forKey: .material)
         switch type {
         case .sphere:
             self.wrapped = Sphere(
-                r: try container.decode(Float.self, forKey: .radius),
+                r: try container.decodeIfPresent(Float.self, forKey: .radius) ?? 1,
                 t: transform,
                 solidAngle: try container.decodeIfPresent(Bool.self, forKey: .solidAngle) ?? false
             )

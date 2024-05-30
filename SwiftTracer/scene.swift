@@ -8,6 +8,9 @@
 import Foundation
 
 final class Scene {
+    public static var NB_INTERSECTION = 0
+    public static var NB_TRACED_RAYS = 0
+    
     let root: Shape
     let materials: [String: Material]
     let camera: Camera
@@ -45,13 +48,14 @@ extension Scene: Decodable {
             materials[m.name] = m.wrapped
         }
         
-        let root = BVH(builderType: .sah)
+        //let root = BVH(builderType: .sah)
+        let root = ShapeGroup()
         for s in anyShapes {
             root.add(shape: s.unwrapped(materials: materials))
         }
         
         print("Building acceleration structures ...")
-        root.build()
+        // root.build()
 
         self.init(
             root: root,
@@ -63,6 +67,7 @@ extension Scene: Decodable {
     }
     
     func hit(r: Ray) -> Intersection? {
+        Scene.NB_TRACED_RAYS += 1
         return root.hit(r: r)
     }
 }
@@ -70,7 +75,8 @@ extension Scene: Decodable {
 extension Scene {
     enum Example {
         case simple
-        
+        case threeSphere
+
         func create() -> Data {
             switch self {
             case .simple:
@@ -115,6 +121,106 @@ extension Scene {
                 }
                 """
                 
+                let json = Data(value.utf8)
+                return json
+            case .threeSphere:
+                let value = """
+                {
+                    "camera": {
+                        "transform": {
+                            "o": [0.7, 0, 0]
+                        },
+                        "vfov": 90,
+                        "resolution": [640, 480]
+                    },
+                    "background": [
+                        0, 0, 0
+                    ],
+                    "sampler": {
+                        "type": "independent",
+                        "samples": 1
+                    },
+                    "materials" : [
+                        {
+                            "name": "glass",
+                            "type": "dielectric",
+                            "eta_int": 1.5
+                        },
+                        {
+                            "name": "wall",
+                            "type": "diffuse"
+                        },
+                        {
+                            "name": "light",
+                            "type": "diffuse_light"
+                        },
+                        {
+                            "name": "red ball",
+                            "type": "metal",
+                            "roughness": 0.1,
+                            "ks" : [0.9, 0.1, 0.1]
+                        },
+                        {
+                            "name" : "blue ball",
+                            "type" : "diffuse",
+                            "albedo" : [0.1, 0.1, 0.9]
+                        }
+                    ],
+                    "shapes" : [
+                        {
+                            "type": "quad",
+                            "size": 100,
+                            "transform": [
+                                {"angle": -90, "axis": [1, 0, 0]},
+                                {"translate": [0, -1, 0]}
+                            ],
+                            "material": "wall"
+                        },
+                        {
+                            "type": "quad",
+                            "size": 100,
+                            "transform": {
+                                "translate": [0, 0, -10]
+                            },
+                            "material": "wall"
+                        },
+                        {
+                            "type": "quad",
+                            "size": 20,
+                            "transform": {
+                                "o": [0, 10, 0],
+                                "z": [0, -1, 0],
+                                "y": [0, 0, 1]
+                            },
+                            "material": "light"
+                        },
+                        {
+                            "type" : "sphere",
+                            "transform" : {
+                                "o" : [0, 0, -2]
+                            },
+                            "material" : "red ball"
+                        },
+                        {
+                            "type" : "sphere",
+                            "transform" : {
+                                "o" : [1.8, -0.2, -2.2]
+                            },
+                            "radius" : 0.8,
+                            "material" : "glass"
+                        },
+                        {
+                            "type" : "sphere",
+                            "transform" : {
+                                "o" : [-1.5, -0.5, -1.5]
+                            },
+                            "radius" : 0.5,
+                            "material" : "blue ball"
+                        }
+                    ]
+                }
+                """
+
                 let json = Data(value.utf8)
                 return json
             }

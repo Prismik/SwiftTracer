@@ -18,18 +18,20 @@ final class Quad: Shape {
     }
     
     func hit(r: Ray) -> Intersection? {
-        let ray = self.transform.inverse().ray(r)
+        Scene.NB_INTERSECTION += 1
+        let ray = transform.inverse().ray(r)
         
         // If the ray direction is parallel to the plane, no intersections happen
         guard ray.d.z != 0 else { return nil }
         
         // Intersection distance
         let t = -ray.o.z / ray.d.z
+        if t != 0 { print(" OK \(t)") }
         guard ray.t.range.contains(t) else { return nil }
         
         let p = ray.pointAt(t: t)
         // Check if the x and y component of the intersection point is inside the quad
-        guard abs(p.x) <= halfSize.x && abs(p.y) <= halfSize.y else { return nil }
+        guard p.x.abs() <= halfSize.x && p.y.abs() <= halfSize.y else { return nil }
         
         return Intersection(
             t: t,

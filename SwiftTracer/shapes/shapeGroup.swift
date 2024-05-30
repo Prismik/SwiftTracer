@@ -14,6 +14,7 @@ final class ShapeGroup: Shape {
     var material: Material!
 
     func hit(r: Ray) -> Intersection? {
+        Scene.NB_INTERSECTION += 1
         var intersection: Intersection? = nil
         for (i, shape) in shapes.enumerated() {
             let aabb = aabbs[i]

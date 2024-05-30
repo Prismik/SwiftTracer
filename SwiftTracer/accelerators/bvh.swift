@@ -227,7 +227,7 @@ class BVH {
         var info: Info
         
         var firstPrimitive: Int {
-            switch self.info {
+            switch info {
             case .leaf(let firstPrimitive, _):
                 return firstPrimitive
             case .node:
@@ -236,7 +236,7 @@ class BVH {
         }
         
         var primitiveCount: Int {
-            switch self.info {
+            switch info {
             case .leaf(_, let primitiveCount):
                 return primitiveCount
             case .node:
@@ -326,7 +326,7 @@ class BVH {
         nodes.append(Node(firstPrimitive: 0, primitiveCount: cachedAabbs.count, aabbs: cachedAabbs))
         builder.build(for: self, nodeIndex: 0, cachedAabbs: &cachedAabbs, depth: 0)
         
-        self.shapes = cachedAabbs.map { $0.shape }
+        shapes = cachedAabbs.map { $0.shape }
         for (i, s) in shapes.enumerated() {
             if s.material.hasEmission {
                 lightIndexes.append(i)
@@ -352,19 +352,19 @@ class BVH {
             
             return intersection
         case let .node(left):
-            let leftDistance = self.nodes[left].aabb.hit(r: r)
-            let rightDistance = self.nodes[left + 1].aabb.hit(r: r)
+            let leftDistance = nodes[left].aabb.hit(r: r)
+            let rightDistance = nodes[left + 1].aabb.hit(r: r)
             switch (leftDistance, rightDistance) {
             case let (tleft?, tright?):
                 let shouldReverse = tleft > tright
                 let closestIndex = shouldReverse ? left + 1 : left
                 let farthestIndex = shouldReverse ? left : left + 1
                 
-                switch self.hitBvh(r: r, node: nodes[closestIndex]) {
+                switch hitBvh(r: r, node: nodes[closestIndex]) {
                 case let its?:
                     if its.t < tright {
                         return its
-                    } else if let otherIts = self.hitBvh(r: r, node: nodes[farthestIndex]) {
+                    } else if let otherIts = hitBvh(r: r, node: nodes[farthestIndex]) {
                         return its.t < otherIts.t
                             ? its
                             : otherIts
@@ -372,12 +372,12 @@ class BVH {
                         return its
                     }
                 case nil:
-                    return self.hitBvh(r: r, node: nodes[farthestIndex])
+                    return hitBvh(r: r, node: nodes[farthestIndex])
                 }
             case (_?, nil):
-                return self.hitBvh(r: r, node: nodes[left])
+                return hitBvh(r: r, node: nodes[left])
             case (nil, _?):
-                return self.hitBvh(r: r, node: nodes[left + 1])
+                return hitBvh(r: r, node: nodes[left + 1])
             case (nil, nil):
                 return nil
             }
