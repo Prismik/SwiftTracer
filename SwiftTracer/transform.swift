@@ -12,12 +12,6 @@ struct Transform {
     let m: Mat4
     let mInv: Mat4
     
-    /*
-    private let translation: Vec3
-    private let scale: Vec3
-    private let rotation: Mat3
-    */
-    
     init(m: Mat4) {
         self.init(m: m, mInv: m.inverse)
     }
@@ -25,26 +19,6 @@ struct Transform {
     private init(m: Mat4, mInv: Mat4) {
         self.m = m
         self.mInv = mInv
-        
-        /*
-        let col1 = m[0]
-        let col2 = m[1]
-        let col3 = m[2]
-        let col4 = m[3]
-        self.translation = Vec3(col4[0], col4[1], col4[2])
-        
-        
-        let sx = Vec3(col1[0], col1[1], col1[2]).length
-        let sy = Vec3(col2[0], col2[1], col2[2]).length
-        let sz = Vec3(col3[0], col3[1], col3[2]).length
-        self.scale = Vec3(sx, sy, sz)
-        
-        self.rotation = Mat3(
-            SIMD3<Float>.init(col1[0] / sx, col1[1] / sx, col1[2] / sx),
-            SIMD3<Float>.init(col2[0] / sy, col2[1] / sy, col2[2] / sy),
-            SIMD3<Float>.init(col3[0] / sz, col3[1] / sz, col3[2] / sz)
-        )
-         */
     }
     
     func inverse() -> Transform {

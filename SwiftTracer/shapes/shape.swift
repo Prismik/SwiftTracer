@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import simd
 
 // TODO Why is it talking about p; investigate
 struct EmitterSample {
@@ -68,7 +69,7 @@ struct AnyShape: Decodable {
         if let transforms = try? container.decode([Transform].self, forKey: .transform) {
             var m = Mat4.identity()
             for t in transforms {
-                m = m * t.m
+                m = t.m * m
             }
             
             transform = Transform(m: m)

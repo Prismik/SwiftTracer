@@ -55,7 +55,7 @@ extension Scene: Decodable {
         }
         
         print("Building acceleration structures ...")
-        // root.build()
+        //root.build()
 
         self.init(
             root: root,

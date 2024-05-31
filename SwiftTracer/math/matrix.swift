@@ -38,19 +38,19 @@ extension Mat4: Decodable {
         case x
         case y
         case z
-    }
-    
-    enum AngleAxisCodingKeys: String, CodingKey {
+        
+        // Angle axis
         case angle
         case axis
-    }
-
-    enum TranslateCodingKeys: String, CodingKey {
+        
+        // Translate
         case translate
     }
     
     public init(from decoder: Decoder) throws {
-        if let container = try? decoder.container(keyedBy: CodingKeys.self) {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if container.contains(any: [.o, .x, .y, .z]) {
             let o = try container.decodeIfPresent(Vec3.self, forKey: .o) ?? Vec3()
             let x = try container.decodeIfPresent(Vec3.self, forKey: .x) ?? Vec3.unit(.x)
             let y = try container.decodeIfPresent(Vec3.self, forKey: .y) ?? Vec3.unit(.y)
@@ -63,9 +63,9 @@ extension Mat4: Decodable {
                 Vec4(o.x, o.y, o.z, 1)
             ]
             self.init(columns)
-        } else if let container = try? decoder.container(keyedBy: AngleAxisCodingKeys.self) {
-            let angle = try container.decodeIfPresent(Float.self, forKey: .angle) ?? 0 // toradian
-            let a = try container.decodeIfPresent(Vec3.self, forKey: .axis) ?? Vec3(1, 0, 0) // normalize
+        } else if container.contains(any: [.angle, .axis]) {
+            let angle = try container.decodeIfPresent(Float.self, forKey: .angle) ?? 0
+            let a = try container.decodeIfPresent(Vec3.self, forKey: .axis) ?? Vec3(1, 0, 0)
             let axis = a.normalized()
             let rad = angle.toRadians()
             let (sin, cos) = (rad.sin(), rad.cos())
@@ -76,7 +76,7 @@ extension Mat4: Decodable {
                 Vec4(subCos * axis.x * axis.z + sin * axis.y, subCos * axis.y * axis.z - sin * axis.x, subCos * axis.z * axis.z + cos, 0),
                 Vec4(0, 0, 0, 1)
             )
-        } else if let container = try? decoder.container(keyedBy: TranslateCodingKeys.self) {
+        } else if container.contains(.translate) {
             let t = try container.decodeIfPresent(Vec3.self, forKey: .translate) ?? Vec3()
             self.init(
                 Vec4(1, 0, 0, 0),
@@ -98,8 +98,16 @@ extension Mat4: Decodable {
     static func identity() -> Mat4 {
         return Mat4(diagonal: Vec4(repeating: 1))
     }
-    
-    static func *(lhs: Mat4, rhs: Mat4) -> Mat4 {
-        return simd_mul(lhs, rhs)
+}
+
+extension KeyedDecodingContainer {
+    func contains(any keys: [K]) -> Bool {
+        for key in keys {
+            if contains(key) {
+                return true
+            }
+        }
+        
+        return false
     }
 }

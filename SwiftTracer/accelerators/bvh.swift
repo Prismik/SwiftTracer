@@ -199,7 +199,7 @@ class BVH {
         }
         
         private func optimalSplitParameters(scores: [[Float]]) -> SplitParameters {
-            var start = SplitParameters(axis: 0, position: Int.max, cost: Float.greatestFiniteMagnitude)
+            let start = SplitParameters(axis: 0, position: Int.max, cost: Float.greatestFiniteMagnitude)
             return scores.enumerated().reduce(start) { (overall, element) in
                 let (axis, score) = element
                 let axisParams = score.enumerated().reduce(overall) { local, element in

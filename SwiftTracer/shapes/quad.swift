@@ -26,7 +26,6 @@ final class Quad: Shape {
         
         // Intersection distance
         let t = -ray.o.z / ray.d.z
-        if t != 0 { print(" OK \(t)") }
         guard ray.t.range.contains(t) else { return nil }
         
         let p = ray.pointAt(t: t)
@@ -53,20 +52,20 @@ final class Quad: Shape {
     }
     
     func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
-        let n = self.transform.normal(Vec3.unit(.z)).normalized()
+        let n = transform.normal(Vec3.unit(.z)).normalized()
         var y = Point3(
             sample.x * halfSize.x * 2 - halfSize.x,
             sample.y * halfSize.y * 2 - halfSize.y,
             0
         )
-        y = self.transform.point(y)
-        return EmitterSample(y: y, n: n, uv: Vec2(), pdf: pdfDirect(shape: self, p: p, y: y, n: n))
+        y = transform.point(y)
+        return EmitterSample(y: y, n: n, uv: uv(p: p), pdf: pdfDirect(shape: self, p: p, y: y, n: n))
     }
     
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {
         let sqDistance = y.distance2(p)
         let wi = (p - y).normalized()
-        let cos = abs(n.dot(wi))
+        let cos = n.dot(wi).abs()
         let area = halfSize.x * halfSize.y * 4
         return sqDistance / (cos * area) // TODO seems to give 1 / cos -> check
     }

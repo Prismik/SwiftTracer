@@ -36,7 +36,7 @@ enum Render {
         let decoder = JSONDecoder()
         do {
             let scene = try decoder.decode(Scene.self, from: example)
-            let integrator = NormalIntegrator()
+            let integrator = PathIntegrator()
             let sampler = IndependantSampler()
             let clock = ContinuousClock()
             let time = clock.measure {

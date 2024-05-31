@@ -57,8 +57,8 @@ struct AnyMaterial: Decodable {
             self.wrapped = Metal(texture: texture, roughness: roughness)
         case .dielectric:
             let texture = try container.decodeIfPresent(Texture<Color>.self, forKey: .ks) ?? .constant(value: Color(repeating: 1))
-            let etaInterior = try container.decodeIfPresent(Float.self, forKey: .etaInt) ?? 1.0
-            let etaExterior = try container.decodeIfPresent(Float.self, forKey: .etaExt) ?? 1.5
+            let etaInterior = try container.decodeIfPresent(Float.self, forKey: .etaInt) ?? 1.5
+            let etaExterior = try container.decodeIfPresent(Float.self, forKey: .etaExt) ?? 1.0
             self.wrapped = Dielectric(texture: texture, etaInterior: etaInterior, etaExterior: etaExterior)
         case .emitter:
             let texture = try container.decodeIfPresent(Texture<Color>.self, forKey: .albedo) ?? .constant(value: Color(repeating: 1))
