@@ -83,7 +83,7 @@ struct AnyShape: Decodable {
             self.wrapped = Sphere(
                 r: try container.decodeIfPresent(Float.self, forKey: .radius) ?? 1,
                 t: transform,
-                solidAngle: try container.decodeIfPresent(Bool.self, forKey: .solidAngle) ?? false
+                solidAngle: try container.decodeIfPresent(Bool.self, forKey: .solidAngle) ?? true
             )
         case .quad:
             // TODO Support rectangle

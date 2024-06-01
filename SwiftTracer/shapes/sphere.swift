@@ -78,8 +78,6 @@ final class Sphere: Shape {
         let p111 = transform.point(Point3(repeating: r));
         for p in [p000, p001, p010, p100, p011, p110, p101, p111] {
             result.extend(with: p);
-            //result.extend(p + self.center_vec);
-            //result.extend(p - self.center_vec);
          }
 
         return result.sanitized()
@@ -93,7 +91,7 @@ final class Sphere: Shape {
     
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {
         return solidAngle
-            ? pdfSolidAngle()
+            ? pdfSolidAngle(p: p)
             : pdfSpherical(p: p, y: y, n: n)
     }
     
@@ -125,8 +123,19 @@ final class Sphere: Shape {
     }
     
     private func sampleSolidAngle(p: Point3, sample: Vec2) -> EmitterSample {
-        // TODO
-        return EmitterSample(y: Point3(), n: Vec3(), uv: Vec2(), pdf: 0)
+        let center = transform.point(Point3())
+        let sqDistance = p.distance2(center)
+        guard sqDistance > radius.pow(2) else { return sampleSpherical(p: p, sample: sample) }
+        
+        let thetaMax = (1 - (radius.pow(2) / sqDistance)).squareRoot().acos()
+        let uniform = Sample.cone(sample: sample, thetaMax: thetaMax)
+        let frame = Frame(n: (center - p).normalized())
+        if let hit = self.hit(r: Ray(origin: p, direction: frame.toWorld(v: uniform))) {
+            return EmitterSample(y: hit.p, n: hit.n, uv: uv(center: center, p: p), pdf: pdfSolidAngle(p: p))
+        } else {
+            fatalError("Something went wrong when sampling the sphere with solid angle!")
+        }
+        
     }
     
     private func pdfSpherical(p: Point3, y: Point3, n: Vec3) -> Float {
@@ -137,7 +146,11 @@ final class Sphere: Shape {
         return sqDistance / (cos * area)
     }
     
-    private func pdfSolidAngle() -> Float {
-        return 0
+    private func pdfSolidAngle(p: Point3) -> Float {
+        let center = transform.point(Point3())
+        let d = p.distance(center)
+        let cosThetaMax = (d.pow(2) - radius.pow(2)).squareRoot() / d
+        let area = 2 * .pi * (1 - cosThetaMax)
+        return 1 / area
     }
 }
