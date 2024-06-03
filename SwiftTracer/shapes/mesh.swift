@@ -25,23 +25,54 @@ final class Mesh {
     let tangents: [Vec3]
 
     init() {
-        positions = []
-        normals = []
-        uvs = []
         tangents = []
         facePositionIndexes = []
         faceNormalIndexes = []
         faceUvIndexes = []
         faceTangentIndexes = []
         
-        /*
-        let inputFile: std.string = "cornell_box.obj"
-        var config = tinyobj.ObjReaderConfig()
-        config.mtl_search_path = "./"
         var reader = tinyobj.ObjReader()
-        if (!reader.ParseFromFile(inputFile, config)) {
-            print("Error")
+        let config = tinyobj.ObjReaderConfig()
+        reader.ParseFromFile(std.string("filename"), config)
+        let attributes = reader.attrib_
+        let shapes = reader.shapes_
+        let materials = reader.materials_
+        
+        self.positions = stride(from: 0, through: attributes.vertices.size(), by: 3).map { i in
+            let x = attributes.vertices[i]
+            let y = attributes.vertices[i + 1]
+            let z = attributes.vertices[i + 2]
+            return Vec3(x, y, z)
         }
-        */
+        
+        self.normals = stride(from: 0, through: attributes.normals.size(), by: 3).map { i in
+            let x = attributes.normals[i]
+            let y = attributes.normals[i + 1]
+            let z = attributes.normals[i + 2]
+            return Vec3(x, y, z)
+        }
+        
+        self.uvs = stride(from: 0, through: attributes.texcoords.size(), by: 2).map { i in
+            let u = attributes.texcoords[i]
+            let v = attributes.texcoords[i + 1]
+            return Vec2(u, v)
+        }
+
+        for s in shapes {
+            var offset = 0
+            let vertexCount = s.mesh.num_face_vertices.size()
+            for f in 0 ..< vertexCount {
+                let fv = s.mesh.num_face_vertices[f]
+                for v in 0 ..< fv {
+                    let idx = s.mesh.indices[offset + Int(v)]
+                    
+                    let vx = attributes.vertices[3 * Int(idx.vertex_index)]
+                    let vy = attributes.vertices[3 * Int(idx.vertex_index) + 1]
+                    let vz = attributes.vertices[3 * Int(idx.vertex_index) + 2]
+                }
+                
+                offset += Int(fv)
+            }
+        }
     }
 }

@@ -32,6 +32,7 @@
 		19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
 		19C0A7152C08FA3200A7A0FD /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
 		19C0A7182C08FB1B00A7A0FD /* diffuseLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */; };
+		19D52CF92C0D80FB00C63D9E /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */; };
 		19E8082F2B2B664400A37D37 /* render.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8082E2B2B664400A37D37 /* render.swift */; };
 		19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 19E808382B2B698900A37D37 /* ArgumentParser */; };
 		19E8083E2B2B6DE900A37D37 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
@@ -94,6 +95,9 @@
 		19C0A7102C08EECE00A7A0FD /* metal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = metal.swift; sourceTree = "<group>"; };
 		19C0A7132C08F5EE00A7A0FD /* dielectric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dielectric.swift; sourceTree = "<group>"; };
 		19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = diffuseLight.swift; sourceTree = "<group>"; };
+		19D52CF62C0D80FB00C63D9E /* SwiftTracer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftTracer-Bridging-Header.h"; sourceTree = "<group>"; };
+		19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tiny_obj_loader.cc; sourceTree = "<group>"; };
+		19D52CF82C0D80FB00C63D9E /* tiny_obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tiny_obj_loader.h; sourceTree = "<group>"; };
 		19E8082B2B2B664400A37D37 /* SwiftTracer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SwiftTracer; sourceTree = BUILT_PRODUCTS_DIR; };
 		19E8082E2B2B664400A37D37 /* render.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = render.swift; sourceTree = "<group>"; };
 		19E8083D2B2B6DE900A37D37 /* material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = material.swift; sourceTree = "<group>"; };
@@ -172,6 +176,24 @@
 			path = lights;
 			sourceTree = "<group>";
 		};
+		19D52CF42C0D80DC00C63D9E /* external */ = {
+			isa = PBXGroup;
+			children = (
+				19D52CF52C0D80E400C63D9E /* tinyobj */,
+			);
+			path = external;
+			sourceTree = "<group>";
+		};
+		19D52CF52C0D80E400C63D9E /* tinyobj */ = {
+			isa = PBXGroup;
+			children = (
+				19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */,
+				19D52CF82C0D80FB00C63D9E /* tiny_obj_loader.h */,
+				19D52CF62C0D80FB00C63D9E /* SwiftTracer-Bridging-Header.h */,
+			);
+			path = tinyobj;
+			sourceTree = "<group>";
+		};
 		19E808222B2B664400A37D37 = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +215,7 @@
 		19E8082D2B2B664400A37D37 /* SwiftTracer */ = {
 			isa = PBXGroup;
 			children = (
+				19D52CF42C0D80DC00C63D9E /* external */,
 				19C0A7162C08FB0F00A7A0FD /* lights */,
 				19C0A70D2C06AA7300A7A0FD /* accelerators */,
 				19EFB3C02C010827005CC488 /* samplers */,
@@ -311,6 +334,7 @@
 					};
 					19E8082A2B2B664400A37D37 = {
 						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1540;
 					};
 				};
 			};
@@ -405,6 +429,7 @@
 				19EFB3CB2C03B88B005CC488 /* image.swift in Sources */,
 				19BBA7232BF82CE800981204 /* ray.swift in Sources */,
 				19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */,
+				19D52CF92C0D80FB00C63D9E /* tiny_obj_loader.cc in Sources */,
 				19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */,
 				19BBA71A2BF7D32F00981204 /* transform.swift in Sources */,
 				19BBA7252BF97A9700981204 /* path.swift in Sources */,
@@ -507,6 +532,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -561,6 +587,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
@@ -568,8 +595,12 @@
 		19E808332B2B664400A37D37 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftTracer/external/tinyobj/SwiftTracer-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -577,8 +608,11 @@
 		19E808342B2B664400A37D37 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftTracer/external/tinyobj/SwiftTracer-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
