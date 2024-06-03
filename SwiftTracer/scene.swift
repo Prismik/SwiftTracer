@@ -51,7 +51,14 @@ extension Scene: Decodable {
         //let root = BVH(builderType: .sah)
         let root = ShapeGroup()
         for s in anyShapes {
-            root.add(shape: s.unwrapped(materials: materials))
+            if let mesh = s.unwrapped(materials: materials) as? ShapeGroup {
+                for var ms in mesh.shapes {
+                    ms.material = mesh.material
+                    root.add(shape: ms)
+                }
+            } else {
+                root.add(shape: s.unwrapped(materials: materials))
+            }
         }
         
         print("Building acceleration structures ...")
@@ -76,6 +83,8 @@ extension Scene {
     enum Example {
         case simple
         case threeSphere
+        case teapot
+        case triangle
 
         func create() -> Data {
             switch self {
@@ -220,7 +229,120 @@ extension Scene {
                     ]
                 }
                 """
-
+                let json = Data(value.utf8)
+                return json
+            case .teapot:
+                let value = """
+                {
+                    "camera": {
+                        "transform": { "o": [0, 0, 4] },
+                        "fov": 45,
+                        "resolution": [640, 480]
+                    },
+                    "background": [1, 1, 1],
+                    "materials": [
+                        {
+                            "name": "mat_teapot",
+                            "type": "diffuse",
+                            "albedo": [0.6, 0.4, 0.4]
+                        },
+                        {
+                            "name": "mat_plane",
+                            "type": "diffuse",
+                            "albedo": [0.75, 0.75, 0.75]
+                        }
+                    ],
+                    "shapes": [
+                        {
+                            "type": "mesh",
+                            "filename": "cube",
+                            "material": "mat_teapot"
+                        },
+                        {
+                            "type": "quad",
+                            "transform": {
+                                "o": [0, -1, 0],
+                                "x": [1, 0, 0],
+                                "y": [0, 0, -1],
+                                "z": [0, 1, 0]
+                            },
+                            "size": 100,
+                            "material": "mat_plane"
+                        }
+                    ]
+                }
+                """
+                
+                let json = Data(value.utf8)
+                return json
+            case .triangle:
+                let value = """
+                {
+                    "camera": {
+                        "transform": {
+                            "o": [0, 0, 4]
+                        },
+                        "vfov": 45,
+                        "resolution": [640, 480]
+                    },
+                    "background": [
+                        1, 1, 1
+                    ],
+                    "sampler": {
+                        "type": "independent",
+                        "samples": 100
+                    },
+                    "materials": [
+                        {
+                            "name": "mat_triangle",
+                            "type": "diffuse",
+                            "albedo": [0.6, 0.4, 0.4]
+                        },
+                        {
+                            "name": "mat_plane",
+                            "type": "diffuse",
+                            "albedo": [0.75, 0.75, 0.75]
+                        }
+                    ],
+                  "shapes": [
+                    {
+                      "type": "triangle",
+                      "positions": [
+                        [ 0.5, 0, 0 ],
+                        [ 0.5, 1, 0 ],
+                        [ 1.5, 1, 0 ]
+                      ],
+                      "material": "mat_triangle"
+                    },
+                    {
+                      "type": "triangle",
+                      "positions": [
+                        [ -1.5, 0, 0 ],
+                        [ -1.5, 1, 0 ],
+                        [ -0.5, 1, 0 ]
+                      ],
+                      "normals": [
+                        [ 0, 0, 0 ],
+                        [ 0, 1, 0 ],
+                        [ 1, 1, 0 ]
+                      ],
+                      "material": "mat_triangle"
+                    },
+                    {
+                      "type": "quad",
+                      "transform": {
+                        "o": [0, -1,  0],
+                        "x": [1,  0,  0],
+                        "y": [0,  0, -1],
+                        "z": [0,  1,  0]
+                      },
+                      "size": 100,
+                      "material": "mat_plane"
+                    }
+                  ]
+                }
+                """
+                
                 let json = Data(value.utf8)
                 return json
             }

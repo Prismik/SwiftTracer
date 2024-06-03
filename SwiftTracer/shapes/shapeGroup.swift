@@ -61,7 +61,7 @@ final class ShapeGroup: Shape {
     }
     
     func add(shape: Shape) {
-        if shape.material.hasEmission {
+        if shape.material != nil && shape.material.hasEmission {
             lightIndexes.append(shapes.count)
         }
         

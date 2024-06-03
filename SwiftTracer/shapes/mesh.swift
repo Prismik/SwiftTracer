@@ -24,48 +24,78 @@ final class Mesh {
     let uvs: [Vec2]
     let tangents: [Vec3]
 
-    init() {
+    init(positions: [Vec3], normals: [Vec3]) {
+        self.positions = positions
+        self.tangents = []
+        self.facePositionIndexes = [Vec3(0, 1, 2)]
+        self.faceNormalIndexes = normals.isEmpty ? [] : [Vec3(0, 1, 2)]
+        self.faceUvIndexes = []
+        self.faceTangentIndexes = []
+        self.normals = normals
+        self.uvs = []
+    }
+
+    init(filename: String) {
         tangents = []
-        facePositionIndexes = []
-        faceNormalIndexes = []
         faceUvIndexes = []
         faceTangentIndexes = []
         
         var reader = tinyobj.ObjReader()
         let config = tinyobj.ObjReaderConfig()
-        reader.ParseFromFile(std.string("filename"), config)
+        reader.ParseFromFile(std.string(filename), config)
         let attributes = reader.attrib_
         let shapes = reader.shapes_
         let materials = reader.materials_
         
-        self.positions = stride(from: 0, through: attributes.vertices.size(), by: 3).map { i in
+        self.positions = stride(from: 0, through: attributes.vertices.size() - 1, by: 3).map { i in
             let x = attributes.vertices[i]
             let y = attributes.vertices[i + 1]
             let z = attributes.vertices[i + 2]
             return Vec3(x, y, z)
         }
         
-        self.normals = stride(from: 0, through: attributes.normals.size(), by: 3).map { i in
+        self.normals = stride(from: 0, through: attributes.normals.size() - 1, by: 3).map { i in
             let x = attributes.normals[i]
             let y = attributes.normals[i + 1]
             let z = attributes.normals[i + 2]
             return Vec3(x, y, z)
         }
         
-        self.uvs = stride(from: 0, through: attributes.texcoords.size(), by: 2).map { i in
+        self.uvs = stride(from: 0, through: attributes.texcoords.size() - 1, by: 2).map { i in
             let u = attributes.texcoords[i]
             let v = attributes.texcoords[i + 1]
             return Vec2(u, v)
         }
 
+        var facePositionIdx: [Vec3] = []
+        var faceNormalIdx: [Vec3] = []
         for s in shapes {
-            var offset = 0
+            let offset = facePositionIdx.count
+            print(s.mesh.indices.count)
+            let vertexIndices: [Int] = s.mesh.indices.map { Int($0.vertex_index) }
+            let normalIndices: [Int] = s.mesh.indices.map { Int($0.normal_index) }
+            for face in stride(from: 0, through: vertexIndices.count - 1, by: 3) {
+                let subsetV = vertexIndices[face ..< face + 3]
+                let subsetN = normalIndices[face ..< face + 3]
+                let v = Vec3(
+                    Float(subsetV[0 + face]) + Float(offset),
+                    Float(subsetV[1 + face]) + Float(offset),
+                    Float(subsetV[2 + face]) + Float(offset)
+                )
+                let n = Vec3(
+                    Float(subsetN[0 + face]) + Float(offset),
+                    Float(subsetN[1 + face]) + Float(offset),
+                    Float(subsetN[2 + face]) + Float(offset)
+                )
+                faceNormalIdx.append(n)
+            }
+            /*
             let vertexCount = s.mesh.num_face_vertices.size()
             for f in 0 ..< vertexCount {
                 let fv = s.mesh.num_face_vertices[f]
                 for v in 0 ..< fv {
                     let idx = s.mesh.indices[offset + Int(v)]
-                    
+                    indexes.append(Int(idx.vertex_index))
                     let vx = attributes.vertices[3 * Int(idx.vertex_index)]
                     let vy = attributes.vertices[3 * Int(idx.vertex_index) + 1]
                     let vz = attributes.vertices[3 * Int(idx.vertex_index) + 2]
@@ -73,6 +103,9 @@ final class Mesh {
                 
                 offset += Int(fv)
             }
+             */
         }
+        self.facePositionIndexes = facePositionIdx
+        self.faceNormalIndexes = faceNormalIdx
     }
 }

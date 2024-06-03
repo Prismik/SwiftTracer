@@ -59,10 +59,9 @@ final class Triangle: Shape {
         return (uv0, uv1, uv2)
     }
 
-    init(tangents: [Int], positions: [Int], normals: [Int], uvs: [Int], tan: [Int]) {
-        let mesh = Mesh()
+    init(faceId: Int, mesh: Mesh) {
+        self.faceId = faceId
         self.mesh = mesh
-        self.faceId = 0
     }
 
     func hit(r: Ray) -> Intersection? {
@@ -75,7 +74,7 @@ final class Triangle: Shape {
         
         let pvec = r.d.cross(edge2)
         let det = edge1.dot(pvec)
-        guard det >= epsilon && det <= -epsilon else { return nil }
+        guard det.abs() >= epsilon else { return nil }
         
         let invDet: Float = 1 / det
         

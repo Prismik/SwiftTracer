@@ -42,6 +42,8 @@ struct AnyShape: Decodable {
     enum TypeIdentifier: String, Codable {
         case sphere
         case quad
+        case triangle
+        case mesh
     }
 
     enum CodingKeys: String, CodingKey {
@@ -56,6 +58,13 @@ struct AnyShape: Decodable {
         
         // Quad
         case size
+        
+        // Triangle
+        case positions
+        case normals
+
+        // Mesh
+        case filename
     }
 
     let type: TypeIdentifier
@@ -92,6 +101,22 @@ struct AnyShape: Decodable {
                 halfSize: Vec2(size / 2, size / 2),
                 transform: transform
             )
+        case .mesh:
+            let filename = try container.decode(String.self, forKey: .filename)
+            guard let path = Bundle.main.path(forResource: filename, ofType: "obj", inDirectory: "assets") else {
+                fatalError("Trying to load obj that does not exist")
+            }
+            let mesh = Mesh(filename: path)
+            let group = ShapeGroup()
+            for id in 0 ..< mesh.facePositionIndexes.count {
+                group.add(shape: Triangle(faceId: id, mesh: mesh))
+            }
+            self.wrapped = group
+        case .triangle:
+            let positions = try container.decode([Vec3].self, forKey: .positions)
+            let normals = try container.decodeIfPresent([Vec3].self, forKey: .normals) ?? []
+            let mesh = Mesh(positions: positions, normals: normals)
+            self.wrapped = Triangle(faceId: 0, mesh: mesh)
         }
     }
     

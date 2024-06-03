@@ -32,11 +32,11 @@ enum Render {
         print(output)
         print(String(spp))
         
-        let example = Scene.Example.threeSphere.create()
+        let example = Scene.Example.teapot.create()
         let decoder = JSONDecoder()
         do {
             let scene = try decoder.decode(Scene.self, from: example)
-            let integrator = PathIntegrator()
+            let integrator = NormalIntegrator()
             let sampler = IndependantSampler()
             let clock = ContinuousClock()
             let time = clock.measure {
