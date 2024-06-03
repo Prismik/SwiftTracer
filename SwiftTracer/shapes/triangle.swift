@@ -139,13 +139,14 @@ final class Triangle: Shape {
     }
     
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {
-        let sqDistnace = y.distance2(p)
+        let sqDistance = y.distance2(p)
         let wi = (p - y).normalized()
         let cos = n.dot(wi).abs()
         let (p0, p1, p2) = vertices
         let edge1 = p1 - p0
         let edge2 = p2 - p0
         let area = edge1.cross(edge2).length / 2
+        return sqDistance / (cos * area)
     }
     
     private func uv(coordinates coords: (Float, Float, Float)) -> Vec2 {

@@ -33,5 +33,15 @@ final class Mesh {
         faceNormalIndexes = []
         faceUvIndexes = []
         faceTangentIndexes = []
+        
+        /*
+        let inputFile: std.string = "cornell_box.obj"
+        var config = tinyobj.ObjReaderConfig()
+        config.mtl_search_path = "./"
+        var reader = tinyobj.ObjReader()
+        if (!reader.ParseFromFile(inputFile, config)) {
+            print("Error")
+        }
+        */
     }
 }
