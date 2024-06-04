@@ -43,8 +43,20 @@ extension Mat4: Decodable {
         case angle
         case axis
         
+        // Scale
+        case scale
+        
         // Translate
         case translate
+        
+        // Rotate
+        case rotation
+
+        // From --> to
+        case from
+        case to
+        case up
+        case at
     }
     
     public init(from decoder: Decoder) throws {
@@ -63,6 +75,9 @@ extension Mat4: Decodable {
                 Vec4(o.x, o.y, o.z, 1)
             ]
             self.init(columns)
+        } else if container.contains(.scale) {
+            let value =  try container.decodeIfPresent(Vec3.self, forKey: .scale) ?? Vec3()
+            self.init(diagonal: value.extend(scalar: 1))
         } else if container.contains(any: [.angle, .axis]) {
             let angle = try container.decodeIfPresent(Float.self, forKey: .angle) ?? 0
             let a = try container.decodeIfPresent(Vec3.self, forKey: .axis) ?? Vec3(1, 0, 0)
@@ -76,6 +91,27 @@ extension Mat4: Decodable {
                 Vec4(subCos * axis.x * axis.z + sin * axis.y, subCos * axis.y * axis.z - sin * axis.x, subCos * axis.z * axis.z + cos, 0),
                 Vec4(0, 0, 0, 1)
             )
+        } else if container.contains(.rotation) {
+            var r = try container.decodeIfPresent(Vec3.self, forKey: .rotation) ?? Vec3()
+            r = r * Float.pi / 180
+            let c = Vec3(r.x.cos(), r.y.cos(), r.z.cos())
+            let s = Vec3(r.x.sin(), r.y.sin(), r.z.sin())
+            self.init(
+                Vec4(
+                    c[1] * c[2] - s[1] * s[0] * s[2],
+                    -c[1] * s[2] - s[1] * s[0] * c[2],
+                    -s[1] * c[0],
+                    0
+                ),
+                Vec4(c[0] * s[2], c[0] * c[2], -s[0], 0),
+                Vec4(
+                    s[1] * c[2] + c[1] * s[0] * s[2],
+                    -s[1] * s[2] + c[1] * s[0] * c[2],
+                    c[1] * c[0],
+                    0
+                ),
+                Vec4(0, 0, 0, 1)
+            )
         } else if container.contains(.translate) {
             let t = try container.decodeIfPresent(Vec3.self, forKey: .translate) ?? Vec3()
             self.init(
@@ -83,6 +119,21 @@ extension Mat4: Decodable {
                 Vec4(0, 1, 0, 0),
                 Vec4(0, 0, 1, 0),
                 Vec4(t.x, t.y, t.z, 1)
+            )
+        } else if container.contains(any: [.from, .to, .up, .at]) {
+            let from = try container.decodeIfPresent(Vec3.self, forKey: .from) ?? Vec3.unit(.z)
+            var to = try container.decodeIfPresent(Vec3.self, forKey: .to) ?? Vec3()
+            to += try container.decodeIfPresent(Vec3.self, forKey: .at) ?? Vec3()
+            var up = try container.decodeIfPresent(Vec3.self, forKey: .y) ?? Vec3.unit(.y)
+            let dir = (from - to).normalized()
+            let left = up.cross(dir).normalized()
+            up = dir.cross(left).normalized()
+            
+            self.init(
+                left.extend(scalar: 0),
+                up.extend(scalar: 0),
+                dir.extend(scalar: 0),
+                from.extend(scalar: 1)
             )
         } else {
             var container = try decoder.unkeyedContainer()

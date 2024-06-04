@@ -106,7 +106,7 @@ struct AnyShape: Decodable {
             guard let path = Bundle.main.path(forResource: filename, ofType: "obj", inDirectory: "assets") else {
                 fatalError("Trying to load obj that does not exist")
             }
-            let mesh = Mesh(filename: path)
+            let mesh = Mesh(filename: path, transform: transform)
             let group = ShapeGroup()
             for id in 0 ..< mesh.facePositionIndexes.count {
                 group.add(shape: Triangle(faceId: id, mesh: mesh))

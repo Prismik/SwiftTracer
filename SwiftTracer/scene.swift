@@ -85,6 +85,7 @@ extension Scene {
         case threeSphere
         case teapot
         case triangle
+        case cornelBox
 
         func create() -> Data {
             switch self {
@@ -338,6 +339,159 @@ extension Scene {
                       },
                       "size": 100,
                       "material": "mat_plane"
+                    }
+                  ]
+                }
+                """
+                
+                let json = Data(value.utf8)
+                return json
+            case .cornelBox:
+                let value = """
+                {
+                    "camera": {
+                        "transform": {
+                            "from": [0, 20, 3000],
+                            "at": [0, -4, 0],
+                            "up": [0, 1, 0]
+                        },
+                        "vfov": 28,
+                        "resolution": [1024, 1024]
+                    },
+                    "background": [
+                        1, 1, 1
+                    ],
+                    "sampler": {
+                        "type": "independent",
+                        "samples": 100
+                    },
+                    "materials": [
+                        {
+                            "name": "white",
+                            "type": "diffuse",
+                            "albedo": [0.73, 0.73, 0.73]
+                        },
+                        {
+                            "name": "green",
+                            "type": "diffuse",
+                            "albedo": [0.12, 0.45, 0.15]
+                        },
+                        {
+                            "name": "red",
+                            "type": "diffuse",
+                            "albedo": [0.65, 0.05, 0.05]
+                        },
+                        {
+                            "name": "tall_box",
+                            "type": "diffuse",
+                            "albedo": [0.725, 0.71, 0.68]
+                        },
+                        {
+                            "name": "short_box",
+                            "type": "diffuse",
+                            "albedo": [0.725, 0.71, 0.68]
+                        },
+                        {
+                            "name": "light",
+                            "type": "diffuse_light"
+                        }
+                    ],
+                    "shapes": [{
+                        "transform": [
+                            {
+                                "scale": [59.4811, 60.4394, 60]
+                            },
+                            {
+                                "scale": 3.0
+                            },
+                            {
+                                "rotation": [90, 90, -153.36]
+                            },
+                            {
+                                "o": [300, -470, 0]
+                            }
+                        ],
+                        "filename": "cube",
+                        "type": "mesh",
+                        "material": "short_box"
+                    }, {
+                        "type": "mesh",
+                        "transform": [
+                            {
+                                "scale": [60.7289, 59.7739, 120]
+                            },
+                            {
+                              "scale": 3.5
+                            },
+                            {
+                              "rotation": [90, 180, 160.812]
+                            },
+                            {
+                              "o": [-200, -300, -300]
+                            }
+                        ],
+                        "filename": "cube",
+                        "material": "tall_box"
+                    }, {
+                        "type": "quad",
+                        "transform": [{
+                            "translate": [0, 0, -650]
+                        }],
+                        "size": 1300,
+                        "material": "white"
+                    }, {
+                        "type": "quad",
+                        "transform": [{
+                            "axis": [1, 0, 0],
+                            "angle": 90,
+                        }, {
+                            "translate": [0, 650, 0]
+                        }],
+                        "size": 1300,
+                        "material": "white"
+                    }, {
+                        "type": "quad",
+                        "transform": [{
+                            "axis": [1, 0, 0],
+                            "angle": -90,
+                        }, {
+                            "translate": [0, -650, 0]
+                        }],
+                        "size": 1300,
+                        "material": "white"
+                    }, {
+                        "type": "quad",
+                        "transform": [{
+                            "axis": [0, 1, 0],
+                            "angle": 90,
+                        }, {
+                            "translate": [-650, 0, 0]
+                        }],
+                        "size": 1300,
+                        "material": "green"
+                    }, {
+                        "type": "quad",
+                        "transform": [{
+                            "axis": [0, 1, 0],
+                            "angle": -90,
+                        }, {
+                            "translate": [650, 0, 0]
+                        }],
+                        "size": 1300,
+                        "material": "red"
+                    }, {
+                        "type": "quad",
+                        "transform": [
+                            {
+                                "axis": [1, 0, 0],
+                                "angle": 90
+                            },
+                            {
+                                "translate": [0, 640, 0]
+                            }
+                        ],
+                        "size": 300,
+                        "material": "light"
                     }
                   ]
                 }
