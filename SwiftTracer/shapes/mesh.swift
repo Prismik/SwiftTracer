@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// TODO Caching
 final class Mesh {
     var material: Material!
 
@@ -44,7 +45,6 @@ final class Mesh {
         reader.ParseFromFile(std.string(filename), config)
         let attributes = reader.attrib_
         let shapes = reader.shapes_
-        // let materials = reader.materials_
         
         self.positions = stride(from: 0, through: attributes.vertices.size() - 1, by: 3).map { i in
             let x = attributes.vertices[i]
@@ -71,30 +71,24 @@ final class Mesh {
         var faceUvIdx: [Vec3] = []
         for s in shapes {
             let offset = facePositionIdx.count
-            print(s.mesh.indices.count)
-            let vertexIndices: [Int] = s.mesh.indices.map { Int($0.vertex_index) }
-            let normalIndices: [Int] = s.mesh.indices.map { Int($0.normal_index) }
-            let uvIndices: [Int] = s.mesh.indices.map { Int($0.texcoord_index) }
-            for face in stride(from: 0, through: vertexIndices.count - 1, by: 3) {
-                let subsetV = vertexIndices[face ..< face + 3]
-                let subsetN = normalIndices[face ..< face + 3]
-                let subsetUV = uvIndices[face ..< face + 3]
+            for face in stride(from: 0, through: s.mesh.indices.count - 1, by: 3) {
+                let subset = s.mesh.indices[face ..< face + 3]
                 let v = Vec3(
-                    Float(subsetV[0 + face]) + Float(offset),
-                    Float(subsetV[1 + face]) + Float(offset),
-                    Float(subsetV[2 + face]) + Float(offset)
+                    Float(subset[0 + face].vertex_index) + Float(offset),
+                    Float(subset[1 + face].vertex_index) + Float(offset),
+                    Float(subset[2 + face].vertex_index) + Float(offset)
                 )
                 facePositionIdx.append(v)
                 let n = Vec3(
-                    Float(subsetN[0 + face]) + Float(offset),
-                    Float(subsetN[1 + face]) + Float(offset),
-                    Float(subsetN[2 + face]) + Float(offset)
+                    Float(subset[0 + face].normal_index) + Float(offset),
+                    Float(subset[1 + face].normal_index) + Float(offset),
+                    Float(subset[2 + face].normal_index) + Float(offset)
                 )
                 faceNormalIdx.append(n)
                 let uv = Vec3(
-                    Float(subsetUV[0 + face]) + Float(offset),
-                    Float(subsetUV[1 + face]) + Float(offset),
-                    Float(subsetUV[2 + face]) + Float(offset)
+                    Float(subset[0 + face].texcoord_index) + Float(offset),
+                    Float(subset[1 + face].texcoord_index) + Float(offset),
+                    Float(subset[2 + face].texcoord_index) + Float(offset)
                 )
                 faceUvIdx.append(uv)
             }
