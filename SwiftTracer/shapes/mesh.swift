@@ -57,7 +57,7 @@ final class Mesh {
             let x = attributes.normals[i]
             let y = attributes.normals[i + 1]
             let z = attributes.normals[i + 2]
-            return transform.normal(Vec3(x, y, z))
+            return transform.normal(Vec3(x, y, z)).normalized()
         }
         
         self.uvs = stride(from: 0, through: attributes.texcoords.size() - 1, by: 2).map { i in

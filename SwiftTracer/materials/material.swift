@@ -38,6 +38,9 @@ struct AnyMaterial: Decodable {
         // Dielectric
         case etaInt = "eta_int"
         case etaExt = "eta_ext"
+        
+        // Emitter
+        case radiance
     }
 
     let type: TypeIdentifier
@@ -61,7 +64,7 @@ struct AnyMaterial: Decodable {
             let etaExterior = try container.decodeIfPresent(Float.self, forKey: .etaExt) ?? 1.0
             self.wrapped = Dielectric(texture: texture, etaInterior: etaInterior, etaExterior: etaExterior)
         case .emitter:
-            let texture = try container.decodeIfPresent(Texture<Color>.self, forKey: .albedo) ?? .constant(value: Color(repeating: 1))
+            let texture = try container.decodeIfPresent(Texture<Color>.self, forKey: .radiance) ?? .constant(value: Color(repeating: 1))
             self.wrapped = DiffuseLight(texture: texture)
         }
     }

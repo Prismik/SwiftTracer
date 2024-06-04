@@ -76,8 +76,13 @@ extension Mat4: Decodable {
             ]
             self.init(columns)
         } else if container.contains(.scale) {
-            let value =  try container.decodeIfPresent(Vec3.self, forKey: .scale) ?? Vec3()
-            self.init(diagonal: value.extend(scalar: 1))
+            do {
+                let singleValue = try container.decode(Float.self, forKey: .scale)
+                self.init(diagonal: Vec3(repeating: singleValue).extend(scalar: 1))
+            } catch {
+                let value =  try container.decodeIfPresent(Vec3.self, forKey: .scale) ?? Vec3()
+                self.init(diagonal: value.extend(scalar: 1))
+            }
         } else if container.contains(any: [.angle, .axis]) {
             let angle = try container.decodeIfPresent(Float.self, forKey: .angle) ?? 0
             let a = try container.decodeIfPresent(Vec3.self, forKey: .axis) ?? Vec3(1, 0, 0)
@@ -96,7 +101,7 @@ extension Mat4: Decodable {
             r = r * Float.pi / 180
             let c = Vec3(r.x.cos(), r.y.cos(), r.z.cos())
             let s = Vec3(r.x.sin(), r.y.sin(), r.z.sin())
-            self.init(
+            self = Mat4(
                 Vec4(
                     c[1] * c[2] - s[1] * s[0] * s[2],
                     -c[1] * s[2] - s[1] * s[0] * c[2],
@@ -111,7 +116,7 @@ extension Mat4: Decodable {
                     0
                 ),
                 Vec4(0, 0, 0, 1)
-            )
+            ).transpose
         } else if container.contains(.translate) {
             let t = try container.decodeIfPresent(Vec3.self, forKey: .translate) ?? Vec3()
             self.init(

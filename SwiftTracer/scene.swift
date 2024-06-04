@@ -140,7 +140,7 @@ extension Scene {
                         "transform": {
                             "o": [0.7, 0, 0]
                         },
-                        "vfov": 90,
+                        "fov": 90,
                         "resolution": [640, 480]
                     },
                     "background": [
@@ -283,7 +283,7 @@ extension Scene {
                         "transform": {
                             "o": [0, 0, 4]
                         },
-                        "vfov": 45,
+                        "fov": 45,
                         "resolution": [640, 480]
                     },
                     "background": [
@@ -355,8 +355,8 @@ extension Scene {
                             "at": [0, -4, 0],
                             "up": [0, 1, 0]
                         },
-                        "vfov": 28,
-                        "resolution": [1024, 1024]
+                        "fov": 28,
+                        "resolution": [512, 512]
                     },
                     "background": [
                         1, 1, 1
@@ -393,7 +393,8 @@ extension Scene {
                         },
                         {
                             "name": "light",
-                            "type": "diffuse_light"
+                            "type": "diffuse_light",
+                            "radiance": [16, 16, 16]
                         }
                     ],
                     "shapes": [{
