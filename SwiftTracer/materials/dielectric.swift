@@ -62,10 +62,10 @@ final class Dielectric: Material {
     let hasEmission = false
     let isMedia = false
     let density: Float = 0
-    let texture: Texture<Color>
+    let texture: Texture
     let etaInterior: Float
     let etaExterior: Float
-    init(texture: Texture<Color>, etaInterior: Float, etaExterior: Float) {
+    init(texture: Texture, etaInterior: Float, etaExterior: Float) {
         self.texture = texture
         self.etaInterior = etaInterior
         self.etaExterior = etaExterior

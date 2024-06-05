@@ -11,8 +11,8 @@ final class Diffuse: Material {
     let hasEmission = false
     let isMedia = false
     let density: Float = 0
-    let texture: Texture<Color>
-    init(texture: Texture<Color>) {
+    let texture: Texture
+    init(texture: Texture) {
         self.texture = texture
     }
 

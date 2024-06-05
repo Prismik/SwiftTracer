@@ -11,10 +11,10 @@ final class Metal: Material {
     let hasEmission = false
     let isMedia = false
     let density: Float = 0
-    let texture: Texture<Color>
-    let roughness: Texture<Float>
+    let texture: Texture
+    let roughness: Texture
 
-    init(texture: Texture<Color>, roughness: Texture<Float>) {
+    init(texture: Texture, roughness: Texture) {
         self.texture = texture
         self.roughness = roughness
     }
@@ -24,7 +24,7 @@ final class Metal: Material {
         guard wo.z >= 0 else { return nil }
         
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
-        let roughness = roughness.get(uv: uv, p: p)
+        let roughness = roughness.get(uv: uv, p: p).x
         switch roughness {
         case let r where r == 0:
             return SampledDirection(weight: texture.get(uv: uv, p: p), wi: specularWi.normalized())

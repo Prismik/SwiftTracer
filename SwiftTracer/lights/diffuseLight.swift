@@ -12,9 +12,9 @@ final class DiffuseLight: Material {
     let hasEmission = true
     let isMedia = false
     let density: Float = 0
-    let texture: Texture<Color>
+    let texture: Texture
     
-    init(texture: Texture<Color>) {
+    init(texture: Texture) {
         self.texture = texture
     }
 

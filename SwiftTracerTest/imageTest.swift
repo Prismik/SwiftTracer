@@ -30,7 +30,23 @@ final class ImageTest: XCTestCase {
             }
         }
         let image = Image(array: array)
-        let success = image.save(to: "xctest.png")
+        let success = image.write(to: "xctest.png")
         XCTAssertEqual(success, true)
+    }
+    
+    func testSimpleLoad() throws {
+        let bundle = Bundle(for: type(of: self))
+        let image = Image(filename: "xctest", bundle: bundle, subdir: nil)
+        let unwrapped = try XCTUnwrap(image)
+        
+        let data = unwrapped.read()
+        let rgb00 = data.get(0, 0)
+        let rgb10 = data.get(data.xSize - 1, 0)
+        let rgb01 = data.get(0, data.ySize - 1)
+        let rgb11 = data.get(data.xSize - 1, data.ySize - 1)
+        XCTAssertEqual(rgb00, Color(1, 1, 1))
+        XCTAssertEqual(rgb10, Color(1, 0, 0))
+        XCTAssertEqual(rgb01, Color(0, 1, 0))
+        XCTAssertEqual(rgb11, Color(0, 0, 1))
     }
 }

@@ -8,19 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		193E42502BFE5EA300D96A37 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
-		193E42512BFE71DF00D96A37 /* texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7302BFC0C7100981204 /* texture.swift */; };
 		193E42522BFE737F00D96A37 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		193E42532BFE738F00D96A37 /* ray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7222BF82CE800981204 /* ray.swift */; };
-		19694BD92C0E1FFF007AD6A4 /* scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7322BFD4F0000981204 /* scene.swift */; };
 		19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
-		19694BDC2C0E2028007AD6A4 /* shapeGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3BD2C00F63E005CC488 /* shapeGroup.swift */; };
-		19694BDD2C0E2200007AD6A4 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
-		19694BDE2C0E220D007AD6A4 /* diffuseLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */; };
 		196ECD562C0B7FC30052DEA6 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
 		196ECD582C0B80350052DEA6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
 		1999D0502C0E48F400358201 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D04F2C0E48C500358201 /* cube.obj */; };
 		1999D0522C0F853000358201 /* uv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0512C0F853000358201 /* uv.swift */; };
+		1999D0592C0F8A4100358201 /* dragon.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0572C0F8A3600358201 /* dragon.obj */; };
+		1999D05A2C0F8A4100358201 /* buddha.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0532C0F8A3100358201 /* buddha.obj */; };
+		1999D05B2C0F8A4100358201 /* bunny.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0542C0F8A3100358201 /* bunny.obj */; };
+		1999D0612C0FE01400358201 /* simple.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D05F2C0FDF7D00358201 /* simple.json */; };
+		1999D06C2C0FE16F00358201 /* threeSpheres.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0622C0FE0A100358201 /* threeSpheres.json */; };
+		1999D06D2C0FE16F00358201 /* teapot.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0642C0FE0EB00358201 /* teapot.json */; };
+		1999D06E2C0FE16F00358201 /* triangle.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0662C0FE10B00358201 /* triangle.json */; };
+		1999D06F2C0FE16F00358201 /* cornelBox.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D06A2C0FE15200358201 /* cornelBox.json */; };
+		1999D0762C0FEF7200358201 /* xctest.png in Resources */ = {isa = PBXBuildFile; fileRef = 1999D0702C0FEC7700358201 /* xctest.png */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
@@ -31,14 +35,11 @@
 		19BBA72F2BFC089A00981204 /* sampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72E2BFC089A00981204 /* sampling.swift */; };
 		19BBA7312BFC0C7100981204 /* texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7302BFC0C7100981204 /* texture.swift */; };
 		19BBA7332BFD4F0000981204 /* scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7322BFD4F0000981204 /* scene.swift */; };
-		19BBA73B2BFD531B00981204 /* swiftTracerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA73A2BFD531B00981204 /* swiftTracerTest.swift */; };
 		19BBA73F2BFD54C100981204 /* vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808412B2B6F2600A37D37 /* vector.swift */; };
 		19BBA7402BFD5AD600981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A70E2C06AA8400A7A0FD /* bvh.swift */; };
 		19C0A7112C08EECE00A7A0FD /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
-		19C0A7122C08F56700A7A0FD /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
 		19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
-		19C0A7152C08FA3200A7A0FD /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
 		19C0A7182C08FB1B00A7A0FD /* diffuseLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */; };
 		19D52CF92C0D80FB00C63D9E /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */; };
 		19E8082F2B2B664400A37D37 /* render.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8082E2B2B664400A37D37 /* render.swift */; };
@@ -49,16 +50,12 @@
 		19E808442B2B728C00A37D37 /* sphere.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808432B2B728C00A37D37 /* sphere.swift */; };
 		19E808462B2B729700A37D37 /* shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808452B2B729700A37D37 /* shape.swift */; };
 		19E808482B2B730600A37D37 /* aabb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808472B2B730600A37D37 /* aabb.swift */; };
-		19EFB3B12BFE7A7A005CC488 /* diffuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083F2B2B6E7000A37D37 /* diffuse.swift */; };
 		19EFB3B22BFE7B82005CC488 /* sampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72E2BFC089A00981204 /* sampling.swift */; };
 		19EFB3B32BFE7B92005CC488 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72C2BFBB48100981204 /* utils.swift */; };
-		19EFB3B42BFFC5E5005CC488 /* shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808452B2B729700A37D37 /* shape.swift */; };
-		19EFB3B52BFFC5E9005CC488 /* sphere.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808432B2B728C00A37D37 /* sphere.swift */; };
 		19EFB3B62BFFC6B0005CC488 /* aabb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808472B2B730600A37D37 /* aabb.swift */; };
 		19EFB3BA2C00EBCF005CC488 /* quad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3B92C00EBCF005CC488 /* quad.swift */; };
 		19EFB3BC2C00EF44005CC488 /* mathTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3BB2C00EF44005CC488 /* mathTest.swift */; };
 		19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3BD2C00F63E005CC488 /* shapeGroup.swift */; };
-		19EFB3BF2C010440005CC488 /* quad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3B92C00EBCF005CC488 /* quad.swift */; };
 		19EFB3C22C010833005CC488 /* sampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C12C010833005CC488 /* sampler.swift */; };
 		19EFB3C42C01085F005CC488 /* independant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C32C01085F005CC488 /* independant.swift */; };
 		19EFB3C62C010CB8005CC488 /* array2d.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C52C010CB8005CC488 /* array2d.swift */; };
@@ -77,6 +74,14 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				1999D06C2C0FE16F00358201 /* threeSpheres.json in CopyFiles */,
+				1999D06D2C0FE16F00358201 /* teapot.json in CopyFiles */,
+				1999D06E2C0FE16F00358201 /* triangle.json in CopyFiles */,
+				1999D06F2C0FE16F00358201 /* cornelBox.json in CopyFiles */,
+				1999D0612C0FE01400358201 /* simple.json in CopyFiles */,
+				1999D0592C0F8A4100358201 /* dragon.obj in CopyFiles */,
+				1999D05A2C0F8A4100358201 /* buddha.obj in CopyFiles */,
+				1999D05B2C0F8A4100358201 /* bunny.obj in CopyFiles */,
 				1999D0502C0E48F400358201 /* cube.obj in CopyFiles */,
 				1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */,
 			);
@@ -91,6 +96,15 @@
 		1999D0462C0E3F5200358201 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
 		1999D04F2C0E48C500358201 /* cube.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
 		1999D0512C0F853000358201 /* uv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = uv.swift; sourceTree = "<group>"; };
+		1999D0532C0F8A3100358201 /* buddha.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = buddha.obj; sourceTree = "<group>"; };
+		1999D0542C0F8A3100358201 /* bunny.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bunny.obj; sourceTree = "<group>"; };
+		1999D0572C0F8A3600358201 /* dragon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dragon.obj; sourceTree = "<group>"; };
+		1999D05F2C0FDF7D00358201 /* simple.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = simple.json; sourceTree = "<group>"; };
+		1999D0622C0FE0A100358201 /* threeSpheres.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = threeSpheres.json; sourceTree = "<group>"; };
+		1999D0642C0FE0EB00358201 /* teapot.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = teapot.json; sourceTree = "<group>"; };
+		1999D0662C0FE10B00358201 /* triangle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = triangle.json; sourceTree = "<group>"; };
+		1999D06A2C0FE15200358201 /* cornelBox.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBox.json; sourceTree = "<group>"; };
+		1999D0702C0FEC7700358201 /* xctest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xctest.png; sourceTree = "<group>"; };
 		19BBA7192BF7D32F00981204 /* transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transform.swift; sourceTree = "<group>"; };
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
 		19BBA71E2BF7D70800981204 /* mathError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathError.swift; sourceTree = "<group>"; };
@@ -102,7 +116,6 @@
 		19BBA7302BFC0C7100981204 /* texture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = texture.swift; sourceTree = "<group>"; };
 		19BBA7322BFD4F0000981204 /* scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scene.swift; sourceTree = "<group>"; };
 		19BBA7382BFD531B00981204 /* SwiftTracerTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftTracerTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		19BBA73A2BFD531B00981204 /* swiftTracerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftTracerTest.swift; sourceTree = "<group>"; };
 		19C0A70E2C06AA8400A7A0FD /* bvh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bvh.swift; sourceTree = "<group>"; };
 		19C0A7102C08EECE00A7A0FD /* metal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = metal.swift; sourceTree = "<group>"; };
 		19C0A7132C08F5EE00A7A0FD /* dielectric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dielectric.swift; sourceTree = "<group>"; };
@@ -152,10 +165,43 @@
 		1999D0482C0E3F5200358201 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				1999D05E2C0FDF6200358201 /* scenes */,
+				1999D05D2C0FDED400358201 /* textures */,
+				1999D05C2C0FDEC600358201 /* mesh */,
+			);
+			path = assets;
+			sourceTree = "<group>";
+		};
+		1999D05C2C0FDEC600358201 /* mesh */ = {
+			isa = PBXGroup;
+			children = (
+				1999D0572C0F8A3600358201 /* dragon.obj */,
+				1999D0532C0F8A3100358201 /* buddha.obj */,
+				1999D0542C0F8A3100358201 /* bunny.obj */,
 				1999D0462C0E3F5200358201 /* teapot.obj */,
 				1999D04F2C0E48C500358201 /* cube.obj */,
 			);
-			path = assets;
+			path = mesh;
+			sourceTree = "<group>";
+		};
+		1999D05D2C0FDED400358201 /* textures */ = {
+			isa = PBXGroup;
+			children = (
+				1999D0702C0FEC7700358201 /* xctest.png */,
+			);
+			path = textures;
+			sourceTree = "<group>";
+		};
+		1999D05E2C0FDF6200358201 /* scenes */ = {
+			isa = PBXGroup;
+			children = (
+				1999D05F2C0FDF7D00358201 /* simple.json */,
+				1999D0622C0FE0A100358201 /* threeSpheres.json */,
+				1999D0642C0FE0EB00358201 /* teapot.json */,
+				1999D0662C0FE10B00358201 /* triangle.json */,
+				1999D06A2C0FE15200358201 /* cornelBox.json */,
+			);
+			path = scenes;
 			sourceTree = "<group>";
 		};
 		19BBA71B2BF7D35F00981204 /* math */ = {
@@ -173,7 +219,6 @@
 		19BBA7392BFD531B00981204 /* SwiftTracerTest */ = {
 			isa = PBXGroup;
 			children = (
-				19BBA73A2BFD531B00981204 /* swiftTracerTest.swift */,
 				19EFB3BB2C00EF44005CC488 /* mathTest.swift */,
 				19EFB3C72C0274D2005CC488 /* array2dTest.swift */,
 				19EFB3CE2C0648B1005CC488 /* imageTest.swift */,
@@ -399,6 +444,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1999D0762C0FEF7200358201 /* xctest.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,31 +455,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19C0A7152C08FA3200A7A0FD /* dielectric.swift in Sources */,
-				19C0A7122C08F56700A7A0FD /* metal.swift in Sources */,
 				19EFB3D02C064A7F005CC488 /* image.swift in Sources */,
 				19EFB3C92C0274FD005CC488 /* array2d.swift in Sources */,
 				19EFB3CF2C0648B1005CC488 /* imageTest.swift in Sources */,
-				19EFB3BF2C010440005CC488 /* quad.swift in Sources */,
 				19EFB3C82C0274D2005CC488 /* array2dTest.swift in Sources */,
 				19EFB3B62BFFC6B0005CC488 /* aabb.swift in Sources */,
 				19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */,
-				19EFB3B52BFFC5E9005CC488 /* sphere.swift in Sources */,
-				19EFB3B42BFFC5E5005CC488 /* shape.swift in Sources */,
 				19EFB3B32BFE7B92005CC488 /* utils.swift in Sources */,
-				19694BDD2C0E2200007AD6A4 /* material.swift in Sources */,
 				19EFB3B22BFE7B82005CC488 /* sampling.swift in Sources */,
 				19EFB3BC2C00EF44005CC488 /* mathTest.swift in Sources */,
-				19694BDC2C0E2028007AD6A4 /* shapeGroup.swift in Sources */,
-				19694BD92C0E1FFF007AD6A4 /* scene.swift in Sources */,
-				19EFB3B12BFE7A7A005CC488 /* diffuse.swift in Sources */,
 				193E42532BFE738F00D96A37 /* ray.swift in Sources */,
 				193E42522BFE737F00D96A37 /* transform.swift in Sources */,
-				193E42512BFE71DF00D96A37 /* texture.swift in Sources */,
 				19BBA7402BFD5AD600981204 /* matrix.swift in Sources */,
-				19694BDE2C0E220D007AD6A4 /* diffuseLight.swift in Sources */,
 				19BBA73F2BFD54C100981204 /* vector.swift in Sources */,
-				19BBA73B2BFD531B00981204 /* swiftTracerTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -58,6 +58,13 @@ class Array2d<T> {
         self.storage = Array(repeating: value, count: x * y)
     }
     
+    init?(contentsOf filename: String) {
+        
+        self.xSize = 0
+        self.ySize = 0
+        self.storage = Array()
+    }
+
     func get(_ x: Int, _ y: Int) -> T {
         return storage[index(x, y)]
     }

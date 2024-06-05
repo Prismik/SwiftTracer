@@ -21,13 +21,6 @@ extension UvIntegrator: SamplerIntegrator {
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
         guard let intersection = scene.hit(r: ray) else { return Color() }
         let uv = intersection.uv
-        return Vec3(modulo(uv.x, 1.0), modulo(uv.y, 1.0), 0)
-    }
-    
-    private func modulo(_ a: Float, _ b: Float) -> Float {
-        let r = a.truncatingRemainder(dividingBy: b)
-        return r < 0
-            ? r + b
-            : r
+        return Vec3(uv.x.modulo(1.0), uv.y.modulo(1.0), 0)
     }
 }

@@ -39,8 +39,10 @@ class Image {
     }
 
     private let raw: Array2d<Color>
-    private let pixels : UnsafeMutableRawPointer
-    private let context: CGContext
+    private let pixels : UnsafeMutableRawPointer!
+    private let context: CGContext!
+    private let cgImage: CGImage!
+
     init(array: Array2d<Color>) {
         self.raw = array
         let bytesPerRow = raw.xSize * MemoryLayout<BitmapPixel>.size
@@ -57,13 +59,51 @@ class Image {
             space: colorSpace!,
             bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
         )!
+        self.cgImage = nil
+    }
+    
+    init?(filename: String, bundle: Bundle = Bundle.main, subdir: String? = "assets") {
+        guard let url = bundle.url(forResource: filename, withExtension: "png", subdirectory: subdir) else { return nil }
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+        guard let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
+        let size = cgImage.height * cgImage.bytesPerRow
+        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)
+        self.raw = Array2d(x: cgImage.width, y: cgImage.height, value: Color())
+        self.pixels = malloc(size)
+        self.context = CGContext(
+            data: pixels,
+            width: cgImage.width,
+            height: cgImage.height,
+            bitsPerComponent: cgImage.bitsPerComponent,
+            bytesPerRow: cgImage.bytesPerRow,
+            space: colorSpace!,
+            bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
+        )
+        self.cgImage = cgImage
     }
     
     deinit {
         free(pixels)
     }
 
-    func save(to filename: String) -> Bool {
+    func read() -> Array2d<Color> {
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: context.width, height: context.height), byTiling: false)
+        let mem = pixels.assumingMemoryBound(to: UInt8.self)
+        for x in 0 ..< context.width {
+            for y in 0 ..< context.height {
+                let i = context.bytesPerRow * y + MemoryLayout<BitmapPixel>.size * x
+                let r = mem[i] / 255
+                let g = mem[i + 1] / 255
+                let b = mem[i + 2] / 255
+                raw.set(value: Color(Float(r), Float(g), Float(b)), x, y)
+            }
+        }
+        
+        return raw
+    }
+
+    func write(to filename: String) -> Bool {
         for (i, pixel) in raw.enumerated() {
             let offset = i * MemoryLayout<BitmapPixel>.size
             pixels.storeBytes(of: BitmapPixel(from: pixel), toByteOffset: offset, as: BitmapPixel.self)

@@ -52,19 +52,19 @@ struct AnyMaterial: Decodable {
         self.name = try container.decode(String.self, forKey: .name)
         switch type {
         case .diffuse:
-            let texture = try container.decodeIfPresent(Texture<Color>.self, forKey: .albedo) ?? .constant(value: Color(repeating: 1))
+            let texture = try container.decodeIfPresent(Texture.self, forKey: .albedo) ?? .constant(value: Color(repeating: 1))
             self.wrapped = Diffuse(texture: texture)
         case .metal:
-            let texture = try container.decodeIfPresent(Texture<Color>.self, forKey: .ks) ?? .constant(value: Color(repeating: 1))
-            let roughness = try container.decode(Texture<Float>.self, forKey: .roughness)
+            let texture = try container.decodeIfPresent(Texture.self, forKey: .ks) ?? .constant(value: Color(repeating: 1))
+            let roughness = try container.decode(Texture.self, forKey: .roughness)
             self.wrapped = Metal(texture: texture, roughness: roughness)
         case .dielectric:
-            let texture = try container.decodeIfPresent(Texture<Color>.self, forKey: .ks) ?? .constant(value: Color(repeating: 1))
+            let texture = try container.decodeIfPresent(Texture.self, forKey: .ks) ?? .constant(value: Color(repeating: 1))
             let etaInterior = try container.decodeIfPresent(Float.self, forKey: .etaInt) ?? 1.5
             let etaExterior = try container.decodeIfPresent(Float.self, forKey: .etaExt) ?? 1.0
             self.wrapped = Dielectric(texture: texture, etaInterior: etaInterior, etaExterior: etaExterior)
         case .emitter:
-            let texture = try container.decodeIfPresent(Texture<Color>.self, forKey: .radiance) ?? .constant(value: Color(repeating: 1))
+            let texture = try container.decodeIfPresent(Texture.self, forKey: .radiance) ?? .constant(value: Color(repeating: 1))
             self.wrapped = DiffuseLight(texture: texture)
         }
     }

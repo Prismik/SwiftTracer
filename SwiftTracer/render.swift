@@ -42,10 +42,10 @@ enum Render {
             let time = clock.measure {
                 let pixels = integrator.render(scene: scene, sampler: sampler)
                 let image = Image(array: pixels)
-                if image.save(to: "test.png") {
+                if image.write(to: "test.png") {
                     print("#Intersection: \(Scene.NB_INTERSECTION)")
                     print("#rays: \(Scene.NB_TRACED_RAYS)")
-                    print("ratio: \(Scene.NB_INTERSECTION / Scene.NB_TRACED_RAYS)")
+                    print("ratio: \(Float(Scene.NB_INTERSECTION) / Float(Scene.NB_TRACED_RAYS))")
                 } else {
                     print("Failure")
                 }

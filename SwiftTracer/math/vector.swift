@@ -17,6 +17,7 @@ typealias Color = simd_float3
 protocol SummableMultipliable: Equatable {
     static func +(lhs: Self, rhs: Self) -> Self
     static func *(lhs: Self, rhs: Self) -> Self
+    static func *(lhs: Self, rhs: Float) -> Self
 }
 
 struct Frame {

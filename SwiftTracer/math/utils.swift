@@ -23,6 +23,10 @@ enum Utils {
 }
 
 extension Float {
+    var isPair: Bool {
+        return self.truncatingRemainder(dividingBy: 2) == 0
+    }
+
     func toRadians() -> Self {
         return self * Float.pi / 180
     }
@@ -49,5 +53,12 @@ extension Float {
     
     func abs() -> Float {
         return Swift.abs(self)
+    }
+    
+    func modulo(_ other: Float) -> Float {
+        let r = self.truncatingRemainder(dividingBy: other)
+        return r < 0
+            ? r + other
+            : r
     }
 }
