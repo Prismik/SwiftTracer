@@ -85,6 +85,7 @@ extension Scene {
         case teapot
         case triangle
         case cornelBox
+        case roughness
 
         func create() throws -> Data {
             guard let url = Bundle.main.url(forResource: self.rawValue, withExtension: "json", subdirectory: "assets") else {

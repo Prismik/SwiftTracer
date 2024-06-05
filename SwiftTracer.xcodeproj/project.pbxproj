@@ -25,6 +25,7 @@
 		1999D06E2C0FE16F00358201 /* triangle.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0662C0FE10B00358201 /* triangle.json */; };
 		1999D06F2C0FE16F00358201 /* cornelBox.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D06A2C0FE15200358201 /* cornelBox.json */; };
 		1999D0762C0FEF7200358201 /* xctest.png in Resources */ = {isa = PBXBuildFile; fileRef = 1999D0702C0FEC7700358201 /* xctest.png */; };
+		1999D0792C0FF68E00358201 /* roughness.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0772C0FF52100358201 /* roughness.json */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
@@ -74,6 +75,7 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				1999D0792C0FF68E00358201 /* roughness.json in CopyFiles */,
 				1999D06C2C0FE16F00358201 /* threeSpheres.json in CopyFiles */,
 				1999D06D2C0FE16F00358201 /* teapot.json in CopyFiles */,
 				1999D06E2C0FE16F00358201 /* triangle.json in CopyFiles */,
@@ -105,6 +107,7 @@
 		1999D0662C0FE10B00358201 /* triangle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = triangle.json; sourceTree = "<group>"; };
 		1999D06A2C0FE15200358201 /* cornelBox.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBox.json; sourceTree = "<group>"; };
 		1999D0702C0FEC7700358201 /* xctest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xctest.png; sourceTree = "<group>"; };
+		1999D0772C0FF52100358201 /* roughness.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = roughness.json; sourceTree = "<group>"; };
 		19BBA7192BF7D32F00981204 /* transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transform.swift; sourceTree = "<group>"; };
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
 		19BBA71E2BF7D70800981204 /* mathError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathError.swift; sourceTree = "<group>"; };
@@ -200,6 +203,7 @@
 				1999D0642C0FE0EB00358201 /* teapot.json */,
 				1999D0662C0FE10B00358201 /* triangle.json */,
 				1999D06A2C0FE15200358201 /* cornelBox.json */,
+				1999D0772C0FF52100358201 /* roughness.json */,
 			);
 			path = scenes;
 			sourceTree = "<group>";

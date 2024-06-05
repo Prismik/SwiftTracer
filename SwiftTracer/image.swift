@@ -96,7 +96,7 @@ class Image {
                 let r = mem[i] / 255
                 let g = mem[i + 1] / 255
                 let b = mem[i + 2] / 255
-                raw.set(value: Color(Float(r), Float(g), Float(b)), x, y)
+                raw.set(value: Color(Float(r), Float(g), Float(b)).toLinearRGB(), x, y)
             }
         }
         
@@ -106,7 +106,7 @@ class Image {
     func write(to filename: String) -> Bool {
         for (i, pixel) in raw.enumerated() {
             let offset = i * MemoryLayout<BitmapPixel>.size
-            pixels.storeBytes(of: BitmapPixel(from: pixel), toByteOffset: offset, as: BitmapPixel.self)
+            pixels.storeBytes(of: BitmapPixel(from: pixel.toSRGB()), toByteOffset: offset, as: BitmapPixel.self)
         }
 
         // TODO Better url handling at a given folder
@@ -116,5 +116,31 @@ class Image {
                 
         CGImageDestinationAddImage(destination, img, nil)
         return CGImageDestinationFinalize(destination)
+    }
+}
+
+private extension Color {
+    func toSRGB() -> Self {
+        var result = Color()
+        for i in 0 ..< 3 {
+            let val = self[i]
+            result[i] = val <= 0.0031308
+                ? 12.92 * val
+                : (1 + 0.055) * val.pow(1 / 2.4) - 0.055
+        }
+        
+        return result
+    }
+    
+    func toLinearRGB() -> Self {
+        var result = Color()
+        for i in 0 ..< 3 {
+            let val = self[i]
+            result[i] = val <= 0.04045
+                ? val * (1 / 12.92)
+                : ((val + 0.055) / 1.055).pow(2.4)
+        }
+        
+        return result
     }
 }

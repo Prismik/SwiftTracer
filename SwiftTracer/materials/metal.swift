@@ -24,7 +24,7 @@ final class Metal: Material {
         guard wo.z >= 0 else { return nil }
         
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
-        let roughness = roughness.get(uv: uv, p: p).x
+        let roughness: Float = roughness.get(uv: uv, p: p)
         switch roughness {
         case let r where r == 0:
             return SampledDirection(weight: texture.get(uv: uv, p: p), wi: specularWi.normalized())
@@ -45,12 +45,12 @@ final class Metal: Material {
         let wi = wi.normalized()
         guard wo.z >= 0 && wi.z >= 0 else { return Color() }
         
-        let roughness = roughness.get(uv: uv, p: p).clamped(0, 1)
+        let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
         guard roughness != 0 else { return Color() }
         
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
         let n = power(roughness: roughness)
-        let ks = texture.get(uv: uv, p: p)
+        let ks: Color = texture.get(uv: uv, p: p)
         let a = wo.dot(specularWi).clamped(.ulpOfOne, .pi / 2)
         return ks * (n + 1) / (2 * .pi) * a.pow(n)
     }
@@ -60,7 +60,7 @@ final class Metal: Material {
         let wi = wi.normalized()
         guard wo.z >= 0 && wi.z >= 0 else { return 0 }
 
-        let roughness = roughness.get(uv: uv, p: p).clamped(0, 1)
+        let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
         guard roughness != 0 else { return 0 }
 
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)

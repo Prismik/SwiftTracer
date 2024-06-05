@@ -22,8 +22,8 @@ final class Diffuse: Material {
         
         let wi = Sample.cosineHemisphere(sample: sample).normalized()
         let cos = wi.dot(Vec3.unit(.z))
-        let albedo = self.texture.get(uv: uv, p: p)
-        let pdf = self.pdf(wo: wo, wi: wi, uv: uv, p: p)
+        let albedo: Color = texture.get(uv: uv, p: p)
+        let pdf = pdf(wo: wo, wi: wi, uv: uv, p: p)
         let weight = (albedo / Float.pi) * cos / pdf
         
         return SampledDirection(weight: weight, wi: wi)

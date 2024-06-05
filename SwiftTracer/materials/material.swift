@@ -52,12 +52,17 @@ struct AnyMaterial: Decodable {
         self.name = try container.decode(String.self, forKey: .name)
         switch type {
         case .diffuse:
-            let texture = try container.decodeIfPresent(Texture.self, forKey: .albedo) ?? .constant(value: Color(repeating: 1))
+            let texture = try container.decodeIfPresent(Texture.self, forKey: .albedo) ?? .constant(value: Color(repeating: 0.8))
             self.wrapped = Diffuse(texture: texture)
         case .metal:
             let texture = try container.decodeIfPresent(Texture.self, forKey: .ks) ?? .constant(value: Color(repeating: 1))
-            let roughness = try container.decode(Texture.self, forKey: .roughness)
-            self.wrapped = Metal(texture: texture, roughness: roughness)
+            do {
+                let roughness = try container.decode(Float.self, forKey: .roughness)
+                self.wrapped = Metal(texture: texture, roughness: .constant(value: Color(repeating: roughness)))
+            } catch {
+                let roughness = try container.decode(Texture.self, forKey: .roughness)
+                self.wrapped = Metal(texture: texture, roughness: roughness)
+            }
         case .dielectric:
             let texture = try container.decodeIfPresent(Texture.self, forKey: .ks) ?? .constant(value: Color(repeating: 1))
             let etaInterior = try container.decodeIfPresent(Float.self, forKey: .etaInt) ?? 1.5

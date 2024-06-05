@@ -13,6 +13,11 @@ enum Texture {
     case checkerboard2d(color1: Color, color2: Color, uvScale: Vec2, uvOffset: Vec2)
     case checkerboard3d(color1: Color, color2: Color, transform: Transform)
     
+    func get(uv: Vec2, p: Point3) -> Float {
+        let c: Color = get(uv: uv, p: p)
+        return (c.x + c.y + c.z) / 3
+    }
+
     func get(uv: Vec2, p: Point3) -> Color {
         let uv = Vec2(uv.x.modulo(1.0), uv.y.modulo(1.0))
         switch self {

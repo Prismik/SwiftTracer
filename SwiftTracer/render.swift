@@ -32,9 +32,9 @@ enum Render {
         print(output)
         print(String(spp))
         
-        let example = Scene.Example.cornelBox.create()
-        let decoder = JSONDecoder()
         do {
+            let example = try Scene.Example.roughness.create()
+            let decoder = JSONDecoder()
             let scene = try decoder.decode(Scene.self, from: example)
             let integrator = PathIntegrator()
             let sampler = IndependantSampler()
