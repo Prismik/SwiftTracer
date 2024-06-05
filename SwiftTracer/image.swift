@@ -63,11 +63,11 @@ class Image {
     }
     
     init?(filename: String, bundle: Bundle = Bundle.main, subdir: String? = "assets") {
-        guard let url = bundle.url(forResource: filename, withExtension: "png", subdirectory: subdir) else { return nil }
+        guard let url = bundle.url(forResource: filename, withExtension: nil, subdirectory: subdir) else { return nil }
         guard let data = try? Data(contentsOf: url) else { return nil }
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         guard let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
-        let size = cgImage.height * cgImage.bytesPerRow
+        let size = cgImage.height * cgImage.width * 4
         let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)
         self.raw = Array2d(x: cgImage.width, y: cgImage.height, value: Color())
         self.pixels = malloc(size)
@@ -75,8 +75,8 @@ class Image {
             data: pixels,
             width: cgImage.width,
             height: cgImage.height,
-            bitsPerComponent: cgImage.bitsPerComponent,
-            bytesPerRow: cgImage.bytesPerRow,
+            bitsPerComponent: 8,
+            bytesPerRow: 4 * cgImage.width,
             space: colorSpace!,
             bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
         )
@@ -93,10 +93,10 @@ class Image {
         for x in 0 ..< context.width {
             for y in 0 ..< context.height {
                 let i = context.bytesPerRow * y + MemoryLayout<BitmapPixel>.size * x
-                let r = mem[i] / 255
-                let g = mem[i + 1] / 255
-                let b = mem[i + 2] / 255
-                raw.set(value: Color(Float(r), Float(g), Float(b)).toLinearRGB(), x, y)
+                let r = Float(mem[i]) / 255
+                let g = Float(mem[i + 1]) / 255
+                let b = Float(mem[i + 2]) / 255
+                raw.set(value: Color(r, g, b).toLinearRGB(), x, y)
             }
         }
         

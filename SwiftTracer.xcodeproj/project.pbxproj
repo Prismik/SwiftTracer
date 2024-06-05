@@ -27,6 +27,10 @@
 		1999D0762C0FEF7200358201 /* xctest.png in Resources */ = {isa = PBXBuildFile; fileRef = 1999D0702C0FEC7700358201 /* xctest.png */; };
 		1999D0792C0FF68E00358201 /* roughness.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0772C0FF52100358201 /* roughness.json */; };
 		1999D07C2C1003A100358201 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 1999D07B2C1003A100358201 /* Progress */; };
+		1999D0812C100A6C00358201 /* checkerboardXY.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D07F2C100A1A00358201 /* checkerboardXY.json */; };
+		1999D0842C10E71E00358201 /* textures.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0822C10E61D00358201 /* textures.json */; };
+		1999D0892C10E8F500358201 /* sun.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0862C10E8EF00358201 /* sun.jpg */; };
+		1999D08A2C10E8F500358201 /* uv-texture.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0852C10E8EF00358201 /* uv-texture.png */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
@@ -76,6 +80,10 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				1999D0892C10E8F500358201 /* sun.jpg in CopyFiles */,
+				1999D08A2C10E8F500358201 /* uv-texture.png in CopyFiles */,
+				1999D0842C10E71E00358201 /* textures.json in CopyFiles */,
+				1999D0812C100A6C00358201 /* checkerboardXY.json in CopyFiles */,
 				1999D0792C0FF68E00358201 /* roughness.json in CopyFiles */,
 				1999D06C2C0FE16F00358201 /* threeSpheres.json in CopyFiles */,
 				1999D06D2C0FE16F00358201 /* teapot.json in CopyFiles */,
@@ -109,6 +117,10 @@
 		1999D06A2C0FE15200358201 /* cornelBox.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBox.json; sourceTree = "<group>"; };
 		1999D0702C0FEC7700358201 /* xctest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xctest.png; sourceTree = "<group>"; };
 		1999D0772C0FF52100358201 /* roughness.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = roughness.json; sourceTree = "<group>"; };
+		1999D07F2C100A1A00358201 /* checkerboardXY.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = checkerboardXY.json; sourceTree = "<group>"; };
+		1999D0822C10E61D00358201 /* textures.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = textures.json; sourceTree = "<group>"; };
+		1999D0852C10E8EF00358201 /* uv-texture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uv-texture.png"; sourceTree = "<group>"; };
+		1999D0862C10E8EF00358201 /* sun.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sun.jpg; sourceTree = "<group>"; };
 		19BBA7192BF7D32F00981204 /* transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transform.swift; sourceTree = "<group>"; };
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
 		19BBA71E2BF7D70800981204 /* mathError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathError.swift; sourceTree = "<group>"; };
@@ -192,6 +204,8 @@
 		1999D05D2C0FDED400358201 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				1999D0862C10E8EF00358201 /* sun.jpg */,
+				1999D0852C10E8EF00358201 /* uv-texture.png */,
 				1999D0702C0FEC7700358201 /* xctest.png */,
 			);
 			path = textures;
@@ -206,6 +220,8 @@
 				1999D0662C0FE10B00358201 /* triangle.json */,
 				1999D06A2C0FE15200358201 /* cornelBox.json */,
 				1999D0772C0FF52100358201 /* roughness.json */,
+				1999D07F2C100A1A00358201 /* checkerboardXY.json */,
+				1999D0822C10E61D00358201 /* textures.json */,
 			);
 			path = scenes;
 			sourceTree = "<group>";

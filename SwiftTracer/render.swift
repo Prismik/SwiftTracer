@@ -33,7 +33,7 @@ enum Render {
         print(String(spp))
         
         do {
-            let example = try Scene.Example.roughness.create()
+            let example = try Scene.Example.textures.create()
             let decoder = JSONDecoder()
             let scene = try decoder.decode(Scene.self, from: example)
             let integrator = PathIntegrator()

@@ -96,15 +96,13 @@ final class Sphere: Shape {
     }
     
     private func uv(center: Point3, p: Point3) -> Vec2 {
-        let v = p - center
-        var phi = atan2(v.y, v.x)
-        let theta = (v.z / radius).acos()
-        if phi < 0 {
-            phi += 2 * Float.pi
-        }
-        
-        let invPi = 1 / Float.pi
-        return Vec2(phi * (0.8 * invPi), theta * invPi)
+        let v = (p - center).normalized()
+        let theta = atan2(v.y, v.x)
+        let phi = v.z.acos()
+        return Vec2(
+            (.pi + theta) / (2 * .pi),
+            (.pi - phi) / .pi
+        )
     }
     
     private func sampleSpherical(p: Point3, sample: Vec2) -> EmitterSample {

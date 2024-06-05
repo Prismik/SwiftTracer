@@ -42,6 +42,26 @@ private struct Block {
     var rayCount: Int
 }
 
+private struct Printer: ProgressBarPrinter {
+    var lastPrintedTime = 0.0
+
+    init() {
+        // the cursor is moved up before printing the progress bar.
+        // have to move the cursor down one line initially.
+        print("")
+    }
+    
+    mutating func display(_ progressBar: ProgressBar) {
+        var tv = timeval()
+        gettimeofday(&tv, nil)
+        let currentTime = Double(tv.tv_sec) + Double(tv.tv_usec) / 1000000
+        if (currentTime - lastPrintedTime > 0.1 || progressBar.index == progressBar.count) {
+            print(progressBar.value)
+            lastPrintedTime = currentTime
+        }
+    }
+}
+
 func render<T: SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler) -> Array2d<Color> {
     print("Integrator preprocessing ...")
     integrator.preprocess(scene: scene, sampler: sampler)
@@ -52,7 +72,7 @@ func render<T: SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler)
     gcd.enter()
     Task {
         defer { gcd.leave() }
-        var progress = ProgressBar(count: Int(scene.camera.resolution.x) / 32 * Int(scene.camera.resolution.y) / 32)
+        var progress = ProgressBar(count: Int(scene.camera.resolution.x) / 32 * Int(scene.camera.resolution.y) / 32, printer: Printer())
         let blocks = await renderBlocks(blockSize: 32, scene: scene, integrator: integrator, sampler: sampler) {
             progress.next()
         }

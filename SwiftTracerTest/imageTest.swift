@@ -36,7 +36,7 @@ final class ImageTest: XCTestCase {
     
     func testSimpleLoad() throws {
         let bundle = Bundle(for: type(of: self))
-        let image = Image(filename: "xctest", bundle: bundle, subdir: nil)
+        let image = Image(filename: "xctest.png", bundle: bundle, subdir: nil)
         let unwrapped = try XCTUnwrap(image)
         
         let data = unwrapped.read()

@@ -36,6 +36,7 @@ extension Scene: Decodable {
     }
 
     convenience init(from decoder: Decoder) throws {
+        // TODO Add sampler decoding
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let camera = try container.decode(Camera.self, forKey: .camera)
         let background = try container.decodeIfPresent(Color.self, forKey: .background) ?? Color(1, 1, 1)
@@ -86,6 +87,8 @@ extension Scene {
         case triangle
         case cornelBox
         case roughness
+        case checkerboard = "checkerboardXY"
+        case textures
 
         func create() throws -> Data {
             guard let url = Bundle.main.url(forResource: self.rawValue, withExtension: "json", subdirectory: "assets") else {

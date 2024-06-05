@@ -11,7 +11,6 @@ enum Texture {
     case constant(value: Color)
     case textureMap(values: Array2d<Color>, scale: Float, uvScale: Vec2, uvOffset: Vec2)
     case checkerboard2d(color1: Color, color2: Color, uvScale: Vec2, uvOffset: Vec2)
-    case checkerboard3d(color1: Color, color2: Color, transform: Transform)
     
     func get(uv: Vec2, p: Point3) -> Float {
         let c: Color = get(uv: uv, p: p)
@@ -30,14 +29,6 @@ enum Texture {
             let a = floor(scaled.x)
             let b = floor(scaled.y)
             return (a + b).isPair
-                ? color1
-                : color2
-        case let .checkerboard3d(color1, color2, transform):
-            let p = transform.point(p)
-            let a = floor(p.x.abs())
-            let b = floor(p.y.abs())
-            let c = floor(p.z.abs())
-            return (a + b + c).isPair
                 ? color1
                 : color2
         }
@@ -72,7 +63,6 @@ extension Texture: Decodable {
         case constant
         case texture
         case checkerboardXY = "checkerboard2d"
-        case checkerboardXYZ = "checkerboard3d"
     }
 
 
@@ -82,14 +72,13 @@ extension Texture: Decodable {
         
         // Texture
         case scale
-        case uvScale
-        case uvOffset
+        case uvScale = "uv_scale"
+        case uvOffset = "uv_offset"
         case vflip
 
         // Checkerboards
         case color1
         case color2
-        case transform
     }
     
     init(from decoder: Decoder) throws {
@@ -100,26 +89,21 @@ extension Texture: Decodable {
             case .texture:
                 // TODO File resolver
                 let file = try container.decode(String.self, forKey: .filename)
-                let scale = try container.decode(Float.self, forKey: .scale)
-                let uvScale = try container.decode(Vec2.self, forKey: .uvScale)
-                let uvOffset = try container.decode(Vec2.self, forKey: .uvOffset)
+                let scale = try container.decodeIfPresent(Float.self, forKey: .scale) ?? 1.0
+                let uvScale = try container.decodeIfPresent(Vec2.self, forKey: .uvScale) ?? Vec2(repeating: 1)
+                let uvOffset = try container.decodeIfPresent(Vec2.self, forKey: .uvOffset) ?? Vec2()
                 let vflip = try container.decodeIfPresent(Bool.self, forKey: .vflip) ?? true
-                guard var values = Image(filename: file)?.read() else { fatalError("Error while reading image \(file)") }
+                guard let values = Image(filename: file)?.read() else { fatalError("Error while reading image \(file)") }
                 if vflip {
                     values.flipVertically()
                 }
                 self = .textureMap(values: values, scale: scale, uvScale: uvScale, uvOffset: uvOffset)
             case .checkerboardXY:
-                let color1 = try container.decode(Color.self, forKey: .color1)
-                let color2 = try container.decode(Color.self, forKey: .color2)
-                let scale = try container.decode(Vec2.self, forKey: .uvScale)
-                let offset = try container.decode(Vec2.self, forKey: .uvOffset)
+                let color1 = try container.decodeIfPresent(Color.self, forKey: .color1) ?? Color()
+                let color2 = try container.decodeIfPresent(Color.self, forKey: .color2) ?? Color(repeating: 1)
+                let scale = try container.decodeIfPresent(Vec2.self, forKey: .uvScale) ?? Vec2(repeating: 1)
+                let offset = try container.decodeIfPresent(Vec2.self, forKey: .uvOffset) ?? Vec2()
                 self = .checkerboard2d(color1: color1, color2: color2, uvScale: scale, uvOffset: offset)
-            case .checkerboardXYZ:
-                let color1 = try container.decode(Color.self, forKey: .color1)
-                let color2 = try container.decode(Color.self, forKey: .color2)
-                let transform = try container.decode(Transform.self, forKey: .transform)
-                self = .checkerboard3d(color1: color1, color2: color2, transform: transform)
             default:
                 throw DecodingError.dataCorrupted(
                     DecodingError.Context(codingPath: [CodingKeys.type], debugDescription: "Invalid texture type")
