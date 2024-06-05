@@ -26,6 +26,7 @@
 		1999D06F2C0FE16F00358201 /* cornelBox.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D06A2C0FE15200358201 /* cornelBox.json */; };
 		1999D0762C0FEF7200358201 /* xctest.png in Resources */ = {isa = PBXBuildFile; fileRef = 1999D0702C0FEC7700358201 /* xctest.png */; };
 		1999D0792C0FF68E00358201 /* roughness.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0772C0FF52100358201 /* roughness.json */; };
+		1999D07C2C1003A100358201 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 1999D07B2C1003A100358201 /* Progress */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
@@ -159,6 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */,
+				1999D07C2C1003A100358201 /* Progress in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,6 +389,7 @@
 			name = SwiftTracer;
 			packageProductDependencies = (
 				19E808382B2B698900A37D37 /* ArgumentParser */,
+				1999D07B2C1003A100358201 /* Progress */,
 			);
 			productName = SwiftTracer;
 			productReference = 19E8082B2B2B664400A37D37 /* SwiftTracer */;
@@ -425,6 +428,7 @@
 			mainGroup = 19E808222B2B664400A37D37;
 			packageReferences = (
 				19E808372B2B698900A37D37 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+				1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */,
 			);
 			productRefGroup = 19E8082C2B2B664400A37D37 /* Products */;
 			projectDirPath = "";
@@ -734,6 +738,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jkandzi/Progress.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
 		19E808372B2B698900A37D37 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
@@ -745,6 +757,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1999D07B2C1003A100358201 /* Progress */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */;
+			productName = Progress;
+		};
 		19E808382B2B698900A37D37 /* ArgumentParser */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 19E808372B2B698900A37D37 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;

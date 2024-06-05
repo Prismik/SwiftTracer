@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Progress
 
 enum IntegratorType {
     case Path
@@ -51,8 +52,10 @@ func render<T: SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler)
     gcd.enter()
     Task {
         defer { gcd.leave() }
-
-        let blocks = await renderBlocks(blockSize: 32, scene: scene, integrator: integrator, sampler: sampler)
+        var progress = ProgressBar(count: Int(scene.camera.resolution.x) / 32 * Int(scene.camera.resolution.y) / 32)
+        let blocks = await renderBlocks(blockSize: 32, scene: scene, integrator: integrator, sampler: sampler) {
+            progress.next()
+        }
         return assemble(renderBlocks: blocks, image: image)
     }
 
@@ -72,7 +75,7 @@ private func assemble(renderBlocks: [Block], image: Array2d<Color>) -> Array2d<C
     return image
 }
 
-private func renderBlocks(blockSize: Int = 32, scene: Scene, integrator: SamplerIntegrator, sampler: Sampler) async -> [Block] {
+private func renderBlocks(blockSize: Int = 32, scene: Scene, integrator: SamplerIntegrator, sampler: Sampler, increment: @escaping () -> Void) async -> [Block] {
     return await withTaskGroup(of: Block.self) { group in
         for x in stride(from: 0, to: Int(scene.camera.resolution.x), by: blockSize) {
             for y in stride(from: 0, to: Int(scene.camera.resolution.y), by: blockSize) {
@@ -82,6 +85,7 @@ private func renderBlocks(blockSize: Int = 32, scene: Scene, integrator: Sampler
                 )
                 
                 group.addTask {
+                    increment()
                     return renderMonteCarlo(scene: scene, integrator: integrator, size: size, x: x, y: y, sampler: sampler)
                 }
             }
