@@ -89,7 +89,8 @@ extension Scene {
         case roughness
         case checkerboard = "checkerboardXY"
         case textures
-
+        case blend
+        
         func create() throws -> Data {
             guard let url = Bundle.main.url(forResource: self.rawValue, withExtension: "json", subdirectory: "assets") else {
                 fatalError("Trying to load obj that does not exist")

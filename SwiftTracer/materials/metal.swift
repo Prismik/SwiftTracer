@@ -9,8 +9,6 @@ import Foundation
 
 final class Metal: Material {
     let hasEmission = false
-    let isMedia = false
-    let density: Float = 0
     let texture: Texture
     let roughness: Texture
 

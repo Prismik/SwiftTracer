@@ -31,6 +31,13 @@
 		1999D0842C10E71E00358201 /* textures.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0822C10E61D00358201 /* textures.json */; };
 		1999D0892C10E8F500358201 /* sun.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0862C10E8EF00358201 /* sun.jpg */; };
 		1999D08A2C10E8F500358201 /* uv-texture.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0852C10E8EF00358201 /* uv-texture.png */; };
+		1999D08C2C10F37D00358201 /* blend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D08B2C10F37D00358201 /* blend.swift */; };
+		1999D0972C1246B700358201 /* blend.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D08D2C12443800358201 /* blend.json */; };
+		1999D0982C1246B700358201 /* chest_albedo.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0902C1246A600358201 /* chest_albedo.jpg */; };
+		1999D0992C1246B700358201 /* chest_blend.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0912C1246A600358201 /* chest_blend.exr */; };
+		1999D09A2C1246B700358201 /* chest_normal.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D08F2C1246A600358201 /* chest_normal.exr */; };
+		1999D09B2C1246B700358201 /* chest_rough.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0922C1246A600358201 /* chest_rough.exr */; };
+		1999D09E2C12490400358201 /* chest.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D09C2C1248F800358201 /* chest.obj */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
@@ -80,6 +87,12 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				1999D09E2C12490400358201 /* chest.obj in CopyFiles */,
+				1999D0972C1246B700358201 /* blend.json in CopyFiles */,
+				1999D0982C1246B700358201 /* chest_albedo.jpg in CopyFiles */,
+				1999D0992C1246B700358201 /* chest_blend.exr in CopyFiles */,
+				1999D09A2C1246B700358201 /* chest_normal.exr in CopyFiles */,
+				1999D09B2C1246B700358201 /* chest_rough.exr in CopyFiles */,
 				1999D0892C10E8F500358201 /* sun.jpg in CopyFiles */,
 				1999D08A2C10E8F500358201 /* uv-texture.png in CopyFiles */,
 				1999D0842C10E71E00358201 /* textures.json in CopyFiles */,
@@ -121,6 +134,13 @@
 		1999D0822C10E61D00358201 /* textures.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = textures.json; sourceTree = "<group>"; };
 		1999D0852C10E8EF00358201 /* uv-texture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uv-texture.png"; sourceTree = "<group>"; };
 		1999D0862C10E8EF00358201 /* sun.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sun.jpg; sourceTree = "<group>"; };
+		1999D08B2C10F37D00358201 /* blend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blend.swift; sourceTree = "<group>"; };
+		1999D08D2C12443800358201 /* blend.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blend.json; sourceTree = "<group>"; };
+		1999D08F2C1246A600358201 /* chest_normal.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = chest_normal.exr; sourceTree = "<group>"; };
+		1999D0902C1246A600358201 /* chest_albedo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = chest_albedo.jpg; sourceTree = "<group>"; };
+		1999D0912C1246A600358201 /* chest_blend.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = chest_blend.exr; sourceTree = "<group>"; };
+		1999D0922C1246A600358201 /* chest_rough.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = chest_rough.exr; sourceTree = "<group>"; };
+		1999D09C2C1248F800358201 /* chest.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = chest.obj; sourceTree = "<group>"; };
 		19BBA7192BF7D32F00981204 /* transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transform.swift; sourceTree = "<group>"; };
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
 		19BBA71E2BF7D70800981204 /* mathError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathError.swift; sourceTree = "<group>"; };
@@ -192,6 +212,7 @@
 		1999D05C2C0FDEC600358201 /* mesh */ = {
 			isa = PBXGroup;
 			children = (
+				1999D09C2C1248F800358201 /* chest.obj */,
 				1999D0572C0F8A3600358201 /* dragon.obj */,
 				1999D0532C0F8A3100358201 /* buddha.obj */,
 				1999D0542C0F8A3100358201 /* bunny.obj */,
@@ -204,6 +225,10 @@
 		1999D05D2C0FDED400358201 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				1999D0902C1246A600358201 /* chest_albedo.jpg */,
+				1999D0912C1246A600358201 /* chest_blend.exr */,
+				1999D08F2C1246A600358201 /* chest_normal.exr */,
+				1999D0922C1246A600358201 /* chest_rough.exr */,
 				1999D0862C10E8EF00358201 /* sun.jpg */,
 				1999D0852C10E8EF00358201 /* uv-texture.png */,
 				1999D0702C0FEC7700358201 /* xctest.png */,
@@ -222,6 +247,7 @@
 				1999D0772C0FF52100358201 /* roughness.json */,
 				1999D07F2C100A1A00358201 /* checkerboardXY.json */,
 				1999D0822C10E61D00358201 /* textures.json */,
+				1999D08D2C12443800358201 /* blend.json */,
 			);
 			path = scenes;
 			sourceTree = "<group>";
@@ -332,6 +358,7 @@
 				19E8083F2B2B6E7000A37D37 /* diffuse.swift */,
 				19C0A7102C08EECE00A7A0FD /* metal.swift */,
 				19C0A7132C08F5EE00A7A0FD /* dielectric.swift */,
+				1999D08B2C10F37D00358201 /* blend.swift */,
 			);
 			path = materials;
 			sourceTree = "<group>";
@@ -502,6 +529,7 @@
 				19EFB3C42C01085F005CC488 /* independant.swift in Sources */,
 				19E808442B2B728C00A37D37 /* sphere.swift in Sources */,
 				19C0A7182C08FB1B00A7A0FD /* diffuseLight.swift in Sources */,
+				1999D08C2C10F37D00358201 /* blend.swift in Sources */,
 				19E808462B2B729700A37D37 /* shape.swift in Sources */,
 				19BBA7272BF97AAA00981204 /* integrator.swift in Sources */,
 				19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */,

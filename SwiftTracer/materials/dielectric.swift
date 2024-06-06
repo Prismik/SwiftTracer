@@ -60,8 +60,6 @@ final class Dielectric: Material {
     }
 
     let hasEmission = false
-    let isMedia = false
-    let density: Float = 0
     let texture: Texture
     let etaInterior: Float
     let etaExterior: Float

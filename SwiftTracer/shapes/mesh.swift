@@ -15,15 +15,15 @@ final class Mesh {
     var hasUvs: Bool { return !uvs.isEmpty }
     var hasTangents: Bool { return !tangents.isEmpty }
     
-    let facePositionIndexes: [Vec3]
-    let faceNormalIndexes: [Vec3]
-    let faceUvIndexes: [Vec3]
-    let faceTangentIndexes: [Vec3]
+    private(set) var facePositionIndexes: [Vec3] = []
+    private(set) var faceNormalIndexes: [Vec3] = []
+    private(set) var faceUvIndexes: [Vec3] = []
+    private(set) var faceTangentIndexes: [Vec3] = []
 
-    let positions: [Point3]
-    let normals: [Vec3]
-    let uvs: [Vec2]
-    let tangents: [Vec3]
+    private(set) var positions: [Point3] = []
+    private(set) var normals: [Vec3] = []
+    private(set) var uvs: [Vec2] = []
+    private(set) var tangents: [Vec3] = []
 
     init(positions: [Vec3], normals: [Vec3]) {
         self.positions = positions
@@ -37,15 +37,12 @@ final class Mesh {
     }
 
     init(filename: String, transform: Transform) {
-        tangents = []
-        faceTangentIndexes = []
-        
         var reader = tinyobj.ObjReader()
         let config = tinyobj.ObjReaderConfig()
         reader.ParseFromFile(std.string(filename), config)
         let attributes = reader.attrib_
         let shapes = reader.shapes_
-        
+
         self.positions = stride(from: 0, through: attributes.vertices.size() - 1, by: 3).map { i in
             let x = attributes.vertices[i]
             let y = attributes.vertices[i + 1]
@@ -66,36 +63,36 @@ final class Mesh {
             return Vec2(u, v)
         }
 
-        var facePositionIdx: [Vec3] = []
-        var faceNormalIdx: [Vec3] = []
-        var faceUvIdx: [Vec3] = []
         for s in shapes {
-            let offset = facePositionIdx.count
-            for face in stride(from: 0, through: s.mesh.indices.count - 1, by: 3) {
-                let subset = s.mesh.indices[face ..< face + 3]
-                let v = Vec3(
-                    Float(subset[0 + face].vertex_index) + Float(offset),
-                    Float(subset[1 + face].vertex_index) + Float(offset),
-                    Float(subset[2 + face].vertex_index) + Float(offset)
-                )
-                facePositionIdx.append(v)
-                let n = Vec3(
-                    Float(subset[0 + face].normal_index) + Float(offset),
-                    Float(subset[1 + face].normal_index) + Float(offset),
-                    Float(subset[2 + face].normal_index) + Float(offset)
-                )
-                faceNormalIdx.append(n)
-                let uv = Vec3(
-                    Float(subset[0 + face].texcoord_index) + Float(offset),
-                    Float(subset[1 + face].texcoord_index) + Float(offset),
-                    Float(subset[2 + face].texcoord_index) + Float(offset)
-                )
-                faceUvIdx.append(uv)
+            var offset = 0
+            for nfv in s.mesh.num_face_vertices {
+                var newIdxVertex: [Float] = []
+                var newIdxNormal: [Float] = []
+                var newIdxTexture: [Float] = []
+                for v in 0 ..< nfv {
+                    let idx = s.mesh.indices[offset + Int(v)]
+                    newIdxVertex.append(Float(idx.vertex_index))
+                    
+                    if idx.normal_index >= 0 {
+                        newIdxNormal.append(Float(idx.normal_index))
+                    }
+                    
+                    if idx.texcoord_index >= 0 {
+                        newIdxTexture.append(Float(idx.texcoord_index))
+                    }
+                }
+                
+                facePositionIndexes.append(Vec3(newIdxVertex[0], newIdxVertex[1], newIdxVertex[2]))
+                if !newIdxNormal.isEmpty {
+                    faceNormalIndexes.append(Vec3(newIdxNormal[0], newIdxNormal[1], newIdxNormal[2]))
+                }
+                if !newIdxTexture.isEmpty {
+                    faceUvIndexes.append(Vec3(newIdxTexture[0], newIdxTexture[1], newIdxTexture[2]))
+                }
+                offset += Int(nfv)
             }
         }
-        self.facePositionIndexes = facePositionIdx
-        self.faceNormalIndexes = faceNormalIdx
-        self.faceUvIndexes = faceUvIdx
+
         print("Loaded: \(filename)")
     }
 }

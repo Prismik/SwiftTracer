@@ -102,7 +102,7 @@ final class Triangle: Shape {
         
         // TODO Tangents + Bitangents
         
-        return Intersection(t: t, p: p, n: n, uv: uv(coordinates: (1 - u, u, v)), material: mesh.material, shape: self)
+        return Intersection(t: t, p: p, n: n, uv: uv(coordinates: (1 - u - v, u, v)), material: mesh.material, shape: self)
     }
     
     func aabb() -> AABB {
@@ -134,7 +134,7 @@ final class Triangle: Shape {
             + u * p1
             + v * p2
         
-        return EmitterSample(y: y, n: n, uv: uv(coordinates: (1 - u, u, v)), pdf: pdfDirect(shape: self, p: p, y: y, n: n))
+        return EmitterSample(y: y, n: n, uv: uv(coordinates: (1 - u - v, u, v)), pdf: pdfDirect(shape: self, p: p, y: y, n: n))
     }
     
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {

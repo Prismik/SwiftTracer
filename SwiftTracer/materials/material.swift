@@ -10,6 +10,8 @@ import Foundation
 
 struct SampledDirection {
     let weight: Color
+    
+    /// Incident ray
     let wi: Vec3
 }
 
@@ -21,6 +23,7 @@ struct AnyMaterial: Decodable {
         case metal
         case dielectric
         case emitter = "diffuse_light"
+        case blend
     }
 
     enum CodingKeys: String, CodingKey {
@@ -41,6 +44,11 @@ struct AnyMaterial: Decodable {
         
         // Emitter
         case radiance
+        
+        // Blend
+        case alpha
+        case m1
+        case m2
     }
 
     let type: TypeIdentifier
@@ -49,7 +57,7 @@ struct AnyMaterial: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.type = try container.decode(TypeIdentifier.self, forKey: .type)
-        self.name = try container.decode(String.self, forKey: .name)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
         switch type {
         case .diffuse:
             let texture = try container.decodeIfPresent(Texture.self, forKey: .albedo) ?? .constant(value: Color(repeating: 0.8))
@@ -71,6 +79,11 @@ struct AnyMaterial: Decodable {
         case .emitter:
             let texture = try container.decodeIfPresent(Texture.self, forKey: .radiance) ?? .constant(value: Color(repeating: 1))
             self.wrapped = DiffuseLight(texture: texture)
+        case .blend:
+            let m1 = try container.decode(AnyMaterial.self, forKey: .m1)
+            let m2 = try container.decode(AnyMaterial.self, forKey: .m2)
+            let alpha = try container.decodeIfPresent(Texture.self, forKey: .alpha) ?? .constant(value: Color(repeating: 0.5))
+            self.wrapped = Blend(m1: m1.wrapped, m2: m2.wrapped, alpha: alpha)
         }
     }
 }
@@ -78,11 +91,10 @@ struct AnyMaterial: Decodable {
 protocol Material {
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection?
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color
+    /// Probability density function of the material
     func pdf(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Float
     func hasDelta(uv: Vec2, p: Point3) -> Bool
     func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color
     
     var hasEmission: Bool { get }
-    var isMedia: Bool { get }
-    var density: Float { get }
 }
