@@ -63,6 +63,7 @@ final class Dielectric: Material {
     let texture: Texture
     let etaInterior: Float
     let etaExterior: Float
+
     init(texture: Texture, etaInterior: Float, etaExterior: Float) {
         self.texture = texture
         self.etaInterior = etaInterior
@@ -70,7 +71,6 @@ final class Dielectric: Material {
     }
     
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection? {
-        let wo = wo.normalized()
         let r = Refraction(material: self, wo: wo)
         if r.exterior.sin > 1 { // reflect
             return SampledDirection(weight: texture.get(uv: uv, p: p), wi: r.reflect())

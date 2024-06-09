@@ -22,7 +22,6 @@ final class Blend: Material {
     }
 
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection? {
-        let wo = wo.normalized()
         guard wo.z >= 0 else { return nil }
         
         let a: Float = self.alpha.get(uv: uv, p: p)

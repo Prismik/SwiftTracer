@@ -10,12 +10,12 @@ import Foundation
 final class Diffuse: Material {
     let hasEmission = false
     let texture: Texture
-    init(texture: Texture) {
+
+    init(texture: Texture, bump: Texture? = nil) {
         self.texture = texture
     }
 
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection? {
-        let wo = wo.normalized()
         guard wo.z > 0 else { return nil }
         
         let wi = Sample.cosineHemisphere(sample: sample).normalized()

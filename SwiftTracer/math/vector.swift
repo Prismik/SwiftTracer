@@ -121,6 +121,15 @@ extension Point3 {
     func toHomogeneous() -> Vec4 {
         return Vec4(self.x, self.y, self.z, 1)
     }
+    
+    func visible(from other: Self, within scene: Scene) -> Bool {
+        var d = self - other
+        var dist = d.length
+        d /= dist
+        dist -= 0.0002 // epsilon
+        let r = Ray(origin: other, direction: d).with(max: dist)
+        return scene.hit(r: r) != nil
+    }
 }
 
 extension Color: SummableMultipliable {

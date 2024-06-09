@@ -134,7 +134,7 @@ final class Triangle: Shape {
             + u * p1
             + v * p2
         
-        return EmitterSample(y: y, n: n, uv: uv(coordinates: (1 - u - v, u, v)), pdf: pdfDirect(shape: self, p: p, y: y, n: n))
+        return EmitterSample(y: y, n: n, uv: uv(coordinates: (1 - u - v, u, v)), pdf: pdfDirect(shape: self, p: p, y: y, n: n), shape: self)
     }
     
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {

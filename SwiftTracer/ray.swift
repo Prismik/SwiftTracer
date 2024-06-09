@@ -40,6 +40,16 @@ class Ray {
         self.t = Distance(min: 0.0001, max: Float.greatestFiniteMagnitude)
     }
     
+    func with(min: Float) -> Self {
+        self.t = t.with(min: min)
+        return self
+    }
+
+    func with(max: Float) -> Self {
+        self.t = t.with(max: max)
+        return self
+    }
+
     func withinRange(min: Float, max: Float) -> Self {
         self.t = Distance(min: min, max: max)
         return self

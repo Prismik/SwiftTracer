@@ -82,7 +82,12 @@ extension Texture: Decodable {
     }
     
     init(from decoder: Decoder) throws {
-        do {
+        if let rawValueTexture = try? Texture.fromSingleValueRaw(decoder: decoder) {
+            self = rawValueTexture
+        } else if let rawFilenameTexture = try? Texture.fromSingleValueFilename(decoder: decoder) {
+            self = rawFilenameTexture
+        } else {
+            // Decode json object
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let type = try container.decode(TypeIdentifier.self, forKey: .type)
             switch type {
@@ -109,10 +114,31 @@ extension Texture: Decodable {
                     DecodingError.Context(codingPath: [CodingKeys.type], debugDescription: "Invalid texture type")
                 )
             }
-        } catch {
-            let container = try decoder.singleValueContainer()
-            self = .constant(value: try container.decode(Color.self))
         }
+    }
+    
+    /// Attempts decoding a texture as constant value using Float or Color decoding
+    private static func fromSingleValueRaw(decoder: Decoder) throws -> Texture {
+        let container = try decoder.singleValueContainer()
+        do {
+            let value = try container.decode(Float.self)
+            return .constant(value: Color(repeating: value))
+        } catch {
+            let value = try container.decode(Color.self)
+            return .constant(value: value)
+        }
+    }
+    
+    private static func fromSingleValueFilename(decoder: Decoder) throws -> Texture {
+        let container = try decoder.singleValueContainer()
+        let value = try container.decode(String.self)
+        return Texture.from(filename: value)
+    }
+    
+    private static func from(filename: String) -> Texture {
+        guard let values = Image(filename: filename)?.read() else { fatalError("Error while reading image \(filename)") }
+        values.flipVertically()
+        return .textureMap(values: values, scale: 1.0, uvScale: Vec2(repeating: 1), uvOffset: Vec2())
     }
 }
 

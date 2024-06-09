@@ -116,7 +116,8 @@ final class Sphere: Shape {
             y: y,
             n: n,
             uv: uv(center: center, p: p),
-            pdf: pdfDirect(shape: self, p: p, y: y, n: n)
+            pdf: pdfDirect(shape: self, p: p, y: y, n: n),
+            shape: self
         )
     }
     
@@ -129,7 +130,7 @@ final class Sphere: Shape {
         let uniform = Sample.cone(sample: sample, thetaMax: thetaMax)
         let frame = Frame(n: (center - p).normalized())
         if let hit = self.hit(r: Ray(origin: p, direction: frame.toWorld(v: uniform))) {
-            return EmitterSample(y: hit.p, n: hit.n, uv: uv(center: center, p: p), pdf: pdfSolidAngle(p: p))
+            return EmitterSample(y: hit.p, n: hit.n, uv: uv(center: center, p: p), pdf: pdfSolidAngle(p: p), shape: self)
         } else {
             fatalError("Something went wrong when sampling the sphere with solid angle!")
         }

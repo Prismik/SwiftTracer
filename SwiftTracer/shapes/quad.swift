@@ -59,7 +59,7 @@ final class Quad: Shape {
             0
         )
         y = transform.point(y)
-        return EmitterSample(y: y, n: n, uv: uv(p: p), pdf: pdfDirect(shape: self, p: p, y: y, n: n))
+        return EmitterSample(y: y, n: n, uv: uv(p: p), pdf: pdfDirect(shape: self, p: p, y: y, n: n), shape: self)
     }
     
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {

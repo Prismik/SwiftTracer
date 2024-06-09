@@ -38,6 +38,9 @@
 		1999D09A2C1246B700358201 /* chest_normal.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D08F2C1246A600358201 /* chest_normal.exr */; };
 		1999D09B2C1246B700358201 /* chest_rough.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0922C1246A600358201 /* chest_rough.exr */; };
 		1999D09E2C12490400358201 /* chest.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D09C2C1248F800358201 /* chest.obj */; };
+		1999D0A02C1361BB00358201 /* direct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D09F2C1361BB00358201 /* direct.swift */; };
+		1999D0A22C136D4100358201 /* direct.json in Resources */ = {isa = PBXBuildFile; fileRef = 1999D0A12C136D4100358201 /* direct.json */; };
+		1999D0A42C137BF900358201 /* normalMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0A32C137BF900358201 /* normalMap.swift */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
@@ -141,6 +144,9 @@
 		1999D0912C1246A600358201 /* chest_blend.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = chest_blend.exr; sourceTree = "<group>"; };
 		1999D0922C1246A600358201 /* chest_rough.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = chest_rough.exr; sourceTree = "<group>"; };
 		1999D09C2C1248F800358201 /* chest.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = chest.obj; sourceTree = "<group>"; };
+		1999D09F2C1361BB00358201 /* direct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = direct.swift; sourceTree = "<group>"; };
+		1999D0A12C136D4100358201 /* direct.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = direct.json; sourceTree = "<group>"; };
+		1999D0A32C137BF900358201 /* normalMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = normalMap.swift; sourceTree = "<group>"; };
 		19BBA7192BF7D32F00981204 /* transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transform.swift; sourceTree = "<group>"; };
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
 		19BBA71E2BF7D70800981204 /* mathError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathError.swift; sourceTree = "<group>"; };
@@ -248,6 +254,7 @@
 				1999D07F2C100A1A00358201 /* checkerboardXY.json */,
 				1999D0822C10E61D00358201 /* textures.json */,
 				1999D08D2C12443800358201 /* blend.json */,
+				1999D0A12C136D4100358201 /* direct.json */,
 			);
 			path = scenes;
 			sourceTree = "<group>";
@@ -359,6 +366,7 @@
 				19C0A7102C08EECE00A7A0FD /* metal.swift */,
 				19C0A7132C08F5EE00A7A0FD /* dielectric.swift */,
 				1999D08B2C10F37D00358201 /* blend.swift */,
+				1999D0A32C137BF900358201 /* normalMap.swift */,
 			);
 			path = materials;
 			sourceTree = "<group>";
@@ -383,6 +391,7 @@
 				19BBA7262BF97AAA00981204 /* integrator.swift */,
 				19EFB3CC2C03FDDF005CC488 /* normal.swift */,
 				1999D0512C0F853000358201 /* uv.swift */,
+				1999D09F2C1361BB00358201 /* direct.swift */,
 			);
 			path = integrators;
 			sourceTree = "<group>";
@@ -488,6 +497,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1999D0A22C136D4100358201 /* direct.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -541,6 +551,7 @@
 				19C0A7112C08EECE00A7A0FD /* metal.swift in Sources */,
 				196ECD582C0B80350052DEA6 /* mesh.swift in Sources */,
 				19E808482B2B730600A37D37 /* aabb.swift in Sources */,
+				1999D0A02C1361BB00358201 /* direct.swift in Sources */,
 				19BBA72D2BFBB48100981204 /* utils.swift in Sources */,
 				19E8082F2B2B664400A37D37 /* render.swift in Sources */,
 				19EFB3CD2C03FDDF005CC488 /* normal.swift in Sources */,
@@ -550,6 +561,7 @@
 				19EFB3BA2C00EBCF005CC488 /* quad.swift in Sources */,
 				19EFB3C62C010CB8005CC488 /* array2d.swift in Sources */,
 				19BBA7312BFC0C7100981204 /* texture.swift in Sources */,
+				1999D0A42C137BF900358201 /* normalMap.swift in Sources */,
 				193E42502BFE5EA300D96A37 /* camera.swift in Sources */,
 				19EFB3CB2C03B88B005CC488 /* image.swift in Sources */,
 				19BBA7232BF82CE800981204 /* ray.swift in Sources */,

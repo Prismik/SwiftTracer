@@ -411,7 +411,7 @@ extension BVH: Shape {
         let shape = shapes[idx]
         let e = shape.sampleDirect(p: p, sample: rng)
         let pdf = pdfDirect(shape: shape, p: p, y: e.y, n: e.n)
-        return EmitterSample(y: e.y, n: e.n, uv: e.uv, pdf: pdf)
+        return EmitterSample(y: e.y, n: e.n, uv: e.uv, pdf: pdf, shape: shape)
     }
     
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {

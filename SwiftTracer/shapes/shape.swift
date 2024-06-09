@@ -18,6 +18,7 @@ struct EmitterSample {
     let uv: Vec2
     /// Probability density (in solid angle)
     let pdf: Float
+    let shape: Shape
 }
 
 struct Intersection {
@@ -95,10 +96,17 @@ struct AnyShape: Decodable {
                 solidAngle: try container.decodeIfPresent(Bool.self, forKey: .solidAngle) ?? true
             )
         case .quad:
-            // TODO Support rectangle
-            let size = try container.decode(Float.self, forKey: .size)
+            let size: Vec2
+            do {
+                let value = try container.decode(Float.self, forKey: .size)
+                size = Vec2(value / 2, value / 2)
+            } catch {
+                let value = try container.decode(Vec2.self, forKey: .size)
+                size = value / 2
+            }
+
             self.wrapped = Quad(
-                halfSize: Vec2(size / 2, size / 2),
+                halfSize: size,
                 transform: transform
             )
         case .mesh:

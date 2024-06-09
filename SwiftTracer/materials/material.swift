@@ -24,12 +24,14 @@ struct AnyMaterial: Decodable {
         case dielectric
         case emitter = "diffuse_light"
         case blend
+        case normalMap = "normal_map"
     }
 
     enum CodingKeys: String, CodingKey {
         // Generic
         case type
         case name
+        case bump
 
         // Diffuse
         case albedo
@@ -49,6 +51,10 @@ struct AnyMaterial: Decodable {
         case alpha
         case m1
         case m2
+        
+        // Normal map
+        case material
+        case normals
     }
 
     let type: TypeIdentifier
@@ -58,6 +64,7 @@ struct AnyMaterial: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.type = try container.decode(TypeIdentifier.self, forKey: .type)
         self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+
         switch type {
         case .diffuse:
             let texture = try container.decodeIfPresent(Texture.self, forKey: .albedo) ?? .constant(value: Color(repeating: 0.8))
@@ -84,6 +91,10 @@ struct AnyMaterial: Decodable {
             let m2 = try container.decode(AnyMaterial.self, forKey: .m2)
             let alpha = try container.decodeIfPresent(Texture.self, forKey: .alpha) ?? .constant(value: Color(repeating: 0.5))
             self.wrapped = Blend(m1: m1.wrapped, m2: m2.wrapped, alpha: alpha)
+        case .normalMap:
+            let anyMaterial = try container.decode(AnyMaterial.self, forKey: .material)
+            let normals = try container.decode(Texture.self, forKey: .normals)
+            self.wrapped = NormalMap(material: anyMaterial.wrapped, normals: normals)
         }
     }
 }

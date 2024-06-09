@@ -50,7 +50,8 @@ final class ShapeGroup: Shape {
             y: e.y,
             n: e.n,
             uv: e.uv,
-            pdf: pdf
+            pdf: pdf,
+            shape: shape
         )
     }
     

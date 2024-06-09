@@ -24,6 +24,11 @@ final class Scene {
         self.background = background
         self.maxDepth = maxDepth
     }
+    
+    func hit(r: Ray) -> Intersection? {
+        Scene.NB_TRACED_RAYS += 1
+        return root.hit(r: r)
+    }
 }
 
 extension Scene: Decodable {
@@ -71,11 +76,6 @@ extension Scene: Decodable {
             background: background,
             maxDepth: maxDepth
         )
-    }
-    
-    func hit(r: Ray) -> Intersection? {
-        Scene.NB_TRACED_RAYS += 1
-        return root.hit(r: r)
     }
 }
 
