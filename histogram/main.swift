@@ -24,8 +24,8 @@ struct Direction: Decodable {
         do {
             self.wo = try container.decode(Vec3.self, forKey: .wo)
         } catch {
-            let theta = try container.decode(Float.self, forKey: .theta)
-            let phi = try container.decode(Float.self, forKey: .phi)
+            let theta = try container.decode(Float.self, forKey: .theta).toRadians()
+            let phi = try container.decode(Float.self, forKey: .phi).toRadians()
             self.wo = Vec3(
                 theta.sin() * phi.cos(),
                 theta.sin() * phi.sin(),
