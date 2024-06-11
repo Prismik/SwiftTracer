@@ -28,8 +28,6 @@ final class Diffuse: Material {
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {
-        let wo = wo.normalized()
-        let wi = wi.normalized()
         guard wo.z >= 0 && wi.z >= 0 else { return Color() }
         
         let cos = wi.dot(Vec3.unit(.z))

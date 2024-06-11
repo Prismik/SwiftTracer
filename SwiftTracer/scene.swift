@@ -90,6 +90,7 @@ extension Scene {
         case checkerboard = "checkerboardXY"
         case textures
         case blend
+        case direct
         
         func create() throws -> Data {
             guard let url = Bundle.main.url(forResource: self.rawValue, withExtension: "json", subdirectory: "assets") else {

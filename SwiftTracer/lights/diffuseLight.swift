@@ -10,8 +10,6 @@ import Foundation
 // TODO Check how pbrt handles this and modify code accordingly
 final class DiffuseLight: Material {
     let hasEmission = true
-    let isMedia = false
-    let density: Float = 0
     let texture: Texture
     
     init(texture: Texture) {

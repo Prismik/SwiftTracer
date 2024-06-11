@@ -19,9 +19,19 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>histogram.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>1999D0AE2C1797A000358201</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>19BBA7372BFD531B00981204</key>
 		<dict>
 			<key>primary</key>

@@ -21,7 +21,7 @@ extension PathIntegrator: SamplerIntegrator {
 
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
         var depth = 0
-        var throughput = Color(1, 1, 1)
+        var throughput = Color(repeating: 1)
         var currentRay = ray
         while depth != maxDepth {
             depth += 1
@@ -30,7 +30,7 @@ extension PathIntegrator: SamplerIntegrator {
             }
             if let intersection = scene.hit(r: currentRay) {
                 let frame = Frame(n: intersection.n)
-                let wo = frame.toLocal(v: -currentRay.d)
+                let wo = frame.toLocal(v: -currentRay.d).normalized()
                 if let direction = intersection.material.sample(
                     wo: wo,
                     uv: intersection.uv,

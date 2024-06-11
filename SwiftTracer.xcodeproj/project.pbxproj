@@ -39,8 +39,41 @@
 		1999D09B2C1246B700358201 /* chest_rough.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0922C1246A600358201 /* chest_rough.exr */; };
 		1999D09E2C12490400358201 /* chest.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D09C2C1248F800358201 /* chest.obj */; };
 		1999D0A02C1361BB00358201 /* direct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D09F2C1361BB00358201 /* direct.swift */; };
-		1999D0A22C136D4100358201 /* direct.json in Resources */ = {isa = PBXBuildFile; fileRef = 1999D0A12C136D4100358201 /* direct.json */; };
 		1999D0A42C137BF900358201 /* normalMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0A32C137BF900358201 /* normalMap.swift */; };
+		1999D0A62C1615EE00358201 /* direct.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0A12C136D4100358201 /* direct.json */; };
+		1999D0A72C1615EE00358201 /* metal_normals.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0A52C1615E300358201 /* metal_normals.exr */; };
+		1999D0B22C1797A000358201 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0B12C1797A000358201 /* main.swift */; };
+		1999D0B72C1797D400358201 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72C2BFBB48100981204 /* utils.swift */; };
+		1999D0B82C1797DC00358201 /* array2d.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C52C010CB8005CC488 /* array2d.swift */; };
+		1999D0BB2C1798FA00358201 /* metal.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0BA2C17987F00358201 /* metal.json */; };
+		1999D0BC2C17996800358201 /* vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808412B2B6F2600A37D37 /* vector.swift */; };
+		1999D0BD2C179E8600358201 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
+		1999D0BE2C179F1B00358201 /* sampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C12C010833005CC488 /* sampler.swift */; };
+		1999D0BF2C179F8E00358201 /* independant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C32C01085F005CC488 /* independant.swift */; };
+		1999D0C02C17A05500358201 /* scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7322BFD4F0000981204 /* scene.swift */; };
+		1999D0C12C17A06000358201 /* shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808452B2B729700A37D37 /* shape.swift */; };
+		1999D0C22C17A06500358201 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
+		1999D0C32C17A07000358201 /* aabb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808472B2B730600A37D37 /* aabb.swift */; };
+		1999D0C42C17A07500358201 /* ray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7222BF82CE800981204 /* ray.swift */; };
+		1999D0C52C17A07D00358201 /* shapeGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3BD2C00F63E005CC488 /* shapeGroup.swift */; };
+		1999D0C62C17A08100358201 /* bvh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A70E2C06AA8400A7A0FD /* bvh.swift */; };
+		1999D0C72C17A08900358201 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
+		1999D0C82C17A08E00358201 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
+		1999D0C92C17A09400358201 /* sphere.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808432B2B728C00A37D37 /* sphere.swift */; };
+		1999D0CA2C17A09C00358201 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
+		1999D0CB2C17A0A300358201 /* quad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3B92C00EBCF005CC488 /* quad.swift */; };
+		1999D0CC2C17A0A600358201 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
+		1999D0CD2C17A0CC00358201 /* sampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72E2BFC089A00981204 /* sampling.swift */; };
+		1999D0CE2C17A0D900358201 /* texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7302BFC0C7100981204 /* texture.swift */; };
+		1999D0CF2C17A0E200358201 /* diffuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083F2B2B6E7000A37D37 /* diffuse.swift */; };
+		1999D0D02C17A0E500358201 /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
+		1999D0D12C17A0EA00358201 /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
+		1999D0D22C17A10600358201 /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */; };
+		1999D0D32C17A11600358201 /* diffuseLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */; };
+		1999D0D42C17A11D00358201 /* normalMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0A32C137BF900358201 /* normalMap.swift */; };
+		1999D0D52C17A12200358201 /* blend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D08B2C10F37D00358201 /* blend.swift */; };
+		1999D0D62C17A24B00358201 /* image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CA2C03B88B005CC488 /* image.swift */; };
+		1999D0D92C17AC2F00358201 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 1999D0D82C17AC2F00358201 /* Progress */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
@@ -84,12 +117,24 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		1999D0AD2C1797A000358201 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = assets;
+			dstSubfolderSpec = 7;
+			files = (
+				1999D0BB2C1798FA00358201 /* metal.json in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		19E808292B2B664400A37D37 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				1999D0A62C1615EE00358201 /* direct.json in CopyFiles */,
+				1999D0A72C1615EE00358201 /* metal_normals.exr in CopyFiles */,
 				1999D09E2C12490400358201 /* chest.obj in CopyFiles */,
 				1999D0972C1246B700358201 /* blend.json in CopyFiles */,
 				1999D0982C1246B700358201 /* chest_albedo.jpg in CopyFiles */,
@@ -147,6 +192,10 @@
 		1999D09F2C1361BB00358201 /* direct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = direct.swift; sourceTree = "<group>"; };
 		1999D0A12C136D4100358201 /* direct.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = direct.json; sourceTree = "<group>"; };
 		1999D0A32C137BF900358201 /* normalMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = normalMap.swift; sourceTree = "<group>"; };
+		1999D0A52C1615E300358201 /* metal_normals.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = metal_normals.exr; sourceTree = "<group>"; };
+		1999D0AF2C1797A000358201 /* histogram */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = histogram; sourceTree = BUILT_PRODUCTS_DIR; };
+		1999D0B12C1797A000358201 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		1999D0BA2C17987F00358201 /* metal.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = metal.json; sourceTree = "<group>"; };
 		19BBA7192BF7D32F00981204 /* transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transform.swift; sourceTree = "<group>"; };
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
 		19BBA71E2BF7D70800981204 /* mathError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathError.swift; sourceTree = "<group>"; };
@@ -186,6 +235,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1999D0AC2C1797A000358201 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1999D0D92C17AC2F00358201 /* Progress in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		19BBA7352BFD531B00981204 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -231,6 +288,7 @@
 		1999D05D2C0FDED400358201 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				1999D0A52C1615E300358201 /* metal_normals.exr */,
 				1999D0902C1246A600358201 /* chest_albedo.jpg */,
 				1999D0912C1246A600358201 /* chest_blend.exr */,
 				1999D08F2C1246A600358201 /* chest_normal.exr */,
@@ -257,6 +315,30 @@
 				1999D0A12C136D4100358201 /* direct.json */,
 			);
 			path = scenes;
+			sourceTree = "<group>";
+		};
+		1999D0B02C1797A000358201 /* histogram */ = {
+			isa = PBXGroup;
+			children = (
+				1999D0B92C17987600358201 /* assets */,
+				1999D0B12C1797A000358201 /* main.swift */,
+			);
+			path = histogram;
+			sourceTree = "<group>";
+		};
+		1999D0B92C17987600358201 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				1999D0BA2C17987F00358201 /* metal.json */,
+			);
+			path = assets;
+			sourceTree = "<group>";
+		};
+		1999D0D72C17AC2F00358201 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		19BBA71B2BF7D35F00981204 /* math */ = {
@@ -320,7 +402,9 @@
 			children = (
 				19E8082D2B2B664400A37D37 /* SwiftTracer */,
 				19BBA7392BFD531B00981204 /* SwiftTracerTest */,
+				1999D0B02C1797A000358201 /* histogram */,
 				19E8082C2B2B664400A37D37 /* Products */,
+				1999D0D72C17AC2F00358201 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -329,6 +413,7 @@
 			children = (
 				19E8082B2B2B664400A37D37 /* SwiftTracer */,
 				19BBA7382BFD531B00981204 /* SwiftTracerTest.xctest */,
+				1999D0AF2C1797A000358201 /* histogram */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -345,8 +430,8 @@
 				19E8083C2B2B6DCA00A37D37 /* integrators */,
 				19E8083B2B2B6DC300A37D37 /* shapes */,
 				19E8083A2B2B6D9B00A37D37 /* materials */,
-				19E8082E2B2B664400A37D37 /* render.swift */,
 				19E808472B2B730600A37D37 /* aabb.swift */,
+				19E8082E2B2B664400A37D37 /* render.swift */,
 				19BBA7192BF7D32F00981204 /* transform.swift */,
 				19BBA7222BF82CE800981204 /* ray.swift */,
 				19BBA7302BFC0C7100981204 /* texture.swift */,
@@ -408,6 +493,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1999D0AE2C1797A000358201 /* histogram */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1999D0B32C1797A000358201 /* Build configuration list for PBXNativeTarget "histogram" */;
+			buildPhases = (
+				1999D0AB2C1797A000358201 /* Sources */,
+				1999D0AC2C1797A000358201 /* Frameworks */,
+				1999D0AD2C1797A000358201 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = histogram;
+			packageProductDependencies = (
+				1999D0D82C17AC2F00358201 /* Progress */,
+			);
+			productName = histogram;
+			productReference = 1999D0AF2C1797A000358201 /* histogram */;
+			productType = "com.apple.product-type.tool";
+		};
 		19BBA7372BFD531B00981204 /* SwiftTracerTest */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 19BBA73C2BFD531B00981204 /* Build configuration list for PBXNativeTarget "SwiftTracerTest" */;
@@ -457,9 +562,12 @@
 				KnownAssetTags = (
 					New,
 				);
-				LastSwiftUpdateCheck = 1410;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
+					1999D0AE2C1797A000358201 = {
+						CreatedOnToolsVersion = 15.4;
+					};
 					19BBA7372BFD531B00981204 = {
 						CreatedOnToolsVersion = 14.1;
 					};
@@ -488,6 +596,7 @@
 			targets = (
 				19E8082A2B2B664400A37D37 /* SwiftTracer */,
 				19BBA7372BFD531B00981204 /* SwiftTracerTest */,
+				1999D0AE2C1797A000358201 /* histogram */,
 			);
 		};
 /* End PBXProject section */
@@ -497,7 +606,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1999D0A22C136D4100358201 /* direct.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,6 +620,43 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1999D0AB2C1797A000358201 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1999D0D22C17A10600358201 /* tiny_obj_loader.cc in Sources */,
+				1999D0BE2C179F1B00358201 /* sampler.swift in Sources */,
+				1999D0D12C17A0EA00358201 /* dielectric.swift in Sources */,
+				1999D0D02C17A0E500358201 /* metal.swift in Sources */,
+				1999D0CD2C17A0CC00358201 /* sampling.swift in Sources */,
+				1999D0BD2C179E8600358201 /* material.swift in Sources */,
+				1999D0CE2C17A0D900358201 /* texture.swift in Sources */,
+				1999D0C62C17A08100358201 /* bvh.swift in Sources */,
+				1999D0C52C17A07D00358201 /* shapeGroup.swift in Sources */,
+				1999D0D42C17A11D00358201 /* normalMap.swift in Sources */,
+				1999D0C22C17A06500358201 /* camera.swift in Sources */,
+				1999D0C12C17A06000358201 /* shape.swift in Sources */,
+				1999D0C42C17A07500358201 /* ray.swift in Sources */,
+				1999D0CC2C17A0A600358201 /* triangle.swift in Sources */,
+				1999D0C32C17A07000358201 /* aabb.swift in Sources */,
+				1999D0CA2C17A09C00358201 /* mesh.swift in Sources */,
+				1999D0B82C1797DC00358201 /* array2d.swift in Sources */,
+				1999D0CF2C17A0E200358201 /* diffuse.swift in Sources */,
+				1999D0D52C17A12200358201 /* blend.swift in Sources */,
+				1999D0BF2C179F8E00358201 /* independant.swift in Sources */,
+				1999D0C72C17A08900358201 /* transform.swift in Sources */,
+				1999D0C02C17A05500358201 /* scene.swift in Sources */,
+				1999D0C82C17A08E00358201 /* matrix.swift in Sources */,
+				1999D0C92C17A09400358201 /* sphere.swift in Sources */,
+				1999D0B22C1797A000358201 /* main.swift in Sources */,
+				1999D0CB2C17A0A300358201 /* quad.swift in Sources */,
+				1999D0D32C17A11600358201 /* diffuseLight.swift in Sources */,
+				1999D0BC2C17996800358201 /* vector.swift in Sources */,
+				1999D0B72C1797D400358201 /* utils.swift in Sources */,
+				1999D0D62C17A24B00358201 /* image.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		19BBA7342BFD531B00981204 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -578,6 +723,37 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		1999D0B42C1797A000358201 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftTracer/external/tinyobj/SwiftTracer-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		1999D0B52C1797A000358201 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftTracer/external/tinyobj/SwiftTracer-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		19BBA73D2BFD531B00981204 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -764,6 +940,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1999D0B32C1797A000358201 /* Build configuration list for PBXNativeTarget "histogram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1999D0B42C1797A000358201 /* Debug */,
+				1999D0B52C1797A000358201 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		19BBA73C2BFD531B00981204 /* Build configuration list for PBXNativeTarget "SwiftTracerTest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -814,6 +999,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		1999D07B2C1003A100358201 /* Progress */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */;
+			productName = Progress;
+		};
+		1999D0D82C17AC2F00358201 /* Progress */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */;
 			productName = Progress;

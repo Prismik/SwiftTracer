@@ -47,7 +47,6 @@ struct Transform {
 }
 
 extension Transform: Decodable {
-    // TODO Move into custom mat4 decoding?
     init(from decoder: Decoder) throws {
         do {
             let matrix = try Mat4(from: decoder)

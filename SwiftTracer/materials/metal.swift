@@ -21,7 +21,7 @@ final class Metal: Material {
         guard wo.z >= 0 else { return nil }
         
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
-        let roughness: Float = roughness.get(uv: uv, p: p)
+        let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
         switch roughness {
         case let r where r == 0:
             return SampledDirection(weight: texture.get(uv: uv, p: p), wi: specularWi.normalized())
@@ -38,9 +38,7 @@ final class Metal: Material {
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {
-        let wo = wo.normalized()
-        let wi = wi.normalized()
-        guard wo.z >= 0 && wi.z >= 0 else { return Color() }
+        guard wo.z >= 0, wi.z >= 0 else { return Color() }
         
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
         guard roughness != 0 else { return Color() }
@@ -53,8 +51,6 @@ final class Metal: Material {
     }
     
     func pdf(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Float {
-        let wo = wo.normalized()
-        let wi = wi.normalized()
         guard wo.z >= 0 && wi.z >= 0 else { return 0 }
 
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
@@ -63,12 +59,12 @@ final class Metal: Material {
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
         let n = power(roughness: roughness)
         let a = wi.dot(specularWi).clamped(.ulpOfOne, .pi / 2)
-        return (n + 1) / (2 * .pi) * pow(a, n)
+        return (n + 1) / (2 * .pi) * a.pow(n)
     }
     
     // TODO Find better name or define properly what a delta is
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
-        self.roughness.get(uv: uv, p: p) == 0
+        roughness.get(uv: uv, p: p) == 0
     }
     
     func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color {
