@@ -32,8 +32,8 @@ enum Render {
             let example = try Scene.Example.direct.create()
             let decoder = JSONDecoder()
             let scene = try decoder.decode(Scene.self, from: example)
-            let integrator = PathIntegrator()
-            let sampler = IndependantSampler()
+            let integrator = DirectIntegrator()
+            let sampler = IndependantSampler(nspp: spp)
             let clock = ContinuousClock()
             let time = clock.measure {
                 let pixels = integrator.render(scene: scene, sampler: sampler)

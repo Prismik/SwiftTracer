@@ -31,7 +31,7 @@ final class Diffuse: Material {
         guard wo.z >= 0 && wi.z >= 0 else { return Color() }
         
         let cos = wi.dot(Vec3.unit(.z))
-        return self.texture.get(uv: uv, p: p) / Float.pi * cos
+        return texture.get(uv: uv, p: p) / .pi * cos
     }
     
     func pdf(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Float {

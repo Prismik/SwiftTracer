@@ -38,7 +38,7 @@ final class Metal: Material {
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {
-        guard wo.z >= 0, wi.z >= 0 else { return Color() }
+        guard wo.z >= 0 && wi.z >= 0 else { return Color() }
         
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
         guard roughness != 0 else { return Color() }
@@ -46,7 +46,7 @@ final class Metal: Material {
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
         let n = power(roughness: roughness)
         let ks: Color = texture.get(uv: uv, p: p)
-        let a = wo.dot(specularWi).clamped(.ulpOfOne, .pi / 2)
+        let a = wi.dot(specularWi).clamped(.ulpOfOne, .pi / 2)
         return ks * (n + 1) / (2 * .pi) * a.pow(n)
     }
     
@@ -64,11 +64,11 @@ final class Metal: Material {
     
     // TODO Find better name or define properly what a delta is
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
-        roughness.get(uv: uv, p: p) == 0
+        return roughness.get(uv: uv, p: p) == 0
     }
     
     func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color {
-        Color()
+        return Color()
     }
     
     private func power(roughness: Float) -> Float {

@@ -7,17 +7,16 @@
 
 import Foundation
 
+// TODO Get rid of center dependency
 final class Sphere: Shape {
     let radius: Float
     let transform: Transform
     var material: Material!
     let solidAngle: Bool
-    let center: Point3
 
     init(r: Float, t: Transform, solidAngle: Bool) {
         self.radius = r
         self.transform = t
-        self.center = Point3(0, 0, 0)
         self.solidAngle = solidAngle
     }
 
@@ -25,7 +24,7 @@ final class Sphere: Shape {
         Scene.NB_INTERSECTION += 1
         
         let ray = transform.inverse().ray(r)
-        let o = ray.o - center
+        let o = ray.o - Point3()
         let a = ray.d.dot(ray.d)
         let b = 2 * ray.d.dot(o)
         let c = o.dot(o) - radius * radius
@@ -52,13 +51,13 @@ final class Sphere: Shape {
         }
         
         let p = ray.pointAt(t: t)
-        let n = (p - center) / radius
+        let n = (p - Point3()) / radius
         
         return Intersection(
             t: t,
             p: transform.point(p),
             n: transform.normal(n).normalized(),
-            uv: uv(center: center, p: p),
+            uv: uv(center: Point3(), p: p),
             material: material,
             shape: self
         )

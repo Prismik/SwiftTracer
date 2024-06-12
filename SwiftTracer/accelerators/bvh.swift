@@ -402,10 +402,11 @@ extension BVH: Shape {
             : nodes[0].aabb
     }
     
+    /// Samples a directly visible lightsource
     func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
         let n = Float(lightIndexes.count)
         var rng = sample
-        let j = floor(sample.x * n)
+        let j = min(floor(sample.x * n), n - 1)
         let idx = lightIndexes[Int(j)]
         rng.x = sample.x * n - j
         let shape = shapes[idx]

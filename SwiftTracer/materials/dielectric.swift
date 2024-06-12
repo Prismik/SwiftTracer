@@ -55,7 +55,7 @@ final class Dielectric: Material {
         }
         
         func refract() -> Vec3 {
-            return -ratio * incident + (ratio * interior.cos - exterior.cos) * normal
+            return (-ratio * incident + (ratio * interior.cos - exterior.cos) * normal).normalized()
         }
     }
 
