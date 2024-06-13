@@ -22,8 +22,11 @@ final class Diffuse: Material {
         let cos = wi.dot(Vec3.unit(.z))
         let albedo: Color = texture.get(uv: uv, p: p)
         let pdf = pdf(wo: wo, wi: wi, uv: uv, p: p)
-        let weight = (albedo / Float.pi) * cos / pdf
-        
+        let weight = (albedo / .pi) * cos / pdf
+        // Disregard samples where the weight results in a non finite number
+        guard weight.isFinite else {
+            return nil
+        }
         return SampledDirection(weight: weight, wi: wi)
     }
     
@@ -36,6 +39,11 @@ final class Diffuse: Material {
     
     func pdf(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Float {
         guard wo.z > 0 else { return 0 }
+        let t = Pdf.cosineHemisphere(v: wi)
+        if t.isNaN || t.isInfinite {
+            print("Bad pdf in diffuse")
+            print("wi: \(wi.x), \(wi.y), \(wi.z)")
+        }
         return Pdf.cosineHemisphere(v: wi)
     }
     

@@ -29,7 +29,7 @@ struct Tracer: ParsableCommand {
 enum Render {
     static func run(input: String, output: String, spp: Int) {
         do {
-            let example = try Scene.Example.direct.create()
+            let example = try Scene.Example.veach.create()
             let decoder = JSONDecoder()
             let scene = try decoder.decode(Scene.self, from: example)
             let integrator = DirectIntegrator()

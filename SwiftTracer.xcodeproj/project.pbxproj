@@ -114,6 +114,20 @@
 		19EFB3CD2C03FDDF005CC488 /* normal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CC2C03FDDF005CC488 /* normal.swift */; };
 		19EFB3CF2C0648B1005CC488 /* imageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CE2C0648B1005CC488 /* imageTest.swift */; };
 		19EFB3D02C064A7F005CC488 /* image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CA2C03B88B005CC488 /* image.swift */; };
+		19F816A62C1A16CF0006B1E1 /* sphere.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816A52C1A14BA0006B1E1 /* sphere.json */; };
+		19F816A82C1A18600006B1E1 /* quad.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816A72C1A18160006B1E1 /* quad.json */; };
+		19F816AA2C1A20B20006B1E1 /* triangle.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816A92C1A20680006B1E1 /* triangle.json */; };
+		19F816AC2C1A215E0006B1E1 /* group.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816AB2C1A211A0006B1E1 /* group.json */; };
+		19F816B12C1A27780006B1E1 /* reflect.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816AD2C1A270B0006B1E1 /* reflect.json */; };
+		19F816B22C1A27780006B1E1 /* refract.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816AF2C1A27430006B1E1 /* refract.json */; };
+		19F816B92C1A7CAF0006B1E1 /* odyssey_triangle.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816B52C1A7CA80006B1E1 /* odyssey_triangle.json */; };
+		19F816BA2C1A7CAF0006B1E1 /* odyssey.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816B32C1A7CA80006B1E1 /* odyssey.json */; };
+		19F816BB2C1A7CAF0006B1E1 /* veach.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816B42C1A7CA80006B1E1 /* veach.json */; };
+		19F816C62C1A7D8D0006B1E1 /* floor.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816BF2C1A7D800006B1E1 /* floor.obj */; };
+		19F816C72C1A7D8D0006B1E1 /* plate1.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816BC2C1A7D800006B1E1 /* plate1.obj */; };
+		19F816C82C1A7D8D0006B1E1 /* plate2.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816BD2C1A7D800006B1E1 /* plate2.obj */; };
+		19F816C92C1A7D8D0006B1E1 /* plate3.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816C02C1A7D800006B1E1 /* plate3.obj */; };
+		19F816CA2C1A7D8D0006B1E1 /* plate4.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816BE2C1A7D800006B1E1 /* plate4.obj */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -123,6 +137,10 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				19F816AC2C1A215E0006B1E1 /* group.json in CopyFiles */,
+				19F816AA2C1A20B20006B1E1 /* triangle.json in CopyFiles */,
+				19F816A82C1A18600006B1E1 /* quad.json in CopyFiles */,
+				19F816A62C1A16CF0006B1E1 /* sphere.json in CopyFiles */,
 				1999D0BB2C1798FA00358201 /* metal.json in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -133,6 +151,16 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				19F816C62C1A7D8D0006B1E1 /* floor.obj in CopyFiles */,
+				19F816C72C1A7D8D0006B1E1 /* plate1.obj in CopyFiles */,
+				19F816C82C1A7D8D0006B1E1 /* plate2.obj in CopyFiles */,
+				19F816C92C1A7D8D0006B1E1 /* plate3.obj in CopyFiles */,
+				19F816CA2C1A7D8D0006B1E1 /* plate4.obj in CopyFiles */,
+				19F816B92C1A7CAF0006B1E1 /* odyssey_triangle.json in CopyFiles */,
+				19F816BA2C1A7CAF0006B1E1 /* odyssey.json in CopyFiles */,
+				19F816BB2C1A7CAF0006B1E1 /* veach.json in CopyFiles */,
+				19F816B12C1A27780006B1E1 /* reflect.json in CopyFiles */,
+				19F816B22C1A27780006B1E1 /* refract.json in CopyFiles */,
 				1999D0A62C1615EE00358201 /* direct.json in CopyFiles */,
 				1999D0A72C1615EE00358201 /* metal_normals.exr in CopyFiles */,
 				1999D09E2C12490400358201 /* chest.obj in CopyFiles */,
@@ -232,6 +260,20 @@
 		19EFB3CA2C03B88B005CC488 /* image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = image.swift; sourceTree = "<group>"; };
 		19EFB3CC2C03FDDF005CC488 /* normal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = normal.swift; sourceTree = "<group>"; };
 		19EFB3CE2C0648B1005CC488 /* imageTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = imageTest.swift; sourceTree = "<group>"; };
+		19F816A52C1A14BA0006B1E1 /* sphere.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sphere.json; sourceTree = "<group>"; };
+		19F816A72C1A18160006B1E1 /* quad.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = quad.json; sourceTree = "<group>"; };
+		19F816A92C1A20680006B1E1 /* triangle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = triangle.json; sourceTree = "<group>"; };
+		19F816AB2C1A211A0006B1E1 /* group.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = group.json; sourceTree = "<group>"; };
+		19F816AD2C1A270B0006B1E1 /* reflect.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = reflect.json; sourceTree = "<group>"; };
+		19F816AF2C1A27430006B1E1 /* refract.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = refract.json; sourceTree = "<group>"; };
+		19F816B32C1A7CA80006B1E1 /* odyssey.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = odyssey.json; sourceTree = "<group>"; };
+		19F816B42C1A7CA80006B1E1 /* veach.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = veach.json; sourceTree = "<group>"; };
+		19F816B52C1A7CA80006B1E1 /* odyssey_triangle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = odyssey_triangle.json; sourceTree = "<group>"; };
+		19F816BC2C1A7D800006B1E1 /* plate1.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plate1.obj; sourceTree = "<group>"; };
+		19F816BD2C1A7D800006B1E1 /* plate2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plate2.obj; sourceTree = "<group>"; };
+		19F816BE2C1A7D800006B1E1 /* plate4.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plate4.obj; sourceTree = "<group>"; };
+		19F816BF2C1A7D800006B1E1 /* floor.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = floor.obj; sourceTree = "<group>"; };
+		19F816C02C1A7D800006B1E1 /* plate3.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plate3.obj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -275,6 +317,11 @@
 		1999D05C2C0FDEC600358201 /* mesh */ = {
 			isa = PBXGroup;
 			children = (
+				19F816BF2C1A7D800006B1E1 /* floor.obj */,
+				19F816BC2C1A7D800006B1E1 /* plate1.obj */,
+				19F816BD2C1A7D800006B1E1 /* plate2.obj */,
+				19F816C02C1A7D800006B1E1 /* plate3.obj */,
+				19F816BE2C1A7D800006B1E1 /* plate4.obj */,
 				1999D09C2C1248F800358201 /* chest.obj */,
 				1999D0572C0F8A3600358201 /* dragon.obj */,
 				1999D0532C0F8A3100358201 /* buddha.obj */,
@@ -303,6 +350,9 @@
 		1999D05E2C0FDF6200358201 /* scenes */ = {
 			isa = PBXGroup;
 			children = (
+				19F816B52C1A7CA80006B1E1 /* odyssey_triangle.json */,
+				19F816B32C1A7CA80006B1E1 /* odyssey.json */,
+				19F816B42C1A7CA80006B1E1 /* veach.json */,
 				1999D05F2C0FDF7D00358201 /* simple.json */,
 				1999D0622C0FE0A100358201 /* threeSpheres.json */,
 				1999D0642C0FE0EB00358201 /* teapot.json */,
@@ -313,6 +363,8 @@
 				1999D0822C10E61D00358201 /* textures.json */,
 				1999D08D2C12443800358201 /* blend.json */,
 				1999D0A12C136D4100358201 /* direct.json */,
+				19F816AD2C1A270B0006B1E1 /* reflect.json */,
+				19F816AF2C1A27430006B1E1 /* refract.json */,
 			);
 			path = scenes;
 			sourceTree = "<group>";
@@ -330,6 +382,10 @@
 			isa = PBXGroup;
 			children = (
 				1999D0BA2C17987F00358201 /* metal.json */,
+				19F816A52C1A14BA0006B1E1 /* sphere.json */,
+				19F816A72C1A18160006B1E1 /* quad.json */,
+				19F816A92C1A20680006B1E1 /* triangle.json */,
+				19F816AB2C1A211A0006B1E1 /* group.json */,
 			);
 			path = assets;
 			sourceTree = "<group>";

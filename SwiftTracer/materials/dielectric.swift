@@ -50,6 +50,7 @@ final class Dielectric: Material {
             return freznelZero + (1 - freznelZero) * (1 - interior.cos).pow(5)
         }
         
+        // TODO Look at refract and reflect of simd
         func reflect() -> Vec3 {
             return Vec3(-incident.x, -incident.y, incident.z).normalized()
         }

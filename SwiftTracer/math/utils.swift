@@ -19,7 +19,12 @@ enum Utils {
     }
     
     static func sphericalCoordinatesFrom(direction: Vec3) -> (Float, Float) {
-        return (atan2f(-direction.y, -direction.x) + Float.pi, direction.z.acos())
+        let t = direction.z.acos()
+        if t.isNaN || t.isInfinite {
+            print("Error in spherical coordinates")
+            print("z: \(direction.z)")
+        }
+        return (atan2f(-direction.y, -direction.x) + .pi, direction.z.acos())
     }
     
     static func pixelToDirection(p: Vec2, imageSize: Vec2) -> Vec3 {

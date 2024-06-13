@@ -31,11 +31,13 @@ final class Quad: Shape {
         let p = ray.pointAt(t: t)
         // Check if the x and y component of the intersection point is inside the quad
         guard p.x.abs() <= halfSize.x && p.y.abs() <= halfSize.y else { return nil }
-        
+
         return Intersection(
             t: t,
             p: transform.point(Point3(p.x, p.y, 0)), // Force the point to be on the plane
-            n: transform.normal(Vec3.unit(.z)),
+            n: transform.normal(Vec3.unit(.z)).normalized(),
+            tan: transform.vector(Vec3.unit(.x)).normalized(),
+            bitan: transform.vector(Vec3.unit(.y)).normalized(),
             uv: uv(p: p),
             material: material,
             shape: self
@@ -67,7 +69,7 @@ final class Quad: Shape {
         let wi = (p - y).normalized()
         let cos = n.dot(wi).abs()
         let area = halfSize.x * halfSize.y * 4
-        return sqDistance / (cos * area) // TODO seems to give 1 / cos -> check
+        return sqDistance / (cos * area)
     }
     
     private func uv(p: Point3) -> Vec2 {

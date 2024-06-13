@@ -31,11 +31,16 @@ struct Intersection {
     /// Surface normal
     let n: Vec3
     
+    let tan: Vec3
+
+    let bitan: Vec3
+    
     let uv: Vec2
     
     let material: Material
     
     let shape: Shape
+    
 }
 
 /// Box type for protocol of shape. Material gets decoded and assigned during unwraping.

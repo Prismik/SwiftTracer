@@ -42,6 +42,12 @@ struct Frame {
         self.z = n
     }
     
+    init(its: Intersection) {
+        self.x = its.bitan
+        self.y = its.tan
+        self.z = its.n
+    }
+
     func toWorld(v: Vec3) -> Vec3 {
         return self.x * v.x + self.y * v.y + self.z * v.z
     }
@@ -135,6 +141,18 @@ extension Point3 {
 extension Color: SummableMultipliable {
     var luminance: Float {
         return self.dot(Color(0.212671, 0.715160, 0.072169))
+    }
+    
+    var hasNaN: Bool {
+        return x.isNaN || y.isNaN || z.isNaN
+    }
+    
+    var hasColor: Bool {
+        return x.isFinite && !x.isZero && y.isFinite && !y.isZero && z.isFinite && !z.isZero
+    }
+    
+    var isFinite: Bool {
+        return x.isFinite && y.isFinite && z.isFinite
     }
 }
 

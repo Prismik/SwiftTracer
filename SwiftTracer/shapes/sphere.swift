@@ -31,13 +31,13 @@ final class Sphere: Shape {
         let discriminant = b * b - 4 * a * c
         var t: Float = 0
         switch(discriminant) {
-        case let x where x < 0: // No roots
+        case let x where x.isLess(than: 0): // No roots
             return nil
-        case let x where x == 0: // One root
+        case let x where x.isZero: // One root
             t = -b / (2 * a)
-        case let x where x > 0: // Two roots
+        default: // Two roots
             var root = (-b - discriminant.squareRoot()) / (2 * a)
-            let validRange = ray.t.min..<ray.t.max
+            let validRange = ray.t.min ..< ray.t.max
             if !validRange.contains(root) {
                 root = (-b + discriminant.squareRoot()) / (2 * a)
                 if !validRange.contains(root) {
@@ -46,17 +46,55 @@ final class Sphere: Shape {
             }
             
             t = root
-        default:
-            return nil // TODO better handling of impossible case
         }
         
         let p = ray.pointAt(t: t)
         let n = (p - Point3()) / radius
         
+        let vs: Vec3
+        let vt: Vec3
+        
+        let theta = (p.z / radius).acos()
+        let dpdu = transform.vector(Vec3(-p.y, p.x, 0) * 2 * .pi)
+        var dpdv: Vec3
+        let zRad = (p.x * p.x + p.y * p.y).squareRoot()
+        if zRad > 0 {
+            let zRadInv = 1 / zRad
+            let cosPhi = p.x * zRadInv
+            let sinPhi = p.y * zRadInv
+            dpdv = Vec3(
+                p.z * cosPhi,
+                p.z * sinPhi,
+                -theta.sin() * radius
+            ) * .pi
+            dpdv = transform.vector(dpdv)
+            vs = dpdu.normalized()
+            vt = dpdv.normalized()
+        } else {
+            let cosPhi: Float = 0
+            let sinPhi: Float = 0
+            dpdv = Vec3(
+                p.z * cosPhi,
+                p.z * sinPhi,
+                -theta.sin() * radius
+            ) * .pi
+            dpdv = transform.vector(dpdv)
+            if n.x.abs() > n.y.abs() {
+                let invLen = 1 / (n.x * n.x + n.z * n.z).squareRoot()
+                vt = Vec3(n.z * invLen, 0, -n.x * invLen)
+            } else {
+                let invLen = 1 / (n.y * n.y + n.z * n.z).squareRoot()
+                vt = Vec3(0, n.z * invLen, -n.y * invLen)
+            }
+            vs = vt.cross(n)
+        }
+
         return Intersection(
             t: t,
             p: transform.point(p),
             n: transform.normal(n).normalized(),
+            tan: vs.normalized(),
+            bitan: vt.normalized(),
             uv: uv(center: Point3(), p: p),
             material: material,
             shape: self
@@ -128,10 +166,11 @@ final class Sphere: Shape {
         let thetaMax = (1 - (radius.pow(2) / sqDistance)).squareRoot().acos()
         let uniform = Sample.cone(sample: sample, thetaMax: thetaMax)
         let frame = Frame(n: (center - p).normalized())
-        if let hit = self.hit(r: Ray(origin: p, direction: frame.toWorld(v: uniform))) {
+        if let hit = self.hit(r: Ray(origin: p, direction: frame.toWorld(v: uniform).normalized())) {
             return EmitterSample(y: hit.p, n: hit.n, uv: uv(center: center, p: p), pdf: pdfSolidAngle(p: p), shape: self)
         } else {
-            fatalError("Something went wrong when sampling the sphere with solid angle!")
+            // Previously FatalError
+            return sampleSpherical(p: p, sample: sample)
         }
         
     }

@@ -86,11 +86,16 @@ extension Scene {
         case teapot
         case triangle
         case cornelBox
+        case refract
+        case reflect
         case roughness
         case checkerboard = "checkerboardXY"
         case textures
         case blend
         case direct
+        case veach
+        case odyssey
+        case odysseyTriangle = "odyssey_triangle"
         
         func create() throws -> Data {
             guard let url = Bundle.main.url(forResource: self.rawValue, withExtension: "json", subdirectory: "assets") else {

@@ -95,14 +95,24 @@ final class Triangle: Shape {
         
         let n: Vec3
         if let (n0, n1, n2) = normals {
-            n = (1.0 - u - v) * n0 + u * n1 + v * n2
+            n = ((1.0 - u - v) * n0 + u * n1 + v * n2).normalized()
         } else {
             n = edge1.cross(edge2).normalized()
         }
         
         // TODO Tangents + Bitangents
         
-        return Intersection(t: t, p: p, n: n, uv: uv(coordinates: (1 - u - v, u, v)), material: mesh.material, shape: self)
+        
+        return Intersection(
+            t: t,
+            p: p,
+            n: n,
+            tan: Vec3(),
+            bitan: Vec3(),
+            uv: uv(coordinates: (1 - u - v, u, v)),
+            material: mesh.material, 
+            shape: self
+        )
     }
     
     func aabb() -> AABB {
@@ -125,7 +135,7 @@ final class Triangle: Shape {
         
         let n: Vec3
         if let (n0, n1, n2) = normals {
-            n = (1.0 - u - v) * n0 + u * n1 + v * n2
+            n = ((1.0 - u - v) * n0 + u * n1 + v * n2).normalized()
         } else {
             n = edge1.cross(edge2).normalized()
         }

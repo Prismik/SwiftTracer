@@ -37,7 +37,7 @@ class Ray {
     init(origin: Point3, direction: Vec3) {
         self.o = origin
         self.d = direction
-        self.t = Distance(min: 0.0001, max: Float.greatestFiniteMagnitude)
+        self.t = Distance(min: 0.00001, max: Float.greatestFiniteMagnitude)
     }
     
     func with(min: Float) -> Self {

@@ -406,7 +406,7 @@ extension BVH: Shape {
     func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
         let n = Float(lightIndexes.count)
         var rng = sample
-        let j = min(floor(sample.x * n), n - 1)
+        let j = max(min(floor(sample.x * n), n - 1), 0)
         let idx = lightIndexes[Int(j)]
         rng.x = sample.x * n - j
         let shape = shapes[idx]

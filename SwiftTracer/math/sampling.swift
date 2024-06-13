@@ -57,6 +57,7 @@ enum Pdf {
     static func cosineHemisphere(v: Vec3) -> Float {
         guard v.z >= 0 else { return 0 }
         let (_, theta) = Utils.sphericalCoordinatesFrom(direction: v)
+
         return theta.cos() / .pi
     }
     
