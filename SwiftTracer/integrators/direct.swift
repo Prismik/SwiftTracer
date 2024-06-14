@@ -29,7 +29,7 @@ extension DirectIntegrator: SamplerIntegrator {
 
         var contribution = Color()
         let sample = sampler.next2()
-        let s = scene.root.sampleDirect(p: p, sample: sample)
+        let s = scene.root.sampleDirect(p: p, n: intersection.n, sample: sample)
         
         // Directly visible light source from sampled point
         if s.y.visible(from: p, within: scene) {

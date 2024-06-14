@@ -23,7 +23,7 @@ final class Metal: Material {
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
         switch roughness {
-        case let r where r == 0:
+        case let r where r.isZero:
             return SampledDirection(weight: texture.get(uv: uv, p: p), wi: specularWi.normalized())
         case let r where r > 0:
             let frame = Frame(n: specularWi)
@@ -64,7 +64,7 @@ final class Metal: Material {
     
     // TODO Find better name or define properly what a delta is
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
-        return roughness.get(uv: uv, p: p) == 0
+        return roughness.get(uv: uv, p: p).isZero
     }
     
     func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color {

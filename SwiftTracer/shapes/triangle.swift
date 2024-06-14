@@ -125,7 +125,7 @@ final class Triangle: Shape {
         return result.sanitized()
     }
     
-    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
+    func sampleDirect(p: Point3, n: Vec3, sample: Vec2) -> EmitterSample {
         let (p0, p1, p2) = vertices
         let edge1 = p1 - p0
         let edge2 = p2 - p0

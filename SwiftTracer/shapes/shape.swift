@@ -143,7 +143,7 @@ struct AnyShape: Decodable {
 protocol Shape {
     func hit(r: Ray) -> Intersection?
     func aabb() -> AABB
-    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample
+    func sampleDirect(p: Point3, n: Vec3, sample: Vec2) -> EmitterSample
     /// For groups, provide the appropriate shape
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float // TODO What is y
     

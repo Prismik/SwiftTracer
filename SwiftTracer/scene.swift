@@ -96,6 +96,7 @@ extension Scene {
         case veach
         case odyssey
         case odysseyTriangle = "odyssey_triangle"
+        case test
         
         func create() throws -> Data {
             guard let url = Bundle.main.url(forResource: self.rawValue, withExtension: "json", subdirectory: "assets") else {

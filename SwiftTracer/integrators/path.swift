@@ -8,8 +8,14 @@
 import Foundation
 
 final class PathIntegrator: Integrator {
-    let maxDepth = 16
-    let mis: Bool = true
+    let maxDepth: Int
+    let mis: Bool
+    
+    init(maxDepth: Int = 16, mis: Bool = true) {
+        self.maxDepth = maxDepth
+        self.mis = mis
+    }
+
     func render(scene: Scene, sampler: Sampler) -> Array2d<Color> {
         return SwiftTracer.render(integrator: self, scene: scene, sampler: sampler)
     }
@@ -62,7 +68,7 @@ final class PathIntegrator: Integrator {
                 let localFrame = Frame(n: newIntersection.n)
                 let newWo = localFrame.toLocal(v: -newRay.d).normalized()
                 let pdf = intersection.material.pdf(wo: wo, wi: direction.wi, uv: uv, p: p)
-                var weight: Float = 1
+                var weight: Float = 1.0
                 if !intersection.material.hasDelta(uv: uv, p: p) {
                     let pdfDirect = scene.root.pdfDirect(
                         shape: newIntersection.shape,

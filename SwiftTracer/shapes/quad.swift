@@ -53,7 +53,7 @@ final class Quad: Shape {
         return result.sanitized()
     }
     
-    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
+    func sampleDirect(p: Point3, n: Vec3, sample: Vec2) -> EmitterSample {
         let n = transform.normal(Vec3.unit(.z)).normalized()
         var y = Point3(
             sample.x * halfSize.x * 2 - halfSize.x,

@@ -134,12 +134,11 @@ private func renderMonteCarlo(scene: Scene, integrator: SamplerIntegrator, size:
             for _ in (0 ..< sampler.nbSamples) {
                 let pos = Vec2(Float(x), Float(y)) + sampler.next2()
                 let ray = scene.camera.createRay(from: pos)
-                let value = integrator.li(ray: ray, scene: scene, sampler: sampler)
-                //if value.hasNaN || !value.isFinite {
-                //    print("NaN or non finite value encountered!")
-                //    print("Value: (\(value.x),\(value.y),\(value.z))")
-                //    print("Pixel: \(lx),\(ly)")
-                //}
+                var value = integrator.li(ray: ray, scene: scene, sampler: sampler)
+                // sanitize nan values
+                if value.x != value.x { value.x = 0 }
+                if value.y != value.y { value.y = 0 }
+                if value.z != value.z { value.z = 0 }
                 avg += value
             }
             

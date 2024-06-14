@@ -120,7 +120,7 @@ final class Sphere: Shape {
         return result.sanitized()
     }
     
-    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
+    func sampleDirect(p: Point3, n: Vec3, sample: Vec2) -> EmitterSample {
         return solidAngle
             ? sampleSolidAngle(p: p, sample: sample)
             : sampleSpherical(p: p, sample: sample)

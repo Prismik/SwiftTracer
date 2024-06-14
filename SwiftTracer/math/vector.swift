@@ -95,6 +95,10 @@ extension Vec3 {
         return Vec4(self[0], self[1], self[2], scalar)
     }
     
+    func reflect(n: Vec3) ->  Vec3 {
+        return Vec3()
+    }
+
     static func unit(_ axis: Axis) -> Vec3 {
         switch axis {
         case .x: return Vec3(1, 0, 0)

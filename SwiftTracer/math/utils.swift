@@ -175,7 +175,8 @@ extension Float {
     }
     
     func clamped(_ lower: Float, _ upper: Float) -> Float {
-        return min(max(lower, self), upper)
+        let t = self < lower ? lower : self
+        return t > upper ? upper : t
     }
     
     func pow(_ n: Float) -> Float {
