@@ -12,7 +12,10 @@ final class ShapeGroup: Shape {
     var aabbs: [AABB] = []
     var lightIndexes: [Int] = []
     var material: Material!
+    unowned var light: Light!
 
+    var area: Float { return 0 }
+    
     func hit(r: Ray) -> Intersection? {
         Scene.NB_INTERSECTION += 1
         var intersection: Intersection? = nil
@@ -62,10 +65,6 @@ final class ShapeGroup: Shape {
     }
     
     func add(shape: Shape) {
-        if shape.material != nil && shape.material.hasEmission {
-            lightIndexes.append(shapes.count)
-        }
-        
         aabbs.append(shape.aabb())
         shapes.append(shape)
     }

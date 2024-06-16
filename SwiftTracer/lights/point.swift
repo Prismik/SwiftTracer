@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Point: Light {
+final class PointLight: Light {
     let category: LightCategory = .delta(type: .position)
     let transform: Transform
     let I: Color
@@ -26,18 +26,18 @@ class Point: Light {
         let sqDistance = p.distance2(context.p)
         let wi = (p - context.p).normalized()
         let li = I / sqDistance
-        return LightSample(L: li, wi: wi, pdf: 1)
+        return LightSample(L: li, wi: wi, p: p, pdf: 1)
     }
     
     func phi() -> Color {
         return 4 * .pi * I
     }
 
-    func pdfLi(context: LightSample.Context, wi: Vec3) -> Float {
+    func pdfLi(context: LightSample.Context, y: Point3) -> Float {
         return 0
     }
     
-    func L(p: Point3, n: Vec3, uv: Vec2, w: Vec3) -> Color {
+    func L(p: Point3, n: Vec3, uv: Vec2, wo w: Vec3) -> Color {
         return Color()
     }
 }

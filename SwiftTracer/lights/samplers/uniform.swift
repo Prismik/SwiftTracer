@@ -20,9 +20,11 @@ class UniformLightSampler: LightSampler {
     
     func sample(sample: Float) -> SampledLight? {
         guard !lights.isEmpty else { return nil }
-        let index = min(Int(sample) * lights.count, lights.count - 1)
-        let prob: Float = 1 / Float(lights.count)
-        return SampledLight(light: lights[index], prob: prob)
+        let n = Float(lights.count)
+        let index = min(floor(sample * n), n - 1)
+        let prob: Float = 1 / n
+        let s = sample * n - index
+        return SampledLight(light: lights[Int(index)], prob: prob, s: s)
     }
     
     func pmf(context: LightSample.Context, light: any Light) -> Float {

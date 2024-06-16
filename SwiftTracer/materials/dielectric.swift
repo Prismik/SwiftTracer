@@ -60,7 +60,6 @@ final class Dielectric: Material {
         }
     }
 
-    let hasEmission = false
     let texture: Texture
     let etaInterior: Float
     let etaExterior: Float
@@ -94,9 +93,5 @@ final class Dielectric: Material {
     
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
         return true
-    }
-    
-    func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color {
-        return Color()
     }
 }

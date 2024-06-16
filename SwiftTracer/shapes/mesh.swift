@@ -14,7 +14,8 @@ final class Mesh {
     var hasNormals: Bool { return !normals.isEmpty }
     var hasUvs: Bool { return !uvs.isEmpty }
     var hasTangents: Bool { return !tangents.isEmpty }
-    
+    unowned var light: Light!
+
     private(set) var facePositionIndexes: [Vec3] = []
     private(set) var faceNormalIndexes: [Vec3] = []
     private(set) var faceUvIndexes: [Vec3] = []

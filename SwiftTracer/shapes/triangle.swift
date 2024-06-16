@@ -13,10 +13,21 @@ final class Triangle: Shape {
         set { mesh.material = newValue }
     }
     
+    var area: Float {
+        let (p0, p1, p2) = vertices
+        let edge1 = p1 - p0
+        let edge2 = p2 - p0
+        return edge1.cross(edge2).length / 2
+    }
+    
     let faceId: Int
     
     // TODO Memory handling of cross-related references
     let mesh: Mesh
+    unowned var light: Light! { 
+        get { return mesh.light }
+        set { mesh.light = newValue }
+    }
 
     private var vertices: (Point3, Point3, Point3) {
         let indexes = mesh.facePositionIndexes[faceId]
@@ -110,7 +121,6 @@ final class Triangle: Shape {
             tan: Vec3(),
             bitan: Vec3(),
             uv: uv(coordinates: (1 - u - v, u, v)),
-            material: mesh.material, 
             shape: self
         )
     }
@@ -125,7 +135,7 @@ final class Triangle: Shape {
         return result.sanitized()
     }
     
-    func sampleDirect(p: Point3, n: Vec3, sample: Vec2) -> EmitterSample {
+    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
         let (p0, p1, p2) = vertices
         let edge1 = p1 - p0
         let edge2 = p2 - p0
@@ -151,10 +161,6 @@ final class Triangle: Shape {
         let sqDistance = y.distance2(p)
         let wi = (p - y).normalized()
         let cos = n.dot(wi).abs()
-        let (p0, p1, p2) = vertices
-        let edge1 = p1 - p0
-        let edge2 = p2 - p0
-        let area = edge1.cross(edge2).length / 2
         return sqDistance / (cos * area)
     }
     

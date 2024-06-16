@@ -8,7 +8,6 @@
 import Foundation
 
 final class Diffuse: Material {
-    let hasEmission = false
     let texture: Texture
 
     init(texture: Texture, bump: Texture? = nil) {
@@ -48,9 +47,5 @@ final class Diffuse: Material {
     
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
         return false
-    }
-    
-    func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color {
-        return Color()
     }
 }

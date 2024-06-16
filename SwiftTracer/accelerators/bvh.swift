@@ -300,8 +300,8 @@ class BVH {
     private let currentAxis: Axis
     private var nodes: [BVH.Node]
     private var shapes: [Shape]
-    private var lights: [Light]
     private var lightIndexes: [Int]
+    unowned var light: Light!
 
     init(builderType: BuilderType) {
         self.axisSelection = .roundRobin
@@ -310,15 +310,10 @@ class BVH {
         self.shapes = []
         self.currentAxis = .x
         self.lightIndexes = []
-        self.lights = []
     }
 
     func add(shape: Shape) {
         shapes.append(shape)
-    }
-    
-    func add(light: Light) {
-        lights.append(light)
     }
     
     func build() {
@@ -333,11 +328,6 @@ class BVH {
         builder.build(for: self, nodeIndex: 0, cachedAabbs: &cachedAabbs, depth: 0)
         
         shapes = cachedAabbs.map { $0.shape }
-        for (i, s) in shapes.enumerated() {
-            if s.material.hasEmission {
-                lightIndexes.append(i)
-            }
-        }
     }
 
     private func hitBvh(r: Ray, node: BVH.Node) -> Intersection? {
@@ -392,6 +382,8 @@ class BVH {
 }
 
 extension BVH: Shape {
+    var area: Float { return 0 }
+
     func hit(r: Ray) -> Intersection? {
         guard !nodes.isEmpty else { return nil }
         switch nodes[0].aabb.hit(r: r) {
@@ -409,27 +401,21 @@ extension BVH: Shape {
     }
     
     /// Samples uniformly a visible lightsource
-    func sampleDirect(p: Point3, n: Vec3, sample: Vec2) -> EmitterSample {
-        let ctx = LightSample.Context.init(p: p, n: n, ns: n)
-        let n = Float(lights.count)
+    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
+        let n = Float(lightIndexes.count)
         var rng = sample
         let j = max(min(floor(sample.x * n), n - 1), 0)
         let idx = lightIndexes[Int(j)]
         rng.x = sample.x * n - j
         let shape = shapes[idx]
-        let light = lights[Int(j)]
-        guard let le = light.sampleLi(context: ctx, sample: rng) else {
-            fatalError()
-        }
-        let lpdf = light.pdfLi(context: ctx, wi: le.wi)
-        let e = shape.sampleDirect(p: p, n: ctx.n, sample: rng)
+        let e = shape.sampleDirect(p: p, sample: rng)
         let pdf = pdfDirect(shape: shape, p: p, y: e.y, n: e.n)
         
         return EmitterSample(y: e.y, n: e.n, uv: e.uv, pdf: pdf, shape: shape)
     }
     
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {
-        let marginal: Float = 1 / Float(lights.count)
+        let marginal: Float = 1 / Float(lightIndexes.count)
         let conditional = shape.pdfDirect(shape: shape, p: p, y: y, n: n)
         return marginal * conditional
     }

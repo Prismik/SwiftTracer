@@ -9,6 +9,7 @@ import Foundation
 
 struct LightSample {
     struct Context {
+        /// Incoming point
         let p: Point3
         /// Surface normal
         let n: Vec3
@@ -18,8 +19,10 @@ struct LightSample {
 
     /// Radiance
     let L: Color
-    /// Incident direction towards a point
+    /// Incident direction towards the light in world coordinates
     let wi: Vec3
+    /// Point on the light source
+    let p: Point3
     let pdf: Float
 }
 
@@ -84,44 +87,54 @@ enum LightCategory: Decodable {
 
 struct AnyLight: Decodable {
     let category: LightCategory
+    let name: String
     private(set) var wrapped: Light
+    private var shapeIdentifier: String = ""
     
     enum CodingKeys: String, CodingKey {
-        case category
+        // Generic
+        case type
+        case name
         
         // Point light
         case transform
         case intensity
+        
+        // Area
+        case radiance
     }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let lightCategory = try container.decode(LightCategory.self, forKey: .category)
-        self.category = lightCategory
+        self.category = try container.decode(LightCategory.self, forKey: .type)
+        self.name = try container.decode(String.self, forKey: .name)
         switch category {
         case .delta(type: .position):
             let transform = try container.decode(Transform.self, forKey: .transform)
             let intensity = try container.decode(Color.self, forKey: .intensity)
-            self.wrapped = Point(transform: transform, intensity: intensity)
+            self.wrapped = PointLight(transform: transform, intensity: intensity)
+        case .area:
+            let radiance = try container.decode(Texture.self, forKey: .radiance)
+            self.wrapped = AreaLight(texture: radiance)
         default:
             fatalError() // Not implemented
         }
     }
 }
 
-protocol Light {
+protocol Light: AnyObject {
     var category: LightCategory { get }
     func preprocess()
     func sampleLi(context: LightSample.Context, sample: Vec2) -> LightSample?
-    func pdfLi(context: LightSample.Context, wi: Vec3) -> Float
+    func pdfLi(context: LightSample.Context, y: Point3) -> Float
     func phi() -> Color
-    func L(p: Point3, n: Vec3, uv: Vec2, w: Vec3) -> Color
+    func L(p: Point3, n: Vec3, uv: Vec2, wo: Vec3) -> Color
     func Le(ray: Ray) -> Color
 }
 
 extension Light {
     /// Radiance contribution at a given point
-    func L(p: Point3, n: Vec3, uv: Vec2, w: Vec3) -> Color {
+    func L(p: Point3, n: Vec3, uv: Vec2, wo: Vec3) -> Color {
         return Color()
     }
     

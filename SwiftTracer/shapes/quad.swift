@@ -11,7 +11,11 @@ final class Quad: Shape {
     let halfSize: Vec2
     let transform: Transform
     var material: Material!
+    unowned var light: Light!
+
+    var area: Float { return halfSize.x * halfSize.y * 4 }
     
+
     init(halfSize: Vec2, transform: Transform) {
         self.halfSize = halfSize
         self.transform = transform
@@ -39,7 +43,6 @@ final class Quad: Shape {
             tan: transform.vector(Vec3.unit(.x)).normalized(),
             bitan: transform.vector(Vec3.unit(.y)).normalized(),
             uv: uv(p: p),
-            material: material,
             shape: self
         )
     }
@@ -53,7 +56,7 @@ final class Quad: Shape {
         return result.sanitized()
     }
     
-    func sampleDirect(p: Point3, n: Vec3, sample: Vec2) -> EmitterSample {
+    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
         let n = transform.normal(Vec3.unit(.z)).normalized()
         var y = Point3(
             sample.x * halfSize.x * 2 - halfSize.x,
@@ -68,7 +71,6 @@ final class Quad: Shape {
         let sqDistance = y.distance2(p)
         let wi = (p - y).normalized()
         let cos = n.dot(wi).abs()
-        let area = halfSize.x * halfSize.y * 4
         return sqDistance / (cos * area)
     }
     

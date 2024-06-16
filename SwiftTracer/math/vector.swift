@@ -79,6 +79,11 @@ extension Vec3 {
         return simd.length(self)
     }
     
+    var lengthSquared: Float {
+        let l = simd.length(self)
+        return l * l
+    }
+    
     func dot(_ other: Vec3) -> Scalar {
         return simd_dot(self, other)
     }

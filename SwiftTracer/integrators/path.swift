@@ -24,18 +24,15 @@ final class PathIntegrator: Integrator {
     private func light(wo: Vec3, scene: Scene, frame: Frame, intersection: Intersection, s: Vec2) -> Color {
         let p = intersection.p
         let uv = intersection.uv
-        let source = scene.root.sampleDirect(p: p, sample: s)
-        guard source.y.visible(from: p, within: scene) else { return Color() }
         
-        let wi = (source.y - p).normalized()
-        let localWi = frame.toLocal(v: wi).normalized()
-        let pdf = intersection.material.pdf(wo: wo, wi: localWi, uv: uv, p: p)
-        let eval = intersection.material.evaluate(wo: wo, wi: localWi, uv: uv, p: p)
-        let weight = source.pdf / (pdf + source.pdf)
-        let localFrame = Frame(n: source.n)
-        let newWo = localFrame.toLocal(v: -wi).normalized()
-
-        return (weight * eval / source.pdf) * source.shape.material.emission(wo: newWo, uv: source.uv, p: source.y)
+        let ctx = LightSample.Context(p: p, n: intersection.n, ns: intersection.n)
+        guard let sample = scene.sample(context: ctx, s: s) else { return Color() }
+        let localWi = frame.toLocal(v: sample.wi).normalized()
+        let pdf = intersection.shape.material.pdf(wo: wo, wi: localWi, uv: uv, p: p)
+        let eval = intersection.shape.material.evaluate(wo: wo, wi: localWi, uv: uv, p: p)
+        let weight = sample.pdf / (pdf + sample.pdf)
+        
+        return (weight * eval / sample.pdf) * sample.L
     }
     
     /// Recursively traces rays using MIS
@@ -55,7 +52,7 @@ final class PathIntegrator: Integrator {
         // MIS Material
         var weightMis = Color()
         var its: Intersection? = nil
-        guard let direction = intersection.material.sample(wo: wo, uv: uv, p: p, sample: s) else {
+        guard !intersection.hasEmission, let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: s) else {
             return contribution
         }
         
@@ -64,12 +61,13 @@ final class PathIntegrator: Integrator {
         let newRay = Ray(origin: intersection.p, direction: wi)
         if let newIntersection = scene.hit(r: newRay) {
             its = newIntersection
-            if newIntersection.material.hasEmission {
+            if newIntersection.hasEmission {
+                let light = newIntersection.shape.light!
                 let localFrame = Frame(n: newIntersection.n)
                 let newWo = localFrame.toLocal(v: -newRay.d).normalized()
-                let pdf = intersection.material.pdf(wo: wo, wi: direction.wi, uv: uv, p: p)
+                let pdf = intersection.shape.material.pdf(wo: wo, wi: direction.wi, uv: uv, p: p)
                 var weight: Float = 1.0
-                if !intersection.material.hasDelta(uv: uv, p: p) {
+                if !intersection.shape.material.hasDelta(uv: uv, p: p) {
                     let pdfDirect = scene.root.pdfDirect(
                         shape: newIntersection.shape,
                         p: p,
@@ -81,11 +79,7 @@ final class PathIntegrator: Integrator {
                 }
 
                 contribution += (weight * weightMis)
-                    * newIntersection.material.emission(
-                        wo: newWo,
-                        uv: newIntersection.uv,
-                        p: newIntersection.p
-                    )
+                    * light.L(p: newIntersection.p, n: newIntersection.n, uv: newIntersection.uv, wo: newWo)
             }
         }
 
@@ -106,8 +100,9 @@ extension PathIntegrator: SamplerIntegrator {
         guard let intersection = scene.hit(r: ray) else { return scene.background }
         let frame = Frame(n: intersection.n)
         let wo = frame.toLocal(v: -ray.d).normalized()
-        return intersection.material.hasEmission
-            ? intersection.material.emission(wo: wo, uv: intersection.uv, p: intersection.p)
+        
+        return intersection.hasEmission
+            ? intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
             : trace(intersection: intersection, ray: ray, scene: scene, sampler: sampler, depth: 0)
     }
     
@@ -121,7 +116,9 @@ extension PathIntegrator: SamplerIntegrator {
             if let intersection = scene.hit(r: currentRay) {
                 let frame = Frame(n: intersection.n)
                 let wo = frame.toLocal(v: -currentRay.d).normalized()
-                if let direction = intersection.material.sample(
+                if intersection.hasEmission {
+                    return throughput * intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
+                } else if let direction = intersection.shape.material.sample(
                     wo: wo,
                     uv: intersection.uv,
                     p: intersection.p,
@@ -131,7 +128,7 @@ extension PathIntegrator: SamplerIntegrator {
                     currentRay = Ray(origin: intersection.p, direction: wi)
                     throughput *= direction.weight
                 } else {
-                    return throughput * intersection.material.emission(wo: wo, uv: intersection.uv, p: intersection.p)
+                    return Color()
                 }
             } else {
                 return throughput * scene.background

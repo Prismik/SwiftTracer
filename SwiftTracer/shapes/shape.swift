@@ -37,10 +37,11 @@ struct Intersection {
     
     let uv: Vec2
     
-    let material: Material
-    
     let shape: Shape
     
+    var hasEmission: Bool {
+        return shape.light != nil
+    }
 }
 
 /// Box type for protocol of shape. Material gets decoded and assigned during unwraping.
@@ -56,6 +57,7 @@ struct AnyShape: Decodable {
         // Generic
         case transform
         case material
+        case light
         case type
 
         // Sphere
@@ -75,7 +77,8 @@ struct AnyShape: Decodable {
 
     let type: TypeIdentifier
     let material: String
-    private var wrapped: Shape
+    let light: String
+    private(set) var wrapped: Shape
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -92,7 +95,8 @@ struct AnyShape: Decodable {
         else  {
             transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
         }
-        self.material = try container.decode(String.self, forKey: .material)
+        self.material = try container.decodeIfPresent(String.self, forKey: .material) ?? ""
+        self.light = try container.decodeIfPresent(String.self, forKey: .light) ?? ""
         switch type {
         case .sphere:
             self.wrapped = Sphere(
@@ -133,19 +137,30 @@ struct AnyShape: Decodable {
         }
     }
     
-    func unwrapped(materials: [String: Material]) -> Shape {
-        var shape = self.wrapped
-        shape.material = materials[material]
+    /// Unwraps a shape by trying to associate a material identifier with a Material instance
+    func unwrapped(materials: [String: Material], lights: [String: Light]) -> Shape {
+        let shape = self.wrapped
+        if material.isEmpty, let light = lights[light] as? AreaLight {
+            light.shape = shape
+            shape.light = light
+        } else {
+            shape.material = materials[material]
+        }
+        
         return shape
     }
 }
 
-protocol Shape {
+protocol Shape: AnyObject {
     func hit(r: Ray) -> Intersection?
     func aabb() -> AABB
-    func sampleDirect(p: Point3, n: Vec3, sample: Vec2) -> EmitterSample
+    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample
     /// For groups, provide the appropriate shape
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float // TODO What is y
     
+    /// Mutually exclusive with light
     var material: Material! { get set }
+    var area: Float { get }
+    /// For area lights, their parent shape will hold a weak reference to them.
+    var light: Light! { get set }
 }

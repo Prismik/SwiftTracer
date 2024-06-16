@@ -22,7 +22,6 @@ struct AnyMaterial: Decodable {
         case diffuse
         case metal
         case dielectric
-        case emitter = "diffuse_light"
         case blend
         case normalMap = "normal_map"
     }
@@ -83,9 +82,6 @@ struct AnyMaterial: Decodable {
             let etaInterior = try container.decodeIfPresent(Float.self, forKey: .etaInt) ?? 1.5
             let etaExterior = try container.decodeIfPresent(Float.self, forKey: .etaExt) ?? 1.0
             self.wrapped = Dielectric(texture: texture, etaInterior: etaInterior, etaExterior: etaExterior)
-        case .emitter:
-            let texture = try container.decodeIfPresent(Texture.self, forKey: .radiance) ?? .constant(value: Color(repeating: 1))
-            self.wrapped = DiffuseLight(texture: texture)
         case .blend:
             let m1 = try container.decode(AnyMaterial.self, forKey: .m1)
             let m2 = try container.decode(AnyMaterial.self, forKey: .m2)
@@ -105,7 +101,4 @@ protocol Material {
     /// Probability density function of the material
     func pdf(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Float
     func hasDelta(uv: Vec2, p: Point3) -> Bool
-    func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color
-    
-    var hasEmission: Bool { get }
 }

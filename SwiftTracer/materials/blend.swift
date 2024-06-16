@@ -8,8 +8,6 @@
 import Foundation
 
 final class Blend: Material {
-    let hasEmission = false
-
     private let m1: Material
     private let m2: Material
     /// Alpha value for blending in between m1 and m2
@@ -54,9 +52,5 @@ final class Blend: Material {
     
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
         return m1.hasDelta(uv: uv, p: p) || m2.hasDelta(uv: uv, p: p)
-    }
-    
-    func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color {
-        Color()
     }
 }

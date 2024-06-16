@@ -10,6 +10,7 @@ import Foundation
 struct SampledLight {
     let light: Light
     let prob: Float
+    let s: Float
 }
 
 protocol LightSampler {

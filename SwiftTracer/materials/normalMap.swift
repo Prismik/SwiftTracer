@@ -9,7 +9,6 @@ import Foundation
 
 /// Encapsulates a material whose surface has been perturbed through an RGB normal texture.
 final class NormalMap: Material {
-    let hasEmission = false
     let material: Material
     private let normals: Texture
 
@@ -51,11 +50,7 @@ final class NormalMap: Material {
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
         return material.hasDelta(uv: uv, p: p)
     }
-    
-    func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color {
-        return Color()
-    }
-    
+
     private func normal(uv: Vec2, p: Point3) -> Vec3 {
         let n: Vec3 = normals.get(uv: uv, p: p)
         return (2 * n - Vec3(repeating: 1)).normalized()

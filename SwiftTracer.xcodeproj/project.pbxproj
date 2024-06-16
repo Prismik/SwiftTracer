@@ -69,7 +69,7 @@
 		1999D0D02C17A0E500358201 /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
 		1999D0D12C17A0EA00358201 /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
 		1999D0D22C17A10600358201 /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */; };
-		1999D0D32C17A11600358201 /* diffuseLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */; };
+		1999D0D32C17A11600358201 /* area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* area.swift */; };
 		1999D0D42C17A11D00358201 /* normalMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0A32C137BF900358201 /* normalMap.swift */; };
 		1999D0D52C17A12200358201 /* blend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D08B2C10F37D00358201 /* blend.swift */; };
 		1999D0D62C17A24B00358201 /* image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CA2C03B88B005CC488 /* image.swift */; };
@@ -89,7 +89,7 @@
 		19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A70E2C06AA8400A7A0FD /* bvh.swift */; };
 		19C0A7112C08EECE00A7A0FD /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
 		19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
-		19C0A7182C08FB1B00A7A0FD /* diffuseLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */; };
+		19C0A7182C08FB1B00A7A0FD /* area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* area.swift */; };
 		19D52CF92C0D80FB00C63D9E /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */; };
 		19E8082F2B2B664400A37D37 /* render.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8082E2B2B664400A37D37 /* render.swift */; };
 		19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 19E808382B2B698900A37D37 /* ArgumentParser */; };
@@ -252,7 +252,7 @@
 		19C0A70E2C06AA8400A7A0FD /* bvh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bvh.swift; sourceTree = "<group>"; };
 		19C0A7102C08EECE00A7A0FD /* metal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = metal.swift; sourceTree = "<group>"; };
 		19C0A7132C08F5EE00A7A0FD /* dielectric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dielectric.swift; sourceTree = "<group>"; };
-		19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = diffuseLight.swift; sourceTree = "<group>"; };
+		19C0A7172C08FB1B00A7A0FD /* area.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = area.swift; sourceTree = "<group>"; };
 		19D52CF62C0D80FB00C63D9E /* SwiftTracer-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = "SwiftTracer-Bridging-Header.h"; sourceTree = "<group>"; };
 		19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tiny_obj_loader.cc; sourceTree = "<group>"; };
 		19D52CF82C0D80FB00C63D9E /* tiny_obj_loader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = tiny_obj_loader.h; sourceTree = "<group>"; };
@@ -459,7 +459,7 @@
 			isa = PBXGroup;
 			children = (
 				19E9589C2C1C906400F63FA5 /* samplers */,
-				19C0A7172C08FB1B00A7A0FD /* diffuseLight.swift */,
+				19C0A7172C08FB1B00A7A0FD /* area.swift */,
 				19E958962C1BD19E00F63FA5 /* point.swift */,
 				19E958982C1BD1AD00F63FA5 /* light.swift */,
 			);
@@ -746,7 +746,7 @@
 				1999D0C92C17A09400358201 /* sphere.swift in Sources */,
 				1999D0B22C1797A000358201 /* main.swift in Sources */,
 				1999D0CB2C17A0A300358201 /* quad.swift in Sources */,
-				1999D0D32C17A11600358201 /* diffuseLight.swift in Sources */,
+				1999D0D32C17A11600358201 /* area.swift in Sources */,
 				1999D0BC2C17996800358201 /* vector.swift in Sources */,
 				1999D0B72C1797D400358201 /* utils.swift in Sources */,
 				1999D0D62C17A24B00358201 /* image.swift in Sources */,
@@ -779,7 +779,7 @@
 			files = (
 				19EFB3C42C01085F005CC488 /* independant.swift in Sources */,
 				19E808442B2B728C00A37D37 /* sphere.swift in Sources */,
-				19C0A7182C08FB1B00A7A0FD /* diffuseLight.swift in Sources */,
+				19C0A7182C08FB1B00A7A0FD /* area.swift in Sources */,
 				1999D08C2C10F37D00358201 /* blend.swift in Sources */,
 				19E9589B2C1C8F1B00F63FA5 /* lightSampler.swift in Sources */,
 				19E808462B2B729700A37D37 /* shape.swift in Sources */,

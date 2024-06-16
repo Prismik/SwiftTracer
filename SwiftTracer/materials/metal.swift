@@ -8,7 +8,6 @@
 import Foundation
 
 final class Metal: Material {
-    let hasEmission = false
     let texture: Texture
     let roughness: Texture
 
@@ -65,10 +64,6 @@ final class Metal: Material {
     // TODO Find better name or define properly what a delta is
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
         return roughness.get(uv: uv, p: p).isZero
-    }
-    
-    func emission(wo: Vec3, uv: Vec2, p: Point3) -> Color {
-        return Color()
     }
     
     private func power(roughness: Float) -> Float {
