@@ -11,14 +11,14 @@ final class Scene {
     public static var NB_INTERSECTION = 0
     public static var NB_TRACED_RAYS = 0
     
-    let root: Shape
+    let root: ShapeAggregate
     let materials: [String: Material]
     let camera: Camera
     let background: Color
     let maxDepth: UInt
     let lightSampler: LightSampler
 
-    init(root: Shape, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, maxDepth: UInt) {
+    init(root: ShapeAggregate, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, maxDepth: UInt) {
         self.root = root
         self.materials = materials
         self.camera = camera
@@ -52,6 +52,7 @@ extension Scene: Decodable {
         case shapes
         case maxDepth
         case lights
+        case bvh
     }
 
     convenience init(from decoder: Decoder) throws {
@@ -63,7 +64,7 @@ extension Scene: Decodable {
         let anyMaterials = try container.decode([AnyMaterial].self, forKey: .materials)
         let anyShapes = try container.decode([AnyShape].self, forKey: .shapes)
         let anyLights = try container.decode([AnyLight].self, forKey: .lights)
-        
+        let builder = try container.decodeIfPresent(BVH.BuilderType.self, forKey: .bvh)
         var materials: [String: Material] = [:]
         for m in anyMaterials {
             materials[m.name] = m.wrapped
@@ -73,7 +74,13 @@ extension Scene: Decodable {
             lights[l.name] = l.wrapped
         }
 
-        let root = BVH(builderType: .spatial)
+        let root: ShapeAggregate
+        if let bvhBuilder = builder {
+            root = BVH(builderType: bvhBuilder)
+        } else {
+            root = ShapeGroup()
+        }
+
         for s in anyShapes {
             if let mesh = s.unwrapped(materials: materials, lights: lights) as? ShapeGroup {
                 for ms in mesh.shapes {
@@ -88,7 +95,11 @@ extension Scene: Decodable {
         let sampler = UniformLightSampler(lights: Array(lights.values))
         
         print("Building acceleration structures ...")
-        root.build()
+        let clock = ContinuousClock()
+        let time = clock.measure {
+            root.build()
+        }
+        print("Building time: \(time)")
 
         self.init(
             root: root,

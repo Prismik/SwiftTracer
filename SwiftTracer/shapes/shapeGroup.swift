@@ -7,15 +7,13 @@
 
 import Foundation
 
-final class ShapeGroup: Shape {
+final class ShapeGroup: ShapeAggregate {
     var shapes: [Shape] = []
     var aabbs: [AABB] = []
     var lightIndexes: [Int] = []
     var material: Material!
     unowned var light: Light!
 
-    var area: Float { return 0 }
-    
     func hit(r: Ray) -> Intersection? {
         Scene.NB_INTERSECTION += 1
         var intersection: Intersection? = nil
@@ -29,43 +27,31 @@ final class ShapeGroup: Shape {
         
         return intersection
     }
-    
-    func aabb() -> AABB {
-        var aabb = AABB()
-        for shapeAabb in aabbs {
-            aabb.extend(with: shapeAabb.min)
-            aabb.extend(with: shapeAabb.max)
-        }
-        
-        return aabb.sanitized()
-    }
-    
-    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
-        let n = Float(lightIndexes.count)
-        var rng = sample
-        let j = floor(sample.x * n)
-        let idx = lightIndexes[Int(j)]
-        rng.x = sample.x * n - j
-        let shape = shapes[idx]
-        let e = shape.sampleDirect(p: p, sample: rng)
-        let pdf = self.pdfDirect(shape: shape, p: p, y: e.y, n: e.n)
-        return EmitterSample(
-            y: e.y,
-            n: e.n,
-            uv: e.uv,
-            pdf: pdf,
-            shape: shape
-        )
-    }
-    
-    func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {
-        let marginal: Float = (1.0 / Float(lightIndexes.count))
-        let conditional = shape.pdfDirect(shape: shape, p: p, y: y, n: n)
-        return marginal * conditional
-    }
-    
+
     func add(shape: Shape) {
         aabbs.append(shape.aabb())
         shapes.append(shape)
+    }
+    
+    func build() { }
+}
+
+
+// Extending group as a shape so we can wrap a mesh into a shape group temporarily during decoding
+extension ShapeGroup: Shape {
+    func aabb() -> AABB {
+        fatalError("Invalid call of aabb on ShapeGroup! Call on triangles instead.")
+    }
+    
+    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
+        fatalError("Invalid call of sampleDirect on ShapeGroup! Call on triangles instead.")
+    }
+    
+    func pdfDirect(shape: any Shape, p: Point3, y: Point3, n: Vec3) -> Float {
+        fatalError("Invalid call of pdfDirect on ShapeGroup! Call on triangles instead.")
+    }
+    
+    var area: Float {
+        fatalError("Invalid call of area on ShapeGroup! Call on triangles instead.")
     }
 }

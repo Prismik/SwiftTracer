@@ -151,8 +151,11 @@ struct AnyShape: Decodable {
     }
 }
 
-protocol Shape: AnyObject {
+protocol Intersecting {
     func hit(r: Ray) -> Intersection?
+}
+
+protocol Shape: AnyObject, Intersecting {
     func aabb() -> AABB
     func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample
     /// For groups, provide the appropriate shape
@@ -163,4 +166,9 @@ protocol Shape: AnyObject {
     var area: Float { get }
     /// For area lights, their parent shape will hold a weak reference to them.
     var light: Light! { get set }
+}
+
+protocol ShapeAggregate: Intersecting {
+    func add(shape: Shape)
+    func build()
 }

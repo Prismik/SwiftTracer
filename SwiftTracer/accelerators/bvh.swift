@@ -20,7 +20,7 @@ fileprivate struct CachedShapeAabb {
 
 class BVH {
     //MARK: Builders
-    enum BuilderType {
+    enum BuilderType: String, Decodable {
         case median
         case spatial
         /// Uses SAH cost to select the best axis
@@ -56,14 +56,14 @@ class BVH {
                 }
                 
                 let leftCount = count.isMultiple(of: 2)
-                ? count / 2
-                : count / 2 + 1
+                    ? count / 2
+                    : count / 2 + 1
                 let rightCount = count / 2
                 node.toNode(left: nodesCount)
                 
                 // Left + Right
-                bvh.nodes.append(BVH.Node(firstPrimitive: first, primitiveCount: leftCount, aabbs: cachedAabbs))
-                bvh.nodes.append(BVH.Node(firstPrimitive: first + leftCount, primitiveCount: rightCount, aabbs: cachedAabbs))
+                bvh.nodes.append(BVH.Node(firstPrimitive: first, primitiveCount: leftCount, aabbs: &cachedAabbs))
+                bvh.nodes.append(BVH.Node(firstPrimitive: first + leftCount, primitiveCount: rightCount, aabbs: &cachedAabbs))
                 if leftCount > maxGroupSize {
                     build(for: bvh, nodeIndex: nodesCount, cachedAabbs: &cachedAabbs, depth: depth + 1)
                 }
@@ -106,8 +106,8 @@ class BVH {
                 node.toNode(left: nodesCount)
                 
                 // Left + Right
-                bvh.nodes.append(BVH.Node(firstPrimitive: first, primitiveCount: leftCount, aabbs: cachedAabbs))
-                bvh.nodes.append(BVH.Node(firstPrimitive: first + leftCount, primitiveCount: rightCount, aabbs: cachedAabbs))
+                bvh.nodes.append(BVH.Node(firstPrimitive: first, primitiveCount: leftCount, aabbs: &cachedAabbs))
+                bvh.nodes.append(BVH.Node(firstPrimitive: first + leftCount, primitiveCount: rightCount, aabbs: &cachedAabbs))
                 if leftCount > maxGroupSize {
                     build(for: bvh, nodeIndex: nodesCount, cachedAabbs: &cachedAabbs, depth: depth + 1)
                 }
@@ -155,8 +155,8 @@ class BVH {
                 let rightCount = count - leftCount
                 
                 // Left + Right
-                bvh.nodes.append(BVH.Node(firstPrimitive: first, primitiveCount: leftCount, aabbs: cachedAabbs))
-                bvh.nodes.append(BVH.Node(firstPrimitive: first + leftCount, primitiveCount: rightCount, aabbs: cachedAabbs))
+                bvh.nodes.append(BVH.Node(firstPrimitive: first, primitiveCount: leftCount, aabbs: &cachedAabbs))
+                bvh.nodes.append(BVH.Node(firstPrimitive: first + leftCount, primitiveCount: rightCount, aabbs: &cachedAabbs))
                 if leftCount > maxGroupSize {
                     build(for: bvh, nodeIndex: nodesCount, cachedAabbs: &cachedAabbs, depth: depth + 1)
                 }
@@ -192,7 +192,7 @@ class BVH {
             
             // RTL
             let rtlRange = node.firstPrimitive + 1 ..< node.firstPrimitive + node.primitiveCount
-            let rtl = sweep(aabbs: &aabbs, traversalIndexes: rtlRange.reversed(), scoreSize: scoreSize, parentArea: parentArea)
+            let rtl = sweep(aabbs: &aabbs, traversalIndexes: rtlRange.reversed(), scoreSize: scoreSize, parentArea: parentArea).reversed()
             
             // Merge
             return zip(ltr, rtl).map { $0 + $1 }
@@ -244,7 +244,7 @@ class BVH {
             }
         }
         
-        init(firstPrimitive: Int, primitiveCount: Int, aabbs: [CachedShapeAabb]) {
+        init(firstPrimitive: Int, primitiveCount: Int, aabbs: inout [CachedShapeAabb]) {
             var aabb = AABB()
             let slice = aabbs[firstPrimitive ..< firstPrimitive + primitiveCount]
             for item in slice {
@@ -312,24 +312,6 @@ class BVH {
         self.lightIndexes = []
     }
 
-    func add(shape: Shape) {
-        shapes.append(shape)
-    }
-    
-    func build() {
-        guard nodes.isEmpty else {
-            return print("WARNING! Trying to rebuild an already built BVH")
-        }
-        
-        var cachedAabbs: [CachedShapeAabb] = shapes.map {
-            CachedShapeAabb(aabb: $0.aabb(), shape: $0)
-        }
-        nodes.append(Node(firstPrimitive: 0, primitiveCount: cachedAabbs.count, aabbs: cachedAabbs))
-        builder.build(for: self, nodeIndex: 0, cachedAabbs: &cachedAabbs, depth: 0)
-        
-        shapes = cachedAabbs.map { $0.shape }
-    }
-
     private func hitBvh(r: Ray, node: BVH.Node) -> Intersection? {
         switch node.info {
         case let .leaf(firstPrimitive, primitiveCount):
@@ -370,20 +352,18 @@ class BVH {
                 case nil:
                     return hitBvh(r: r, node: nodes[farthestIndex])
                 }
-            case (_?, nil):
+            case (.some, .none):
                 return hitBvh(r: r, node: nodes[left])
-            case (nil, _?):
+            case (.none, .some):
                 return hitBvh(r: r, node: nodes[left + 1])
-            case (nil, nil):
+            case (.none, .none):
                 return nil
             }
         }
     }
 }
 
-extension BVH: Shape {
-    var area: Float { return 0 }
-
+extension BVH: ShapeAggregate {
     func hit(r: Ray) -> Intersection? {
         guard !nodes.isEmpty else { return nil }
         switch nodes[0].aabb.hit(r: r) {
@@ -394,34 +374,21 @@ extension BVH: Shape {
         }
     }
     
-    func aabb() -> AABB {
-        return nodes.isEmpty
-            ? AABB()
-            : nodes[0].aabb
+    func add(shape: Shape) {
+        shapes.append(shape)
     }
     
-    /// Samples uniformly a visible lightsource
-    func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
-        let n = Float(lightIndexes.count)
-        var rng = sample
-        let j = max(min(floor(sample.x * n), n - 1), 0)
-        let idx = lightIndexes[Int(j)]
-        rng.x = sample.x * n - j
-        let shape = shapes[idx]
-        let e = shape.sampleDirect(p: p, sample: rng)
-        let pdf = pdfDirect(shape: shape, p: p, y: e.y, n: e.n)
+    func build() {
+        guard nodes.isEmpty else {
+            return print("WARNING! Trying to rebuild an already built BVH")
+        }
         
-        return EmitterSample(y: e.y, n: e.n, uv: e.uv, pdf: pdf, shape: shape)
-    }
-    
-    func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {
-        let marginal: Float = 1 / Float(lightIndexes.count)
-        let conditional = shape.pdfDirect(shape: shape, p: p, y: y, n: n)
-        return marginal * conditional
-    }
-    
-    var material: Material! {
-        get { return shapes.first?.material }
-        set { /* no op */ }
+        var cachedAabbs: [CachedShapeAabb] = shapes.map {
+            CachedShapeAabb(aabb: $0.aabb(), shape: $0)
+        }
+        nodes.append(Node(firstPrimitive: 0, primitiveCount: cachedAabbs.count, aabbs: &cachedAabbs))
+        builder.build(for: self, nodeIndex: 0, cachedAabbs: &cachedAabbs, depth: 0)
+        
+        shapes = cachedAabbs.map { $0.shape }
     }
 }
