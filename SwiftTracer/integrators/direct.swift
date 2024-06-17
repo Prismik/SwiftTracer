@@ -70,28 +70,27 @@ extension DirectIntegrator: SamplerIntegrator {
         }
 
         // First bounce
-        if let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: sample) {
-            let wi = frame.toWorld(v: direction.wi).normalized()
-            let newRay = Ray(origin: p, direction: wi)
-            
-            if let newIntersection = scene.hit(r: newRay) {
-                // First bounce on a light source
-                if newIntersection.hasEmission, let light = newIntersection.shape.light {
-                    let localFrame = Frame(n: newIntersection.n)
-                    let newWo = localFrame.toLocal(v: -newRay.d).normalized()
-                    let eval = intersection.shape.material.evaluate(wo: wo, wi: direction.wi, uv: uv, p: p)
-                    let pdf = intersection.shape.material.pdf(wo: wo, wi: direction.wi, uv: uv, p: p)
-                    var weight: Float = 1
-                    if !intersection.shape.material.hasDelta(uv: uv, p: p) {
-                        let pdfDirect = light.pdfLi(context: ctx, y: newIntersection.p)
-                        weight = pdf / (pdf + pdfDirect)
-                    }
-                    contribution += (weight * eval / pdf)
-                        * light.L(p: newIntersection.p, n: newIntersection.n, uv: newIntersection.uv, wo: newWo)
+        guard let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: sample) else { return contribution }
+        let wi = frame.toWorld(v: direction.wi).normalized()
+        let newRay = Ray(origin: p, direction: wi)
+        
+        if let newIntersection = scene.hit(r: newRay) {
+            // First bounce on a light source
+            if newIntersection.hasEmission, let light = newIntersection.shape.light {
+                let localFrame = Frame(n: newIntersection.n)
+                let newWo = localFrame.toLocal(v: -newRay.d).normalized()
+                let eval = intersection.shape.material.evaluate(wo: wo, wi: direction.wi, uv: uv, p: p)
+                let pdf = intersection.shape.material.pdf(wo: wo, wi: direction.wi, uv: uv, p: p)
+                var weight: Float = 1
+                if !intersection.shape.material.hasDelta(uv: uv, p: p) {
+                    let pdfDirect = light.pdfLi(context: ctx, y: newIntersection.p)
+                    weight = pdf / (pdf + pdfDirect)
                 }
-            } else {
-                contribution += direction.weight * scene.background
+                contribution += (weight * eval / pdf)
+                    * light.L(p: newIntersection.p, n: newIntersection.n, uv: newIntersection.uv, wo: newWo)
             }
+        } else {
+            contribution += direction.weight * scene.background
         }
         
         return contribution

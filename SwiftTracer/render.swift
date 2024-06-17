@@ -32,7 +32,7 @@ enum Render {
             let example = try Scene.Example.veach.create()
             let decoder = JSONDecoder()
             let scene = try decoder.decode(Scene.self, from: example)
-            let integrator = DirectIntegrator(strategy: .mis)
+            let integrator = PathIntegrator(mis: true)
             let sampler = IndependantSampler(nspp: spp)
             let clock = ContinuousClock()
             let time = clock.measure {

@@ -58,7 +58,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--spp 8"
+            argument = "--spp 10"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

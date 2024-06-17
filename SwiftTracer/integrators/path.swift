@@ -46,13 +46,17 @@ final class PathIntegrator: Integrator {
         let uv = intersection.uv
         let s = sampler.next2()
         
+        guard !intersection.hasEmission else {
+            return intersection.shape.light.L(p: p, n: intersection.n, uv: uv, wo: wo)
+        }
+
         // MIS Emitter
         contribution += light(wo: wo, scene: scene, frame: frame, intersection: intersection, s: s)
 
         // MIS Material
         var weightMis = Color()
         var its: Intersection? = nil
-        guard !intersection.hasEmission, let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: s) else {
+        guard let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: s) else {
             return contribution
         }
         
@@ -61,20 +65,14 @@ final class PathIntegrator: Integrator {
         let newRay = Ray(origin: intersection.p, direction: wi)
         if let newIntersection = scene.hit(r: newRay) {
             its = newIntersection
-            if newIntersection.hasEmission {
-                let light = newIntersection.shape.light!
+            if newIntersection.hasEmission, let light = newIntersection.shape.light {
                 let localFrame = Frame(n: newIntersection.n)
                 let newWo = localFrame.toLocal(v: -newRay.d).normalized()
                 let pdf = intersection.shape.material.pdf(wo: wo, wi: direction.wi, uv: uv, p: p)
-                var weight: Float = 1.0
+                var weight: Float = 1
                 if !intersection.shape.material.hasDelta(uv: uv, p: p) {
-                    let pdfDirect = scene.root.pdfDirect(
-                        shape: newIntersection.shape,
-                        p: p,
-                        y: newIntersection.p,
-                        n: newIntersection.n
-                    )
-                    
+                    let ctx = LightSample.Context(p: p, n: intersection.n, ns: intersection.n)
+                    let pdfDirect = light.pdfLi(context: ctx, y: newIntersection.p)
                     weight = pdf / (pdf + pdfDirect)
                 }
 
@@ -83,7 +81,7 @@ final class PathIntegrator: Integrator {
             }
         }
 
-        return depth == maxDepth
+        return depth == maxDepth || its?.hasEmission == true
             ? contribution + weightMis
             : contribution + trace(intersection: its, ray: newRay, scene: scene, sampler: sampler, depth: depth + 1) * weightMis
     }
@@ -116,8 +114,8 @@ extension PathIntegrator: SamplerIntegrator {
             if let intersection = scene.hit(r: currentRay) {
                 let frame = Frame(n: intersection.n)
                 let wo = frame.toLocal(v: -currentRay.d).normalized()
-                if intersection.hasEmission {
-                    return throughput * intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
+                if intersection.hasEmission, let light = intersection.shape.light {
+                    return throughput * light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
                 } else if let direction = intersection.shape.material.sample(
                     wo: wo,
                     uv: intersection.uv,
