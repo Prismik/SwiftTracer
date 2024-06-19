@@ -1,5 +1,5 @@
 //
-//  independant.swift
+//  independent.swift
 //  SwiftTracer
 //
 //  Created by Francis Beauchamp on 2024-05-24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class IndependantSampler: Sampler {
+final class IndependentSampler: Sampler {
     let nbSamples: Int
 
     init(nspp: Int = 20) {

@@ -54,18 +54,18 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "scene.png"
+            argument = "direct"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--spp 10"
+            argument = "--output out.png"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "CGBITMAP_CONTEXT_LOG_ERRORS"
-            value = "1"
+            key = ""
+            value = ""
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

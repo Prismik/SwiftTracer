@@ -16,29 +16,26 @@ struct Tracer: ParsableCommand {
     @Option(help: "The name for the image output.")
     var output: String?
     
-    @Option(name: .shortAndLong, help: "The number of samples per pixel.")
-    var spp: Int?
-    
     mutating func run() throws {
-        let samples = spp ?? 16
         let out = output ?? "out.png"
-        Render.run(input: input, output: out, spp: samples)
+        guard let example = Scene.Example(rawValue: input) else {
+            fatalError("Trying to load scene which doesn't exist: \(input)")
+        }
+
+        Render.run(input: example, output: out)
     }
 }
 
 enum Render {
-    static func run(input: String, output: String, spp: Int) {
+    static func run(input: Scene.Example, output: String) {
         do {
-            let example = try Scene.Example.teapot.create()
             let decoder = JSONDecoder()
-            let scene = try decoder.decode(Scene.self, from: example)
-            let integrator = PathIntegrator(mis: true)
-            let sampler = IndependantSampler(nspp: spp)
+            let scene = try decoder.decode(Scene.self, from: input.create())
             let clock = ContinuousClock()
             let time = clock.measure {
-                let pixels = integrator.render(scene: scene, sampler: sampler)
+                let pixels = scene.render()
                 let image = Image(array: pixels)
-                if image.write(to: "test.png") {
+                if image.write(to: output) {
                     print("#Intersection: \(Scene.NB_INTERSECTION)")
                     print("#rays: \(Scene.NB_TRACED_RAYS)")
                     print("ratio: \(Float(Scene.NB_INTERSECTION) / Float(Scene.NB_TRACED_RAYS))")

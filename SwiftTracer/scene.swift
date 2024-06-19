@@ -15,16 +15,18 @@ final class Scene {
     let materials: [String: Material]
     let camera: Camera
     let background: Color
-    let maxDepth: UInt
     let lightSampler: LightSampler
+    let sampler: Sampler
+    let integrator: Integrator
 
-    init(root: ShapeAggregate, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, maxDepth: UInt) {
+    init(root: ShapeAggregate, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, sampler: Sampler, integrator: Integrator) {
         self.root = root
         self.materials = materials
         self.camera = camera
         self.background = background
-        self.maxDepth = maxDepth
         self.lightSampler = lightSampler
+        self.sampler = sampler
+        self.integrator = integrator
     }
     
     func hit(r: Ray) -> Intersection? {
@@ -42,6 +44,10 @@ final class Scene {
         
         return LightSample(L: sample.L, wi: sample.wi, p: sample.p, pdf: source.prob * sample.pdf)
     }
+    
+    func render() -> Array2d<Color> {
+        return integrator.render(scene: self, sampler: sampler)
+    }
 }
 
 extension Scene: Decodable {
@@ -52,7 +58,9 @@ extension Scene: Decodable {
         case shapes
         case maxDepth
         case lights
-        case bvh
+        case accelerator
+        case sampler
+        case integrator
     }
 
     convenience init(from decoder: Decoder) throws {
@@ -60,11 +68,13 @@ extension Scene: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let camera = try container.decode(Camera.self, forKey: .camera)
         let background = try container.decodeIfPresent(Color.self, forKey: .background) ?? Color(1, 1, 1)
-        let maxDepth = try container.decodeIfPresent(UInt.self, forKey: .maxDepth) ?? 16
         let anyMaterials = try container.decode([AnyMaterial].self, forKey: .materials)
         let anyShapes = try container.decode([AnyShape].self, forKey: .shapes)
         let anyLights = try container.decode([AnyLight].self, forKey: .lights)
-        let builder = try container.decodeIfPresent(BVH.BuilderType.self, forKey: .bvh)
+        let accelerator = try container.decodeIfPresent(BVH.self, forKey: .accelerator)
+        let sampler = try container.decode(AnySampler.self, forKey: .sampler).wrapped
+        let integrator = try container.decode(AnyIntegrator.self, forKey: .integrator).wrapped
+    
         var materials: [String: Material] = [:]
         for m in anyMaterials {
             materials[m.name] = m.wrapped
@@ -75,8 +85,8 @@ extension Scene: Decodable {
         }
 
         let root: ShapeAggregate
-        if let bvhBuilder = builder {
-            root = BVH(builderType: bvhBuilder)
+        if let bvh = accelerator {
+            root = bvh
         } else {
             root = ShapeGroup()
         }
@@ -92,7 +102,7 @@ extension Scene: Decodable {
             }
         }
         
-        let sampler = UniformLightSampler(lights: Array(lights.values))
+        let lightSampler = UniformLightSampler(lights: Array(lights.values))
         
         print("Building acceleration structures ...")
         let clock = ContinuousClock()
@@ -103,11 +113,12 @@ extension Scene: Decodable {
 
         self.init(
             root: root,
-            lightSampler: sampler,
+            lightSampler: lightSampler,
             materials: materials,
             camera: camera,
             background: background,
-            maxDepth: maxDepth
+            sampler: sampler,
+            integrator: integrator
         )
     }
 }

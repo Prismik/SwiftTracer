@@ -8,10 +8,15 @@
 import Foundation
 
 final class PathIntegrator: Integrator {
+    enum CodingKeys: String, CodingKey {
+        case mis
+        case depth
+    }
+
     let maxDepth: Int
     let mis: Bool
     
-    init(maxDepth: Int = 16, mis: Bool = true) {
+    init(maxDepth: Int, mis: Bool = true) {
         self.maxDepth = maxDepth
         self.mis = mis
     }

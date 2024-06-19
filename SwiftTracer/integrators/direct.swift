@@ -8,7 +8,11 @@
 import Foundation
 
 final class DirectIntegrator: Integrator {
-    enum Strategy {
+    enum CodingKeys: String, CodingKey {
+        case strategy
+    }
+
+    enum Strategy: String, Decodable {
         case mis
         case bsdf
         case eval

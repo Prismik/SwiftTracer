@@ -18,7 +18,7 @@ fileprivate struct CachedShapeAabb {
     let shape: Shape
 }
 
-class BVH {
+final class BVH {
     //MARK: Builders
     enum BuilderType: String, Decodable {
         case median
@@ -29,21 +29,25 @@ class BVH {
         /// - cost = p^l * t^n,l + p^r * t^n,r
         case sah
         
-        fileprivate func instance() -> Builder {
+        fileprivate func instance(nodeSize: Int) -> Builder {
             switch self {
             case .median:
-                return Median()
+                return Median(maxGroupSize: nodeSize)
             case .spatial:
-                return Spatial()
+                return Spatial(maxGroupSize: nodeSize)
             default:
-                return SAH()
+                return SAH(maxGroupSize: nodeSize)
             }
         }
     }
 
     private class Median: Builder {
-        let maxGroupSize = 2
+        let maxGroupSize: Int
 
+        init(maxGroupSize: Int) {
+            self.maxGroupSize = maxGroupSize
+        }
+    
         func build(for bvh: BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int) {
             let nodesCount = bvh.nodes.count
             let node = bvh.nodes[nodeIndex]
@@ -76,7 +80,11 @@ class BVH {
     }
     
     private class Spatial: Builder {
-        let maxGroupSize = 2
+        let maxGroupSize: Int
+
+        init(maxGroupSize: Int) {
+            self.maxGroupSize = maxGroupSize
+        }
         
         func build(for bvh: BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int) {
             let nodesCount = bvh.nodes.count
@@ -126,7 +134,11 @@ class BVH {
             let cost: Float
         }
 
-        let maxGroupSize = 2
+        let maxGroupSize: Int
+
+        init(maxGroupSize: Int) {
+            self.maxGroupSize = maxGroupSize
+        }
         
         func build(for bvh: BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int) {
             let nodesCount = bvh.nodes.count
@@ -303,9 +315,9 @@ class BVH {
     private var lightIndexes: [Int]
     unowned var light: Light!
 
-    init(builderType: BuilderType) {
+    init(builderType: BuilderType, nodeSize: Int) {
         self.axisSelection = .roundRobin
-        self.builder = builderType.instance()
+        self.builder = builderType.instance(nodeSize: nodeSize)
         self.nodes = []
         self.shapes = []
         self.currentAxis = .x
@@ -390,5 +402,19 @@ extension BVH: ShapeAggregate {
         builder.build(for: self, nodeIndex: 0, cachedAabbs: &cachedAabbs, depth: 0)
         
         shapes = cachedAabbs.map { $0.shape }
+    }
+}
+
+extension BVH: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case builder
+        case nodeSize
+    }
+
+    convenience init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let builder = try container.decodeIfPresent(BuilderType.self, forKey: .builder) ?? .sah
+        let nodeSize = try container.decodeIfPresent(Int.self, forKey: .nodeSize) ?? 2
+        self.init(builderType: builder, nodeSize: nodeSize)
     }
 }

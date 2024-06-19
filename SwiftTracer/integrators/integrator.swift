@@ -8,12 +8,11 @@
 import Foundation
 import Progress
 
-enum IntegratorType {
-    case Path
-    case Normal
-    case UV
-    case Direct
-    case PathMis
+enum IntegratorType: String, Decodable {
+    case path
+    case normal
+    case uv
+    case direct
 }
 
 /// Integrating one pixel at a time
@@ -25,6 +24,35 @@ protocol SamplerIntegrator {
 
 protocol Integrator {
     func render(scene: Scene, sampler: Sampler) -> Array2d<Color>
+}
+
+struct AnyIntegrator: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case type
+        case params
+    }
+    
+    let wrapped: Integrator
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(IntegratorType.self, forKey: .type)
+        switch type {
+        case .path:
+            let params = try container.nestedContainer(keyedBy: PathIntegrator.CodingKeys.self, forKey: .params)
+            let depth = try params.decodeIfPresent(Int.self, forKey: .depth) ?? 16
+            let mis = try params.decode(Bool.self, forKey: .mis)
+            self.wrapped = PathIntegrator(maxDepth: depth, mis: mis)
+        case .direct:
+            let params = try container.nestedContainer(keyedBy: DirectIntegrator.CodingKeys.self, forKey: .params)
+            let strategy = try params.decode(DirectIntegrator.Strategy.self, forKey: .strategy)
+            self.wrapped = DirectIntegrator(strategy: strategy)
+        case .normal:
+            self.wrapped = NormalIntegrator()
+        case.uv:
+            self.wrapped = UvIntegrator()
+        }
+    }
 }
 
 extension Integrator {
