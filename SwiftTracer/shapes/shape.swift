@@ -83,6 +83,7 @@ struct AnyShape: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.type = try container.decode(TypeIdentifier.self, forKey: .type)
+        // TODO Make available to other objects
         let transform: Transform
         if let transforms = try? container.decode([Transform].self, forKey: .transform) {
             var m = Mat4.identity()

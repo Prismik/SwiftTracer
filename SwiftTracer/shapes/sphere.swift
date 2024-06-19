@@ -39,10 +39,10 @@ final class Sphere: Shape {
         case let x where x.isZero: // One root
             t = -b / (2 * a)
         default: // Two roots
-            var root = (-b - discriminant.squareRoot()) / (2 * a)
+            var root = (-b - discriminant.sqrt()) / (2 * a)
             let validRange = ray.t.min ..< ray.t.max
             if !validRange.contains(root) {
-                root = (-b + discriminant.squareRoot()) / (2 * a)
+                root = (-b + discriminant.sqrt()) / (2 * a)
                 if !validRange.contains(root) {
                     return nil
                 }
@@ -60,7 +60,7 @@ final class Sphere: Shape {
         let theta = (p.z / radius).acos()
         let dpdu = transform.vector(Vec3(-p.y, p.x, 0) * 2 * .pi)
         var dpdv: Vec3
-        let zRad = (p.x * p.x + p.y * p.y).squareRoot()
+        let zRad = (p.x * p.x + p.y * p.y).sqrt()
         if zRad > 0 {
             let zRadInv = 1 / zRad
             let cosPhi = p.x * zRadInv
@@ -83,10 +83,10 @@ final class Sphere: Shape {
             ) * .pi
             dpdv = transform.vector(dpdv)
             if n.x.abs() > n.y.abs() {
-                let invLen = 1 / (n.x * n.x + n.z * n.z).squareRoot()
+                let invLen = 1 / (n.x * n.x + n.z * n.z).sqrt()
                 vt = Vec3(n.z * invLen, 0, -n.x * invLen)
             } else {
-                let invLen = 1 / (n.y * n.y + n.z * n.z).squareRoot()
+                let invLen = 1 / (n.y * n.y + n.z * n.z).sqrt()
                 vt = Vec3(0, n.z * invLen, -n.y * invLen)
             }
             vs = vt.cross(n)
@@ -165,7 +165,7 @@ final class Sphere: Shape {
         let sqDistance = p.distance2(center)
         guard sqDistance > radius.pow(2) else { return sampleSpherical(p: p, sample: sample) }
         
-        let thetaMax = (1 - (radius.pow(2) / sqDistance)).squareRoot().acos()
+        let thetaMax = (1 - (radius.pow(2) / sqDistance)).sqrt().acos()
         let uniform = Sample.cone(sample: sample, thetaMax: thetaMax)
         let frame = Frame(n: (center - p).normalized())
         if let hit = self.hit(r: Ray(origin: p, direction: frame.toWorld(v: uniform).normalized())) {
@@ -188,7 +188,7 @@ final class Sphere: Shape {
     private func pdfSolidAngle(p: Point3) -> Float {
         let center = transform.point(Point3())
         let d = p.distance(center)
-        let cosThetaMax = (d.pow(2) - radius.pow(2)).squareRoot() / d
+        let cosThetaMax = (d.pow(2) - radius.pow(2)).sqrt() / d
         let area = 2 * .pi * (1 - cosThetaMax)
         return 1 / area
     }

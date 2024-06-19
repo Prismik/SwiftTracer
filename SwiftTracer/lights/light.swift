@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import simd
 
 struct LightSample {
     struct Context {
@@ -100,6 +101,9 @@ struct AnyLight: Decodable {
         case transform
         case intensity
         
+        // Spot light
+        case falloff
+        
         // Area
         case radiance
     }
@@ -110,9 +114,25 @@ struct AnyLight: Decodable {
         self.name = try container.decode(String.self, forKey: .name)
         switch category {
         case .delta(type: .position):
-            let transform = try container.decode(Transform.self, forKey: .transform)
+            let transform: Transform
+            if let transforms = try? container.decode([Transform].self, forKey: .transform) {
+                var m = Mat4.identity()
+                for t in transforms {
+                    m = t.m * m
+                }
+                
+                transform = Transform(m: m)
+            }
+            else  {
+                transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
+            }
             let intensity = try container.decode(Color.self, forKey: .intensity)
-            self.wrapped = PointLight(transform: transform, intensity: intensity)
+            do {
+                let falloff = try container.decode(Vec2.self, forKey: .falloff)
+                self.wrapped = SpotLight(transform: transform, intensity: intensity, start: falloff.x, end: falloff.y)
+            } catch {
+                self.wrapped = PointLight(transform: transform, intensity: intensity)
+            }
         case .area:
             let radiance = try container.decode(Texture.self, forKey: .radiance)
             self.wrapped = AreaLight(texture: radiance)
@@ -128,17 +148,18 @@ protocol Light: AnyObject {
     func sampleLi(context: LightSample.Context, sample: Vec2) -> LightSample?
     func pdfLi(context: LightSample.Context, y: Point3) -> Float
     func phi() -> Color
+    /// Radiance contribution at a given point
     func L(p: Point3, n: Vec3, uv: Vec2, wo: Vec3) -> Color
+    /// Radiance contribution for infinite lights
     func Le(ray: Ray) -> Color
 }
 
 extension Light {
-    /// Radiance contribution at a given point
     func L(p: Point3, n: Vec3, uv: Vec2, wo: Vec3) -> Color {
         return Color()
     }
     
-    /// Radiance contribution for infinite lights
+    
     func Le(ray: Ray) -> Color {
         return Color()
     }

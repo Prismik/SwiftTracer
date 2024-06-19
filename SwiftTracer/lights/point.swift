@@ -36,8 +36,4 @@ final class PointLight: Light {
     func pdfLi(context: LightSample.Context, y: Point3) -> Float {
         return 0
     }
-    
-    func L(p: Point3, n: Vec3, uv: Vec2, wo w: Vec3) -> Color {
-        return Color()
-    }
 }

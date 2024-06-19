@@ -25,7 +25,7 @@ enum Sample {
     }
     
     static func cosineHemisphere(sample: Vec2) -> Vec3 {
-        let theta = sample.x.squareRoot().acos()
+        let theta = sample.x.sqrt().acos()
         let phi = 2 * .pi * sample.y
         return Utils.directionFrom(phi: phi, theta: theta)
     }

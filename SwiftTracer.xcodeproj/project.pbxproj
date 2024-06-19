@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1917635E2C20E927007688D4 /* spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1917635D2C20E927007688D4 /* spot.swift */; };
 		193E42502BFE5EA300D96A37 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		193E42522BFE737F00D96A37 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		193E42532BFE738F00D96A37 /* ray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7222BF82CE800981204 /* ray.swift */; };
@@ -204,6 +205,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1917635D2C20E927007688D4 /* spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = spot.swift; sourceTree = "<group>"; };
 		193E424F2BFE5EA300D96A37 /* camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = camera.swift; sourceTree = "<group>"; };
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
 		196ECD572C0B80350052DEA6 /* mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mesh.swift; sourceTree = "<group>"; };
@@ -462,6 +464,7 @@
 				19C0A7172C08FB1B00A7A0FD /* area.swift */,
 				19E958962C1BD19E00F63FA5 /* point.swift */,
 				19E958982C1BD1AD00F63FA5 /* light.swift */,
+				1917635D2C20E927007688D4 /* spot.swift */,
 			);
 			path = lights;
 			sourceTree = "<group>";
@@ -784,6 +787,7 @@
 				19E9589B2C1C8F1B00F63FA5 /* lightSampler.swift in Sources */,
 				19E808462B2B729700A37D37 /* shape.swift in Sources */,
 				19BBA7272BF97AAA00981204 /* integrator.swift in Sources */,
+				1917635E2C20E927007688D4 /* spot.swift in Sources */,
 				19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */,
 				19EFB3C22C010833005CC488 /* sampler.swift in Sources */,
 				19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */,

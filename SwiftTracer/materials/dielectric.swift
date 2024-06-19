@@ -34,9 +34,9 @@ final class Dielectric: Material {
                 : material.etaInterior
             let normal = Vec3(0, 0, inMaterial ? -1 : 1)
             let cosThetaI = wo.dot(normal)
-            let sinThetaI = (1.0 - cosThetaI * cosThetaI).squareRoot().abs()
+            let sinThetaI = (1.0 - cosThetaI * cosThetaI).sqrt().abs()
             let sinThetaT = sinThetaI * (etaI / etaT)
-            let cosThetaT = (1 - sinThetaT * sinThetaT).squareRoot()
+            let cosThetaT = (1 - sinThetaT * sinThetaT).sqrt()
             self.normal = normal
             self.incident = wo
             self.interior = SubstanceGeometry(eta: etaI, sin: sinThetaI, cos: cosThetaI)

@@ -53,7 +53,7 @@ enum Utils {
                 for _ in 0 ..< nsp {
                     let imagePosition = Vec2(Float(x), Float(y)) + sampler.next2()
                     let direction = pixelToDirection(p: imagePosition, imageSize: imageSize)
-                    let sinTheta: Float = max(1 - direction.z * direction.z, 0).squareRoot()
+                    let sinTheta: Float = max(1 - direction.z * direction.z, 0).sqrt()
                     let pixelArea: Float = .pi / imageSize.y
                         * .pi * 2 / imageSize.x
                         * sinTheta
@@ -101,7 +101,7 @@ enum Utils {
                         continue
                     }
                     
-                    let sinTheta: Float = max(1 - direction.z * direction.z, 0).squareRoot()
+                    let sinTheta: Float = max(1 - direction.z * direction.z, 0).sqrt()
                     let weight = normalisation / sinTheta
                     let current = histogram.get(Int(pixel.x), Int(pixel.y))
                     histogram.set(value: current + weight, Int(pixel.x), Int(pixel.y))
@@ -171,7 +171,11 @@ extension Float {
     }
 
     func toRadians() -> Self {
-        return self * Float.pi / 180
+        return self * .pi / 180
+    }
+    
+    func toDegrees() -> Self {
+        return self * 180 / .pi 
     }
     
     func clamped(_ lower: Float, _ upper: Float) -> Float {
@@ -204,5 +208,9 @@ extension Float {
         return r < 0
             ? r + other
             : r
+    }
+    
+    func sqrt() -> Float {
+        return max(0, squareRoot())
     }
 }
