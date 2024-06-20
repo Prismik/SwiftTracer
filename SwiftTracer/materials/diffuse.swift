@@ -8,9 +8,10 @@
 import Foundation
 
 final class Diffuse: Material {
+    /// Color of the surface (probability of light being reflected at a given wavelength)
     let texture: Texture
 
-    init(texture: Texture, bump: Texture? = nil) {
+    init(texture: Texture) {
         self.texture = texture
     }
 

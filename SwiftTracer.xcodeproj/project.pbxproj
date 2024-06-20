@@ -69,7 +69,6 @@
 		1999D0CF2C17A0E200358201 /* diffuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083F2B2B6E7000A37D37 /* diffuse.swift */; };
 		1999D0D02C17A0E500358201 /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
 		1999D0D12C17A0EA00358201 /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
-		1999D0D22C17A10600358201 /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */; };
 		1999D0D32C17A11600358201 /* area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* area.swift */; };
 		1999D0D42C17A11D00358201 /* normalMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0A32C137BF900358201 /* normalMap.swift */; };
 		1999D0D52C17A12200358201 /* blend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D08B2C10F37D00358201 /* blend.swift */; };
@@ -91,7 +90,6 @@
 		19C0A7112C08EECE00A7A0FD /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
 		19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
 		19C0A7182C08FB1B00A7A0FD /* area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* area.swift */; };
-		19D52CF92C0D80FB00C63D9E /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */; };
 		19E8082F2B2B664400A37D37 /* render.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8082E2B2B664400A37D37 /* render.swift */; };
 		19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 19E808382B2B698900A37D37 /* ArgumentParser */; };
 		19E8083E2B2B6DE900A37D37 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
@@ -256,7 +254,6 @@
 		19C0A7132C08F5EE00A7A0FD /* dielectric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dielectric.swift; sourceTree = "<group>"; };
 		19C0A7172C08FB1B00A7A0FD /* area.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = area.swift; sourceTree = "<group>"; };
 		19D52CF62C0D80FB00C63D9E /* SwiftTracer-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = "SwiftTracer-Bridging-Header.h"; sourceTree = "<group>"; };
-		19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tiny_obj_loader.cc; sourceTree = "<group>"; };
 		19D52CF82C0D80FB00C63D9E /* tiny_obj_loader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = tiny_obj_loader.h; sourceTree = "<group>"; };
 		19E8082B2B2B664400A37D37 /* SwiftTracer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SwiftTracer; sourceTree = BUILT_PRODUCTS_DIR; };
 		19E8082E2B2B664400A37D37 /* render.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = render.swift; sourceTree = "<group>"; };
@@ -480,7 +477,6 @@
 		19D52CF52C0D80E400C63D9E /* tinyobj */ = {
 			isa = PBXGroup;
 			children = (
-				19D52CF72C0D80FB00C63D9E /* tiny_obj_loader.cc */,
 				19D52CF82C0D80FB00C63D9E /* tiny_obj_loader.h */,
 				19D52CF62C0D80FB00C63D9E /* SwiftTracer-Bridging-Header.h */,
 			);
@@ -662,7 +658,7 @@
 					New,
 				);
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1410;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					1999D0AE2C1797A000358201 = {
 						CreatedOnToolsVersion = 15.4;
@@ -723,7 +719,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1999D0D22C17A10600358201 /* tiny_obj_loader.cc in Sources */,
 				1999D0BE2C179F1B00358201 /* sampler.swift in Sources */,
 				1999D0D12C17A0EA00358201 /* dielectric.swift in Sources */,
 				1999D0D02C17A0E500358201 /* metal.swift in Sources */,
@@ -814,7 +809,6 @@
 				19BBA7232BF82CE800981204 /* ray.swift in Sources */,
 				19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */,
 				19E9589E2C1C907C00F63FA5 /* uniform.swift in Sources */,
-				19D52CF92C0D80FB00C63D9E /* tiny_obj_loader.cc in Sources */,
 				19E958992C1BD1AD00F63FA5 /* light.swift in Sources */,
 				19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */,
 				19BBA71A2BF7D32F00981204 /* transform.swift in Sources */,
@@ -832,6 +826,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -848,6 +843,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -863,6 +859,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fbp.SwiftTracerTest;
@@ -880,6 +877,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fbp.SwiftTracerTest;
@@ -899,7 +897,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++03";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -926,6 +924,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -961,7 +960,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++03";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -988,6 +987,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1015,9 +1015,12 @@
 		19E808332B2B664400A37D37 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++03";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DOCC_EXTRACT_EXTENSION_SYMBOLS = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = SwiftTracer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "SwiftTracer/external/tinyobj/SwiftTracer-Bridging-Header.h";
@@ -1030,9 +1033,12 @@
 		19E808342B2B664400A37D37 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++03";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DOCC_EXTRACT_EXTENSION_SYMBOLS = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = SwiftTracer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "SwiftTracer/external/tinyobj/SwiftTracer-Bridging-Header.h";
