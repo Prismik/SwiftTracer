@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftWavefront
 
 /// TODO Caching
 final class Mesh {
@@ -37,49 +38,50 @@ final class Mesh {
         self.uvs = []
     }
 
-    init(filename: String, transform: Transform) {
-        var reader = tinyobj.ObjReader()
-        let config = tinyobj.ObjReaderConfig()
-        reader.ParseFromFile(std.string(filename), config)
-        let attributes = reader.attrib_
-        let shapes = reader.shapes_
+    init(filename: URL, transform: Transform) {
+        let wavefront = Wavefront(filename: filename, encoding: .utf8)
+        do {
+            try wavefront.parse()
+        } catch {
+            print("Error while parsing mesh")
+        }
 
-        self.positions = stride(from: 0, through: attributes.vertices.size() - 1, by: 3).map { i in
-            let x = attributes.vertices[i]
-            let y = attributes.vertices[i + 1]
-            let z = attributes.vertices[i + 2]
+        self.positions = stride(from: 0, through: wavefront.vertices.count - 1, by: 3).map { i in
+            let x = wavefront.vertices[i]
+            let y = wavefront.vertices[i + 1]
+            let z = wavefront.vertices[i + 2]
             return transform.point(Vec3(x, y, z))
         }
         
-        self.normals = stride(from: 0, through: attributes.normals.size() - 1, by: 3).map { i in
-            let x = attributes.normals[i]
-            let y = attributes.normals[i + 1]
-            let z = attributes.normals[i + 2]
+        self.normals = stride(from: 0, through: wavefront.normals.count - 1, by: 3).map { i in
+            let x = wavefront.normals[i]
+            let y = wavefront.normals[i + 1]
+            let z = wavefront.normals[i + 2]
             return transform.normal(Vec3(x, y, z)).normalized()
         }
         
-        self.uvs = stride(from: 0, through: attributes.texcoords.size() - 1, by: 2).map { i in
-            let u = attributes.texcoords[i]
-            let v = attributes.texcoords[i + 1]
+        self.uvs = stride(from: 0, through: wavefront.textcoords.count - 1, by: 2).map { i in
+            let u = wavefront.textcoords[i]
+            let v = wavefront.textcoords[i + 1]
             return Vec2(u, v)
         }
 
-        for s in shapes {
+        for s in wavefront.shapes {
             var offset = 0
-            for nfv in s.mesh.num_face_vertices {
+            for nfv in s.numFaceVertices {
                 var newIdxVertex: [Float] = []
                 var newIdxNormal: [Float] = []
                 var newIdxTexture: [Float] = []
                 for v in 0 ..< nfv {
-                    let idx = s.mesh.indices[offset + Int(v)]
-                    newIdxVertex.append(Float(idx.vertex_index))
+                    let idx = s.indices[offset + Int(v)]
+                    newIdxVertex.append(Float(idx.vIndex))
                     
-                    if idx.normal_index >= 0 {
-                        newIdxNormal.append(Float(idx.normal_index))
+                    if idx.vnIndex >= 0 {
+                        newIdxNormal.append(Float(idx.vnIndex))
                     }
                     
-                    if idx.texcoord_index >= 0 {
-                        newIdxTexture.append(Float(idx.texcoord_index))
+                    if idx.vtIndex >= 0 {
+                        newIdxTexture.append(Float(idx.vtIndex))
                     }
                 }
                 

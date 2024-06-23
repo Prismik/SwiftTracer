@@ -95,6 +95,7 @@ extension Scene: Decodable {
             if let mesh = s.unwrapped(materials: materials, lights: lights) as? ShapeGroup {
                 for ms in mesh.shapes {
                     ms.material = mesh.material
+                    ms.light = mesh.light
                     root.add(shape: ms)
                 }
             } else {

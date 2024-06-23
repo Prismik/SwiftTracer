@@ -121,10 +121,10 @@ struct AnyShape: Decodable {
             )
         case .mesh:
             let filename = try container.decode(String.self, forKey: .filename)
-            guard let path = Bundle.main.path(forResource: filename, ofType: "obj", inDirectory: "assets") else {
+            guard let url = Bundle.main.url(forResource: filename, withExtension: "obj", subdirectory: "assets") else {
                 fatalError("Trying to load obj that does not exist")
             }
-            let mesh = Mesh(filename: path, transform: transform)
+            let mesh = Mesh(filename: url, transform: transform)
             let group = ShapeGroup()
             for id in 0 ..< mesh.facePositionIndexes.count {
                 group.add(shape: Triangle(faceId: id, mesh: mesh))
@@ -142,6 +142,12 @@ struct AnyShape: Decodable {
     func unwrapped(materials: [String: Material], lights: [String: Light]) -> Shape {
         let shape = self.wrapped
         if material.isEmpty, let light = lights[light] as? AreaLight {
+            if let group = shape as? ShapeGroup {
+                for triangle in group.shapes {
+                    triangle.light = light
+                    light.shape = triangle
+                }
+            }
             light.shape = shape
             shape.light = light
         } else {

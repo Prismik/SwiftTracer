@@ -14,6 +14,7 @@
 		19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		196ECD562C0B7FC30052DEA6 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
 		196ECD582C0B80350052DEA6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
+		19737CED2C27457900F49204 /* SwiftWavefront in Frameworks */ = {isa = PBXBuildFile; productRef = 19737CEC2C27457900F49204 /* SwiftWavefront */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
 		1999D0502C0E48F400358201 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D04F2C0E48C500358201 /* cube.obj */; };
 		1999D0522C0F853000358201 /* uv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0512C0F853000358201 /* uv.swift */; };
@@ -253,8 +254,6 @@
 		19C0A7102C08EECE00A7A0FD /* metal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = metal.swift; sourceTree = "<group>"; };
 		19C0A7132C08F5EE00A7A0FD /* dielectric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dielectric.swift; sourceTree = "<group>"; };
 		19C0A7172C08FB1B00A7A0FD /* area.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = area.swift; sourceTree = "<group>"; };
-		19D52CF62C0D80FB00C63D9E /* SwiftTracer-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = "SwiftTracer-Bridging-Header.h"; sourceTree = "<group>"; };
-		19D52CF82C0D80FB00C63D9E /* tiny_obj_loader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = tiny_obj_loader.h; sourceTree = "<group>"; };
 		19E8082B2B2B664400A37D37 /* SwiftTracer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SwiftTracer; sourceTree = BUILT_PRODUCTS_DIR; };
 		19E8082E2B2B664400A37D37 /* render.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = render.swift; sourceTree = "<group>"; };
 		19E8083D2B2B6DE900A37D37 /* material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = material.swift; sourceTree = "<group>"; };
@@ -319,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */,
+				19737CED2C27457900F49204 /* SwiftWavefront in Frameworks */,
 				1999D07C2C1003A100358201 /* Progress in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -466,23 +466,6 @@
 			path = lights;
 			sourceTree = "<group>";
 		};
-		19D52CF42C0D80DC00C63D9E /* external */ = {
-			isa = PBXGroup;
-			children = (
-				19D52CF52C0D80E400C63D9E /* tinyobj */,
-			);
-			path = external;
-			sourceTree = "<group>";
-		};
-		19D52CF52C0D80E400C63D9E /* tinyobj */ = {
-			isa = PBXGroup;
-			children = (
-				19D52CF82C0D80FB00C63D9E /* tiny_obj_loader.h */,
-				19D52CF62C0D80FB00C63D9E /* SwiftTracer-Bridging-Header.h */,
-			);
-			path = tinyobj;
-			sourceTree = "<group>";
-		};
 		19E808222B2B664400A37D37 = {
 			isa = PBXGroup;
 			children = (
@@ -508,7 +491,6 @@
 			isa = PBXGroup;
 			children = (
 				1999D0482C0E3F5200358201 /* assets */,
-				19D52CF42C0D80DC00C63D9E /* external */,
 				19C0A7162C08FB0F00A7A0FD /* lights */,
 				19C0A70D2C06AA7300A7A0FD /* accelerators */,
 				19EFB3C02C010827005CC488 /* samplers */,
@@ -642,6 +624,7 @@
 			packageProductDependencies = (
 				19E808382B2B698900A37D37 /* ArgumentParser */,
 				1999D07B2C1003A100358201 /* Progress */,
+				19737CEC2C27457900F49204 /* SwiftWavefront */,
 			);
 			productName = SwiftTracer;
 			productReference = 19E8082B2B2B664400A37D37 /* SwiftTracer */;
@@ -684,6 +667,7 @@
 			packageReferences = (
 				19E808372B2B698900A37D37 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 				1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */,
+				19737CEB2C27445100F49204 /* XCRemoteSwiftPackageReference "SwiftWavefront" */,
 			);
 			productRefGroup = 19E8082C2B2B664400A37D37 /* Products */;
 			projectDirPath = "";
@@ -949,7 +933,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OBJC_INTEROP_MODE = objcxx;
+				SWIFT_OBJC_INTEROP_MODE = objc;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1007,7 +991,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_INTEROP_MODE = objcxx;
+				SWIFT_OBJC_INTEROP_MODE = objc;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
@@ -1023,8 +1007,8 @@
 				DOCC_EXTRACT_EXTENSION_SYMBOLS = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = SwiftTracer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftTracer/external/tinyobj/SwiftTracer-Bridging-Header.h";
-				SWIFT_OBJC_INTEROP_MODE = objcxx;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_INTEROP_MODE = objc;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -1041,8 +1025,8 @@
 				DOCC_EXTRACT_EXTENSION_SYMBOLS = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = SwiftTracer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftTracer/external/tinyobj/SwiftTracer-Bridging-Header.h";
-				SWIFT_OBJC_INTEROP_MODE = objcxx;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_INTEROP_MODE = objc;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -1089,6 +1073,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		19737CEB2C27445100F49204 /* XCRemoteSwiftPackageReference "SwiftWavefront" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Prismik/SwiftWavefront";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jkandzi/Progress.swift";
@@ -1108,6 +1100,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		19737CEC2C27457900F49204 /* SwiftWavefront */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19737CEB2C27445100F49204 /* XCRemoteSwiftPackageReference "SwiftWavefront" */;
+			productName = SwiftWavefront;
+		};
 		1999D07B2C1003A100358201 /* Progress */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */;
