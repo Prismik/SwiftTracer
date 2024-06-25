@@ -50,10 +50,11 @@ final class SpotLight: Light {
         return smoothFalloff(x: wo.z, a: cosFalloffEnd, b: cosFalloffStart) * intensity
     }
     
-    /// Smooth interpolation of a value between falloff start and falloff end
-    /// 1 if within total illumination
-    /// 0 if outside of both partial illumination and total illumination
-    /// Cubic polynomial interpolation if within partial illumination
+    /// Smooth interpolation of a value in the range of falloff(start ... end)
+    /// > Note: The return value depends on where the point is positioned.
+    /// > - **1** if within total illumination.
+    /// > - **0** if outside of both partial illumination and total illumination.
+    /// > - **Cubic polynomial interpolation** if within partial illumination.
     private func smoothFalloff(x: Float, a: Float, b: Float) -> Float {
         guard a != b else { return x < a ? 0 : 1 }
         let t = ((x - a) / (b - a)).clamped(0, 1)

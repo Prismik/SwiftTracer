@@ -7,10 +7,15 @@
 
 import Foundation
 
-/// Encapsulates a material whose surface has been perturbed through an RGB normal texture.
+/**
+ Material that encapsulates normal information as a texture, which will affect the shading normal of an associated material.
+ It allows to visually add surface detail without changing the geometry of an object.
+ */
 final class NormalMap: Material {
+    /// The material that will see it's shading normal perturbed by the normals texture.
     let material: Material
-    private let normals: Texture
+    /// The normal values, where each channel of a pixel in the RGB image is used to encode a normal direction (R: x, G: y, B: z).
+    let normals: Texture
 
     init(material: Material, normals: Texture) {
         self.material = material

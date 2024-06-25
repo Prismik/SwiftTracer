@@ -166,18 +166,22 @@ enum Utils {
 }
 
 extension Float {
+    /// Returns true if float is pair.
     var isPair: Bool {
         return self.truncatingRemainder(dividingBy: 2) == 0
     }
 
+    /// Converts a degrees andle to a radians angle.
     func toRadians() -> Self {
         return self * .pi / 180
     }
     
+    /// Converts a radians andle to a degrees angle.
     func toDegrees() -> Self {
         return self * 180 / .pi 
     }
     
+    /// Ensures the value will be brought back betwee the range (lower ... upper).
     func clamped(_ lower: Float, _ upper: Float) -> Float {
         let t = self < lower ? lower : self
         return t > upper ? upper : t

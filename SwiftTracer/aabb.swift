@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Bounding box denoted by a min point and a max point.
 struct AABB {
     var min: Point3
     var max: Point3
@@ -23,6 +24,7 @@ struct AABB {
         self.max = max
     }
     
+    /// Updates the bounding box, such that the new minimum will be equal to `min(self.min, other)` and the new maximum will be `max(self.max, other)`.
     mutating func extend(with other: Point3) {
         self.min.x = Swift.min(self.min.x, other.x)
         self.min.y = Swift.min(self.min.y, other.y)
@@ -33,9 +35,9 @@ struct AABB {
         self.max.z = Swift.max(self.max.z, other.z)
     }
     
-    /// Compute intersection with bounding box
+    /// Compute intersection with the bounding box.
     ///
-    /// See http://psgraphics.blogspot.de/2016/02/new-simple-ray-box-test-from-andrew.html
+    /// See [original implementation](http://psgraphics.blogspot.de/2016/02/new-simple-ray-box-test-from-andrew.html).
     func hit(r: Ray) -> Float? {
         var tMin = r.t.min
         var tMax = r.t.max
@@ -80,6 +82,7 @@ struct AABB {
         return 2 * (e.x * e.y + e.y * e.z + e.z * e.x)
     }
 
+    /// Applies a small epsilon value to the min and max to prevent `Float` inaccuracy to cause problems.
     func sanitized() -> Self {
         var copy = self
         let diagonal = copy.diagonal()
@@ -93,6 +96,7 @@ struct AABB {
         return copy
     }
     
+    /// Given `self` and `other` AABBs, return a new AABB where the minimum will be equal to `min(self.min, other)` and the maximum will be `max(self.max, other)`.
     func merge(with other: AABB) -> Self {
         return AABB(
             min: Point3(

@@ -8,8 +8,8 @@
 import Foundation
 import simd
 
-struct LightSample {
-    struct Context {
+public struct LightSample {
+    public struct Context {
         /// Incoming point
         let p: Point3
         /// Surface normal
@@ -27,13 +27,13 @@ struct LightSample {
     let pdf: Float
 }
 
-enum LightCategory: Decodable {
+public enum LightCategory: Decodable {
     enum CodingKeys: String, CodingKey {
         case category
         case delta
     }
 
-    enum DeltaType: String {
+    public enum DeltaType: String {
         /// Emits from a single point in space
         case position
         /// Emits radiance along a single direction
@@ -56,7 +56,7 @@ enum LightCategory: Decodable {
         }
     }
 
-    init(from decoder: any Decoder) throws {
+    public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let category = try container.decode(String.self, forKey: .category)
         switch category {
@@ -86,6 +86,7 @@ enum LightCategory: Decodable {
     }
 }
 
+/// Box type for ``Light`` protocol that allows to decode materials in a type agnostic way.
 struct AnyLight: Decodable {
     let category: LightCategory
     let name: String
@@ -142,7 +143,7 @@ struct AnyLight: Decodable {
     }
 }
 
-protocol Light: AnyObject {
+public protocol Light: AnyObject {
     var category: LightCategory { get }
     func preprocess()
     func sampleLi(context: LightSample.Context, sample: Vec2) -> LightSample?

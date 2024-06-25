@@ -18,6 +18,7 @@ struct EmitterSample {
     let uv: Vec2
     /// Probability density (in solid angle)
     let pdf: Float
+    /// Associated shape
     let shape: Shape
 }
 
@@ -44,7 +45,7 @@ struct Intersection {
     }
 }
 
-/// Box type for protocol of shape. Material gets decoded and assigned during unwraping.
+/// Box type for ``Shape`` protocol that allows to decode shapes in a type agnostic way. Material and lights gets decoded and assigned during unwraping.
 struct AnyShape: Decodable {
     enum TypeIdentifier: String, Codable {
         case sphere
@@ -138,7 +139,7 @@ struct AnyShape: Decodable {
         }
     }
     
-    /// Unwraps a shape by trying to associate a material identifier with a Material instance
+    /// Unwraps a shape by trying to associate a material identifier with a `Material` instance, or a light identifier with a `Light` instance.
     func unwrapped(materials: [String: Material], lights: [String: Light]) -> Shape {
         let shape = self.wrapped
         if material.isEmpty, let light = lights[light] as? AreaLight {
@@ -158,15 +159,19 @@ struct AnyShape: Decodable {
     }
 }
 
+/// Object that can be physically hit by a ray.
 protocol Intersecting {
     func hit(r: Ray) -> Intersection?
 }
 
+/// Geometric primitive that lives within a scene.
 protocol Shape: AnyObject, Intersecting {
+    /// Computed bounding box.
     func aabb() -> AABB
+    /// Samples a point on the shape.
     func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample
-    /// For groups, provide the appropriate shape
-    func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float // TODO What is y
+    /// Probability density function for radiance emition of an area light.
+    func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float
     
     /// Mutually exclusive with light
     var material: Material! { get set }

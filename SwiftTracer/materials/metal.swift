@@ -7,12 +7,27 @@
 
 import Foundation
 
+/**
+ Material with perfectly specular reflections or rough reflections.
+ 
+ # JSON Spec
+ 
+ | Name          | Type      | Usage  |
+ | ------------- | --------- | ------ |
+ | ks            | Texture   | Color of the surface (probability of light being reflected at a given wavelength). |
+ | roughness     | Texture   | Roughness of the reflection. 0 roughness means a perfectly specular (delta), while other values are rough reflections. |
+ 
+*/
 final class Metal: Material {
-    let texture: Texture
+    /// Color of the surface within the [0...1] range (probability of light being reflected at a given wavelength).
+    let ks: Texture
+    
+    /// Roughness of the reflection, within the [0...1] range. 0 roughness means a perfectly specular (delta) reflection,
+    /// while other values are used for rough reflections.
     let roughness: Texture
 
     init(texture: Texture, roughness: Texture) {
-        self.texture = texture
+        self.ks = texture
         self.roughness = roughness
     }
     
@@ -23,14 +38,14 @@ final class Metal: Material {
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
         switch roughness {
         case let r where r.isZero:
-            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: specularWi.normalized())
+            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: specularWi.normalized())
         case let r where r > 0:
             let frame = Frame(n: specularWi)
             let n = power(roughness: roughness)
             let localLobe = Sample.cosineHemispherePower(sample: sample, power: n)
             let lobe = frame.toWorld(v: localLobe)
             guard lobe.z >= 0 else { return nil }
-            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: lobe.normalized())
+            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: lobe.normalized())
         default:
             return nil // Shouldn't happen
         }
@@ -44,7 +59,7 @@ final class Metal: Material {
         
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
         let n = power(roughness: roughness)
-        let ks: Color = texture.get(uv: uv, p: p)
+        let ks: Color = ks.get(uv: uv, p: p)
         let a = wi.dot(specularWi).clamped(.ulpOfOne, .pi / 2)
         return ks * (n + 1) / (2 * .pi) * a.pow(n)
     }
@@ -61,7 +76,6 @@ final class Metal: Material {
         return (n + 1) / (2 * .pi) * a.pow(n)
     }
     
-    // TODO Find better name or define properly what a delta is
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
         return roughness.get(uv: uv, p: p).isZero
     }

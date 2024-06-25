@@ -15,7 +15,7 @@ enum IntegratorType: String, Decodable {
     case direct
 }
 
-/// Integrating one pixel at a time
+/// Integrating one pixel at a time.
 protocol SamplerIntegrator {
     func preprocess(scene: Scene, sampler: Sampler)
     /// Estimate the incoming light for a given ray
@@ -26,6 +26,7 @@ protocol Integrator {
     func render(scene: Scene, sampler: Sampler) -> Array2d<Color>
 }
 
+/// Box type for ``Integrator`` protocol that allows to decode integrators in a type agnostic way.
 struct AnyIntegrator: Decodable {
     enum CodingKeys: String, CodingKey {
         case type
@@ -52,12 +53,6 @@ struct AnyIntegrator: Decodable {
         case.uv:
             self.wrapped = UvIntegrator()
         }
-    }
-}
-
-extension Integrator {
-    static func from(json: Data) -> Integrator? {
-        return nil
     }
 }
 

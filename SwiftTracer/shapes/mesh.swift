@@ -8,7 +8,7 @@
 import Foundation
 import SwiftWavefront
 
-/// TODO Caching
+// TODO Caching
 final class Mesh {
     var material: Material!
 

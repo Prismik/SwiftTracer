@@ -15,6 +15,7 @@ struct SampledDirection {
     let wi: Vec3
 }
 
+/// Box type for ``Material`` protocol that allows to decode materials in a type agnostic way.
 struct AnyMaterial: Decodable {
     let name: String
 
@@ -95,10 +96,15 @@ struct AnyMaterial: Decodable {
     }
 }
 
+/// Encapsulates the properties of a surface and it's associated BSDF to describe how light is being scattered.
+/// > Important: Both the incident light `wi` and the outgoing view direction `wo` are **normalized**, **localized at zero**, and **facing away from the surface**.
 protocol Material {
+    /// Samples an outgoing direction at a given point, given an incident ray and a pseudo randomly generated 2d sample.
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection?
+    /// Evaluation of the emitted color at a given point on the surface, with an incident ray and an outgoing direction.
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color
-    /// Probability density function of the material
+    /// Probability density function of the material.
     func pdf(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Float
+    /// Returns true if the surface has a dirac delta distribution (in the case of perfectly specular or glass materials).
     func hasDelta(uv: Vec2, p: Point3) -> Bool
 }

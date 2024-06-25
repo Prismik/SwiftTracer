@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Ray {
+public class Ray {
     struct Distance {
         let min: Float
         let max: Float

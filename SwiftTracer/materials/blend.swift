@@ -7,10 +7,14 @@
 
 import Foundation
 
+/// Material with a linear combination of two different materials.
+/// Any of the other materials can be combined into a `Blend` instance by using the alpha value.
 final class Blend: Material {
+    /// The first material part of the blending process.
     private let m1: Material
+    /// The second material part of the blending process.
     private let m2: Material
-    /// Alpha value for blending in between m1 and m2
+    /// Alpha value for blending in between m1 and m2.
     private let alpha: Texture
     
     init(m1: Material, m2: Material, alpha: Texture) {

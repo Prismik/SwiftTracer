@@ -12,11 +12,13 @@ enum Texture {
     case textureMap(values: Array2d<Color>, scale: Float, uvScale: Vec2, uvOffset: Vec2)
     case checkerboard2d(color1: Color, color2: Color, uvScale: Vec2, uvOffset: Vec2)
     
+    /// Get the texture `Float` value at the given uv point `(R=G=B)`.
     func get(uv: Vec2, p: Point3) -> Float {
         let c: Color = get(uv: uv, p: p)
         return (c.x + c.y + c.z) / 3
     }
 
+    /// Get the texture RGB components at the given uv point.
     func get(uv: Vec2, p: Point3) -> Color {
         let uv = Vec2(uv.x.modulo(1.0), uv.y.modulo(1.0))
         switch self {

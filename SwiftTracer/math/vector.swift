@@ -8,17 +8,11 @@
 import Foundation
 import simd
 
-typealias Point3 = simd_float3
-typealias Vec2 = simd_float2
-typealias Vec3 = simd_float3
-typealias Vec4 = simd_float4
-typealias Color = simd_float3
-
-protocol SummableMultipliable: Equatable {
-    static func +(lhs: Self, rhs: Self) -> Self
-    static func *(lhs: Self, rhs: Self) -> Self
-    static func *(lhs: Self, rhs: Float) -> Self
-}
+public typealias Point3 = simd_float3
+public typealias Vec2 = simd_float2
+public typealias Vec3 = simd_float3
+public typealias Vec4 = simd_float4
+public typealias Color = simd_float3
 
 struct Frame {
     let x: Vec3
@@ -133,6 +127,7 @@ extension Point3 {
         return Point3(e.x, e.y, e.z)
     }
     
+    
     func toHomogeneous() -> Vec4 {
         return Vec4(self.x, self.y, self.z, 1)
     }
@@ -147,7 +142,7 @@ extension Point3 {
     }
 }
 
-extension Color: SummableMultipliable {
+extension Color {
     var luminance: Float {
         return self.dot(Color(0.212671, 0.715160, 0.072169))
     }
@@ -163,8 +158,4 @@ extension Color: SummableMultipliable {
     var isFinite: Bool {
         return x.isFinite && y.isFinite && z.isFinite
     }
-}
-
-extension Float: SummableMultipliable {
-    
 }

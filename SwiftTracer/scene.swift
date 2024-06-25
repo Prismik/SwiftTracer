@@ -34,6 +34,7 @@ final class Scene {
         return root.hit(r: r)
     }
     
+    /// Samples a light source in the scene.
     func sample(context: LightSample.Context, s: Vec2) -> LightSample? {
         // TODO Rework the sample like in bvh
         guard let source = lightSampler.sample(sample: s.x) else { return nil }

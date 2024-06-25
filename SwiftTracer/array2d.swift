@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Allows linear iteration on every `Array2d` elements.
 struct TwoDimensionalIterator<T>: IteratorProtocol {
     var x: Int = 0
     var y: Int = 0
@@ -31,11 +32,14 @@ struct TwoDimensionalIterator<T>: IteratorProtocol {
     }
 }
 
-/// Two-dimensional array represented as a one dimensional array
+/// Two-dimensional array represented as a one dimensional array.
 class Array2d<T> {
+    /// Typically the length.
     private(set) var xSize: Int
+    /// Typically the height.
     private(set) var ySize: Int
 
+    /// Total number of elements
     var size: Int { xSize * ySize }
 
     private var storage: [T]
@@ -65,14 +69,23 @@ class Array2d<T> {
         self.storage = Array()
     }
 
+    /// Gets the value at index (x, y).
     func get(_ x: Int, _ y: Int) -> T {
         return storage[index(x, y)]
     }
     
+    /// Sets the value at index (x, y).
     func set(value: T, _ x: Int, _ y: Int) {
         storage[index(x, y)] = value
     }
 
+    /// Flips the value vertically, such that the element at (0, 0) becomes (0, n), where n is the `ySize`.
+    /// > Tip: This is particularly useful for the image information that gets read with the coordinate system of:
+    /// > - **X** (from: left, to: right)
+    /// > - **Y** (from: up, to: bottom)
+    /// > - **Z** (from: away from the camera, to: towards the camera)
+    /// >
+    /// > With this function, we can easily can bring it back to **Y** (from: bottom: to: up).
     func flipVertically() {
         let copy = Array2d(copy: self)
         for (i, item) in self.enumerated() {
@@ -81,10 +94,6 @@ class Array2d<T> {
         }
         
         self.storage = copy.storage
-    }
-
-    func debug() {
-        print(storage)
     }
 
     private func index(_ x: Int, _ y: Int) -> Int {

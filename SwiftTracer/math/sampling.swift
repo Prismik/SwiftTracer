@@ -8,7 +8,7 @@
 import Foundation
 
 
-/// Contains sampler functions
+/// Sampler functions.
 enum Sample {
     static func spherical(sample: Vec2) -> Vec3 {
         let theta = (2 * sample.x - 1).acos()
@@ -43,7 +43,7 @@ enum Sample {
     }
 }
 
-/// Contains probability distribution functions
+/// Probability distribution functions.
 enum Pdf {
     static func spherical(_ v: Vec3) -> Float {
         return 1 / (4.0 * .pi)

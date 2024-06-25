@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Box type for ``Sampler`` protocol that allows to decode pseudo-random number samplers in a type agnostic way.
 struct AnySampler: Decodable {
     enum TypeIdentifier: String, Codable {
         case independent

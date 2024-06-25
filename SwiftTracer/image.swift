@@ -10,8 +10,9 @@ import CoreGraphics
 import ImageIO
 import UniformTypeIdentifiers
 
-/// Based on "SwiftRay" by Renaud Pradenc
-/// https://github.com/Ceroce/SwiftRay/blob/master/SwiftRay/SwiftRay/Bitmap.swift
+/// Encapsulates raw image information using `CoreGraphics`.
+///
+/// Based on [SwiftRay](https://github.com/Ceroce/SwiftRay/blob/master/SwiftRay/SwiftRay/Bitmap.swift) by Renaud Pradenc.
 class Image {
     private struct BitmapPixel {
         let r: UInt8
@@ -87,6 +88,8 @@ class Image {
         free(pixels)
     }
 
+    /// Reads the bytes of the associated file found at the path `filename` given in the initializer. The content will be returned as an `Array2d` where values between 0 and 1.
+    /// > Note: The pixel values are converted from standard RGB to linear RGB.
     func read() -> Array2d<Color> {
         context.draw(cgImage, in: CGRect(x: 0, y: 0, width: context.width, height: context.height), byTiling: false)
         let mem = pixels.assumingMemoryBound(to: UInt8.self)
@@ -103,6 +106,9 @@ class Image {
         return raw
     }
 
+    /// Attempts to write the pixel values (RGB) into a new png file at the path `filename`.
+    ///
+    /// > Note: The pixel values are converted from linear RGB to [standard RGB](https://en.wikipedia.org/wiki/SRGB).
     func write(to filename: String) -> Bool {
         for (i, pixel) in raw.enumerated() {
             let offset = i * MemoryLayout<BitmapPixel>.size

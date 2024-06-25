@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Material with glass-like properties. It tends to cause a lot more noise than other materials (partly because of caustics).
 final class Dielectric: Material {
     private struct SubstanceGeometry {
         let eta: Float
@@ -61,7 +62,11 @@ final class Dielectric: Material {
     }
 
     let texture: Texture
+    
+    /// Interior index of refraction.
     let etaInterior: Float
+    
+    /// Exterior index of refraction.
     let etaExterior: Float
 
     init(texture: Texture, etaInterior: Float, etaExterior: Float) {

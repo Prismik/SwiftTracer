@@ -15,6 +15,7 @@
 		196ECD562C0B7FC30052DEA6 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
 		196ECD582C0B80350052DEA6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
 		19737CED2C27457900F49204 /* SwiftWavefront in Frameworks */ = {isa = PBXBuildFile; productRef = 19737CEC2C27457900F49204 /* SwiftWavefront */; };
+		19737CF12C2B478D00F49204 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19737CF02C2B478D00F49204 /* Documentation.docc */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
 		1999D0502C0E48F400358201 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D04F2C0E48C500358201 /* cube.obj */; };
 		1999D0522C0F853000358201 /* uv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0512C0F853000358201 /* uv.swift */; };
@@ -77,7 +78,6 @@
 		1999D0D92C17AC2F00358201 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 1999D0D82C17AC2F00358201 /* Progress */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
-		19BBA71F2BF7D70800981204 /* mathError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71E2BF7D70800981204 /* mathError.swift */; };
 		19BBA7232BF82CE800981204 /* ray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7222BF82CE800981204 /* ray.swift */; };
 		19BBA7252BF97A9700981204 /* path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7242BF97A9700981204 /* path.swift */; };
 		19BBA7272BF97AAA00981204 /* integrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7262BF97AAA00981204 /* integrator.swift */; };
@@ -208,6 +208,7 @@
 		193E424F2BFE5EA300D96A37 /* camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = camera.swift; sourceTree = "<group>"; };
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
 		196ECD572C0B80350052DEA6 /* mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mesh.swift; sourceTree = "<group>"; };
+		19737CF02C2B478D00F49204 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		1999D0462C0E3F5200358201 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
 		1999D04F2C0E48C500358201 /* cube.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
 		1999D0512C0F853000358201 /* uv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = uv.swift; sourceTree = "<group>"; };
@@ -241,7 +242,6 @@
 		1999D0BA2C17987F00358201 /* metal.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = metal.json; sourceTree = "<group>"; };
 		19BBA7192BF7D32F00981204 /* transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transform.swift; sourceTree = "<group>"; };
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
-		19BBA71E2BF7D70800981204 /* mathError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mathError.swift; sourceTree = "<group>"; };
 		19BBA7222BF82CE800981204 /* ray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ray.swift; sourceTree = "<group>"; };
 		19BBA7242BF97A9700981204 /* path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = path.swift; sourceTree = "<group>"; };
 		19BBA7262BF97AAA00981204 /* integrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = integrator.swift; sourceTree = "<group>"; };
@@ -429,7 +429,6 @@
 			children = (
 				19E808412B2B6F2600A37D37 /* vector.swift */,
 				19BBA71C2BF7D3A400981204 /* matrix.swift */,
-				19BBA71E2BF7D70800981204 /* mathError.swift */,
 				19BBA72C2BFBB48100981204 /* utils.swift */,
 				19BBA72E2BFC089A00981204 /* sampling.swift */,
 			);
@@ -490,6 +489,7 @@
 		19E8082D2B2B664400A37D37 /* SwiftTracer */ = {
 			isa = PBXGroup;
 			children = (
+				19737CF02C2B478D00F49204 /* Documentation.docc */,
 				1999D0482C0E3F5200358201 /* assets */,
 				19C0A7162C08FB0F00A7A0FD /* lights */,
 				19C0A70D2C06AA7300A7A0FD /* accelerators */,
@@ -762,6 +762,7 @@
 				19EFB3C42C01085F005CC488 /* independent.swift in Sources */,
 				19E808442B2B728C00A37D37 /* sphere.swift in Sources */,
 				19C0A7182C08FB1B00A7A0FD /* area.swift in Sources */,
+				19737CF12C2B478D00F49204 /* Documentation.docc in Sources */,
 				1999D08C2C10F37D00358201 /* blend.swift in Sources */,
 				19E9589B2C1C8F1B00F63FA5 /* lightSampler.swift in Sources */,
 				19E808462B2B729700A37D37 /* shape.swift in Sources */,
@@ -770,7 +771,6 @@
 				19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */,
 				19EFB3C22C010833005CC488 /* sampler.swift in Sources */,
 				19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */,
-				19BBA71F2BF7D70800981204 /* mathError.swift in Sources */,
 				19E8083E2B2B6DE900A37D37 /* material.swift in Sources */,
 				19E958972C1BD19E00F63FA5 /* point.swift in Sources */,
 				19BBA72F2BFC089A00981204 /* sampling.swift in Sources */,
@@ -1008,6 +1008,7 @@
 				DOCC_HOSTING_BASE_PATH = SwiftTracer;
 				PRODUCT_BUNDLE_IDENTIFIER = SwiftTracer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_DOCUMENTATION_COMPILER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTEROP_MODE = objc;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1027,6 +1028,7 @@
 				DOCC_HOSTING_BASE_PATH = SwiftTracer;
 				PRODUCT_BUNDLE_IDENTIFIER = SwiftTracer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_DOCUMENTATION_COMPILER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTEROP_MODE = objc;
 				SWIFT_VERSION = 5.0;
