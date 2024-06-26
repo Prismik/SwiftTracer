@@ -106,16 +106,16 @@ extension Mat4: Decodable {
             let s = Vec3(r.x.sin(), r.y.sin(), r.z.sin())
             self = Mat4(
                 Vec4(
-                    c[1] * c[2] - s[1] * s[0] * s[2],
-                    -c[1] * s[2] - s[1] * s[0] * c[2],
-                    -s[1] * c[0],
+                    c.y * c.z - s.y * s.x * s.z,
+                    -c.y * s.z - s.y * s.x * c.z,
+                    -s.y * c.x,
                     0
                 ),
-                Vec4(c[0] * s[2], c[0] * c[2], -s[0], 0),
+                Vec4(c.x * s.z, c.x * c.z, -s.x, 0),
                 Vec4(
-                    s[1] * c[2] + c[1] * s[0] * s[2],
-                    -s[1] * s[2] + c[1] * s[0] * c[2],
-                    c[1] * c[0],
+                    s.y * c.z + c.y * s.x * s.z,
+                    -s.y * s.z + c.y * s.x * c.z,
+                    c.y * c.x,
                     0
                 ),
                 Vec4(0, 0, 0, 1)

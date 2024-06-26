@@ -11,7 +11,7 @@ This is a work in progress implementation of a physically based rendering engine
 ### Materials
 
 - <doc:Materials>
-- <doc:TextureJson>
+- <doc:Texture>
 - ``Material``
 - ``Diffuse``
 - ``Metal``
@@ -54,4 +54,3 @@ We use several convenience typealiases to bridge with the unfriendly simd types 
 - ``Vec4``
 - ``Mat3``
 - ``Mat4``
-
