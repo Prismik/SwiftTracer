@@ -145,12 +145,12 @@ extension Mat4: Decodable {
             )
         } else if container.contains(.matrix) {
             let values = try container.decode([Float].self, forKey: .matrix)
-            self.init(
+            self = Mat4(
                 Vec4(values[0], values[1], values[2], values[3]),
                 Vec4(values[4], values[5], values[6], values[7]),
                 Vec4(values[8], values[9], values[10], values[11]),
                 Vec4(values[12], values[13], values[14], values[15])
-            )
+            ).transpose
         } else {
             var container = try decoder.unkeyedContainer()
             var rows: [Vec4] = []
