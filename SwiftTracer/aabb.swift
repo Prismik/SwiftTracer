@@ -8,7 +8,7 @@
 import Foundation
 
 /// Bounding box denoted by a min point and a max point.
-struct AABB {
+public struct AABB {
     var min: Point3
     var max: Point3
     

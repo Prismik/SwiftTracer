@@ -9,7 +9,7 @@ import Foundation
 
 class AreaLight: Light {
     let category: LightCategory = .area
-    unowned var shape: Shape!
+    var shape: Shape!
     let texture: Texture
     init(texture: Texture) {
         self.texture = texture
@@ -29,8 +29,9 @@ class AreaLight: Light {
         return LightSample(L: Le, wi: wi, p: es.y, pdf: es.pdf)
     }
     
-    func pdfLi(context: LightSample.Context, y: Point3) -> Float {
-        return shape.pdfDirect(shape: shape, p: context.p, y: y, n: context.n)
+    func pdfLi(context: LightSample.Context, y: Point3, shape: Shape?) -> Float {
+        guard let shape = shape else { return 0 }
+        return self.shape.pdfDirect(shape: shape, p: context.p, y: y, n: context.n)
     }
     
     func phi() -> Color {

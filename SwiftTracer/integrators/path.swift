@@ -77,7 +77,7 @@ final class PathIntegrator: Integrator {
                 var weight: Float = 1
                 if !intersection.shape.material.hasDelta(uv: uv, p: p) {
                     let ctx = LightSample.Context(p: p, n: intersection.n, ns: intersection.n)
-                    let pdfDirect = light.pdfLi(context: ctx, y: newIntersection.p)
+                    let pdfDirect = light.pdfLi(context: ctx, y: newIntersection.p, shape: newIntersection.shape)
                     weight = pdf / (pdf + pdfDirect)
                 }
 

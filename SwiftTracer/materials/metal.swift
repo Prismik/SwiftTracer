@@ -8,15 +8,7 @@
 import Foundation
 
 /**
- Material with perfectly specular reflections or rough reflections.
- 
- # JSON Spec
- 
- | Name          | Type      | Usage  |
- | ------------- | --------- | ------ |
- | ks            | Texture   | Color of the surface (probability of light being reflected at a given wavelength). |
- | roughness     | Texture   | Roughness of the reflection. 0 roughness means a perfectly specular (delta), while other values are rough reflections. |
- 
+ Material with perfectly specular reflections or rough reflections. 
 */
 final class Metal: Material {
     /// Color of the surface within the [0...1] range (probability of light being reflected at a given wavelength).

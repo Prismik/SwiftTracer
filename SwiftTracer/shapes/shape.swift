@@ -9,7 +9,7 @@ import Foundation
 import simd
 
 // TODO Why is it talking about p; investigate
-struct EmitterSample {
+public struct EmitterSample {
     /// Position on the light source
     let y: Point3
     /// Normal associated with p
@@ -22,7 +22,7 @@ struct EmitterSample {
     let shape: Shape
 }
 
-struct Intersection {
+public struct Intersection {
     /// Intersection distance
     let t: Float
     
@@ -50,7 +50,6 @@ struct AnyShape: Decodable {
     enum TypeIdentifier: String, Codable {
         case sphere
         case quad
-        case triangle
         case mesh
     }
 
@@ -126,16 +125,7 @@ struct AnyShape: Decodable {
                 fatalError("Trying to load obj that does not exist")
             }
             let mesh = Mesh(filename: url, transform: transform)
-            let group = ShapeGroup()
-            for id in 0 ..< mesh.facePositionIndexes.count {
-                group.add(shape: Triangle(faceId: id, mesh: mesh))
-            }
-            self.wrapped = group
-        case .triangle:
-            let positions = try container.decode([Vec3].self, forKey: .positions)
-            let normals = try container.decodeIfPresent([Vec3].self, forKey: .normals) ?? []
-            let mesh = Mesh(positions: positions, normals: normals)
-            self.wrapped = Triangle(faceId: 0, mesh: mesh)
+            self.wrapped = mesh
         }
     }
     
@@ -143,10 +133,9 @@ struct AnyShape: Decodable {
     func unwrapped(materials: [String: Material], lights: [String: Light]) -> Shape {
         let shape = self.wrapped
         if material.isEmpty, let light = lights[light] as? AreaLight {
-            if let group = shape as? ShapeGroup {
-                for triangle in group.shapes {
+            if let mesh = shape as? Mesh {
+                for triangle in mesh.triangles {
                     triangle.light = light
-                    light.shape = triangle
                 }
             }
             light.shape = shape
@@ -160,12 +149,12 @@ struct AnyShape: Decodable {
 }
 
 /// Object that can be physically hit by a ray.
-protocol Intersecting {
+public protocol Intersecting {
     func hit(r: Ray) -> Intersection?
 }
 
 /// Geometric primitive that lives within a scene.
-protocol Shape: AnyObject, Intersecting {
+public protocol Shape: AnyObject, Intersecting {
     /// Computed bounding box.
     func aabb() -> AABB
     /// Samples a point on the shape.

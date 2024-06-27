@@ -18,8 +18,8 @@ final class Scene {
     let lightSampler: LightSampler
     let sampler: Sampler
     let integrator: Integrator
-
-    init(root: ShapeAggregate, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, sampler: Sampler, integrator: Integrator) {
+    private var meshes: [Mesh] = []
+    init(root: ShapeAggregate, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, sampler: Sampler, integrator: Integrator, meshes: [Mesh]) {
         self.root = root
         self.materials = materials
         self.camera = camera
@@ -27,6 +27,7 @@ final class Scene {
         self.lightSampler = lightSampler
         self.sampler = sampler
         self.integrator = integrator
+        self.meshes = meshes
     }
     
     func hit(r: Ray) -> Intersection? {
@@ -65,7 +66,6 @@ extension Scene: Decodable {
     }
 
     convenience init(from decoder: Decoder) throws {
-        // TODO Add sampler decoding
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let camera = try container.decode(Camera.self, forKey: .camera)
         let background = try container.decodeIfPresent(Color.self, forKey: .background) ?? Color(1, 1, 1)
@@ -92,12 +92,12 @@ extension Scene: Decodable {
             root = ShapeGroup()
         }
 
+        var meshes: [Mesh] = []
         for s in anyShapes {
-            if let mesh = s.unwrapped(materials: materials, lights: lights) as? ShapeGroup {
-                for ms in mesh.shapes {
-                    ms.material = mesh.material
-                    ms.light = mesh.light
-                    root.add(shape: ms)
+            if let mesh = s.unwrapped(materials: materials, lights: lights) as? Mesh {
+                meshes.append(mesh)
+                for triangle in mesh.triangles {
+                    root.add(shape: triangle)
                 }
             } else {
                 root.add(shape: s.unwrapped(materials: materials, lights: lights))
@@ -120,7 +120,8 @@ extension Scene: Decodable {
             camera: camera,
             background: background,
             sampler: sampler,
-            integrator: integrator
+            integrator: integrator,
+            meshes: meshes
         )
     }
 }

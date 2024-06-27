@@ -87,7 +87,7 @@ extension DirectIntegrator: SamplerIntegrator {
                 let pdf = intersection.shape.material.pdf(wo: wo, wi: direction.wi, uv: uv, p: p)
                 var weight: Float = 1
                 if !intersection.shape.material.hasDelta(uv: uv, p: p) {
-                    let pdfDirect = light.pdfLi(context: ctx, y: newIntersection.p)
+                    let pdfDirect = light.pdfLi(context: ctx, y: newIntersection.p, shape: newIntersection.shape)
                     weight = pdf / (pdf + pdfDirect)
                 }
                 contribution += (weight * eval / pdf)
