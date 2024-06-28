@@ -42,7 +42,7 @@ final class SpotLight: Light {
         return 2 * .pi * intensity * ((1 - cosFalloffStart) + delta / 2)
     }
 
-    func pdfLi(context: LightSample.Context, y: Point3, shape: Shape?) -> Float {
+    func pdfLi(context: LightSample.Context, y: Point3) -> Float {
         return 0
     }
     

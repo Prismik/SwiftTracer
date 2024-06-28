@@ -20,27 +20,55 @@ final class Triangle: Shape {
         return edge1.cross(edge2).length / 2
     }
     
-    // TODO Memory handling of cross-related references
-    unowned var mesh: Mesh
+    let faceId: Int
     
-    unowned var light: Light! {
-        get { return mesh.light }
-        set { mesh.light = newValue }
+    // TODO Memory handling of cross-related references
+    let mesh: Mesh
+    unowned var light: Light!
+
+    private var vertices: (Point3, Point3, Point3) {
+        let indexes = mesh.facePositionIndexes[faceId]
+        let p0 = mesh.positions[Int(indexes.x)]
+        let p1 = mesh.positions[Int(indexes.y)]
+        let p2 = mesh.positions[Int(indexes.z)]
+        
+        return (p0, p1, p2)
     }
 
-    private let vertices: (Point3, Point3, Point3)
-    private let normals: (Vec3, Vec3, Vec3)?
-    private var uvCoordinates: (Vec2, Vec2, Vec2)?
+    private var normals: (Vec3, Vec3, Vec3)? {
+        guard mesh.hasNormals else { return nil }
+        let indexes =  mesh.faceNormalIndexes[faceId]
+        let n0 = mesh.normals[Int(indexes.x)]
+        let n1 = mesh.normals[Int(indexes.y)]
+        let n2 = mesh.normals[Int(indexes.z)]
+        
+        return (n0, n1, n2)
+    }
+
+    private var tangents: (Vec3, Vec3, Vec3)? {
+        guard mesh.hasTangents else { return nil }
+        let indexes = mesh.faceTangentIndexes[faceId]
+        let t0 = mesh.tangents[Int(indexes.x)]
+        let t1 = mesh.tangents[Int(indexes.y)]
+        let t2 = mesh.tangents[Int(indexes.z)]
+        
+        return t0.length != 0 && t1.length != 0 && t2.length != 0
+            ? (t0, t1, t2)
+            : nil
+    }
     
-    init(
-        mesh: Mesh,
-        vertices: (Vec3, Vec3, Vec3),
-        normals: (Vec3, Vec3, Vec3)? = nil,
-        uvs: (Vec2, Vec2, Vec2)? = nil
-    ) {
-        self.vertices = vertices
-        self.normals = normals
-        self.uvCoordinates = uvs
+    private var uvCoordinates: (Vec2, Vec2, Vec2)? {
+        guard mesh.hasUvs else { return nil }
+        let indexes =  mesh.faceUvIndexes[faceId]
+        let uv0 = mesh.uvs[Int(indexes.x)]
+        let uv1 = mesh.uvs[Int(indexes.y)]
+        let uv2 = mesh.uvs[Int(indexes.z)]
+        
+        return (uv0, uv1, uv2)
+    }
+
+    init(faceId: Int, mesh: Mesh) {
+        self.faceId = faceId
         self.mesh = mesh
     }
 

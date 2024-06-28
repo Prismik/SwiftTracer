@@ -8,7 +8,7 @@
 import simd
 import Foundation
 
-public struct SampledDirection {
+struct SampledDirection {
     let weight: Color
     
     /// Incident ray
@@ -98,7 +98,7 @@ struct AnyMaterial: Decodable {
 
 /// Encapsulates the properties of a surface and it's associated BSDF to describe how light is being scattered.
 /// > Important: Both the incident light `wi` and the outgoing view direction `wo` are **normalized**, **localized at zero**, and **facing away from the surface**.
-public protocol Material: AnyObject {
+protocol Material {
     /// Samples an outgoing direction at a given point, given an incident ray and a pseudo randomly generated 2d sample.
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection?
     /// Evaluation of the emitted color at a given point on the surface, with an incident ray and an outgoing direction.

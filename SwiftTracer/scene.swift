@@ -18,8 +18,8 @@ final class Scene {
     let lightSampler: LightSampler
     let sampler: Sampler
     let integrator: Integrator
-    private var meshes: [Mesh] = []
-    init(root: ShapeAggregate, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, sampler: Sampler, integrator: Integrator, meshes: [Mesh]) {
+
+    init(root: ShapeAggregate, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, sampler: Sampler, integrator: Integrator) {
         self.root = root
         self.materials = materials
         self.camera = camera
@@ -27,7 +27,6 @@ final class Scene {
         self.lightSampler = lightSampler
         self.sampler = sampler
         self.integrator = integrator
-        self.meshes = meshes
     }
     
     func hit(r: Ray) -> Intersection? {
@@ -66,6 +65,7 @@ extension Scene: Decodable {
     }
 
     convenience init(from decoder: Decoder) throws {
+        // TODO Add sampler decoding
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let camera = try container.decode(Camera.self, forKey: .camera)
         let background = try container.decodeIfPresent(Color.self, forKey: .background) ?? Color(1, 1, 1)
@@ -92,11 +92,20 @@ extension Scene: Decodable {
             root = ShapeGroup()
         }
 
-        var meshes: [Mesh] = []
         for s in anyShapes {
-            if let mesh = s.unwrapped(materials: materials, lights: lights) as? Mesh {
-                meshes.append(mesh)
-                for triangle in mesh.triangles {
+            if let group = s.unwrapped(materials: materials, lights: lights) as? ShapeGroup {
+                let meshLight = lights.removeValue(forKey: s.light) as? AreaLight
+                for (i, triangle) in group.shapes.enumerated() {
+                    // Remove parent light, and reassign new lights for each triangles. If not present, simply assign parent material
+                    if let meshLight = meshLight {
+                        let triangleLight = AreaLight(texture: meshLight.texture)
+                        triangleLight.shape = triangle
+                        triangle.light = triangleLight
+                        lights["\(s.light)_\(i)"] = triangleLight
+                    } else {
+                        triangle.material = group.material
+                    }
+
                     root.add(shape: triangle)
                 }
             } else {
@@ -120,8 +129,7 @@ extension Scene: Decodable {
             camera: camera,
             background: background,
             sampler: sampler,
-            integrator: integrator,
-            meshes: meshes
+            integrator: integrator
         )
     }
 }

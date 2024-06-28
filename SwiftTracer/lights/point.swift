@@ -33,7 +33,7 @@ final class PointLight: Light {
         return 4 * .pi * I
     }
 
-    func pdfLi(context: LightSample.Context, y: Point3, shape: Shape?) -> Float {
+    func pdfLi(context: LightSample.Context, y: Point3) -> Float {
         return 0
     }
 }

@@ -42,11 +42,15 @@ The last type that can be used is mostly useful for test scenes and debugging pu
 - **Type**: will always be "checkerboard2d"
 - **uv_scale**: _optional_ ``Vec2`` parameter to define the scale of the checkerboard squares
 - **uv_offset**: _optional_ ``Vec2`` parameter to define the offset of the checkerboard squares
+- **color1**: _optional_ ``Color`` parameter to define the first color of the checkerboard squares. Defaults to black.
+- **color2**: _optional_ ``Color`` parameter to define the second color of the checkerboard squares. Defaults to white.
 
 ```json
 "<Texture property>": {
     "type" : "checkerboard2d",
     "uv_scale" : [100, 100],
-    "uv_offset": [5, 5]
+    "uv_offset": [5, 5],
+    "color1": [0, 0, 0],
+    "color2": [1, 0, 0]
 }
 ```

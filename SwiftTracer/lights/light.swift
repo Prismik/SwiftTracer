@@ -147,7 +147,7 @@ public protocol Light: AnyObject {
     var category: LightCategory { get }
     func preprocess()
     func sampleLi(context: LightSample.Context, sample: Vec2) -> LightSample?
-    func pdfLi(context: LightSample.Context, y: Point3, shape: Shape?) -> Float
+    func pdfLi(context: LightSample.Context, y: Point3) -> Float
     func phi() -> Color
     /// Radiance contribution at a given point
     func L(p: Point3, n: Vec3, uv: Vec2, wo: Vec3) -> Color
