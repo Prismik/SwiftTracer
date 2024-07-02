@@ -31,7 +31,7 @@ final class DirectIntegrator: Integrator {
 
 extension DirectIntegrator: SamplerIntegrator {
     func preprocess(scene: Scene, sampler: Sampler) {
-        
+        scene.preprocess()
     }
 
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color {

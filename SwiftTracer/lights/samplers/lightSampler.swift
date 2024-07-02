@@ -25,4 +25,6 @@ protocol LightSampler {
     
     /// Probability mass function independantly of a specific point being illuminated.
     func pmf(light: Light) -> Float
+    
+    var lights: [Light] { get }
 }

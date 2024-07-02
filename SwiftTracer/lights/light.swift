@@ -115,18 +115,7 @@ struct AnyLight: Decodable {
         self.name = try container.decode(String.self, forKey: .name)
         switch category {
         case .delta(type: .position):
-            let transform: Transform
-            if let transforms = try? container.decode([Transform].self, forKey: .transform) {
-                var m = Mat4.identity()
-                for t in transforms {
-                    m = t.m * m
-                }
-                
-                transform = Transform(m: m)
-            }
-            else  {
-                transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
-            }
+            let transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
             let intensity = try container.decode(Color.self, forKey: .intensity)
             do {
                 let falloff = try container.decode(Vec2.self, forKey: .falloff)
@@ -134,6 +123,10 @@ struct AnyLight: Decodable {
             } catch {
                 self.wrapped = PointLight(transform: transform, intensity: intensity)
             }
+        case .delta(type: .direction):
+            let transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
+            let intensity = try container.decode(Color.self, forKey: .intensity)
+            self.wrapped = ConstantEnvironmentLight(transform: transform, intensity: intensity)
         case .area:
             let radiance = try container.decode(Texture.self, forKey: .radiance)
             self.wrapped = AreaLight(texture: radiance)
@@ -143,11 +136,12 @@ struct AnyLight: Decodable {
     }
 }
 
-public protocol Light: AnyObject {
+protocol Light: AnyObject {
     var category: LightCategory { get }
-    func preprocess()
+    func preprocess(scene: Scene)
     func sampleLi(context: LightSample.Context, sample: Vec2) -> LightSample?
     func pdfLi(context: LightSample.Context, y: Point3) -> Float
+    /// Overall light emitted power
     func phi() -> Color
     /// Radiance contribution at a given point
     func L(p: Point3, n: Vec3, uv: Vec2, wo: Vec3) -> Color

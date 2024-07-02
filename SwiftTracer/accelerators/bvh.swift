@@ -376,6 +376,11 @@ final class BVH {
 }
 
 extension BVH: ShapeAggregate {
+    func aabb() -> AABB {
+        guard let root = nodes.first else { fatalError("No elements in BVH while computing AABB") }
+        return root.aabb
+    }
+    
     func hit(r: Ray) -> Intersection? {
         guard !nodes.isEmpty else { return nil }
         switch nodes[0].aabb.hit(r: r) {

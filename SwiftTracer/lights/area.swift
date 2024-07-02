@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AreaLight: Light {
+final class AreaLight: Light {
     let category: LightCategory = .area
     unowned var shape: Shape!
     let texture: Texture
@@ -15,7 +15,7 @@ class AreaLight: Light {
         self.texture = texture
     }
 
-    func preprocess() {
+    func preprocess(scene: Scene) {
         
     }
     

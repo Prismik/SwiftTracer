@@ -11,6 +11,9 @@ final class Scene {
     public static var NB_INTERSECTION = 0
     public static var NB_TRACED_RAYS = 0
     
+    var bounds: (Point3, Float) {
+        return root.aabb().boundingSphere()
+    }
     let root: ShapeAggregate
     let materials: [String: Material]
     let camera: Camera
@@ -48,6 +51,12 @@ final class Scene {
     
     func render() -> Array2d<Color> {
         return integrator.render(scene: self, sampler: sampler)
+    }
+    
+    func preprocess() {
+        for light in lightSampler.lights {
+            light.preprocess(scene: self)
+        }
     }
 }
 

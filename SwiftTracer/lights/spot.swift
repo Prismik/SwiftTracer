@@ -21,7 +21,7 @@ final class SpotLight: Light {
         self.cosFalloffEnd = end.toRadians().cos()
     }
 
-    func preprocess() {
+    func preprocess(scene: Scene) {
         
     }
 

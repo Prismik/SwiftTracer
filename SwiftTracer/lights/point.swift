@@ -17,7 +17,7 @@ final class PointLight: Light {
         self.I = intensity
     }
 
-    func preprocess() {
+    func preprocess(scene: Scene) {
         
     }
 

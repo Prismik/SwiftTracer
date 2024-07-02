@@ -8,7 +8,7 @@
 import Foundation
 
 class UniformLightSampler: LightSampler {
-    private let lights: [Light]
+    let lights: [Light]
 
     init(lights: [Light]) {
         self.lights = lights

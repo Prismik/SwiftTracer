@@ -8,7 +8,15 @@
 import Foundation
 import simd
 
+struct AnyTransform {
+    
+}
+
 struct Transform {
+    enum GenericKey: String, CodingKey {
+        case transform
+    }
+
     let m: Mat4
     let mInv: Mat4
     
@@ -49,10 +57,18 @@ struct Transform {
 extension Transform: Decodable {
     init(from decoder: Decoder) throws {
         do {
+            let container = try decoder.singleValueContainer()
+            let matrices = try container.decode([Mat4].self)
+            var result = Mat4.identity()
+            for m in matrices {
+                result = m * result
+            }
+            
+            self.init(m: result)
+        } catch {
+            // Only one matrix-transform
             let matrix = try Mat4(from: decoder)
             self.init(m: matrix)
-        } catch {
-            self.init(m: Mat4.identity(), mInv: Mat4.identity())
         }
     }
 }

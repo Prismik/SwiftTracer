@@ -26,13 +26,13 @@ struct AABB {
     
     /// Updates the bounding box, such that the new minimum will be equal to `min(self.min, other)` and the new maximum will be `max(self.max, other)`.
     mutating func extend(with other: Point3) {
-        self.min.x = Swift.min(self.min.x, other.x)
-        self.min.y = Swift.min(self.min.y, other.y)
-        self.min.z = Swift.min(self.min.z, other.z)
+        min.x = Swift.min(min.x, other.x)
+        min.y = Swift.min(min.y, other.y)
+        min.z = Swift.min(min.z, other.z)
         
-        self.max.x = Swift.max(self.max.x, other.x)
-        self.max.y = Swift.max(self.max.y, other.y)
-        self.max.z = Swift.max(self.max.z, other.z)
+        max.x = Swift.max(max.x, other.x)
+        max.y = Swift.max(max.y, other.y)
+        max.z = Swift.max(max.z, other.z)
     }
     
     /// Compute intersection with the bounding box.
@@ -46,8 +46,8 @@ struct AABB {
             // Inverse ray distance (can be optimized if this information is cached inside the ray structure)
             let dInv = 1 / r.d[d]
             
-            var t0 = (self.min[d] - r.o[d]) * dInv
-            var t1 = (self.max[d] - r.o[d]) * dInv
+            var t0 = (min[d] - r.o[d]) * dInv
+            var t1 = (max[d] - r.o[d]) * dInv
             
             // When the direction is inverse, we will hit the plane "max" before "min".
             // Thus, we will swap the two distances so t0 is always the minimum.
@@ -67,14 +67,14 @@ struct AABB {
 
     func center() -> Point3 {
         return 0.5 * Point3(
-            self.min.x + self.max.x,
-            self.min.y + self.max.y,
-            self.min.z + self.max.z
+            min.x + max.x,
+            min.y + max.y,
+            min.z + max.z
         )
     }
 
     func diagonal() -> Vec3 {
-        return self.max - self.min
+        return max - min
     }
     
     func area() -> Float {
@@ -100,15 +100,20 @@ struct AABB {
     func merge(with other: AABB) -> Self {
         return AABB(
             min: Point3(
-                Swift.min(self.min.x, other.min.x),
-                Swift.min(self.min.y, other.min.y),
-                Swift.min(self.min.z, other.min.z)
+                Swift.min(min.x, other.min.x),
+                Swift.min(min.y, other.min.y),
+                Swift.min(min.z, other.min.z)
             ),
             max: Point3(
-                Swift.max(self.max.x, other.max.x),
-                Swift.max(self.max.y, other.max.y),
-                Swift.max(self.max.z, other.max.z)
+                Swift.max(max.x, other.max.x),
+                Swift.max(max.y, other.max.y),
+                Swift.max(max.z, other.max.z)
             )
         )
+    }
+    
+    func boundingSphere() -> (Point3, Float) {
+        let center = center()
+        return (center, (max - center).length )
     }
 }

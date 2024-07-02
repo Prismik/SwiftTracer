@@ -11,7 +11,7 @@ This is a work in progress implementation of a physically based rendering engine
 ### Materials
 
 - <doc:Materials>
-- <doc:Texture>
+- <doc:Textures>
 - ``Material``
 - ``Diffuse``
 - ``Metal``

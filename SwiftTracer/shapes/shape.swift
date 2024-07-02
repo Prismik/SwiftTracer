@@ -85,18 +85,7 @@ struct AnyShape: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.type = try container.decode(TypeIdentifier.self, forKey: .type)
         // TODO Make available to other objects
-        let transform: Transform
-        if let transforms = try? container.decode([Transform].self, forKey: .transform) {
-            var m = Mat4.identity()
-            for t in transforms {
-                m = t.m * m
-            }
-            
-            transform = Transform(m: m)
-        }
-        else  {
-            transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
-        }
+        let transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
         self.material = try container.decodeIfPresent(String.self, forKey: .material) ?? ""
         self.light = try container.decodeIfPresent(String.self, forKey: .light) ?? ""
         switch type {
@@ -174,6 +163,7 @@ protocol Shape: AnyObject, Intersecting {
 }
 
 protocol ShapeAggregate: Intersecting {
+    func aabb() -> AABB
     func add(shape: Shape)
     func build()
 }

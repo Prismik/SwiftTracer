@@ -94,7 +94,7 @@ final class PathIntegrator: Integrator {
 
 extension PathIntegrator: SamplerIntegrator {
     func preprocess(scene: Scene, sampler: Sampler) {
-        
+        scene.preprocess()
     }
 
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
