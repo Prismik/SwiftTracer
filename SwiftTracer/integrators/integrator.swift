@@ -20,6 +20,7 @@ protocol SamplerIntegrator {
     func preprocess(scene: Scene, sampler: Sampler)
     /// Estimate the incoming light for a given ray
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color
+    func render(pixel: (x: Int, y: Int), scene: Scene, sampler: Sampler) -> Color
 }
 
 protocol Integrator {

@@ -98,8 +98,21 @@ extension PathIntegrator: SamplerIntegrator {
     }
 
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
-        guard mis else { return pathNoMis(ray: ray, scene: scene, sampler: sampler) }
+        return mis
+            ? pathMis(ray: ray, scene: scene, sampler: sampler)
+            : pathNoMis(ray: ray, scene: scene, sampler: sampler)
+    }
+    
+    func render(pixel: (x: Int, y: Int), scene: Scene, sampler: Sampler) -> Color {
+        let positionInImage = Vec2(Float(pixel.x), Float(pixel.y))
+        let ray = scene.camera.createRay(from: positionInImage)
         
+        return mis
+            ? pathMis(ray: ray, scene: scene, sampler: sampler)
+            : pathNoMis(ray: ray, scene: scene, sampler: sampler)
+    }
+    
+    private func pathMis(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
         guard let intersection = scene.hit(r: ray) else { return scene.background }
         let frame = Frame(n: intersection.n)
         let wo = frame.toLocal(v: -ray.d).normalized()
@@ -108,7 +121,7 @@ extension PathIntegrator: SamplerIntegrator {
             ? intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
             : trace(intersection: intersection, ray: ray, scene: scene, sampler: sampler, depth: 0)
     }
-    
+
     private func pathNoMis(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
         var depth = 0
         var throughput = Color(repeating: 1)

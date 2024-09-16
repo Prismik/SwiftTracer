@@ -22,4 +22,8 @@ extension NormalIntegrator: SamplerIntegrator {
         guard let intersection = scene.hit(r: ray) else { return Color() }
         return (intersection.n + Vec3(repeating: 1)) * 0.5
     }
+    
+    func render(pixel: (x: Int, y: Int), scene: Scene, sampler: Sampler) -> Color {
+        return Color()
+    }
 }

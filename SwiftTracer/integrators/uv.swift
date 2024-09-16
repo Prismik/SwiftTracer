@@ -23,4 +23,8 @@ extension UvIntegrator: SamplerIntegrator {
         let uv = intersection.uv
         return Vec3(uv.x.modulo(1.0), uv.y.modulo(1.0), 0)
     }
+    
+    func render(pixel: (x: Int, y: Int), scene: Scene, sampler: Sampler) -> Color {
+        return Color()
+    }
 }

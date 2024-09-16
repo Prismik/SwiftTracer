@@ -47,6 +47,10 @@ extension DirectIntegrator: SamplerIntegrator {
         }
     }
     
+    func render(pixel: (x: Int, y: Int), scene: Scene, sampler: Sampler) -> Color {
+        return Color()
+    }
+    
     private func mis(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
         guard let intersection = scene.hit(r: ray) else { return scene.background }
 

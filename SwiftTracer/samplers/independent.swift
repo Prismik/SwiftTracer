@@ -22,7 +22,7 @@ final class IndependentSampler: Sampler {
         return Vec2(gen(), gen())
     }
     
-    private func gen() -> Float {
+    func gen() -> Float {
         Float.random(in: 0 ... 1)
     }
 }

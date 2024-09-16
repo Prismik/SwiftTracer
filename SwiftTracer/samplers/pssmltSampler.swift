@@ -8,7 +8,7 @@
 import Foundation
 
 final class PSSMLTSampler: Sampler {
-    private enum Step {
+    enum Step {
         case small
         case large
     }
@@ -24,13 +24,12 @@ final class PSSMLTSampler: Sampler {
         }
     }
     
-    var nbSamples: Int = 0
+    var nbSamples: Int = 10000
+    
+    var step: Step = .small
+    let largeStepRatio: Float = 0.3
     
     private var sampleIndex = 0
-
-    private var step: Step = .small
-
-    private let largeStepRatio: Float = 0.3
     private var largeStepTime = 0
     
     /// Number of accepted mutations
@@ -79,7 +78,7 @@ final class PSSMLTSampler: Sampler {
         return Vec2(next(), next())
     }
 
-    private func gen() -> Float {
+    func gen() -> Float {
         Float.random(in: 0 ... 1)
     }
     
