@@ -1,4 +1,10 @@
+<div align="center">
+
 # SwiftTracer - A physically based rendering engine [WIP]
+
+[![swift package index platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ftayloraswift%2Fswift-png%2Fbadge%3Ftype%3Dplatforms)](https://github.com/Prismik/SwiftTracer)
+
+</div>
 
 This is my (currently) work in progress implementation of a physically based rendering engine that is inspired by PBRT, Mitsuba and many other contributors in the field.
 
