@@ -39,7 +39,7 @@ class Image {
                     let r = Float(v.r) / 255
                     let g = Float(v.g) / 255
                     let b = Float(v.b) / 255
-                    pixels.set(value: Color(r, g, b), x, y)
+                    pixels.set(value: Color(r, g, b).toLinearRGB(), x, y)
                 }
             }
         } catch {
@@ -50,12 +50,14 @@ class Image {
     }
 
     func write(to filename: String) -> Bool {
+        self.path = filename
         let packed = pixels.reduce(into: [PNG.RGBA<UInt8>](), { acc, rgb in
+            let srgb = rgb.toSRGB()
             acc.append(
                 PNG.RGBA<UInt8>(
-                    UInt8(rgb.x * 255), 
-                    UInt8(rgb.y * 255), 
-                    UInt8(rgb.z * 255)
+                    UInt8(Int(max(0, min(srgb.x, 1)) * 255)), 
+                    UInt8(Int(max(0, min(srgb.y, 1)) * 255)), 
+                    UInt8(Int(max(0, min(srgb.z, 1)) * 255))
                 )
             )
         })
@@ -66,8 +68,7 @@ class Image {
             layout: .init(format: .rgba8(palette: [], fill: nil))
         )
         do {
-            try image.compress(path: path, level: 0)
-            return true
+            return try image.compress(path: path, level: 0) != nil
         } catch {
             return false
         }

@@ -111,9 +111,7 @@ struct AnyShape: Decodable {
             )
         case .mesh:
             let filename = try container.decode(String.self, forKey: .filename)
-            guard let url = Bundle.main.url(forResource: filename, withExtension: "obj", subdirectory: "assets") else {
-                fatalError("Trying to load obj that does not exist")
-            }
+            let url = URL(fileURLWithPath: "SwiftTracer/assets/mesh/\(filename).obj")
             let mesh = Mesh(filename: url, transform: transform)
             let group = ShapeGroup()
             for id in 0 ..< mesh.facePositionIndexes.count {
