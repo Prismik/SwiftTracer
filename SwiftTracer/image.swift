@@ -6,6 +6,74 @@
 //
 
 import Foundation
+
+#if os(Linux)
+import PNG
+
+class Image {
+    private var path: String = ""
+    private var pixels: Array2d<Color>
+    init(array: Array2d<Color>) {
+        self.pixels = array
+    }
+
+    init?(filename: String, bundle: Bundle = Bundle.main, subdir: String? = "assets") {
+        guard let url = bundle.url(forResource: filename, withExtension: nil, subdirectory: subdir) else { return nil }
+        self.path = url.absoluteString
+        self.pixels = Array2d<Color>()
+    }
+
+    func read() -> Array2d<Color> {
+        do {
+            guard let image:PNG.Image = try .decompress(path: path) else {
+                return pixels
+            }
+
+            let rgba: [PNG.RGBA<UInt8>] = image.unpack(as: PNG.RGBA<UInt8>.self)
+            let size: (x:Int, y:Int) = image.size
+
+            for x in 0 ..< size.x {
+                for y in 0 ..< size.y {
+                    let i = x + y * x
+                    let v = rgba[i]
+                    let r = Float(v.r) / 255
+                    let g = Float(v.g) / 255
+                    let b = Float(v.b) / 255
+                    pixels.set(value: Color(r, g, b), x, y)
+                }
+            }
+        } catch {
+            return pixels
+        }
+
+        return pixels
+    }
+
+    func write(to filename: String) -> Bool {
+        let packed = pixels.reduce(into: [PNG.RGBA<UInt8>](), { acc, rgb in
+            acc.append(
+                PNG.RGBA<UInt8>(
+                    UInt8(rgb.x * 255), 
+                    UInt8(rgb.y * 255), 
+                    UInt8(rgb.z * 255)
+                )
+            )
+        })
+        let size = (pixels.xSize, pixels.ySize)
+        let image: PNG.Image = .init(
+            packing: packed, 
+            size: size,
+            layout: .init(format: .rgba8(palette: [], fill: nil))
+        )
+        do {
+            try image.compress(path: path, level: 0)
+            return true
+        } catch {
+            return false
+        }
+    }
+}
+#else
 import CoreGraphics
 import ImageIO
 import UniformTypeIdentifiers
@@ -124,6 +192,7 @@ class Image {
         return CGImageDestinationFinalize(destination)
     }
 }
+#endif
 
 private extension Color {
     func toSRGB() -> Self {
