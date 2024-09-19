@@ -100,7 +100,11 @@ extension Texture: Decodable {
                 let uvScale = try container.decodeIfPresent(Vec2.self, forKey: .uvScale) ?? Vec2(repeating: 1)
                 let uvOffset = try container.decodeIfPresent(Vec2.self, forKey: .uvOffset) ?? Vec2()
                 let vflip = try container.decodeIfPresent(Bool.self, forKey: .vflip) ?? true
+                #if os(Linux)
+                let values = Image(filename: file).read()
+                #else
                 guard let values = Image(filename: file)?.read() else { fatalError("Error while reading image \(file)") }
+                #endif
                 if vflip {
                     values.flipVertically()
                 }
@@ -138,7 +142,11 @@ extension Texture: Decodable {
     }
     
     private static func from(filename: String) -> Texture {
+        #if os(Linux)
+        let values = Image(filename: filename).read()
+        #else
         guard let values = Image(filename: filename)?.read() else { fatalError("Error while reading image \(filename)") }
+        #endif
         values.flipVertically()
         return .textureMap(values: values, scale: 1.0, uvScale: Vec2(repeating: 1), uvOffset: Vec2())
     }

@@ -148,32 +148,3 @@ extension Scene: Decodable {
         )
     }
 }
-
-extension Scene {
-    enum Example: String {
-        case simple
-        case threeSpheres
-        case teapot
-        case triangle
-        case cornelBox
-        case refract
-        case reflect
-        case roughness
-        case checkerboard = "checkerboardXY"
-        case textures
-        case blend
-        case direct
-        case veach
-        case odyssey
-        case odysseyTriangle = "odyssey_triangle"
-        case test
-        
-        func create() throws -> Data {
-            guard let url = Bundle.main.url(forResource: self.rawValue, withExtension: "json", subdirectory: "assets") else {
-                fatalError("Trying to load obj that does not exist")
-            }
-            
-            return try Data(contentsOf: url)
-        }
-    }
-}

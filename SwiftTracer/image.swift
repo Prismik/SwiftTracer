@@ -17,8 +17,8 @@ class Image {
         self.pixels = array
     }
 
-    init?(filename: String, bundle: Bundle = Bundle.main, subdir: String? = "assets") {
-        guard let url = bundle.url(forResource: filename, withExtension: nil, subdirectory: subdir) else { return nil }
+    init(filename: String) {
+        let url = URL(fileURLWithPath: "SwiftTracer/assets/scenes/\(filename)")
         self.path = url.absoluteString
         self.pixels = Array2d<Color>()
     }
@@ -31,10 +31,10 @@ class Image {
 
             let rgba: [PNG.RGBA<UInt8>] = image.unpack(as: PNG.RGBA<UInt8>.self)
             let size: (x:Int, y:Int) = image.size
-
+            self.pixels = Array2d<Color>(x: size.x, y: size.x, value: Color())
             for x in 0 ..< size.x {
                 for y in 0 ..< size.y {
-                    let i = x + y * x
+                    let i = x + y * size.x
                     let v = rgba[i]
                     let r = Float(v.r) / 255
                     let g = Float(v.g) / 255
@@ -50,7 +50,11 @@ class Image {
     }
 
     func write(to filename: String) -> Bool {
+        #if os(Linux)
         self.path = filename
+        #else
+        self.path = "/Users/fbp/code/\(filename)"
+        #endif
         let packed = pixels.reduce(into: [PNG.RGBA<UInt8>](), { acc, rgb in
             let srgb = rgb.toSRGB()
             acc.append(
@@ -132,8 +136,8 @@ class Image {
         self.cgImage = nil
     }
     
-    init?(filename: String, bundle: Bundle = Bundle.main, subdir: String? = "assets") {
-        guard let url = bundle.url(forResource: filename, withExtension: nil, subdirectory: subdir) else { return nil }
+    init?(filename: String) {
+        let url = URL(fileURLWithPath: "assets/\(filename)")
         guard let data = try? Data(contentsOf: url) else { return nil }
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         guard let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }

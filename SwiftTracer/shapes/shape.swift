@@ -111,7 +111,12 @@ struct AnyShape: Decodable {
             )
         case .mesh:
             let filename = try container.decode(String.self, forKey: .filename)
+            #if os(Linux)
             let url = URL(fileURLWithPath: "SwiftTracer/assets/mesh/\(filename).obj")
+            #else
+            let url = URL(fileURLWithPath: "assets/\(filename).obj")
+            #endif
+
             let mesh = Mesh(filename: url, transform: transform)
             let group = ShapeGroup()
             for id in 0 ..< mesh.facePositionIndexes.count {
