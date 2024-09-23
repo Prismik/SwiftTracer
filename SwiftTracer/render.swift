@@ -18,19 +18,19 @@ struct Tracer: ParsableCommand {
     
     mutating func run() throws {
         let out = output ?? "out.png"
-        guard let example = Scene.Example(rawValue: input) else {
-            fatalError("Trying to load scene which doesn't exist: \(input)")
-        }
-
-        Render.run(input: example, output: out)
+        Render.run(input: input, output: out)
     }
 }
 
 enum Render {
-    static func run(input: Scene.Example, output: String) {
+    static func run(input: String, output: String) {
         do {
             let decoder = JSONDecoder()
-            let scene = try decoder.decode(Scene.self, from: input.create())
+            let url = URL(fileURLWithPath: input)
+            guard let data = try? Data(contentsOf: url) else {
+                fatalError("Trying to load scene which doesn't exist: \(input)")
+            }
+            let scene = try decoder.decode(Scene.self, from: data)
             let clock = ContinuousClock()
             let time = clock.measure {
                 let pixels = scene.render()

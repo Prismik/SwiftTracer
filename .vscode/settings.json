@@ -1,0 +1,6 @@
+{
+    "swift.path": "/Swift/swift-5.10.1-RELEASE-ubuntu22.04/usr/bin",
+    "swift.swiftEnvironmentVariables": {
+        "DEVELOPER_DIR": "public"
+    }
+}
