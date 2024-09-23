@@ -102,7 +102,8 @@ extension Scene: Decodable {
         }
 
         for s in anyShapes {
-            if let group = s.unwrapped(materials: materials, lights: lights) as? ShapeGroup {
+            let unwrapped = s.unwrapped(materials: materials, lights: lights)
+            if let group = unwrapped as? ShapeGroup {
                 let meshLight = lights.removeValue(forKey: s.light) as? AreaLight
                 for (i, triangle) in group.shapes.enumerated() {
                     // Remove parent light, and reassign new lights for each triangles. If not present, simply assign parent material
@@ -118,7 +119,12 @@ extension Scene: Decodable {
                     root.add(shape: triangle)
                 }
             } else {
-                root.add(shape: s.unwrapped(materials: materials, lights: lights))
+                // Ensure reciprocal reference
+                if let areaLight = unwrapped.light as? AreaLight {
+                    areaLight.shape = unwrapped
+                }
+
+                root.add(shape: unwrapped)
             }
         }
         
@@ -140,34 +146,5 @@ extension Scene: Decodable {
             sampler: sampler,
             integrator: integrator
         )
-    }
-}
-
-extension Scene {
-    enum Example: String {
-        case simple
-        case threeSpheres
-        case teapot
-        case triangle
-        case cornelBox
-        case refract
-        case reflect
-        case roughness
-        case checkerboard = "checkerboardXY"
-        case textures
-        case blend
-        case direct
-        case veach
-        case odyssey
-        case odysseyTriangle = "odyssey_triangle"
-        case test
-        
-        func create() throws -> Data {
-            guard let url = Bundle.main.url(forResource: self.rawValue, withExtension: "json", subdirectory: "assets") else {
-                fatalError("Trying to load obj that does not exist")
-            }
-            
-            return try Data(contentsOf: url)
-        }
     }
 }

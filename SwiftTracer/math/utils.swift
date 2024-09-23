@@ -7,6 +7,7 @@
 
 import Foundation
 import Progress
+import simd
 
 enum Utils {
     static func directionFrom(phi: Float, theta: Float) -> Vec3 {
@@ -188,19 +189,36 @@ extension Float {
     }
     
     func pow(_ n: Float) -> Float {
-        return Darwin.pow(self, n)
+        #if os(Linux)
+            return Glibc.pow(self, n)
+        #else
+            return Darwin.pow(self, n)
+        #endif
+        
     }
     
     func acos() -> Float {
-        return Darwin.acos(self)
+        #if os(Linux)
+            return Glibc.acos(self)
+        #else
+            return Darwin.acos(self)
+        #endif
     }
     
     func cos() -> Float {
-        return Darwin.cos(self)
+        #if os(Linux)
+            return Glibc.cos(self)
+        #else
+            return Darwin.cos(self)
+        #endif
     }
     
     func sin() -> Float {
-        return Darwin.sin(self)
+        #if os(Linux)
+            return Glibc.sin(self)
+        #else
+            return Darwin.sin(self)
+        #endif
     }
     
     func abs() -> Float {
