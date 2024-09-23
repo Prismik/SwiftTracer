@@ -9,12 +9,14 @@ import Foundation
 
 final class PssmltIntegrator: Integrator {
     struct SampleMCMC {
+        var pos: Vec2
         var contrib: Color
         var weight: Float = 0
         var targetFunction: Float = 0
         
-        init(contrib: Color) {
+        init(contrib: Color, pos: Vec2) {
             self.contrib = contrib
+            self.pos = pos
             self.targetFunction = (contrib.x + contrib.y + contrib.z) / 3
         }
     }
@@ -49,16 +51,17 @@ final class PssmltIntegrator: Integrator {
             proposedState.weight += acceptProbability
             
             if acceptProbability > sampler.gen() {
-                // TODO Accumulate current state
+                image.add(state: state)
                 sampler.accept()
                 state = proposedState
             } else {
-                // TODO Accumulate proposed state
+                image.add(state: proposedState)
                 sampler.reject()
             }
         }
 
         // Flush the last state
+        image.add(state: state)
         sampler.reset()
         return image
     }
@@ -68,6 +71,12 @@ final class PssmltIntegrator: Integrator {
         let x = Int(scene.camera.resolution.x * rng2.x)
         let y = Int(scene.camera.resolution.y * rng2.y)
         let contrib = integrator.render(pixel: (x, y), scene: scene, sampler: sampler)
-        return SampleMCMC(contrib: contrib)
+        return SampleMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
+    }
+}
+
+private extension Array2d<Color> {
+    func add(state: PssmltIntegrator.SampleMCMC) {
+        add(value: state.contrib * state.weight, Int(state.pos.x), Int(state.pos.y))
     }
 }

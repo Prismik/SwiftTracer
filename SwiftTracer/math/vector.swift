@@ -62,11 +62,15 @@ extension Vec2 {
     }
 }
 
-extension Vec3 {
+extension Vec3: AdditiveArithmetic where Scalar: BinaryFloatingPoint {
     enum Axis {
         case x
         case y
         case z
+    }
+
+    public static var zero: Vec3 {
+        return Vec3()
     }
 
     var length: Float {

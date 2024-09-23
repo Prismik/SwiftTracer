@@ -13,6 +13,7 @@ enum IntegratorType: String, Decodable {
     case normal
     case uv
     case direct
+    case pssmlt
 }
 
 /// Integrating one pixel at a time.
@@ -51,8 +52,10 @@ struct AnyIntegrator: Decodable {
             self.wrapped = DirectIntegrator(strategy: strategy)
         case .normal:
             self.wrapped = NormalIntegrator()
-        case.uv:
+        case .uv:
             self.wrapped = UvIntegrator()
+        case .pssmlt:
+            self.wrapped = PssmltIntegrator()
         }
     }
 }

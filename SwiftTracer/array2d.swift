@@ -8,7 +8,7 @@
 import Foundation
 
 /// Allows linear iteration on every `Array2d` elements.
-struct TwoDimensionalIterator<T>: IteratorProtocol {
+struct TwoDimensionalIterator<T: AdditiveArithmetic>: IteratorProtocol {
     var x: Int = 0
     var y: Int = 0
     
@@ -33,7 +33,7 @@ struct TwoDimensionalIterator<T>: IteratorProtocol {
 }
 
 /// Two-dimensional array represented as a one dimensional array.
-class Array2d<T> {
+class Array2d<T: AdditiveArithmetic> {
     /// Typically the length.
     private(set) var xSize: Int
     /// Typically the height.
@@ -77,6 +77,17 @@ class Array2d<T> {
     /// Sets the value at index (x, y).
     func set(value: T, _ x: Int, _ y: Int) {
         storage[index(x, y)] = value
+    }
+
+    /// Adds the value to the current value at index (x, y).
+    func add(value: T, _ x: Int, _ y: Int) {
+        let current = storage[index(x, y)]
+        storage[index(x, y)] = current + value
+    }
+
+    func substract(value: T, _ x: Int, _ y: Int) {
+        let current = storage[index(x, y)]
+        storage[index(x, y)] = current - value
     }
 
     /// Flips the value vertically, such that the element at (0, 0) becomes (0, n), where n is the `ySize`.
