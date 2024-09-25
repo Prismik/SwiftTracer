@@ -24,7 +24,9 @@ final class PSSMLTSampler: Sampler {
         }
     }
     
-    var nbSamples: Int = 100
+    static var count = 0
+    var id: Int = 0
+    var nbSamples: Int = 5000
     
     var step: Step = .small
     let largeStepRatio: Float = 0.3
@@ -87,7 +89,10 @@ final class PSSMLTSampler: Sampler {
     
     // TODO Add init with nb samples and copy value here
     func clone() -> PSSMLTSampler {
-        return PSSMLTSampler()
+        let newSampler = PSSMLTSampler()
+        newSampler.id = PSSMLTSampler.count + 1
+        PSSMLTSampler.count += 1
+        return newSampler
     }
 
     private func primarySpaceGen(i: Int) -> Float {
