@@ -69,7 +69,7 @@ private struct Block {
     var rayCount: Int
 }
 
-private struct Printer: ProgressBarPrinter {
+struct Printer: ProgressBarPrinter {
     var lastPrintedTime = 0.0
 
     init() {

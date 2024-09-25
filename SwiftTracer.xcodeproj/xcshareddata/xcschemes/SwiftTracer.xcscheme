@@ -54,7 +54,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "assets/blend.json"
+            argument = "assets/cornelBox.json"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

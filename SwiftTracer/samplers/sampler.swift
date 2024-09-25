@@ -11,6 +11,7 @@ import Foundation
 struct AnySampler: Decodable {
     enum TypeIdentifier: String, Codable {
         case independent
+        case pssmlt
     }
 
     enum CodingKeys: String, CodingKey {
@@ -22,8 +23,13 @@ struct AnySampler: Decodable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(TypeIdentifier.self, forKey: .type)
-        let nspp = try container.decodeIfPresent(Int.self, forKey: .nspp) ?? 10
-        self.wrapped = IndependentSampler(nspp: nspp)
+        switch type {
+        case .independent:
+            let nspp = try container.decodeIfPresent(Int.self, forKey: .nspp) ?? 10
+            self.wrapped = IndependentSampler(nspp: nspp)
+        case .pssmlt:
+            self.wrapped = PSSMLTSampler()
+        }
     }
 }
 

@@ -107,11 +107,11 @@ class Array2d<T: AdditiveArithmetic> {
         self.storage = copy.storage
     }
 
-    private func index(_ x: Int, _ y: Int) -> Int {
+    internal func index(_ x: Int, _ y: Int) -> Int {
         return y * xSize + x
     }
     
-    private func index2d(_ i: Int) -> (Int, Int) {
+    internal func index2d(_ i: Int) -> (Int, Int) {
         return (i % xSize, i / xSize)
     }
 }

@@ -24,7 +24,7 @@ final class PSSMLTSampler: Sampler {
         }
     }
     
-    var nbSamples: Int = 10000
+    var nbSamples: Int = 100
     
     var step: Step = .small
     let largeStepRatio: Float = 0.3
@@ -36,28 +36,31 @@ final class PSSMLTSampler: Sampler {
     private var time = 0
     
     private var u: [PrimarySample] = []
-    private var states: [(Int, PrimarySample)] = []
+    private var backup: [(Int, PrimarySample)] = []
     
     private let s1: Float = 1 / 1024
     private let s2: Float = 1 / 64
     private lazy var logRatio = -log(s2/s1)
     
+    var nbLargeSteps = 0
+    var nbSmallSteps = 0
+
     func accept() {
         if step == .large {
             largeStepTime = time
         }
         
         time += 1
-        states.removeAll()
+        backup.removeAll()
         sampleIndex = 0
     }
     
     func reject() {
-        for i in 0 ..< states.count {
-            u[states[i].0] = states[i].1
+        for i in 0 ..< backup.count {
+            u[backup[i].0] = backup[i].1
         }
         
-        states.removeAll()
+        backup.removeAll()
         sampleIndex = 0
     }
 
@@ -82,6 +85,11 @@ final class PSSMLTSampler: Sampler {
         Float.random(in: 0 ... 1)
     }
     
+    // TODO Add init with nb samples and copy value here
+    func clone() -> PSSMLTSampler {
+        return PSSMLTSampler()
+    }
+
     private func primarySpaceGen(i: Int) -> Float {
         while i >= u.count {
             u.append(PrimarySample(value: gen()))
@@ -90,9 +98,10 @@ final class PSSMLTSampler: Sampler {
         guard u[i].modify < time else { return u[i].value }
 
         if step == .large {
-            states.append((i, u[i]))
+            backup.append((i, u[i]))
             u[i].modify = time
             u[i].value = gen()
+            nbLargeSteps += 1
         } else {
             if u[i].modify < largeStepTime {
                 u[i].modify = largeStepTime
@@ -104,9 +113,10 @@ final class PSSMLTSampler: Sampler {
                 u[i].value = mutate(sample: u[i].value)
             }
             
-            states.append((i, u[i]))
+            backup.append((i, u[i]))
             u[i].modify += 1
             u[i].value = mutate(sample: u[i].value)
+            nbSmallSteps += 1
         }
         
         return u[i].value
