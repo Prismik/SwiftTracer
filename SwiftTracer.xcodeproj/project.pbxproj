@@ -14,6 +14,43 @@
 		1944809A2CA8A5C1002A90C6 /* rng.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194480992CA8A5C1002A90C6 /* rng.swift */; };
 		1944809C2CA8AD30002A90C6 /* distribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944809B2CA8AD30002A90C6 /* distribution.swift */; };
 		1944809F2CA8B0D5002A90C6 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 1944809E2CA8B0D5002A90C6 /* Algorithms */; };
+		194480A12CA8C788002A90C6 /* rngTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194480A02CA8C788002A90C6 /* rngTest.swift */; };
+		194480A22CA8C7CE002A90C6 /* rng.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194480992CA8A5C1002A90C6 /* rng.swift */; };
+		194480A32CA8C835002A90C6 /* shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808452B2B729700A37D37 /* shape.swift */; };
+		194480A42CA8C86B002A90C6 /* sampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C12C010833005CC488 /* sampler.swift */; };
+		194480A52CA8C87B002A90C6 /* scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7322BFD4F0000981204 /* scene.swift */; };
+		194480A62CA8C8A5002A90C6 /* sphere.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808432B2B728C00A37D37 /* sphere.swift */; };
+		194480A72CA8C8A8002A90C6 /* quad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3B92C00EBCF005CC488 /* quad.swift */; };
+		194480A82CA8C8AA002A90C6 /* shapeGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3BD2C00F63E005CC488 /* shapeGroup.swift */; };
+		194480A92CA8C8AC002A90C6 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
+		194480AA2CA8C8AE002A90C6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
+		194480AB2CA8C8BE002A90C6 /* light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E958982C1BD1AD00F63FA5 /* light.swift */; };
+		194480AC2CA8C8C5002A90C6 /* material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083D2B2B6DE900A37D37 /* material.swift */; };
+		194480AD2CA8C8D8002A90C6 /* diffuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E8083F2B2B6E7000A37D37 /* diffuse.swift */; };
+		194480AE2CA8C8DA002A90C6 /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
+		194480AF2CA8C8DC002A90C6 /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
+		194480B02CA8C8DE002A90C6 /* blend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D08B2C10F37D00358201 /* blend.swift */; };
+		194480B12CA8C8E0002A90C6 /* normalMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0A32C137BF900358201 /* normalMap.swift */; };
+		194480B22CA8C8F7002A90C6 /* texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7302BFC0C7100981204 /* texture.swift */; };
+		194480B32CA8C900002A90C6 /* area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* area.swift */; };
+		194480B42CA8C902002A90C6 /* point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E958962C1BD19E00F63FA5 /* point.swift */; };
+		194480B52CA8C905002A90C6 /* spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1917635D2C20E927007688D4 /* spot.swift */; };
+		194480B62CA8C907002A90C6 /* constantEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1986951E2C2F367A00EEF672 /* constantEnvironment.swift */; };
+		194480B72CA8C912002A90C6 /* lightSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E9589A2C1C8F1B00F63FA5 /* lightSampler.swift */; };
+		194480B82CA8C914002A90C6 /* uniform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E9589D2C1C907C00F63FA5 /* uniform.swift */; };
+		194480B92CA8C91D002A90C6 /* integrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7262BF97AAA00981204 /* integrator.swift */; };
+		194480BA2CA8C920002A90C6 /* path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7242BF97A9700981204 /* path.swift */; };
+		194480BB2CA8C922002A90C6 /* normal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CC2C03FDDF005CC488 /* normal.swift */; };
+		194480BC2CA8C924002A90C6 /* uv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0512C0F853000358201 /* uv.swift */; };
+		194480BD2CA8C926002A90C6 /* direct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D09F2C1361BB00358201 /* direct.swift */; };
+		194480BE2CA8C928002A90C6 /* pssmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901D2C90D3B200D05F58 /* pssmlt.swift */; };
+		194480C02CA8C937002A90C6 /* pssmltSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901F2C90D63400D05F58 /* pssmltSampler.swift */; };
+		194480C12CA8C949002A90C6 /* independent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C32C01085F005CC488 /* independent.swift */; };
+		194480C22CA8C958002A90C6 /* distribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944809B2CA8AD30002A90C6 /* distribution.swift */; };
+		194480C32CA8C9DF002A90C6 /* bvh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A70E2C06AA8400A7A0FD /* bvh.swift */; };
+		194480C52CA8CA0C002A90C6 /* SwiftWavefront in Frameworks */ = {isa = PBXBuildFile; productRef = 194480C42CA8CA0C002A90C6 /* SwiftWavefront */; };
+		194480C72CA8CA22002A90C6 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 194480C62CA8CA22002A90C6 /* Progress */; };
+		194480C92CA8CA38002A90C6 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 194480C82CA8CA38002A90C6 /* Algorithms */; };
 		194D901E2C90D3B200D05F58 /* pssmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901D2C90D3B200D05F58 /* pssmlt.swift */; };
 		194D90202C90D63400D05F58 /* pssmltSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901F2C90D63400D05F58 /* pssmltSampler.swift */; };
 		19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
@@ -220,6 +257,7 @@
 		193E424F2BFE5EA300D96A37 /* camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = camera.swift; sourceTree = "<group>"; };
 		194480992CA8A5C1002A90C6 /* rng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rng.swift; sourceTree = "<group>"; };
 		1944809B2CA8AD30002A90C6 /* distribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = distribution.swift; sourceTree = "<group>"; };
+		194480A02CA8C788002A90C6 /* rngTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rngTest.swift; sourceTree = "<group>"; };
 		194D901D2C90D3B200D05F58 /* pssmlt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmlt.swift; sourceTree = "<group>"; };
 		194D901F2C90D63400D05F58 /* pssmltSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmltSampler.swift; sourceTree = "<group>"; };
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
@@ -327,6 +365,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				194480C92CA8CA38002A90C6 /* Algorithms in Frameworks */,
+				194480C52CA8CA0C002A90C6 /* SwiftWavefront in Frameworks */,
+				194480C72CA8CA22002A90C6 /* Progress in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,6 +502,7 @@
 				19EFB3BB2C00EF44005CC488 /* mathTest.swift */,
 				19EFB3C72C0274D2005CC488 /* array2dTest.swift */,
 				19EFB3CE2C0648B1005CC488 /* imageTest.swift */,
+				194480A02CA8C788002A90C6 /* rngTest.swift */,
 			);
 			path = SwiftTracerTest;
 			sourceTree = "<group>";
@@ -627,6 +669,11 @@
 			dependencies = (
 			);
 			name = SwiftTracerTest;
+			packageProductDependencies = (
+				194480C42CA8CA0C002A90C6 /* SwiftWavefront */,
+				194480C62CA8CA22002A90C6 /* Progress */,
+				194480C82CA8CA38002A90C6 /* Algorithms */,
+			);
 			productName = SwiftTracerTest;
 			productReference = 19BBA7382BFD531B00981204 /* SwiftTracerTest.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -773,18 +820,52 @@
 			buildActionMask = 2147483647;
 			files = (
 				19EFB3D02C064A7F005CC488 /* image.swift in Sources */,
+				194480B12CA8C8E0002A90C6 /* normalMap.swift in Sources */,
 				19EFB3C92C0274FD005CC488 /* array2d.swift in Sources */,
 				19EFB3CF2C0648B1005CC488 /* imageTest.swift in Sources */,
+				194480A62CA8C8A5002A90C6 /* sphere.swift in Sources */,
 				19EFB3C82C0274D2005CC488 /* array2dTest.swift in Sources */,
+				194480B62CA8C907002A90C6 /* constantEnvironment.swift in Sources */,
+				194480BE2CA8C928002A90C6 /* pssmlt.swift in Sources */,
 				19EFB3B62BFFC6B0005CC488 /* aabb.swift in Sources */,
+				194480BD2CA8C926002A90C6 /* direct.swift in Sources */,
+				194480B82CA8C914002A90C6 /* uniform.swift in Sources */,
+				194480AB2CA8C8BE002A90C6 /* light.swift in Sources */,
+				194480BA2CA8C920002A90C6 /* path.swift in Sources */,
+				194480C02CA8C937002A90C6 /* pssmltSampler.swift in Sources */,
+				194480A42CA8C86B002A90C6 /* sampler.swift in Sources */,
 				19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */,
+				194480B22CA8C8F7002A90C6 /* texture.swift in Sources */,
+				194480A72CA8C8A8002A90C6 /* quad.swift in Sources */,
+				194480B72CA8C912002A90C6 /* lightSampler.swift in Sources */,
+				194480AE2CA8C8DA002A90C6 /* metal.swift in Sources */,
+				194480AC2CA8C8C5002A90C6 /* material.swift in Sources */,
+				194480A92CA8C8AC002A90C6 /* triangle.swift in Sources */,
+				194480A22CA8C7CE002A90C6 /* rng.swift in Sources */,
+				194480C12CA8C949002A90C6 /* independent.swift in Sources */,
+				194480A52CA8C87B002A90C6 /* scene.swift in Sources */,
+				194480B92CA8C91D002A90C6 /* integrator.swift in Sources */,
+				194480B52CA8C905002A90C6 /* spot.swift in Sources */,
+				194480AA2CA8C8AE002A90C6 /* mesh.swift in Sources */,
+				194480A32CA8C835002A90C6 /* shape.swift in Sources */,
+				194480AD2CA8C8D8002A90C6 /* diffuse.swift in Sources */,
+				194480B02CA8C8DE002A90C6 /* blend.swift in Sources */,
+				194480BC2CA8C924002A90C6 /* uv.swift in Sources */,
+				194480C32CA8C9DF002A90C6 /* bvh.swift in Sources */,
 				19EFB3B32BFE7B92005CC488 /* utils.swift in Sources */,
 				19EFB3B22BFE7B82005CC488 /* sampling.swift in Sources */,
 				19EFB3BC2C00EF44005CC488 /* mathTest.swift in Sources */,
 				193E42532BFE738F00D96A37 /* ray.swift in Sources */,
 				193E42522BFE737F00D96A37 /* transform.swift in Sources */,
+				194480BB2CA8C922002A90C6 /* normal.swift in Sources */,
+				194480AF2CA8C8DC002A90C6 /* dielectric.swift in Sources */,
+				194480A82CA8C8AA002A90C6 /* shapeGroup.swift in Sources */,
 				19BBA7402BFD5AD600981204 /* matrix.swift in Sources */,
+				194480C22CA8C958002A90C6 /* distribution.swift in Sources */,
+				194480B42CA8C902002A90C6 /* point.swift in Sources */,
 				19BBA73F2BFD54C100981204 /* vector.swift in Sources */,
+				194480B32CA8C900002A90C6 /* area.swift in Sources */,
+				194480A12CA8C788002A90C6 /* rngTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1159,6 +1240,21 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		1944809E2CA8B0D5002A90C6 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1944809D2CA8B0D5002A90C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+		194480C42CA8CA0C002A90C6 /* SwiftWavefront */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19737CEB2C27445100F49204 /* XCRemoteSwiftPackageReference "SwiftWavefront" */;
+			productName = SwiftWavefront;
+		};
+		194480C62CA8CA22002A90C6 /* Progress */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */;
+			productName = Progress;
+		};
+		194480C82CA8CA38002A90C6 /* Algorithms */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1944809D2CA8B0D5002A90C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
 			productName = Algorithms;

@@ -86,7 +86,7 @@ final class PSSMLTSampler: Sampler {
     }
 
     func gen() -> Float {
-        Float.random(in: 0 ... 1)
+        Float.random(in: 0 ... 1, using: &rng)
     }
     
     // TODO Add init with nb samples and copy value here

@@ -26,10 +26,7 @@ final class Array2dTest: XCTestCase {
         expected.set(value: 0, 0, 2)
         expected.set(value: 0, 2, 0)
         
-        a.debug()
         a.flipVertically()
-        a.debug()
-        expected.debug()
         
         XCTAssertEqual(a.get(0, 0), expected.get(0, 0))
         XCTAssertEqual(a.get(2, 2), expected.get(2, 2))

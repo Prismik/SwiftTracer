@@ -75,7 +75,7 @@ final class PssmltIntegrator: Integrator {
         Task {
             defer { gcd.leave() }
             var progress = ProgressBar(count: nbChains, printer: Printer())
-            let img = await chains(samples: totalSamples, nbChains: nbChains, seeds: seeds, integrator: integrator, scene: scene, sampler: sampler) {
+            let img = await chains(samples: totalSamples, nbChains: nbChains, seeds: seeds, cdf: cdf, integrator: integrator, scene: scene) {
                 progress.next()
             }
             self.result = img
@@ -90,7 +90,7 @@ final class PssmltIntegrator: Integrator {
         print("Large steps taken => \(sampler.nbLargeSteps)")
         print("Small steps taken => \(sampler.nbSmallSteps)")
 
-        //image.scale(by: b / averageLuminance)
+        image.scale(by: b / averageLuminance)
         return image
     }
     
@@ -126,14 +126,14 @@ final class PssmltIntegrator: Integrator {
     }
 
     /// Create the async blocks responsible for rendering with a Markov Chain
-    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], integrator: PathIntegrator, scene: Scene, sampler: PSSMLTSampler, increment: @escaping () -> Void) async -> Array2d<Color> {
+    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, integrator: PathIntegrator, scene: Scene, increment: @escaping () -> Void) async -> Array2d<Color> {
         return await withTaskGroup(of: Void.self, returning: Array2d<Color>.self) { group in
             let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
             var processed = 0
             for i in 0 ..< nbChains {
                 group.addTask {
                     increment()
-                    return self.renderChain(i: i, total: nbChains, seeds: seeds, scene: scene, sampler: sampler, into: image)
+                    return self.renderChain(i: i, total: nbChains, seeds: seeds, cdf: cdf, scene: scene, into: image)
                 }
             }
             
@@ -146,9 +146,7 @@ final class PssmltIntegrator: Integrator {
     }
     
     /// Random walk rendering of MCMC
-    private func renderChain(i: Int, total: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, sampler: PSSMLTSampler, into image: Array2d<Color>) -> Void {
-        let startRng = sampler.rng.state
-        
+    private func renderChain(i: Int, total: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, into image: Array2d<Color>) -> Void {
         let id = (Float(i) + 0.5) / Float(total)
         
         // TODO Sample seed
