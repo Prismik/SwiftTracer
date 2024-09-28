@@ -42,7 +42,12 @@ class Array2d<T: AdditiveArithmetic> {
     /// Total number of elements
     var size: Int { xSize * ySize }
 
+    /// Total value contained in storage
+    private(set) var total: T = .zero
+
     private var storage: [T]
+
+    private let lock = NSLock()
 
     init() {
         self.xSize = 0
@@ -76,18 +81,32 @@ class Array2d<T: AdditiveArithmetic> {
     
     /// Sets the value at index (x, y).
     func set(value: T, _ x: Int, _ y: Int) {
+        let current = get(x, y)
+        total += value - current
         storage[index(x, y)] = value
     }
 
     /// Adds the value to the current value at index (x, y).
     func add(value: T, _ x: Int, _ y: Int) {
-        let current = storage[index(x, y)]
-        storage[index(x, y)] = current + value
+        lock.withLock {
+            let current = storage[index(x, y)]
+            total += value
+            storage[index(x, y)] = current + value
+        }
     }
 
     func substract(value: T, _ x: Int, _ y: Int) {
         let current = storage[index(x, y)]
+        total -= value
         storage[index(x, y)] = current - value
+    }
+    
+    func merge(with other: Array2d<T>) {
+        for (i, val) in other.enumerated() {
+            let (x, y) = index2d(i)
+            total += val
+            add(value: val, x, y)
+        }
     }
 
     /// Flips the value vertically, such that the element at (0, 0) becomes (0, n), where n is the `ySize`.

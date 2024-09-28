@@ -9,6 +9,11 @@ import Foundation
 import Progress
 
 final class PssmltIntegrator: Integrator {
+    enum CodingKeys: String, CodingKey {
+        case samplesPerChain
+        case initSamplesCount
+    }
+    
     internal struct StateMCMC {
         var pos: Vec2
         var contrib: Color
@@ -21,36 +26,48 @@ final class PssmltIntegrator: Integrator {
             self.targetFunction = (contrib.x + contrib.y + contrib.z) / 3
         }
     }
-    
-    internal struct SampleMCMC {
-        let x: Int
-        let y: Int
-        var contrib: Color
-    }
 
     // TODO Find appropriate block structure
     private struct MarkovChain {
-        private(set) var samples: [SampleMCMC] = []
+        private(set) var img: Array2d<Color>
+        
+        init(x: Int, y: Int) {
+            img = Array2d(x: x, y: y, value: Color())
+        }
 
         mutating func add(state: inout StateMCMC) {
             let w = state.weight / state.targetFunction
-            let sample = SampleMCMC(x: Int(state.pos.x), y: Int(state.pos.y), contrib: state.contrib * w)
-            samples.append(sample)
+            let x = Int(state.pos.x)
+            let y = Int(state.pos.y)
+            img.add(value: state.contrib * w, x, y)
             state.weight = 0
+        }
+        
+        mutating func normalize(factor: Float) {
+            img.scale(by: factor)
         }
     }
 
-    /// TODO Allow to plug and play this thing
+    // TODO Allow to plug and play this thing
     private let integrator: PathIntegrator = PathIntegrator(maxDepth: 16)
+    /// Samples Per Chain
+    private let spc: Int
+    /// Initialization Samples Count
+    private let isc: Int
+    
+    private var result: Array2d<Color>?
+
+    init(samplesPerChain: Int, initSamplesCount: Int) {
+        self.spc = samplesPerChain
+        self.isc = initSamplesCount
+    }
 
     func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
-        let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
-        guard let sampler = sampler as? PSSMLTSampler else { return image }
+        guard let sampler = sampler as? PSSMLTSampler else { fatalError("This integrator currently only supports PSSMLTSampler") }
         
-        let b = self.b(scene: scene, sampler: sampler)
+        let (b, cdf, seeds) = normalizationConstant(scene: scene, sampler: sampler)
         let totalSamples = sampler.nbSamples * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
-        let nbSamplesPerChain = 100_000
-        let nbChains = totalSamples / nbSamplesPerChain
+        let nbChains = totalSamples / spc
         
         // Run chains in parallel
         let gcd = DispatchGroup()
@@ -58,36 +75,46 @@ final class PssmltIntegrator: Integrator {
         Task {
             defer { gcd.leave() }
             var progress = ProgressBar(count: nbChains, printer: Printer())
-            let chains = await chains(samples: totalSamples, nbChains: nbChains, integrator: integrator, scene: scene, sampler: sampler) {
+            let img = await chains(samples: totalSamples, nbChains: nbChains, seeds: seeds, integrator: integrator, scene: scene, sampler: sampler) {
                 progress.next()
             }
-            return assemble(chains: chains, image: image)
+            self.result = img
         }
         gcd.wait()
         
         // TODO Normalize?
-        
-        let average = image.reduce(Color()) { acc, pixel in
-            return acc + pixel
-        } / Float(image.size)
+        guard let image = result else { fatalError("No result image was returned in the async task") }
+        let average = image.total / Float(image.size)
         let averageLuminance = (average.x + average.y + average.z) / 3.0
         
         print("Large steps taken => \(sampler.nbLargeSteps)")
         print("Small steps taken => \(sampler.nbSmallSteps)")
-        // Scaling is useless for now; most of the image is black
-        // image.scale(by: b / averageLuminance)
+
+        //image.scale(by: b / averageLuminance)
         return image
     }
     
     /// Computes the normalization factor
-    private func b(scene: Scene, sampler: PSSMLTSampler) -> Float {
-        let nb = 100000
-        let b = (0 ..< nb).map { _ in
-            let state = sample(scene: scene, sampler: sampler)
-            return state.targetFunction
-        }.reduce(0, +) / Float(nb)
+    private func normalizationConstant(scene: Scene, sampler: PSSMLTSampler) -> (Float, DistributionOneDimention, [(Float, UInt64)]) {
+        var seeds: [(Float, UInt64)] = []
+        let b = (0 ..< isc).map { _ in
+            let currentSeed = sampler.rng.state
+            
+            let s = sample(scene: scene, sampler: sampler)
+            if s.targetFunction > 0 {
+                seeds.append((s.targetFunction, currentSeed))
+            }
+
+            return s.targetFunction
+        }.reduce(0, +) / Float(isc)
         
-        return b
+        var cdf = DistributionOneDimention(count: seeds.count)
+        for s in seeds {
+            cdf.add(s.0)
+        }
+        
+        cdf.normalize()
+        return (b, cdf, seeds)
     }
     
     private func sample(scene: Scene, sampler: PSSMLTSampler) -> StateMCMC {
@@ -98,37 +125,50 @@ final class PssmltIntegrator: Integrator {
         return StateMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
     }
 
-    private func chains(samples: Int, nbChains: Int, integrator: PathIntegrator, scene: Scene, sampler: PSSMLTSampler, increment: @escaping () -> Void) async -> [MarkovChain] {
-        let nbSamplesPerChain = 100_000
-        return await withTaskGroup(of: MarkovChain.self) { group in
-            for _ in 0 ..< nbChains {
+    /// Create the async blocks responsible for rendering with a Markov Chain
+    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], integrator: PathIntegrator, scene: Scene, sampler: PSSMLTSampler, increment: @escaping () -> Void) async -> Array2d<Color> {
+        return await withTaskGroup(of: Void.self, returning: Array2d<Color>.self) { group in
+            let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
+            var processed = 0
+            for i in 0 ..< nbChains {
                 group.addTask {
                     increment()
-                    return self.renderChain(samples: nbSamplesPerChain, scene: scene, sampler: sampler)
+                    return self.renderChain(i: i, total: nbChains, seeds: seeds, scene: scene, sampler: sampler, into: image)
                 }
             }
-
-            var chains: [MarkovChain] = []
-            for await chain in group {
-                chains.append(chain)
+            
+            for await result in group {
+                processed += 1
             }
             
-            return chains
+            return image
         }
     }
     
-    private func renderChain(samples: Int, scene: Scene, sampler: PSSMLTSampler) -> MarkovChain {
-        let sampler = sampler.clone()
-        var chain = MarkovChain()
+    /// Random walk rendering of MCMC
+    private func renderChain(i: Int, total: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, sampler: PSSMLTSampler, into image: Array2d<Color>) -> Void {
+        let startRng = sampler.rng.state
+        
+        let id = (Float(i) + 0.5) / Float(total)
+        
+        // TODO Sample seed
+        let seed = seeds[cdf.sampleDiscrete(id)]
+        let sampler = PSSMLTSampler()
+        let previousSeed = sampler.rng.state
+        sampler.rng.state = seed.1
+        
+        var chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
         sampler.step = .large
         
         var state = self.sample(scene: scene, sampler: sampler)
         sampler.accept()
         
-        for _ in 0 ..< samples {
+        sampler.rng.state = previousSeed
+        
+        for _ in 0 ..< self.spc {
             sampler.step = sampler.gen() < sampler.largeStepRatio
-            ? .large
-            : .small
+                ? .large
+                : .small
             
             var proposedState = self.sample(scene: scene, sampler: sampler)
             let acceptProbability = min(
@@ -142,28 +182,24 @@ final class PssmltIntegrator: Integrator {
             
             if acceptProbability > sampler.gen() {
                 chain.add(state: &state)
-                //image.add(state: &state)
                 sampler.accept()
                 state = proposedState
             } else {
                 chain.add(state: &proposedState)
-                //image.add(state: &proposedState)
                 sampler.reject()
             }
         }
         
         // Flush the last state
         chain.add(state: &state)
-        //image.add(state: &state)
-        
-        return chain
+        chain.normalize(factor: 1 / Float(spc))
+        image.merge(with: chain.img)
     }
     
+    // TODO Parallelize merging of images
     private func assemble(chains: [MarkovChain], image: Array2d<Color>) -> Array2d<Color> {
         for chain in chains {
-            for sample in chain.samples {
-                image.add(sample)
-            }
+            image.merge(with: chain.img)
         }
 
         return image
@@ -171,10 +207,6 @@ final class PssmltIntegrator: Integrator {
 }
 
 private extension Array2d<Color> {
-    func add(_ state: PssmltIntegrator.SampleMCMC) {
-        add(value: state.contrib, state.x, state.y)
-    }
-    
     // TODO Move into Array2d by fixing generic constraints
     func scale(by factor: Float) {
         for (i, item) in self.enumerated() {

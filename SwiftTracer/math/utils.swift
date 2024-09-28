@@ -5,6 +5,7 @@
 //  Created by Francis Beauchamp on 2024-05-20.
 //
 
+import Algorithms
 import Foundation
 import Progress
 import simd
@@ -234,5 +235,13 @@ extension Float {
     
     func sqrt() -> Float {
         return max(0, squareRoot())
+    }
+}
+
+extension RandomAccessCollection where Element: Comparable {
+    func binarySearch(_ element: Element) -> (index: Index, found: Bool) {
+        let index = partitioningIndex(where: { $0 >= element })
+        let found = index != endIndex && self[index] == element
+        return (index, found)
     }
 }

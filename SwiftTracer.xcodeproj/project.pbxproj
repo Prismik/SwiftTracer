@@ -11,6 +11,9 @@
 		193E42502BFE5EA300D96A37 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		193E42522BFE737F00D96A37 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		193E42532BFE738F00D96A37 /* ray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7222BF82CE800981204 /* ray.swift */; };
+		1944809A2CA8A5C1002A90C6 /* rng.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194480992CA8A5C1002A90C6 /* rng.swift */; };
+		1944809C2CA8AD30002A90C6 /* distribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944809B2CA8AD30002A90C6 /* distribution.swift */; };
+		1944809F2CA8B0D5002A90C6 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 1944809E2CA8B0D5002A90C6 /* Algorithms */; };
 		194D901E2C90D3B200D05F58 /* pssmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901D2C90D3B200D05F58 /* pssmlt.swift */; };
 		194D90202C90D63400D05F58 /* pssmltSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901F2C90D63400D05F58 /* pssmltSampler.swift */; };
 		19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
@@ -215,6 +218,8 @@
 /* Begin PBXFileReference section */
 		1917635D2C20E927007688D4 /* spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = spot.swift; sourceTree = "<group>"; };
 		193E424F2BFE5EA300D96A37 /* camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = camera.swift; sourceTree = "<group>"; };
+		194480992CA8A5C1002A90C6 /* rng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rng.swift; sourceTree = "<group>"; };
+		1944809B2CA8AD30002A90C6 /* distribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = distribution.swift; sourceTree = "<group>"; };
 		194D901D2C90D3B200D05F58 /* pssmlt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmlt.swift; sourceTree = "<group>"; };
 		194D901F2C90D63400D05F58 /* pssmltSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmltSampler.swift; sourceTree = "<group>"; };
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
@@ -332,6 +337,7 @@
 				1982F6B32C9B8757000FF286 /* PNG in Frameworks */,
 				19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */,
 				19737CED2C27457900F49204 /* SwiftWavefront in Frameworks */,
+				1944809F2CA8B0D5002A90C6 /* Algorithms in Frameworks */,
 				1999D07C2C1003A100358201 /* Progress in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -444,6 +450,7 @@
 				19BBA71C2BF7D3A400981204 /* matrix.swift */,
 				19BBA72C2BFBB48100981204 /* utils.swift */,
 				19BBA72E2BFC089A00981204 /* sampling.swift */,
+				1944809B2CA8AD30002A90C6 /* distribution.swift */,
 			);
 			path = math;
 			sourceTree = "<group>";
@@ -521,6 +528,7 @@
 				193E424F2BFE5EA300D96A37 /* camera.swift */,
 				19EFB3C52C010CB8005CC488 /* array2d.swift */,
 				19EFB3CA2C03B88B005CC488 /* image.swift */,
+				194480992CA8A5C1002A90C6 /* rng.swift */,
 			);
 			path = SwiftTracer;
 			sourceTree = "<group>";
@@ -642,6 +650,7 @@
 				1999D07B2C1003A100358201 /* Progress */,
 				19737CEC2C27457900F49204 /* SwiftWavefront */,
 				1982F6B22C9B8757000FF286 /* PNG */,
+				1944809E2CA8B0D5002A90C6 /* Algorithms */,
 			);
 			productName = SwiftTracer;
 			productReference = 19E8082B2B2B664400A37D37 /* SwiftTracer */;
@@ -686,6 +695,7 @@
 				1999D07A2C1003A100358201 /* XCRemoteSwiftPackageReference "Progress" */,
 				19737CEB2C27445100F49204 /* XCRemoteSwiftPackageReference "SwiftWavefront" */,
 				1982F6B12C9B8757000FF286 /* XCRemoteSwiftPackageReference "swift-png" */,
+				1944809D2CA8B0D5002A90C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
 			productRefGroup = 19E8082C2B2B664400A37D37 /* Products */;
 			projectDirPath = "";
@@ -793,6 +803,7 @@
 				1917635E2C20E927007688D4 /* spot.swift in Sources */,
 				19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */,
 				19EFB3C22C010833005CC488 /* sampler.swift in Sources */,
+				1944809A2CA8A5C1002A90C6 /* rng.swift in Sources */,
 				19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */,
 				19E8083E2B2B6DE900A37D37 /* material.swift in Sources */,
 				19E958972C1BD19E00F63FA5 /* point.swift in Sources */,
@@ -820,6 +831,7 @@
 				19E958992C1BD1AD00F63FA5 /* light.swift in Sources */,
 				19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */,
 				19BBA71A2BF7D32F00981204 /* transform.swift in Sources */,
+				1944809C2CA8AD30002A90C6 /* distribution.swift in Sources */,
 				194D90202C90D63400D05F58 /* pssmltSampler.swift in Sources */,
 				19BBA7252BF97A9700981204 /* path.swift in Sources */,
 				1986951F2C2F367A00EEF672 /* constantEnvironment.swift in Sources */,
@@ -1103,6 +1115,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1944809D2CA8B0D5002A90C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 		19737CEB2C27445100F49204 /* XCRemoteSwiftPackageReference "SwiftWavefront" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Prismik/SwiftWavefront";
@@ -1138,6 +1158,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1944809E2CA8B0D5002A90C6 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1944809D2CA8B0D5002A90C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
 		19737CEC2C27457900F49204 /* SwiftWavefront */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 19737CEB2C27445100F49204 /* XCRemoteSwiftPackageReference "SwiftWavefront" */;

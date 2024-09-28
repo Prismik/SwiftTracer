@@ -55,7 +55,10 @@ struct AnyIntegrator: Decodable {
         case .uv:
             self.wrapped = UvIntegrator()
         case .pssmlt:
-            self.wrapped = PssmltIntegrator()
+            let params = try container.nestedContainer(keyedBy: PssmltIntegrator.CodingKeys.self, forKey: .params)
+            let spc = try params.decode(Int.self, forKey: .samplesPerChain)
+            let isc = try params.decode(Int.self, forKey: .initSamplesCount)
+            self.wrapped = PssmltIntegrator(samplesPerChain: spc, initSamplesCount: isc)
         }
     }
 }

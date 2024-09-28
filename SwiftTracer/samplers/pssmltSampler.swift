@@ -26,11 +26,13 @@ final class PSSMLTSampler: Sampler {
     
     static var count = 0
     var id: Int = 0
-    var nbSamples: Int = 5000
+    var nbSamples: Int = 50
     
     var step: Step = .small
     let largeStepRatio: Float = 0.3
     
+    var rng: RNG = RNG()
+
     private var sampleIndex = 0
     private var largeStepTime = 0
     
