@@ -9,7 +9,7 @@ import Foundation
 
 final class IndependentSampler: Sampler {
     let nbSamples: Int
-
+    var rng: RNG = RNG()
     init(nspp: Int = 20) {
         self.nbSamples = nspp
     }
@@ -23,6 +23,6 @@ final class IndependentSampler: Sampler {
     }
     
     func gen() -> Float {
-        Float.random(in: 0 ... 1)
+        Float.random(in: 0 ... 1, using: &rng)
     }
 }

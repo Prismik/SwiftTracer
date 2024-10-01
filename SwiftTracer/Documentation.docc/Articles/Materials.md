@@ -38,11 +38,27 @@ A diffuse material has an associated texture, codified in the json as `albedo`. 
     }
 }
 
-
-
-
 ### Metal
 
+A metal material reflects. A completely specular metal surface will have it's roughness set to zero, while any values above that and up to 1 will behave closer and closer to a diffuse surface. It has an associated texture, codified in the json as `ks`. That property describes the wavelength of the light that will get reflected by the material.
+
+@Row {
+    @Column {
+        To create a gold looking material, you would add the following material to your list of materials:
+
+        ```json
+        {
+            "type": "metal",
+            "name": "unique identifier",
+            "ks": [1, 0, 0]
+        }
+        ```
+    }
+    
+    @Column {
+        ![A diffuse material.](diffuse)
+    }
+}
 ### Dielectric
 
 ### Blend

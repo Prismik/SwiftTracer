@@ -39,4 +39,5 @@ protocol Sampler {
     func gen() -> Float
 
     var nbSamples: Int { get }
+    var rng: RNG { get }
 }

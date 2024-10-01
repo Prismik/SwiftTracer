@@ -27,7 +27,6 @@ final class PssmltIntegrator: Integrator {
         }
     }
 
-    // TODO Find appropriate block structure
     private struct MarkovChain {
         private(set) var img: Array2d<Color>
         
@@ -41,10 +40,6 @@ final class PssmltIntegrator: Integrator {
             let y = Int(state.pos.y)
             img.add(value: state.contrib * w, x, y)
             state.weight = 0
-        }
-        
-        mutating func normalize(factor: Float) {
-            img.scale(by: factor)
         }
     }
 
@@ -63,8 +58,6 @@ final class PssmltIntegrator: Integrator {
     }
 
     func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
-        guard let sampler = sampler as? PSSMLTSampler else { fatalError("This integrator currently only supports PSSMLTSampler") }
-        
         let (b, cdf, seeds) = normalizationConstant(scene: scene, sampler: sampler)
         let totalSamples = sampler.nbSamples * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
         let nbChains = totalSamples / spc
@@ -82,20 +75,23 @@ final class PssmltIntegrator: Integrator {
         }
         gcd.wait()
         
-        // TODO Normalize?
         guard let image = result else { fatalError("No result image was returned in the async task") }
-        let average = image.total / Float(image.size)
+        //let average = image.total / Float(image.size)
+        let average = image.reduce(into: Color()) { acc, cur in
+            acc += cur.sanitized / Float(image.size)
+        }
         let averageLuminance = (average.x + average.y + average.z) / 3.0
         
-        print("Large steps taken => \(sampler.nbLargeSteps)")
-        print("Small steps taken => \(sampler.nbSmallSteps)")
+        print("average => \(average)")
+        print("average luminance => \(averageLuminance)")
+        print("b => \(b)")
 
         image.scale(by: b / averageLuminance)
         return image
     }
     
     /// Computes the normalization factor
-    private func normalizationConstant(scene: Scene, sampler: PSSMLTSampler) -> (Float, DistributionOneDimention, [(Float, UInt64)]) {
+    private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [(Float, UInt64)]) {
         var seeds: [(Float, UInt64)] = []
         let b = (0 ..< isc).map { _ in
             let currentSeed = sampler.rng.state
@@ -108,6 +104,7 @@ final class PssmltIntegrator: Integrator {
             return s.targetFunction
         }.reduce(0, +) / Float(isc)
         
+        guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
         for s in seeds {
             cdf.add(s.0)
@@ -117,11 +114,11 @@ final class PssmltIntegrator: Integrator {
         return (b, cdf, seeds)
     }
     
-    private func sample(scene: Scene, sampler: PSSMLTSampler) -> StateMCMC {
+    private func sample(scene: Scene, sampler: Sampler) -> StateMCMC {
         let rng2 = sampler.next2()
         let x = Int(scene.camera.resolution.x * rng2.x)
         let y = Int(scene.camera.resolution.y * rng2.y)
-        let contrib = integrator.render(pixel: (x, y), scene: scene, sampler: sampler)
+        let contrib = integrator.render(pixel: (x, y), scene: scene, sampler: sampler).sanitized
         return StateMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
     }
 
@@ -137,7 +134,7 @@ final class PssmltIntegrator: Integrator {
                 }
             }
             
-            for await result in group {
+            for await _ in group {
                 processed += 1
             }
             
@@ -148,9 +145,8 @@ final class PssmltIntegrator: Integrator {
     /// Random walk rendering of MCMC
     private func renderChain(i: Int, total: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, into image: Array2d<Color>) -> Void {
         let id = (Float(i) + 0.5) / Float(total)
-        
-        // TODO Sample seed
-        let seed = seeds[cdf.sampleDiscrete(id)]
+        let i = cdf.sampleDiscrete(id)
+        let seed = seeds[i]
         let sampler = PSSMLTSampler()
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.1
@@ -190,7 +186,7 @@ final class PssmltIntegrator: Integrator {
         
         // Flush the last state
         chain.add(state: &state)
-        chain.normalize(factor: 1 / Float(spc))
+        chain.img.scale(by: 1 / Float(spc))
         image.merge(with: chain.img)
     }
     

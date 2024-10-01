@@ -41,7 +41,7 @@ struct DistributionOneDimention {
         case (let v, true):
             return v
         case (let v, false):
-            return v - 1
+            return max(v - 1, 0)
         }
     }
 }

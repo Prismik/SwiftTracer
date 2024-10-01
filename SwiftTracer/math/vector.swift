@@ -162,4 +162,14 @@ extension Color {
     var isFinite: Bool {
         return x.isFinite && y.isFinite && z.isFinite
     }
+    
+    /// Replaces NaN in the rgb channels with `zero`.
+    var sanitized: Self {
+        var result = Color()
+        
+        if x != x { print("NaN encountred"); result.x = 0 }
+        if y != y { print("NaN encountred"); result.y = 0 }
+        if z != z { print("NaN encountred"); result.z = 0 }
+        return result
+    }
 }

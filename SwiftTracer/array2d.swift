@@ -40,7 +40,7 @@ class Array2d<T: AdditiveArithmetic> {
     private(set) var ySize: Int
 
     /// Total number of elements
-    var size: Int { xSize * ySize }
+    var size: Int { storage.count }
 
     /// Total value contained in storage
     private(set) var total: T = .zero
@@ -86,7 +86,7 @@ class Array2d<T: AdditiveArithmetic> {
         storage[index(x, y)] = value
     }
 
-    /// Adds the value to the current value at index (x, y).
+    /// Adds `value` to the current value at index (x, y).
     func add(value: T, _ x: Int, _ y: Int) {
         lock.withLock {
             let current = storage[index(x, y)]
@@ -94,18 +94,27 @@ class Array2d<T: AdditiveArithmetic> {
             storage[index(x, y)] = current + value
         }
     }
+    
+    /// Adds `value` to the current value at value i.
+    func add(value: T, i: Int) {
+        lock.withLock {
+            let current = storage[i]
+            total += value
+            storage[i] = current + value
+        }
+    }
 
+    /// Substracts `value` to the current value at index (x, y)
     func substract(value: T, _ x: Int, _ y: Int) {
         let current = storage[index(x, y)]
         total -= value
         storage[index(x, y)] = current - value
     }
     
+    /// For each values in `other`, add them into `self`.
     func merge(with other: Array2d<T>) {
         for (i, val) in other.enumerated() {
-            let (x, y) = index2d(i)
-            total += val
-            add(value: val, x, y)
+            add(value: val, i: i)
         }
     }
 
