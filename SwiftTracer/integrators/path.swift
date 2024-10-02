@@ -10,13 +10,16 @@ import Foundation
 final class PathIntegrator: Integrator {
     enum CodingKeys: String, CodingKey {
         case mis
-        case depth
+        case maxDepth
+        case minDepth
     }
 
+    let minDepth: Int
     let maxDepth: Int
     let mis: Bool
     
-    init(maxDepth: Int, mis: Bool = true) {
+    init(minDepth: Int, maxDepth: Int, mis: Bool = true) {
+        self.minDepth = minDepth
         self.maxDepth = maxDepth
         self.mis = mis
     }
@@ -86,7 +89,7 @@ final class PathIntegrator: Integrator {
             }
         }
 
-        return depth == maxDepth || its?.hasEmission == true
+        return depth == maxDepth || (its?.hasEmission == true && depth >= minDepth)
             ? contribution + weightMis
             : contribution + trace(intersection: its, ray: newRay, scene: scene, sampler: sampler, depth: depth + 1) * weightMis
     }

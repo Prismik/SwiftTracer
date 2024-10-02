@@ -44,23 +44,28 @@ final class PssmltIntegrator: Integrator {
     }
 
     // TODO Allow to plug and play this thing
-    private let integrator: PathIntegrator = PathIntegrator(maxDepth: 16)
+    private let integrator: PathIntegrator = PathIntegrator(minDepth: 0, maxDepth: 16)
     /// Samples Per Chain
-    private let spc: Int
+    private let nspc: Int
     /// Initialization Samples Count
     private let isc: Int
-    
+    /// Samples per pixel (can derive total sample from this).
+    private var nspp: Int = 10
+
     private var result: Array2d<Color>?
 
+    private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
     init(samplesPerChain: Int, initSamplesCount: Int) {
-        self.spc = samplesPerChain
+        self.nspc = samplesPerChain
         self.isc = initSamplesCount
+        self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 
     func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
+        self.nspp = sampler.nbSamples
         let (b, cdf, seeds) = normalizationConstant(scene: scene, sampler: sampler)
         let totalSamples = sampler.nbSamples * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
-        let nbChains = totalSamples / spc
+        let nbChains = totalSamples / nspc
         
         // Run chains in parallel
         let gcd = DispatchGroup()
@@ -82,6 +87,10 @@ final class PssmltIntegrator: Integrator {
         }
         let averageLuminance = (average.x + average.y + average.z) / 3.0
         
+        print("largeStepCount => \(stats.small.times)")
+        print("smallStepCount => \(stats.large.times)")
+        print("smallStepAcceptRatio => \(Float(stats.small.accept) / Float(stats.small.accept + stats.small.reject))")
+        print("largeStepAcceptRatio => \(Float(stats.large.accept) / Float(stats.large.accept + stats.large.reject))")
         print("average => \(average)")
         print("average luminance => \(averageLuminance)")
         print("b => \(b)")
@@ -147,7 +156,7 @@ final class PssmltIntegrator: Integrator {
         let id = (Float(i) + 0.5) / Float(total)
         let i = cdf.sampleDiscrete(id)
         let seed = seeds[i]
-        let sampler = PSSMLTSampler()
+        let sampler = PSSMLTSampler(nbSamples: nspp)
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.1
         
@@ -155,11 +164,12 @@ final class PssmltIntegrator: Integrator {
         sampler.step = .large
         
         var state = self.sample(scene: scene, sampler: sampler)
+        guard state.targetFunction == seed.0 else { fatalError("Inconsistent seed-sample") }
         sampler.accept()
         
         sampler.rng.state = previousSeed
         
-        for _ in 0 ..< self.spc {
+        for _ in 0 ..< self.nspc {
             sampler.step = sampler.gen() < sampler.largeStepRatio
                 ? .large
                 : .small
@@ -186,8 +196,10 @@ final class PssmltIntegrator: Integrator {
         
         // Flush the last state
         chain.add(state: &state)
-        chain.img.scale(by: 1 / Float(spc))
+        chain.img.scale(by: 1 / Float(nspc))
         image.merge(with: chain.img)
+        stats.small.combine(with: sampler.smallStats)
+        stats.large.combine(with: sampler.largeStats)
     }
     
     // TODO Parallelize merging of images
@@ -207,5 +219,13 @@ private extension Array2d<Color> {
             let (x, y) = index2d(i)
             set(value: item * factor, x, y)
         }
+    }
+}
+
+private extension PSSMLTSampler.Stats {
+    mutating func combine(with other: Self) {
+        self.times += other.times
+        self.accept += other.accept
+        self.reject += other.reject
     }
 }

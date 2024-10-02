@@ -28,7 +28,8 @@ struct AnySampler: Decodable {
             let nspp = try container.decodeIfPresent(Int.self, forKey: .nspp) ?? 10
             self.wrapped = IndependentSampler(nspp: nspp)
         case .pssmlt:
-            self.wrapped = PSSMLTSampler()
+            let nspp = try container.decodeIfPresent(Int.self, forKey: .nspp) ?? 10
+            self.wrapped = PSSMLTSampler(nbSamples: nspp)
         }
     }
 }

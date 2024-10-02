@@ -43,9 +43,10 @@ struct AnyIntegrator: Decodable {
         switch type {
         case .path:
             let params = try container.nestedContainer(keyedBy: PathIntegrator.CodingKeys.self, forKey: .params)
-            let depth = try params.decodeIfPresent(Int.self, forKey: .depth) ?? 16
+            let minDepth = try params.decodeIfPresent(Int.self, forKey: .minDepth) ?? 0
+            let maxDepth = try params.decodeIfPresent(Int.self, forKey: .maxDepth) ?? 16
             let mis = try params.decode(Bool.self, forKey: .mis)
-            self.wrapped = PathIntegrator(maxDepth: depth, mis: mis)
+            self.wrapped = PathIntegrator(minDepth: minDepth, maxDepth: maxDepth, mis: mis)
         case .direct:
             let params = try container.nestedContainer(keyedBy: DirectIntegrator.CodingKeys.self, forKey: .params)
             let strategy = try params.decode(DirectIntegrator.Strategy.self, forKey: .strategy)

@@ -8,6 +8,12 @@
 import Foundation
 
 final class PSSMLTSampler: Sampler {
+    struct Stats {
+        var times: Int
+        var accept: Int
+        var reject: Int
+    }
+
     enum Step {
         case small
         case large
@@ -26,7 +32,7 @@ final class PSSMLTSampler: Sampler {
     
     static var count = 0
     var id: Int = 0
-    var nbSamples: Int = 50
+    var nbSamples: Int
     
     var step: Step = .small
     let largeStepRatio: Float = 0.3
@@ -46,12 +52,19 @@ final class PSSMLTSampler: Sampler {
     private let s2: Float = 1 / 64
     private lazy var logRatio = -log(s2/s1)
     
-    var nbLargeSteps = 0
-    var nbSmallSteps = 0
+    var smallStats = Stats(times: 0, accept: 0, reject: 0)
+    var largeStats = Stats(times: 0, accept: 0, reject: 0)
+
+    init(nbSamples: Int) {
+        self.nbSamples = nbSamples
+    }
 
     func accept() {
         if step == .large {
             largeStepTime = time
+            largeStats.accept += 1
+        } else {
+            smallStats.accept += 1
         }
         
         time += 1
@@ -62,6 +75,12 @@ final class PSSMLTSampler: Sampler {
     func reject() {
         for i in 0 ..< backup.count {
             u[backup[i].0] = backup[i].1
+        }
+        
+        if step == .large {
+            largeStats.reject += 1
+        } else {
+            smallStats.reject += 1
         }
         
         backup.removeAll()
@@ -91,7 +110,7 @@ final class PSSMLTSampler: Sampler {
     
     // TODO Add init with nb samples and copy value here
     func clone() -> PSSMLTSampler {
-        let newSampler = PSSMLTSampler()
+        let newSampler = PSSMLTSampler(nbSamples: nbSamples)
         newSampler.id = PSSMLTSampler.count + 1
         PSSMLTSampler.count += 1
         return newSampler
@@ -108,7 +127,7 @@ final class PSSMLTSampler: Sampler {
             backup.append((i, u[i]))
             u[i].modify = time
             u[i].value = gen()
-            nbLargeSteps += 1
+            largeStats.times += 1
         } else {
             if u[i].modify < largeStepTime {
                 u[i].modify = largeStepTime
@@ -123,7 +142,7 @@ final class PSSMLTSampler: Sampler {
             backup.append((i, u[i]))
             u[i].modify += 1
             u[i].value = mutate(sample: u[i].value)
-            nbSmallSteps += 1
+            smallStats.times += 1
         }
         
         return u[i].value
@@ -135,7 +154,7 @@ final class PSSMLTSampler: Sampler {
         let dv = s2 * exp(logRatio * rng)
         if rng < 0.5 {
             result += dv
-            if result > 1 { result -= 1 }
+            if result >= 1 { result -= 1 }
         } else {
             result -= dv
             if result < 0 { result += 1 }

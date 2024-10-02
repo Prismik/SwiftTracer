@@ -165,7 +165,7 @@ extension Color {
     
     /// Replaces NaN in the rgb channels with `zero`.
     var sanitized: Self {
-        var result = Color()
+        var result = self
         
         if x != x { print("NaN encountred"); result.x = 0 }
         if y != y { print("NaN encountred"); result.y = 0 }
