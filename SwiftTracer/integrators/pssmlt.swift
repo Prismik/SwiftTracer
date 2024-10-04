@@ -34,17 +34,16 @@ final class PssmltIntegrator: Integrator {
             img = Array2d(x: x, y: y, value: Color())
         }
 
-        mutating func add(state: inout StateMCMC) {
+        mutating func add(state: StateMCMC) {
             let w = state.weight / state.targetFunction
             let x = Int(state.pos.x)
             let y = Int(state.pos.y)
             img.add(value: state.contrib * w, x, y)
-            state.weight = 0
         }
     }
 
     // TODO Allow to plug and play this thing
-    private let integrator: PathIntegrator = PathIntegrator(minDepth: 0, maxDepth: 16)
+    private let integrator: PathIntegrator = PathIntegrator(minDepth: 1, maxDepth: 16)
     /// Samples Per Chain
     private let nspc: Int
     /// Initialization Samples Count
@@ -119,6 +118,7 @@ final class PssmltIntegrator: Integrator {
             cdf.add(s.0)
         }
         
+        print("Seeds count => \(seeds.count)")
         cdf.normalize()
         return (b, cdf, seeds)
     }
@@ -170,45 +170,43 @@ final class PssmltIntegrator: Integrator {
         sampler.rng.state = previousSeed
         
         for _ in 0 ..< self.nspc {
-            sampler.step = sampler.gen() < sampler.largeStepRatio
+            sampler.step = Float.random(in: 0 ... 1) < sampler.largeStepRatio
                 ? .large
                 : .small
             
             var proposedState = self.sample(scene: scene, sampler: sampler)
+            guard !proposedState.contrib.hasNaN else { fatalError("NaN in proposed state") }
+            guard !proposedState.targetFunction.isNaN else { fatalError("NaN in proposed state") }
             let acceptProbability = min(
                 1.0,
                 proposedState.targetFunction / state.targetFunction
             )
             
             // This is veach style expectations; See if using Kelemen style wouldn't be more appropriate
-            state.weight += 1 - acceptProbability
-            proposedState.weight += acceptProbability
+            if acceptProbability > 0 {
+                state.weight = 1.0 - acceptProbability
+                proposedState.weight = acceptProbability
+            } else {
+                state.weight = 1
+                proposedState.weight = 0
+            }
             
-            if acceptProbability > sampler.gen() {
-                chain.add(state: &state)
+            if acceptProbability > Float.random(in: 0 ... 1) {
+                chain.add(state: state)
                 sampler.accept()
                 state = proposedState
             } else {
-                chain.add(state: &proposedState)
+                chain.add(state: proposedState)
                 sampler.reject()
             }
         }
         
         // Flush the last state
-        chain.add(state: &state)
-        chain.img.scale(by: 1 / Float(nspc))
+        chain.add(state: state)
+        chain.img.scale(by: 1.0 / Float(nspc))
         image.merge(with: chain.img)
         stats.small.combine(with: sampler.smallStats)
         stats.large.combine(with: sampler.largeStats)
-    }
-    
-    // TODO Parallelize merging of images
-    private func assemble(chains: [MarkovChain], image: Array2d<Color>) -> Array2d<Color> {
-        for chain in chains {
-            image.merge(with: chain.img)
-        }
-
-        return image
     }
 }
 

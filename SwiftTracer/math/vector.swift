@@ -167,9 +167,9 @@ extension Color {
     var sanitized: Self {
         var result = self
         
-        if x != x { print("NaN encountred"); result.x = 0 }
-        if y != y { print("NaN encountred"); result.y = 0 }
-        if z != z { print("NaN encountred"); result.z = 0 }
+        if x != x { result.x = 0 }
+        if y != y { result.y = 0 }
+        if z != z { result.z = 0 }
         return result
     }
 }

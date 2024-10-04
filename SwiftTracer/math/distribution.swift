@@ -24,7 +24,7 @@ struct DistributionOneDimention {
         var current: Float = 0
         let count = Float(elements.count)
         for e in elements {
-            cdf.append(e)
+            cdf.append(current)
             current += e / count
         }
         

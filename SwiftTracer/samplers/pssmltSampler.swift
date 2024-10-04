@@ -73,8 +73,8 @@ final class PSSMLTSampler: Sampler {
     }
     
     func reject() {
-        for i in 0 ..< backup.count {
-            u[backup[i].0] = backup[i].1
+        for (i, v) in backup {
+            u[i] = v
         }
         
         if step == .large {
@@ -160,6 +160,8 @@ final class PSSMLTSampler: Sampler {
             if result < 0 { result += 1 }
         }
         
+        assert(result < 1)
+        assert(result >= 0)
         return result
     }
 }

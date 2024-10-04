@@ -66,7 +66,7 @@ extension DirectIntegrator: SamplerIntegrator {
         var contribution = Color()
         let sample = sampler.next2()
         
-        // NEW LIGHT HANDLING
+        // Sample direct light source
         let ctx = LightSample.Context(p: p, n: intersection.n, ns: intersection.n)
         if let sample = scene.sample(context: ctx, s: sample) {
             let localWi = frame.toLocal(v: sample.wi).normalized()
