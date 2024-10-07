@@ -19,7 +19,7 @@ final class PSSMLTSampler: Sampler {
         case large
     }
 
-    private final class PrimarySample {
+    private struct PrimarySample {
         var value: Float
         /// `time` value when this sample was modified most recently.
         var modify: Int
@@ -34,8 +34,16 @@ final class PSSMLTSampler: Sampler {
     var id: Int = 0
     var nbSamples: Int
     
-    var step: Step = .small
-    let largeStepRatio: Float = 0.3
+    var step: Step = .small {
+        didSet {
+            if step == .small {
+                smallStats.times += 1
+            } else {
+                largeStats.times += 1
+            }
+        }
+    }
+    let largeStepRatio: Float
     
     var rng: RNG = RNG()
 
@@ -55,8 +63,9 @@ final class PSSMLTSampler: Sampler {
     var smallStats = Stats(times: 0, accept: 0, reject: 0)
     var largeStats = Stats(times: 0, accept: 0, reject: 0)
 
-    init(nbSamples: Int) {
+    init(nbSamples: Int, largeStepRatio: Float = 0.3) {
         self.nbSamples = nbSamples
+        self.largeStepRatio = largeStepRatio
     }
 
     func accept() {
@@ -127,7 +136,6 @@ final class PSSMLTSampler: Sampler {
             backup.append((i, u[i]))
             u[i].modify = time
             u[i].value = gen()
-            largeStats.times += 1
         } else {
             if u[i].modify < largeStepTime {
                 u[i].modify = largeStepTime
@@ -142,7 +150,6 @@ final class PSSMLTSampler: Sampler {
             backup.append((i, u[i]))
             u[i].modify += 1
             u[i].value = mutate(sample: u[i].value)
-            smallStats.times += 1
         }
         
         return u[i].value
@@ -150,11 +157,20 @@ final class PSSMLTSampler: Sampler {
     
     private func mutate(sample: Float) -> Float {
         var result = sample
-        let rng = gen()
+        var rng = gen()
+        let add: Bool
+        if self.gen() < 0.5 {
+            add = true
+            rng *= 2
+        } else {
+            add = false
+            rng = 2 * (rng - 0.5)
+        }
+        
         let dv = s2 * exp(logRatio * rng)
-        if rng < 0.5 {
+        if add {
             result += dv
-            if result >= 1 { result -= 1 }
+            if result > 1 { result -= 1 }
         } else {
             result -= dv
             if result < 0 { result += 1 }

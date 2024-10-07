@@ -21,7 +21,7 @@ protocol SamplerIntegrator {
     func preprocess(scene: Scene, sampler: Sampler)
     /// Estimate the incoming light for a given ray
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color
-    func render(pixel: (x: Int, y: Int), scene: Scene, sampler: Sampler) -> Color
+    func render(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color
 }
 
 protocol Integrator {
@@ -59,7 +59,13 @@ struct AnyIntegrator: Decodable {
             let params = try container.nestedContainer(keyedBy: PssmltIntegrator.CodingKeys.self, forKey: .params)
             let spc = try params.decode(Int.self, forKey: .samplesPerChain)
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
-            self.wrapped = PssmltIntegrator(samplesPerChain: spc, initSamplesCount: isc)
+            let integrator = (try? params.decode(AnyIntegrator.self, forKey: .integrator))?.wrapped as? SamplerIntegrator
+            
+            self.wrapped = PssmltIntegrator(
+                samplesPerChain: spc,
+                initSamplesCount: isc,
+                integrator: integrator ?? PathIntegrator(minDepth: 0, maxDepth: 16)
+            )
         }
     }
 }
@@ -165,8 +171,7 @@ enum MonteCarloIntegrator {
                 var avg = Color()
                 for _ in (0 ..< sampler.nbSamples) {
                     let pos = Vec2(Float(x), Float(y)) + sampler.next2()
-                    let ray = scene.camera.createRay(from: pos)
-                    var value = integrator.li(ray: ray, scene: scene, sampler: sampler)
+                    var value = integrator.render(pixel: pos, scene: scene, sampler: sampler)
                     // sanitize nan values
                     if value.x != value.x { value.x = 0 }
                     if value.y != value.y { value.y = 0 }

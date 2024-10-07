@@ -100,10 +100,8 @@ extension PathIntegrator: SamplerIntegrator {
             : pathNoMis(ray: ray, scene: scene, sampler: sampler)
     }
     
-    func render(pixel: (x: Int, y: Int), scene: Scene, sampler: Sampler) -> Color {
-        let positionInImage = Vec2(Float(pixel.x), Float(pixel.y))
-        let ray = scene.camera.createRay(from: positionInImage)
-        
+    func render(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
+        let ray = scene.camera.createRay(from: pixel)
         return mis
             ? pathMis(ray: ray, scene: scene, sampler: sampler)
             : pathNoMis(ray: ray, scene: scene, sampler: sampler)

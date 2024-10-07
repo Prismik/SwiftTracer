@@ -23,7 +23,8 @@ extension NormalIntegrator: SamplerIntegrator {
         return (intersection.n + Vec3(repeating: 1)) * 0.5
     }
     
-    func render(pixel: (x: Int, y: Int), scene: Scene, sampler: Sampler) -> Color {
-        return Color()
+    func render(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
+        let ray = scene.camera.createRay(from: pixel)
+        return li(ray: ray, scene: scene, sampler: sampler)
     }
 }

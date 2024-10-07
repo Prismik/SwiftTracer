@@ -10,8 +10,12 @@ import Progress
 
 final class PssmltIntegrator: Integrator {
     enum CodingKeys: String, CodingKey {
+        /// Number of samples that will be generated within each Markov chain.
         case samplesPerChain
+        /// Number of samples used for generating the normalization constant `b`.
         case initSamplesCount
+        /// Underlying integrator used to render the pixels.
+        case integrator
     }
     
     internal struct StateMCMC {
@@ -27,23 +31,26 @@ final class PssmltIntegrator: Integrator {
         }
     }
 
-    private struct MarkovChain {
+    private class MarkovChain {
         private(set) var img: Array2d<Color>
         
         init(x: Int, y: Int) {
             img = Array2d(x: x, y: y, value: Color())
         }
 
-        mutating func add(state: StateMCMC) {
-            let w = state.weight / state.targetFunction
+        func add(state: inout StateMCMC) {
+            let w = state.targetFunction == 0
+                ? 0
+                : state.weight / state.targetFunction
             let x = Int(state.pos.x)
             let y = Int(state.pos.y)
             img.add(value: state.contrib * w, x, y)
+            state.weight = 0
         }
     }
 
     // TODO Allow to plug and play this thing
-    private let integrator: PathIntegrator = PathIntegrator(minDepth: 1, maxDepth: 16)
+    private let integrator: SamplerIntegrator
     /// Samples Per Chain
     private let nspc: Int
     /// Initialization Samples Count
@@ -52,11 +59,12 @@ final class PssmltIntegrator: Integrator {
     private var nspp: Int = 10
 
     private var result: Array2d<Color>?
-
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
-    init(samplesPerChain: Int, initSamplesCount: Int) {
+
+    init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator) {
         self.nspc = samplesPerChain
         self.isc = initSamplesCount
+        self.integrator = integrator
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 
@@ -66,6 +74,7 @@ final class PssmltIntegrator: Integrator {
         let totalSamples = sampler.nbSamples * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
         let nbChains = totalSamples / nspc
         
+        let beforeBlackCount = zeroColorFound
         // Run chains in parallel
         let gcd = DispatchGroup()
         gcd.enter()
@@ -86,8 +95,9 @@ final class PssmltIntegrator: Integrator {
         }
         let averageLuminance = (average.x + average.y + average.z) / 3.0
         
-        print("largeStepCount => \(stats.small.times)")
-        print("smallStepCount => \(stats.large.times)")
+        print("Nb of black pixels found in chains => \(zeroColorFound - beforeBlackCount)")
+        print("largeStepCount => \(stats.large.times)")
+        print("smallStepCount => \(stats.small.times)")
         print("smallStepAcceptRatio => \(Float(stats.small.accept) / Float(stats.small.accept + stats.small.reject))")
         print("largeStepAcceptRatio => \(Float(stats.large.accept) / Float(stats.large.accept + stats.large.reject))")
         print("average => \(average)")
@@ -123,16 +133,19 @@ final class PssmltIntegrator: Integrator {
         return (b, cdf, seeds)
     }
     
+    private var zeroColorFound: Int = 0
+    
     private func sample(scene: Scene, sampler: Sampler) -> StateMCMC {
         let rng2 = sampler.next2()
-        let x = Int(scene.camera.resolution.x * rng2.x)
-        let y = Int(scene.camera.resolution.y * rng2.y)
-        let contrib = integrator.render(pixel: (x, y), scene: scene, sampler: sampler).sanitized
-        return StateMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
+        let x = Int(min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1))
+        let y = Int(min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1))
+        let contrib = integrator.render(pixel: Vec2(Float(x), Float(y)), scene: scene, sampler: sampler)
+        if !contrib.hasColor { zeroColorFound += 1 }
+        return StateMCMC(contrib: contrib.sanitized, pos: Vec2(Float(x), Float(y)))
     }
 
     /// Create the async blocks responsible for rendering with a Markov Chain
-    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, integrator: PathIntegrator, scene: Scene, increment: @escaping () -> Void) async -> Array2d<Color> {
+    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, integrator: SamplerIntegrator, scene: Scene, increment: @escaping () -> Void) async -> Array2d<Color> {
         return await withTaskGroup(of: Void.self, returning: Array2d<Color>.self) { group in
             let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
             var processed = 0
@@ -160,7 +173,7 @@ final class PssmltIntegrator: Integrator {
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.1
         
-        var chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
+        let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
         sampler.step = .large
         
         var state = self.sample(scene: scene, sampler: sampler)
@@ -175,34 +188,27 @@ final class PssmltIntegrator: Integrator {
                 : .small
             
             var proposedState = self.sample(scene: scene, sampler: sampler)
-            guard !proposedState.contrib.hasNaN else { fatalError("NaN in proposed state") }
-            guard !proposedState.targetFunction.isNaN else { fatalError("NaN in proposed state") }
             let acceptProbability = min(
                 1.0,
                 proposedState.targetFunction / state.targetFunction
             )
             
             // This is veach style expectations; See if using Kelemen style wouldn't be more appropriate
-            if acceptProbability > 0 {
-                state.weight = 1.0 - acceptProbability
-                proposedState.weight = acceptProbability
-            } else {
-                state.weight = 1
-                proposedState.weight = 0
-            }
+            state.weight += 1.0 - acceptProbability
+            proposedState.weight += acceptProbability
             
             if acceptProbability > Float.random(in: 0 ... 1) {
-                chain.add(state: state)
+                chain.add(state: &state)
                 sampler.accept()
                 state = proposedState
             } else {
-                chain.add(state: proposedState)
+                chain.add(state: &proposedState)
                 sampler.reject()
             }
         }
         
         // Flush the last state
-        chain.add(state: state)
+        chain.add(state: &state)
         chain.img.scale(by: 1.0 / Float(nspc))
         image.merge(with: chain.img)
         stats.small.combine(with: sampler.smallStats)

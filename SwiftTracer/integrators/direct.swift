@@ -47,8 +47,9 @@ extension DirectIntegrator: SamplerIntegrator {
         }
     }
     
-    func render(pixel: (x: Int, y: Int), scene: Scene, sampler: Sampler) -> Color {
-        return Color()
+    func render(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
+        let ray = scene.camera.createRay(from: pixel)
+        return li(ray: ray, scene: scene, sampler: sampler)
     }
     
     private func mis(ray: Ray, scene: Scene, sampler: Sampler) -> Color {

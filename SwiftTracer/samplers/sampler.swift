@@ -17,6 +17,7 @@ struct AnySampler: Decodable {
     enum CodingKeys: String, CodingKey {
         case type
         case nspp
+        case largeStepRatio
     }
     
     let wrapped: Sampler
@@ -29,7 +30,8 @@ struct AnySampler: Decodable {
             self.wrapped = IndependentSampler(nspp: nspp)
         case .pssmlt:
             let nspp = try container.decodeIfPresent(Int.self, forKey: .nspp) ?? 10
-            self.wrapped = PSSMLTSampler(nbSamples: nspp)
+            let largeStepRatio = try container.decodeIfPresent(Float.self, forKey: .largeStepRatio) ?? 0.3
+            self.wrapped = PSSMLTSampler(nbSamples: nspp, largeStepRatio: largeStepRatio)
         }
     }
 }

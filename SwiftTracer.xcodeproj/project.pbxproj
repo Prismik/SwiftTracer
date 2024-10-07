@@ -53,6 +53,7 @@
 		194480C92CA8CA38002A90C6 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 194480C82CA8CA38002A90C6 /* Algorithms */; };
 		194D901E2C90D3B200D05F58 /* pssmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901D2C90D3B200D05F58 /* pssmlt.swift */; };
 		194D90202C90D63400D05F58 /* pssmltSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901F2C90D63400D05F58 /* pssmltSampler.swift */; };
+		196094BD2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */; };
 		19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		196ECD562C0B7FC30052DEA6 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
 		196ECD582C0B80350052DEA6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
@@ -235,6 +236,7 @@
 				1982F6BF2C9BA2D1000FF286 /* chest_rough.png in CopyFiles */,
 				1982F6B62C9B9A59000FF286 /* sun.png in CopyFiles */,
 				1999D0842C10E71E00358201 /* textures.json in CopyFiles */,
+				196094BD2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json in CopyFiles */,
 				1999D0812C100A6C00358201 /* checkerboardXY.json in CopyFiles */,
 				1999D0792C0FF68E00358201 /* roughness.json in CopyFiles */,
 				1999D06C2C0FE16F00358201 /* threeSpheres.json in CopyFiles */,
@@ -260,6 +262,7 @@
 		194480A02CA8C788002A90C6 /* rngTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rngTest.swift; sourceTree = "<group>"; };
 		194D901D2C90D3B200D05F58 /* pssmlt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmlt.swift; sourceTree = "<group>"; };
 		194D901F2C90D63400D05F58 /* pssmltSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmltSampler.swift; sourceTree = "<group>"; };
+		196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBoxPssmlt.json; sourceTree = "<group>"; };
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
 		196ECD572C0B80350052DEA6 /* mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mesh.swift; sourceTree = "<group>"; };
 		19737CF02C2B478D00F49204 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
@@ -436,6 +439,7 @@
 		1999D05E2C0FDF6200358201 /* scenes */ = {
 			isa = PBXGroup;
 			children = (
+				196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */,
 				19F816B52C1A7CA80006B1E1 /* odyssey_triangle.json */,
 				19F816B32C1A7CA80006B1E1 /* odyssey.json */,
 				19F816B42C1A7CA80006B1E1 /* veach.json */,
