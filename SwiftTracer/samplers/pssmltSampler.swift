@@ -68,6 +68,11 @@ final class PSSMLTSampler: Sampler {
         self.largeStepRatio = largeStepRatio
     }
 
+    // TODO Make sure the new instence maintains integrity of the vectors
+    func new() -> Self {
+        return .init(nbSamples: self.nbSamples, largeStepRatio: self.largeStepRatio)
+    }
+
     func accept() {
         if step == .large {
             largeStepTime = time
