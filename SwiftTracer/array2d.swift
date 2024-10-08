@@ -28,7 +28,7 @@ struct TwoDimensionalIterator<T: AdditiveArithmetic>: IteratorProtocol {
         
         x = next
         
-        return array.get(cx, cy)
+        return array[cx, cy]
     }
 }
 
@@ -68,22 +68,21 @@ class Array2d<T: AdditiveArithmetic> {
     }
     
     init?(contentsOf filename: String) {
-        
         self.xSize = 0
         self.ySize = 0
         self.storage = Array()
     }
 
-    /// Gets the value at index (x, y).
-    func get(_ x: Int, _ y: Int) -> T {
-        return storage[index(x, y)]
-    }
-    
-    /// Sets the value at index (x, y).
-    func set(value: T, _ x: Int, _ y: Int) {
-        let current = get(x, y)
-        total += value - current
-        storage[index(x, y)] = value
+    subscript(x: Int, y: Int) -> T {
+        get {
+            storage[index(x, y)]
+        }
+        set {
+            let index = index(x, y)
+            let current = storage[index]
+            total += newValue - current
+            storage[index] = newValue
+        }
     }
 
     /// Adds `value` to the current value at index (x, y).
@@ -129,7 +128,7 @@ class Array2d<T: AdditiveArithmetic> {
         let copy = Array2d(copy: self)
         for (i, item) in self.enumerated() {
             let (x, y) = index2d(i)
-            copy.set(value: item, x, ySize - 1 -  y)
+            copy[x, ySize - 1 -  y] = item
         }
         
         self.storage = copy.storage
@@ -147,5 +146,15 @@ class Array2d<T: AdditiveArithmetic> {
 extension Array2d: Sequence {
     func makeIterator() -> TwoDimensionalIterator<T> {
         return TwoDimensionalIterator(self)
+    }
+}
+
+extension Array2d<Color> {
+    // TODO Move into Array2d by fixing generic constraints
+    func scale(by factor: Float) {
+        for (i, item) in self.enumerated() {
+            let (x, y) = index2d(i)
+            self[x, y] = item * factor
+        }
     }
 }

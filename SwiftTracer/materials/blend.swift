@@ -39,7 +39,7 @@ final class Blend: Material {
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {
-        guard !hasDelta(uv: uv, p: p) else { return Color() }
+        guard !hasDelta(uv: uv, p: p) else { return .zero }
         
         let a: Float = self.alpha.get(uv: uv, p: p)
         return a * m1.evaluate(wo: wo, wi: wi, uv: uv, p: p)

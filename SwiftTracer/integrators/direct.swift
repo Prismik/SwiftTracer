@@ -123,7 +123,7 @@ extension DirectIntegrator: SamplerIntegrator {
         
         let sample = sampler.next2()
         let ctx = LightSample.Context(p: p, n: intersection.n, ns: intersection.n)
-        guard let light = scene.sample(context: ctx, s: sample) else { return Color() }
+        guard let light = scene.sample(context: ctx, s: sample) else { return .zero }
         let eval = intersection.shape.material.evaluate(wo: wo, wi: frame.toLocal(v: light.wi), uv: uv, p: p)
         
         return (eval / light.pdf) * light.L
@@ -146,7 +146,7 @@ extension DirectIntegrator: SamplerIntegrator {
         }
 
         let sample = sampler.next2()
-        guard let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: sample) else { return Color() }
+        guard let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: sample) else { return .zero }
         let wi = frame.toWorld(v: direction.wi).normalized()
         let newRay = Ray(origin: intersection.p, direction: wi)
         
@@ -158,7 +158,7 @@ extension DirectIntegrator: SamplerIntegrator {
         let localWo = localFrame.toLocal(v: -newRay.d).normalized()
         return newIts.hasEmission
             ? (eval / pdf) * newIts.shape.light.L(p: newIts.p, n: newIts.n, uv: newIts.uv, wo: localWo)
-            : Color()
+            : .zero
     }
 
     private func bsdf(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
@@ -174,7 +174,7 @@ extension DirectIntegrator: SamplerIntegrator {
         }
         
         let sample = sampler.next2()
-        guard let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: sample) else { return Color() }
+        guard let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: sample) else { return .zero }
         let wi = frame.toWorld(v: direction.wi).normalized()
         let newRay = Ray(origin: intersection.p, direction: wi)
         guard let newIts = scene.hit(r: newRay) else { return direction.weight * scene.background }
@@ -182,6 +182,6 @@ extension DirectIntegrator: SamplerIntegrator {
         let localWo = localFrame.toLocal(v: -newRay.d).normalized()
         return newIts.hasEmission
             ? direction.weight * newIts.shape.light.L(p: newIts.p, n: newIts.n, uv: newIts.uv, wo: localWo)
-            : Color()
+            : .zero
     }
 }

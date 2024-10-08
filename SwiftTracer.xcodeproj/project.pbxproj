@@ -54,6 +54,8 @@
 		194D901E2C90D3B200D05F58 /* pssmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901D2C90D3B200D05F58 /* pssmlt.swift */; };
 		194D90202C90D63400D05F58 /* pssmltSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901F2C90D63400D05F58 /* pssmltSampler.swift */; };
 		196094BD2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */; };
+		196094BF2CB46638009FDAC4 /* gdmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094BE2CB46636009FDAC4 /* gdmlt.swift */; };
+		196094C02CB46638009FDAC4 /* gdmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094BE2CB46636009FDAC4 /* gdmlt.swift */; };
 		19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		196ECD562C0B7FC30052DEA6 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
 		196ECD582C0B80350052DEA6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
@@ -263,6 +265,7 @@
 		194D901D2C90D3B200D05F58 /* pssmlt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmlt.swift; sourceTree = "<group>"; };
 		194D901F2C90D63400D05F58 /* pssmltSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmltSampler.swift; sourceTree = "<group>"; };
 		196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBoxPssmlt.json; sourceTree = "<group>"; };
+		196094BE2CB46636009FDAC4 /* gdmlt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gdmlt.swift; sourceTree = "<group>"; };
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
 		196ECD572C0B80350052DEA6 /* mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mesh.swift; sourceTree = "<group>"; };
 		19737CF02C2B478D00F49204 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
@@ -608,6 +611,7 @@
 		19E8083C2B2B6DCA00A37D37 /* integrators */ = {
 			isa = PBXGroup;
 			children = (
+				196094BE2CB46636009FDAC4 /* gdmlt.swift */,
 				19BBA7242BF97A9700981204 /* path.swift */,
 				19BBA7262BF97AAA00981204 /* integrator.swift */,
 				19EFB3CC2C03FDDF005CC488 /* normal.swift */,
@@ -869,6 +873,7 @@
 				194480B42CA8C902002A90C6 /* point.swift in Sources */,
 				19BBA73F2BFD54C100981204 /* vector.swift in Sources */,
 				194480B32CA8C900002A90C6 /* area.swift in Sources */,
+				196094BF2CB46638009FDAC4 /* gdmlt.swift in Sources */,
 				194480A12CA8C788002A90C6 /* rngTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -891,6 +896,7 @@
 				1944809A2CA8A5C1002A90C6 /* rng.swift in Sources */,
 				19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */,
 				19E8083E2B2B6DE900A37D37 /* material.swift in Sources */,
+				196094C02CB46638009FDAC4 /* gdmlt.swift in Sources */,
 				19E958972C1BD19E00F63FA5 /* point.swift in Sources */,
 				19BBA72F2BFC089A00981204 /* sampling.swift in Sources */,
 				19C0A7112C08EECE00A7A0FD /* metal.swift in Sources */,

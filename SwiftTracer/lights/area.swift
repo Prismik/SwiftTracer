@@ -41,7 +41,7 @@ final class AreaLight: Light {
         case let .checkerboard2d(color1, color2, _, _):
             L = (color1 + color2) / 2
         case .textureMap(let values, _, _, _):
-            L = values.reduce(Color(), { acc, rgb in
+            L = values.reduce(.zero, { acc, rgb in
                 return acc + rgb
             }) / Float(values.size)
         }
@@ -50,7 +50,7 @@ final class AreaLight: Light {
     }
     
     func L(p: Point3, n: Vec3, uv: Vec2, wo: Vec3) -> Color {
-        guard wo.z > 0 else { return Color() }
+        guard wo.z > 0 else { return .zero }
         return texture.get(uv: uv, p: p)
     }
 }

@@ -36,7 +36,7 @@ final class Diffuse: Material {
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {
         let wo = wo.normalized()
         let wi = wi.normalized()
-        guard wo.z >= 0 && wi.z >= 0 else { return Color() }
+        guard wo.z >= 0 && wi.z >= 0 else { return .zero }
         
         let cos = wi.dot(Vec3.unit(.z))
         return texture.get(uv: uv, p: p) / .pi * cos

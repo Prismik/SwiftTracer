@@ -75,7 +75,7 @@ struct AnyMaterial: Decodable {
                 let roughness = try container.decode(Float.self, forKey: .roughness)
                 self.wrapped = Metal(texture: texture, roughness: .constant(value: Color(repeating: roughness)))
             } catch {
-                let roughness = try container.decodeIfPresent(Texture.self, forKey: .roughness) ?? .constant(value: Color())
+                let roughness = try container.decodeIfPresent(Texture.self, forKey: .roughness) ?? .constant(value: .zero)
                 self.wrapped = Metal(texture: texture, roughness: roughness)
             }
         case .dielectric:

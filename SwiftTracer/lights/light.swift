@@ -151,11 +151,11 @@ protocol Light: AnyObject {
 
 extension Light {
     func L(p: Point3, n: Vec3, uv: Vec2, wo: Vec3) -> Color {
-        return Color()
+        return .zero
     }
     
     
     func Le(ray: Ray) -> Color {
-        return Color()
+        return .zero
     }
 }

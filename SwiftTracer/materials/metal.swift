@@ -52,10 +52,10 @@ final class Metal: Material {
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {
-        guard wo.z >= 0 && wi.z >= 0 else { return Color() }
+        guard wo.z >= 0 && wi.z >= 0 else { return .zero }
         
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
-        guard roughness != 0 else { return Color() }
+        guard roughness != 0 else { return .zero }
         
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
         let n = power(roughness: roughness)

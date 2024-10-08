@@ -31,7 +31,7 @@ class Image {
 
             let rgba: [PNG.RGBA<UInt8>] = image.unpack(as: PNG.RGBA<UInt8>.self)
             let size: (x:Int, y:Int) = image.size
-            self.pixels = Array2d<Color>(x: size.x, y: size.x, value: Color())
+            self.pixels = Array2d<Color>(x: size.x, y: size.x, value: .zero)
             for x in 0 ..< size.x {
                 for y in 0 ..< size.y {
                     let i = x + y * size.x
@@ -143,7 +143,7 @@ class Image {
         guard let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
         let size = cgImage.height * cgImage.width * 4
         let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)
-        self.raw = Array2d(x: cgImage.width, y: cgImage.height, value: Color())
+        self.raw = Array2d(x: cgImage.width, y: cgImage.height, value: .zero)
         self.pixels = malloc(size)
         self.context = CGContext(
             data: pixels,
@@ -172,7 +172,7 @@ class Image {
                 let r = Float(mem[i]) / 255
                 let g = Float(mem[i + 1]) / 255
                 let b = Float(mem[i + 2]) / 255
-                raw.set(value: Color(r, g, b).toLinearRGB(), x, y)
+                raw[x, y] = Color(r, g, b).toLinearRGB()
             }
         }
         

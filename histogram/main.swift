@@ -63,7 +63,7 @@ struct ShapeTest: Decodable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let anyShapes = try container.decode([AnyShape].self, forKey: .shapes)
-        self.shapes = anyShapes.map { $0.unwrapped(materials: ["nd": DiffuseLight(texture: .constant(value: Color()))]) }
+        self.shapes = anyShapes.map { $0.unwrapped(materials: ["nd": DiffuseLight(texture: .constant(value: .zero))]) }
     }
 }
 

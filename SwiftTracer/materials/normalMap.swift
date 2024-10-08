@@ -39,7 +39,7 @@ final class NormalMap: Material {
         let localWo = frame.toLocal(v: wo).normalized()
         let localWi = frame.toLocal(v: wi).normalized()
         
-        guard localWi.z >= 0, wi.z >= 0 else { return Color() }
+        guard localWi.z >= 0, wi.z >= 0 else { return .zero }
         return material.evaluate(wo: localWo, wi: localWi, uv: uv, p: p)
     }
     

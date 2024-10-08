@@ -31,7 +31,7 @@ final class PathIntegrator: Integrator {
     /// Evaluates direct lighting on a given intersection
     private func light(wo: Vec3, scene: Scene, frame: Frame, intersection: Intersection, s: Vec2) -> Color {
         let ctx = LightSample.Context(p: intersection.p, n: intersection.n, ns: intersection.n)
-        guard let lightSample = scene.sample(context: ctx, s: s) else { return Color() }
+        guard let lightSample = scene.sample(context: ctx, s: s) else { return .zero }
         let localWi = frame.toLocal(v: lightSample.wi).normalized()
         let pdf = intersection.shape.material.pdf(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)
         let eval = intersection.shape.material.evaluate(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)
@@ -42,7 +42,7 @@ final class PathIntegrator: Integrator {
 
     /// Recursively traces rays using MIS
     private func trace(intersection: Intersection?, ray: Ray, scene: Scene, sampler: Sampler, depth: Int) -> Color {
-        guard ray.d.length.isFinite else { return Color() }
+        guard ray.d.length.isFinite else { return .zero }
         guard let intersection = intersection else { return scene.background }
         var contribution = Color()
         let frame = Frame(n: intersection.n)
@@ -123,7 +123,7 @@ extension PathIntegrator: SamplerIntegrator {
         var currentRay = ray
         while depth != maxDepth {
             depth += 1
-            guard currentRay.d.length.isFinite else { return Color() }
+            guard currentRay.d.length.isFinite else { return .zero }
             if let intersection = scene.hit(r: currentRay) {
                 let frame = Frame(n: intersection.n)
                 let wo = frame.toLocal(v: -currentRay.d).normalized()
@@ -139,7 +139,7 @@ extension PathIntegrator: SamplerIntegrator {
                     currentRay = Ray(origin: intersection.p, direction: wi)
                     throughput *= direction.weight
                 } else {
-                    return Color()
+                    return .zero
                 }
             } else {
                 return throughput * scene.background

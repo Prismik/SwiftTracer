@@ -14,6 +14,7 @@ enum IntegratorType: String, Decodable {
     case uv
     case direct
     case pssmlt
+    case gdmlt
 }
 
 /// Integrating one pixel at a time.
@@ -22,6 +23,16 @@ protocol SamplerIntegrator {
     /// Estimate the incoming light for a given ray
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color
     func render(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color
+}
+
+struct GradientDomainResult {
+    let img: Array2d<Color>
+    let dx: Array2d<Color>
+    let dy: Array2d<Color>
+}
+
+protocol GradientDomainIntegrator {
+    func render(scene: Scene, sampler: Sampler) -> GradientDomainResult
 }
 
 protocol Integrator {
@@ -66,6 +77,8 @@ struct AnyIntegrator: Decodable {
                 initSamplesCount: isc,
                 integrator: integrator ?? PathIntegrator(minDepth: 0, maxDepth: 16)
             )
+        case .gdmlt:
+            self.wrapped = GdmltIntegrator(maxReconstructIterations: 40)
         }
     }
 }
@@ -125,7 +138,8 @@ enum MonteCarloIntegrator {
         for block in renderBlocks {
             for x in (0 ..< Int(block.size.x)) {
                 for y in (0 ..< Int(block.size.y)) {
-                    image.set(value: block.image.get(x, y), x + Int(block.position.x), y + Int(block.position.y))
+                    let (dx, dy): (Int, Int) = (x + Int(block.position.x), y + Int(block.position.y))
+                    image[dx, dy] = block.image[x, y]
                 }
             }
         }
@@ -179,7 +193,7 @@ enum MonteCarloIntegrator {
                     avg += value
                 }
                 
-                partialImage.set(value: avg / Float(sampler.nbSamples), lx, ly)
+                partialImage[lx, ly] = avg / Float(sampler.nbSamples)
             }
         }
         

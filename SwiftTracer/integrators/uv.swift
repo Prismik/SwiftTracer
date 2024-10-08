@@ -19,7 +19,7 @@ extension UvIntegrator: SamplerIntegrator {
     }
     
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
-        guard let intersection = scene.hit(r: ray) else { return Color() }
+        guard let intersection = scene.hit(r: ray) else { return .zero }
         let uv = intersection.uv
         return Vec3(uv.x.modulo(1.0), uv.y.modulo(1.0), 0)
     }

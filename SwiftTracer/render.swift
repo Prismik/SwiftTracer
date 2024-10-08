@@ -33,9 +33,16 @@ enum Render {
             let scene = try decoder.decode(Scene.self, from: data)
             let clock = ContinuousClock()
             let time = clock.measure {
-                let pixels = scene.render()
-                let image = Image(array: pixels)
-                if image.write(to: output) {
+                let result = scene.render()
+                var successes: Int = 0
+                for (i, item) in result.enumerated() {
+                    let image = Image(array: item)
+                    let id = i == 0 ? "" : "\(i)-"
+                    let writeResult = image.write(to: "\(id)\(output)")
+                    if writeResult { successes += 1 }
+                }
+                
+                if successes == result.count {
                     print("#Intersection: \(Scene.NB_INTERSECTION)")
                     print("#rays: \(Scene.NB_TRACED_RAYS)")
                     print("ratio: \(Float(Scene.NB_INTERSECTION) / Float(Scene.NB_TRACED_RAYS))")

@@ -89,7 +89,7 @@ final class Dielectric: Material {
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {
-        return Color()
+        return .zero
     }
     
     func pdf(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Float {

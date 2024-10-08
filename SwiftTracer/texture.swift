@@ -49,10 +49,10 @@ enum Texture {
         let a = (xy.x - p00.x) / xDistance
         let b = (xy.y - p00.y) / yDistance
         
-        let rp00 = values.get(Int(p00.x), Int(p00.y))
-        let rp01 = values.get(Int(p01.x), Int(p01.y))
-        let rp10 = values.get(Int(p10.x), Int(p10.y))
-        let rp11 = values.get(Int(p11.x), Int(p11.y))
+        let rp00 = values[Int(p00.x), Int(p00.y)]
+        let rp01 = values[Int(p01.x), Int(p01.y)]
+        let rp10 = values[Int(p10.x), Int(p10.y)]
+        let rp11 = values[Int(p11.x), Int(p11.y)]
 
         let lhs = (rp01 * (1 - a) + rp11 * a) * b
         let rhs = (rp00 * (1 - a) + rp10 * a) * (1 - b)
@@ -110,7 +110,7 @@ extension Texture: Decodable {
                 }
                 self = .textureMap(values: values, scale: scale, uvScale: uvScale, uvOffset: uvOffset)
             case .checkerboardXY:
-                let color1 = try container.decodeIfPresent(Color.self, forKey: .color1) ?? Color()
+                let color1 = try container.decodeIfPresent(Color.self, forKey: .color1) ?? .zero
                 let color2 = try container.decodeIfPresent(Color.self, forKey: .color2) ?? Color(repeating: 1)
                 let scale = try container.decodeIfPresent(Vec2.self, forKey: .uvScale) ?? Vec2(repeating: 1)
                 let offset = try container.decodeIfPresent(Vec2.self, forKey: .uvOffset) ?? Vec2()

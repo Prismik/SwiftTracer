@@ -49,8 +49,13 @@ final class Scene {
         return LightSample(L: sample.L, wi: sample.wi, p: sample.p, pdf: source.prob * sample.pdf)
     }
     
-    func render() -> Array2d<Color> {
-        return integrator.render(scene: self, sampler: sampler)
+    func render() -> [Array2d<Color>] {
+        if let gradientIntegrator = integrator as? GradientDomainIntegrator {
+            let result: GradientDomainResult = gradientIntegrator.render(scene: self, sampler: sampler)
+            return [result.img, result.dx, result.dy]
+        } else {
+            return [integrator.render(scene: self, sampler: sampler)]
+        }
     }
     
     func preprocess() {

@@ -35,7 +35,7 @@ final class PssmltIntegrator: Integrator {
         private(set) var img: Array2d<Color>
         
         init(x: Int, y: Int) {
-            img = Array2d(x: x, y: y, value: Color())
+            img = Array2d(x: x, y: y, value: .zero)
         }
 
         func add(state: inout StateMCMC) {
@@ -90,7 +90,7 @@ final class PssmltIntegrator: Integrator {
         
         guard let image = result else { fatalError("No result image was returned in the async task") }
         //let average = image.total / Float(image.size)
-        let average = image.reduce(into: Color()) { acc, cur in
+        let average = image.reduce(into: .zero) { acc, cur in
             acc += cur.sanitized / Float(image.size)
         }
         let averageLuminance = (average.x + average.y + average.z) / 3.0
@@ -213,16 +213,6 @@ final class PssmltIntegrator: Integrator {
         image.merge(with: chain.img)
         stats.small.combine(with: sampler.smallStats)
         stats.large.combine(with: sampler.largeStats)
-    }
-}
-
-private extension Array2d<Color> {
-    // TODO Move into Array2d by fixing generic constraints
-    func scale(by factor: Float) {
-        for (i, item) in self.enumerated() {
-            let (x, y) = index2d(i)
-            set(value: item * factor, x, y)
-        }
     }
 }
 

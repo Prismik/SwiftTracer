@@ -70,7 +70,7 @@ enum Utils {
                     integral += pdfValue * pixelArea
                 }
                 
-                pdf.set(value: accumulator / Float(nsp), x, y)
+                pdf[x, y] = accumulator / Float(nsp)
             }
         }
         
@@ -105,8 +105,9 @@ enum Utils {
                     
                     let sinTheta: Float = max(1 - direction.z * direction.z, 0).sqrt()
                     let weight = normalisation / sinTheta
-                    let current = histogram.get(Int(pixel.x), Int(pixel.y))
-                    histogram.set(value: current + weight, Int(pixel.x), Int(pixel.y))
+                    let (x, y): (Int, Int) = (Int(pixel.x), Int(pixel.y))
+                    let current = histogram[x, y]
+                    histogram[x, y] = current + weight
                 }
             }
         }
@@ -114,7 +115,7 @@ enum Utils {
         var pdf1d = Array(repeating: Float(0), count: Int(imageSize.x) * Int(imageSize.y))
         for y in 0 ..< Int(imageSize.y) {
             for x in 0 ..< Int(imageSize.x) {
-                pdf1d[y * Int(imageSize.x) + x] = pdf.get(x, y)
+                pdf1d[y * Int(imageSize.x) + x] = pdf[x, y]
             }
         }
         pdf1d.sort()
@@ -146,8 +147,8 @@ enum Utils {
         var difference: Float = 0
         for y in 0 ..< Int(imageSize.y) {
             for x in 0 ..< Int(imageSize.x) {
-                let pdfVal = pdf.get(x, y)
-                let histogramVal = histogram.get(x, y)
+                let pdfVal = pdf[x, y]
+                let histogramVal = histogram[x, y]
                 let diff = pdfVal - histogramVal
                 difference += diff
                 
@@ -157,9 +158,9 @@ enum Utils {
                     ? Color(-diff / exposure, 0, 0)
                     : Color(0, diff / exposure, 0)
                 
-                pdfImage.set(value: pdfColor, x, y)
-                histogramImage.set(value: histogramColor, x, y)
-                diffImage.set(value: diffColor, x, y)
+                pdfImage[x, y] = pdfColor
+                histogramImage[x, y] = histogramColor
+                diffImage[x, y] = diffColor
             }
         }
         
