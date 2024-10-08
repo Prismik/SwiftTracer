@@ -44,7 +44,7 @@ final class PssmltIntegrator: Integrator {
                 : state.weight / state.targetFunction
             let x = Int(state.pos.x)
             let y = Int(state.pos.y)
-            img.add(value: state.contrib * w, x, y)
+            img[x, y] += state.contrib * w
             state.weight = 0
         }
     }

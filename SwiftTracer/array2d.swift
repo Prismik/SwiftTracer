@@ -78,23 +78,16 @@ class Array2d<T: AdditiveArithmetic> {
             storage[index(x, y)]
         }
         set {
-            let index = index(x, y)
-            let current = storage[index]
-            total += newValue - current
-            storage[index] = newValue
-        }
-    }
-
-    /// Adds `value` to the current value at index (x, y).
-    func add(value: T, _ x: Int, _ y: Int) {
-        lock.withLock {
-            let current = storage[index(x, y)]
-            total += value
-            storage[index(x, y)] = current + value
+            lock.withLock {
+                let index = index(x, y)
+                let current = storage[index]
+                total += newValue - current
+                storage[index] = newValue
+            }
         }
     }
     
-    /// Adds `value` to the current value at value i.
+    /// Adds `value` to the current value at ith element in the storage.
     func add(value: T, i: Int) {
         lock.withLock {
             let current = storage[i]

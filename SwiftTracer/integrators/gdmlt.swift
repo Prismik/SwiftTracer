@@ -63,21 +63,22 @@ extension GdmltIntegrator: GradientDomainIntegrator {
             for x in 0 ..< img.xSize {
                 for y in 0 ..< img.ySize {
                     let originalSeed = sampler.rng.state
-                    let pixel = integrator.render(pixel: Vec2(Float(x), Float(y)), scene: scene, sampler: sampler)
-                    img.add(value: pixel, x, y)
+                    let base = Vec2(Float(x), Float(y))
+                    let pixel = integrator.render(pixel: base, scene: scene, sampler: sampler)
+                    img[x, y] += pixel
                     // TODO Does it overlap to end of img or we don't use it
                     // TODO Check that the ray to replay is appropriate
-                    let base = Vec2(Float(x), Float(y))
+                    // TODO Check that we can consider x,y < 0 and xy > max as Color.zero
                     let left = render(pixel: base - Vec2(1, 0), using: originalSeed, scene: scene, sampler: &sampler)
                     let right = render(pixel: base + Vec2(1, 0), using: originalSeed, scene: scene, sampler: &sampler)
                     let top = render(pixel: base - Vec2(0, 1), using: originalSeed, scene: scene, sampler: &sampler)
                     let bottom = render(pixel: base + Vec2(0, 1), using: originalSeed, scene: scene, sampler: &sampler)
                     
                     // TODO Double check the convention with (y + 1) and (y - 1)
-                    if x != 0 { dxGradients.add(value: 0.5 * (pixel - left), x - 1, y) }
-                    if y != 0 { dyGradients.add(value: 0.5 * (pixel - top), x, y - 1) }
-                    if x != Int(scene.camera.resolution.x) - 1 { dxGradients.add(value: 0.5 * (right - pixel), x, y) }
-                    if y != Int(scene.camera.resolution.y) - 1 { dyGradients.add(value: 0.5 * (bottom - pixel), x, y) }
+                    dxGradients[x - 1, y] += 0.5 * (pixel - left)
+                    dyGradients[x, y - 1] += 0.5 * (pixel - top)
+                    dxGradients[x, y] += 0.5 * (right - pixel)
+                    dyGradients[x, y] += 0.5 * (bottom - pixel)
                 }
             }
             
@@ -97,9 +98,8 @@ extension GdmltIntegrator: GradientDomainIntegrator {
     }
     
     private func render(pixel: Vec2, using seed: UInt64, scene: Scene, sampler: inout Sampler) -> Color {
+        guard pixel.x > 0, pixel.y > 0, pixel.x < scene.camera.resolution.x - 1, pixel.y < scene.camera.resolution.y - 1 else { return .zero }
         sampler.rng.state = seed
-        let max = Vec2(scene.camera.resolution.x - 1, scene.camera.resolution.y - 1)
-        let pixel = Vec2(pixel.x.clamped(0, max.x), pixel.y.clamped(0, max.y))
         return integrator.render(pixel: pixel, scene: scene, sampler: sampler)
     }
 }
