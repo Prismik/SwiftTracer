@@ -1,5 +1,5 @@
 //
-//  shiftMap.swift
+//  shiftMapping.swift
 //  SwiftTracer
 //
 //  Created by Francis Beauchamp on 2024-10-08.
@@ -8,9 +8,11 @@
 // TODO Allow for plug and play of other types of integrators
 struct ShiftMapParams {
     let seed: UInt64?
-    
-    init(seed: UInt64? = nil) {
+    let path: Path?
+
+    init(seed: UInt64? = nil, path: Path? = nil) {
         self.seed = seed
+        self.path = path
     }
 }
 
@@ -47,4 +49,26 @@ final class RandomSequenceReplay: ShiftMapping {
         sampler.rng.state = seed
         return integrator.render(pixel: pixel, scene: scene, sampler: sampler)
     }
+}
+
+final class PathReconnection: ShiftMapping {
+    var sampler: Sampler
+    
+    private let integrator: PathIntegrator
+    private let scene: Scene
+
+    init(integrator: PathIntegrator, scene: Scene, sampler: Sampler) {
+        self.integrator = integrator
+        self.scene = scene
+        self.sampler = sampler
+    }
+
+    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color {
+        guard let path = params.path else { fatalError("Wrong params provided to \(String(describing: self))") }
+        
+        // TODO Look into the path for valid reconnections
+        return .zero
+    }
+    
+    
 }

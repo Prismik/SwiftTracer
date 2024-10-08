@@ -8,13 +8,12 @@
 import Foundation
 import simd
 
-// TODO Why is it talking about p; investigate
 struct EmitterSample {
     /// Position on the light source
     let y: Point3
-    /// Normal associated with p
+    /// Normal associated with y
     let n: Vec3
-    /// UV coordinates associated with p
+    /// UV coordinates associated with y
     let uv: Vec2
     /// Probability density (in solid angle)
     let pdf: Float
@@ -26,7 +25,7 @@ struct Intersection {
     /// Intersection distance
     let t: Float
     
-    /// Point of intersection TODO is it world or local
+    /// Point of intersection
     let p: Point3
     
     /// Surface normal
