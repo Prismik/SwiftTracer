@@ -15,6 +15,7 @@ final class Path {
     }
 
     private init() { }
+    
     private init(start: Vertex) {
         vertices.append(start)
     }

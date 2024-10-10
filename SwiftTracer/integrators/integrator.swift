@@ -22,7 +22,7 @@ protocol SamplerIntegrator {
     func preprocess(scene: Scene, sampler: Sampler)
     /// Estimate the incoming light for a given ray
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color
-    func render(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color
+    func li(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color
 }
 
 struct GradientDomainResult {
@@ -83,15 +83,6 @@ struct AnyIntegrator: Decodable {
     }
 }
 
-private struct Block {
-    let position: Vec2
-    let size: Vec2
-    let sample: Sampler
-    var image: Array2d<Color>
-    var intersectionCount: Int
-    var rayCount: Int
-}
-
 struct Printer: ProgressBarPrinter {
     var lastPrintedTime = 0.0
 
@@ -113,6 +104,17 @@ struct Printer: ProgressBarPrinter {
 }
 
 enum MonteCarloIntegrator {
+    internal struct Block {
+        let position: Vec2
+        let size: Vec2
+        let sample: Sampler
+        var image: Array2d<Color>
+        var intersectionCount: Int
+        var rayCount: Int
+        
+        var images: [Array2d<Color>] { [image] }
+    }
+
     static func render<T: SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler) -> Array2d<Color> {
         print("Integrator preprocessing ...")
         integrator.preprocess(scene: scene, sampler: sampler)
@@ -127,23 +129,10 @@ enum MonteCarloIntegrator {
             let blocks = await renderBlocks(blockSize: 32, scene: scene, integrator: integrator, sampler: sampler) {
                 progress.next()
             }
-            return assemble(renderBlocks: blocks, image: image)
+            return blocks.assemble(into: image)
         }
         
         gcd.wait()
-        return image
-    }
-    
-    private static func assemble(renderBlocks: [Block], image: Array2d<Color>) -> Array2d<Color> {
-        for block in renderBlocks {
-            for x in (0 ..< Int(block.size.x)) {
-                for y in (0 ..< Int(block.size.y)) {
-                    let (dx, dy): (Int, Int) = (x + Int(block.position.x), y + Int(block.position.y))
-                    image[dx, dy] = block.image[x, y]
-                }
-            }
-        }
-        
         return image
     }
     
@@ -185,7 +174,7 @@ enum MonteCarloIntegrator {
                 var avg = Color()
                 for _ in (0 ..< sampler.nbSamples) {
                     let pos = Vec2(Float(x), Float(y)) + sampler.next2()
-                    var value = integrator.render(pixel: pos, scene: scene, sampler: sampler)
+                    var value = integrator.li(pixel: pos, scene: scene, sampler: sampler)
                     // sanitize nan values
                     if value.x != value.x { value.x = 0 }
                     if value.y != value.y { value.y = 0 }
@@ -199,5 +188,20 @@ enum MonteCarloIntegrator {
         
         block.image = partialImage
         return block
+    }
+}
+
+private extension [MonteCarloIntegrator.Block] {
+    func assemble(into image: Array2d<Color>) -> Array2d<Color> {
+        for block in self {
+            for x in (0 ..< Int(block.size.x)) {
+                for y in (0 ..< Int(block.size.y)) {
+                    let (dx, dy): (Int, Int) = (x + Int(block.position.x), y + Int(block.position.y))
+                    image[dx, dy] = block.image[x, y]
+                }
+            }
+        }
+        
+        return image
     }
 }

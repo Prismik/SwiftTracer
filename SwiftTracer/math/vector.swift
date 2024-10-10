@@ -172,4 +172,9 @@ extension Color {
         if z != z { result.z = 0 }
         return result
     }
+    
+    /// Returns a copy of `self` where the values are replaced by their absolute values.
+    var abs: Self {
+        return Color(x.abs(), y.abs(), z.abs())
+    }
 }

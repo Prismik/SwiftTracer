@@ -5,6 +5,7 @@
 //  Created by Francis Beauchamp on 2024-10-07.
 //
 
+import Foundation
 import Progress
 
 /// Gradient domain metropolis light transport integrator
@@ -16,15 +17,149 @@ final class GdmltIntegrator: Integrator {
     }
     
     private let maxReconstructIterations: Int
-    private let integrator = PathIntegrator(minDepth: 0, maxDepth: 16)
+    private let maxDepth: Int
+    private let minDepth: Int
 
-    init(maxReconstructIterations: Int) {
+    init(maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
         self.maxReconstructIterations = maxReconstructIterations
+        self.minDepth = minDepth
+        self.maxDepth = maxDepth
     }
 
     func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
         let result: GradientDomainResult = render(scene: scene, sampler: sampler)
         return result.img
+    }
+}
+
+extension GdmltIntegrator: SamplerIntegrator {
+    func preprocess(scene: Scene, sampler: any Sampler) {
+        // no op
+    }
+    
+    
+    /// Evaluates direct lighting on a given intersection
+    private func light(wo: Vec3, scene: Scene, frame: Frame, intersection: Intersection, s: Vec2) -> Color {
+        let ctx = LightSample.Context(p: intersection.p, n: intersection.n, ns: intersection.n)
+        guard let lightSample = scene.sample(context: ctx, s: s) else { return .zero }
+        let localWi = frame.toLocal(v: lightSample.wi).normalized()
+        let pdf = intersection.shape.material.pdf(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)
+        let eval = intersection.shape.material.evaluate(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)
+        let weight = lightSample.pdf / (pdf + lightSample.pdf)
+        
+        return (weight * eval / lightSample.pdf) * lightSample.L
+    }
+
+    /// Recursively traces rays using MIS
+    private func trace(intersection: Intersection?, ray: Ray, scene: Scene, sampler: Sampler, depth: Int) -> Color {
+        guard ray.d.length.isFinite else { return .zero }
+        guard let intersection = intersection else { return scene.background }
+        var contribution = Color()
+        let frame = Frame(n: intersection.n)
+        let wo = frame.toLocal(v: -ray.d).normalized()
+        let s = sampler.next2()
+        
+        guard !intersection.hasEmission else {
+            return intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
+        }
+
+        // MIS Emitter
+        contribution += light(wo: wo, scene: scene, frame: frame, intersection: intersection, s: s)
+
+        // MIS Material
+        guard let direction = intersection.shape.material.sample(wo: wo, uv: intersection.uv, p: intersection.p, sample: s) else {
+            return contribution
+        }
+        
+        let bsdfWeight = direction.weight
+        let wi = frame.toWorld(v: direction.wi).normalized()
+        let newRay = Ray(origin: intersection.p, direction: wi)
+        var its: Intersection? = nil
+        if let newIntersection = scene.hit(r: newRay) {
+            its = newIntersection
+            if newIntersection.hasEmission, let light = newIntersection.shape.light {
+                let localFrame = Frame(n: newIntersection.n)
+                let newWo = localFrame.toLocal(v: -newRay.d).normalized()
+                let pdf = intersection.shape.material.pdf(wo: wo, wi: direction.wi, uv: intersection.uv, p: intersection.p)
+                var weight: Float = 1
+                if !intersection.shape.material.hasDelta(uv: intersection.uv, p: intersection.p) {
+                    let ctx = LightSample.Context(p: intersection.p, n: intersection.n, ns: intersection.n)
+                    let pdfDirect = light.pdfLi(context: ctx, y: newIntersection.p)
+                    weight = pdf / (pdf + pdfDirect)
+                }
+
+                contribution += (weight * bsdfWeight)
+                    * light.L(p: newIntersection.p, n: newIntersection.n, uv: newIntersection.uv, wo: newWo)
+            }
+        }
+
+        return depth == maxDepth || (its?.hasEmission == true && depth >= minDepth)
+            ? contribution
+            : contribution + trace(intersection: its, ray: newRay, scene: scene, sampler: sampler, depth: depth + 1) * bsdfWeight
+    }
+    
+    func li(ray: Ray, scene: Scene, sampler: any Sampler) -> Color {
+        guard let intersection = scene.hit(r: ray) else { return scene.background }
+        let frame = Frame(n: intersection.n)
+        let wo = frame.toLocal(v: -ray.d).normalized()
+        
+        return intersection.hasEmission
+            ? intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
+            : trace(intersection: intersection, ray: ray, scene: scene, sampler: sampler, depth: 0)
+    }
+    
+    func li(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
+        let ray = scene.camera.createRay(from: pixel)
+        return li(ray: ray, scene: scene, sampler: sampler)
+    }
+}
+
+extension GdmltIntegrator: GradientDomainIntegrator {
+    internal struct Block {
+        let position: Vec2
+        let size: Vec2
+        var image: Array2d<Color>
+        var dxGradients: Array2d<Color>
+        var dyGradients: Array2d<Color>
+        
+        mutating func update(img: Array2d<Color>, dx: Array2d<Color>, dy: Array2d<Color>) {
+            self.image = img
+            self.dxGradients = dx
+            self.dyGradients = dy
+        }
+    }
+    
+    func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
+        print("Integrator preprocessing ...")
+        preprocess(scene: scene, sampler: sampler)
+        
+        print("Rendering ...")
+        let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
+        let dxGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
+        let dyGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
+        let mapper: ShiftMapping = RandomSequenceReplay(integrator: self, scene: scene, sampler: sampler)
+        
+        let gcd = DispatchGroup()
+        gcd.enter()
+        Task {
+            defer { gcd.leave() }
+            var progress = ProgressBar(count: Int(scene.camera.resolution.x) / 32 * Int(scene.camera.resolution.y) / 32, printer: Printer())
+            let blocks = await renderBlocks(scene: scene, mapper: mapper) {
+                progress.next()
+            }
+            
+            return blocks.assemble(into: img, dx: dxGradients, dy: dyGradients)
+        }
+        
+        gcd.wait()
+        
+        print("Reconstructing with dx and dy ...")
+        return GradientDomainResult(
+            img: reconstruct(image: img, dxGradients: dxGradients, dyGradients: dyGradients),
+            dx: dxGradients.transformed { $0.abs },
+            dy: dyGradients.transformed { $0.abs }
+        )
+        
     }
     
     private func reconstruct(image img: Array2d<Color>, dxGradients: Array2d<Color>, dyGradients: Array2d<Color>) -> Array2d<Color> {
@@ -50,22 +185,54 @@ final class GdmltIntegrator: Integrator {
         }
         return final
     }
-}
+    
+    private func renderBlocks(blockSize: Int = 32, scene: Scene, mapper: ShiftMapping, increment: @escaping () -> Void) async -> [Block] {
+        return await withTaskGroup(of: Block.self) { group in
+            for x in stride(from: 0, to: Int(scene.camera.resolution.x), by: blockSize) {
+                for y in stride(from: 0, to: Int(scene.camera.resolution.y), by: blockSize) {
+                    let size = Vec2(
+                        min(scene.camera.resolution.x - Float(x), Float(blockSize)),
+                        min(scene.camera.resolution.y - Float(y), Float(blockSize))
+                    )
+                    
+                    group.addTask {
+                        increment()
+                        return self.renderBlock(scene: scene, size: size, x: x, y: y, mapper: mapper)
+                    }
+                }
+            }
 
-extension GdmltIntegrator: GradientDomainIntegrator {
-    func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
-        let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
-        let dxGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        let dyGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        let mapper: ShiftMapping = RandomSequenceReplay(integrator: integrator, scene: scene, sampler: sampler)
-        var progress = ProgressBar(count: mapper.sampler.nbSamples, printer: Printer())
+            var blocks: [Block] = []
+            for await block in group {
+                blocks.append(block)
+            }
+            
+            return blocks
+        }
+    }
+
+    private func renderBlock(scene: Scene, size: Vec2, x: Int, y: Int, mapper: ShiftMapping) -> Block {
+        let img = Array2d(x: Int(size.x), y: Int(size.y), value: Color())
+        let dxGradients = Array2d<Color>(x: img.xSize + 1, y: img.ySize + 1, value: .zero)
+        let dyGradients = Array2d<Color>(x: img.xSize + 1, y: img.ySize + 1, value: .zero)
+        var block = Block(
+            position: Vec2(Float(x), Float(y)),
+            size: size,
+            image: img,
+            dxGradients: dxGradients,
+            dyGradients: dyGradients
+        )
+
         for _ in 0 ..< mapper.sampler.nbSamples {
-            for x in 0 ..< img.xSize {
-                for y in 0 ..< img.ySize {
+            for lx in 0 ..< Int(block.size.x) {
+                for ly in 0 ..< Int(block.size.y) {
+                    let x = lx + Int(block.position.x)
+                    let y = ly + Int(block.position.y)
+
                     let originalSeed = mapper.sampler.rng.state
-                    let base = Vec2(Float(x), Float(y))
-                    let pixel = integrator.render(pixel: base, scene: scene, sampler: mapper.sampler)
-                    img[x, y] += pixel
+                    let base = Vec2(Float(x), Float(y)) + mapper.sampler.next2()
+                    let pixel = li(pixel: base, scene: scene, sampler: mapper.sampler)
+                    img[lx, ly] += pixel
                     // TODO Does it overlap to end of img or we don't use it
                     // TODO Check that the ray to replay is appropriate
                     // TODO Check that we can consider x,y < 0 and xy > max as Color.zero
@@ -77,31 +244,40 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                     let bottom = mapper.shift(pixel: base, offset: Vec2(0, 1), params: params)
                     
                     // TODO Double check the convention with (y + 1) and (y - 1)
-                    if x != 0 { dxGradients[x - 1, y] += 0.5 * (pixel - left) }
-                    if y != 0 { dyGradients[x, y - 1] += 0.5 * (pixel - top) }
-                    dxGradients[x, y] += 0.5 * (right - pixel)
-                    dyGradients[x, y] += 0.5 * (bottom - pixel)
+                    if block.position.x != 0 { dxGradients[lx, ly+1] += 0.5 * (pixel - left) }
+                    if block.position.y != 0 { dyGradients[lx+1, ly] += 0.5 * (pixel - top) }
+                    dxGradients[lx+1, ly+1] += 0.5 * (right - pixel)
+                    dyGradients[lx+1, ly+1] += 0.5 * (bottom - pixel)
                 }
             }
             
-            progress.next()
+            
         }
         
-        print("Reconstructing with dx and dy ...")
-        let scaleFactor: Float = 1.0 / Float(sampler.nbSamples)
+        let scaleFactor: Float = 1.0 / Float(mapper.sampler.nbSamples)
         img.scale(by: scaleFactor)
         dxGradients.scale(by: scaleFactor)
         dyGradients.scale(by: scaleFactor)
-        return GradientDomainResult(
-            img: reconstruct(image: img, dxGradients: dxGradients, dyGradients: dyGradients),
-            dx: dxGradients,
-            dy: dyGradients
-        )
+        block.update(img: img, dx: dxGradients, dy: dyGradients)
+        return block
     }
-    
-    private func render(pixel: Vec2, using seed: UInt64, scene: Scene, sampler: inout Sampler) -> Color {
-        guard pixel.x > 0, pixel.y > 0, pixel.x < scene.camera.resolution.x - 1, pixel.y < scene.camera.resolution.y - 1 else { return .zero }
-        sampler.rng.state = seed
-        return integrator.render(pixel: pixel, scene: scene, sampler: sampler)
+}
+
+private extension [GdmltIntegrator.Block] {
+    func assemble(into image: Array2d<Color>, dx: Array2d<Color>, dy: Array2d<Color>) -> GradientDomainResult {
+        for block in self {
+            for x in (0 ..< Int(block.size.x)) {
+                for y in (0 ..< Int(block.size.y)) {
+                    let (lx, ly): (Int, Int) = (x + Int(block.position.x), y + Int(block.position.y))
+                    image[lx, ly] = block.image[x, y]
+                    if x == 0 && lx != 0 { dx[lx - 1, ly] += block.dxGradients[x, y] }
+                    if y == 0 && ly != 0 { dy[lx, ly - 1] += block.dyGradients[x, y] }
+                    dx[lx, ly] += block.dxGradients[x+1, y+1]
+                    dy[lx, ly] += block.dyGradients[x+1, y+1]
+                }
+            }
+        }
+        
+        return GradientDomainResult(img: image, dx: dx, dy: dy)
     }
 }

@@ -127,6 +127,23 @@ class Array2d<T: AdditiveArithmetic> {
         self.storage = copy.storage
     }
 
+    /// Applies the transformator `t` on each of the values, mutating the storage in place.
+    func transform(_ t: (T) -> T) {
+        for (i, value) in storage.enumerated() {
+            storage[i] = t(value)
+        }
+    }
+    
+    /// Applies the transformator `t` on each of the values, mutating the storage in place and returning the updated version of `self`.
+    func transformed(_ t: (T) -> T) -> Array2d<T> {
+        let copy = Array2d(copy: self)
+        for (i, value) in storage.enumerated() {
+            copy.storage[i] = t(value)
+        }
+        
+        return copy
+    }
+
     internal func index(_ x: Int, _ y: Int) -> Int {
         return y * xSize + x
     }
@@ -143,7 +160,6 @@ extension Array2d: Sequence {
 }
 
 extension Array2d<Color> {
-    // TODO Move into Array2d by fixing generic constraints
     func scale(by factor: Float) {
         for (i, item) in self.enumerated() {
             let (x, y) = index2d(i)

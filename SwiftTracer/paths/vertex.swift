@@ -12,7 +12,7 @@ protocol Vertex {
 }
 
 struct SurfaceVertex: Vertex {
-    let position: Point3
+    var position: Point3 { return intersection.p }
     let incoming: [Edge]
     let outgoing: [Edge]
     let intersection: Intersection
@@ -27,4 +27,15 @@ struct LightVertex: Vertex {
     let n: Vec3
     /// Only type of light source we can intersect for now
     let light: AreaLight
+}
+
+struct CameraVertex: Vertex {
+    let position: Point3 = .zero
+    let incoming: [Edge]
+    let outgoing: [Edge]
+    
+    init() {
+        self.incoming = []
+        self.outgoing = []
+    }
 }
