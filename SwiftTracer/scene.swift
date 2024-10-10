@@ -153,3 +153,14 @@ extension Scene: Decodable {
         )
     }
 }
+
+private extension Point3 {
+    func visible(from other: Self, within scene: Scene) -> Bool {
+        var d = other - self
+        var dist = d.length
+        d /= dist
+        dist -= 0.0002 // epsilon
+        let r = Ray(origin: self, direction: d).with(max: dist)
+        return scene.hit(r: r) == nil
+    }
+}
