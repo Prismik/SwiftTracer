@@ -19,6 +19,7 @@ final class GdmltIntegrator: Integrator {
     private let maxReconstructIterations: Int
     private let maxDepth: Int
     private let minDepth: Int
+    private let mapper: ShiftMapping
 
     init(maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
         self.maxReconstructIterations = maxReconstructIterations
@@ -51,7 +52,7 @@ extension GdmltIntegrator: SamplerIntegrator {
     }
 
     /// Recursively traces rays using MIS
-    private func trace(intersection: Intersection?, ray: Ray, scene: Scene, sampler: Sampler, depth: Int) -> Color {
+    private func trace(intersection: Intersection?, ray: Ray, path: Path, scene: Scene, sampler: Sampler, depth: Int) -> Color {
         guard ray.d.length.isFinite else { return .zero }
         guard let intersection = intersection else { return scene.background }
         var contribution = Color()
@@ -95,7 +96,7 @@ extension GdmltIntegrator: SamplerIntegrator {
 
         return depth == maxDepth || (its?.hasEmission == true && depth >= minDepth)
             ? contribution
-            : contribution + trace(intersection: its, ray: newRay, scene: scene, sampler: sampler, depth: depth + 1) * bsdfWeight
+            : contribution + trace(intersection: its, ray: newRay, path: path, scene: scene, sampler: sampler, depth: depth + 1) * bsdfWeight
     }
     
     func li(ray: Ray, scene: Scene, sampler: any Sampler) -> Color {
@@ -103,9 +104,11 @@ extension GdmltIntegrator: SamplerIntegrator {
         let frame = Frame(n: intersection.n)
         let wo = frame.toLocal(v: -ray.d).normalized()
         
+        let root = CameraVertex()
+        let path = Path.start(at: root)
         return intersection.hasEmission
             ? intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
-            : trace(intersection: intersection, ray: ray, scene: scene, sampler: sampler, depth: 0)
+            : trace(intersection: intersection, ray: ray, path: path, scene: scene, sampler: sampler, depth: 0)
     }
     
     func li(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
@@ -114,6 +117,21 @@ extension GdmltIntegrator: SamplerIntegrator {
     }
 }
 
+extension GdmltIntegrator: PathSpaceIntegrator {
+    func li(pixel: Vec2, scene: Scene, sampler: any Sampler, stop: (Path) -> Bool) -> (Color, Path) {
+        let ray = scene.camera.createRay(from: pixel)
+        let root = CameraVertex()
+        let path = Path.start(at: root)
+        
+        guard let intersection = scene.hit(r: ray) else { return (scene.background, path) }
+        let frame = Frame(n: intersection.n)
+        let wo = frame.toLocal(v: -ray.d).normalized()
+        return li(ray: ray, scene: scene, sampler: sampler)
+    }
+    
+    
+}
+                                
 extension GdmltIntegrator: GradientDomainIntegrator {
     internal struct Block {
         let position: Vec2
@@ -160,30 +178,6 @@ extension GdmltIntegrator: GradientDomainIntegrator {
             dy: dyGradients.transformed { $0.abs }
         )
         
-    }
-    
-    private func reconstruct(image img: Array2d<Color>, dxGradients: Array2d<Color>, dyGradients: Array2d<Color>) -> Array2d<Color> {
-        let j = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        var final = Array2d<Color>(copy: img)
-        let max: (x: Int, y: Int) = (x: Int(img.xSize - 1), y: Int(img.ySize - 1))
-        for _ in 0 ..< maxReconstructIterations {
-            for x in 0 ..< img.xSize {
-                for y in 0 ..< img.ySize {
-                    var value = final[x, y]
-                    
-                    if x != 0 { value += final[x - 1, y] + dxGradients[x - 1, y] }
-                    if y != 0 { value += final[x, y - 1] + dyGradients[x, y - 1] }
-                    if x != max.x { value += final[x + 1, y] }
-                    value -= dxGradients[x, y]
-                    if y != max.y { value += final[x, y + 1] }
-                    value -= dyGradients[x, y]
-                    j[x, y] = value / 5
-                }
-            }
-            
-            final = j
-        }
-        return final
     }
     
     private func renderBlocks(blockSize: Int = 32, scene: Scene, mapper: ShiftMapping, increment: @escaping () -> Void) async -> [Block] {
@@ -233,9 +227,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                     let base = Vec2(Float(x), Float(y)) + mapper.sampler.next2()
                     let pixel = li(pixel: base, scene: scene, sampler: mapper.sampler)
                     img[lx, ly] += pixel
-                    // TODO Does it overlap to end of img or we don't use it
-                    // TODO Check that the ray to replay is appropriate
-                    // TODO Check that we can consider x,y < 0 and xy > max as Color.zero
+                    
                     // TODO Figure out a way to build appripriately for path reconnection
                     let params = ShiftMapParams(seed: originalSeed)
                     let left = mapper.shift(pixel: base, offset: -Vec2(1, 0), params: params)
@@ -243,15 +235,32 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                     let top = mapper.shift(pixel: base, offset: -Vec2(0, 1), params: params)
                     let bottom = mapper.shift(pixel: base, offset: Vec2(0, 1), params: params)
                     
-                    // TODO Double check the convention with (y + 1) and (y - 1)
-                    if block.position.x != 0 { dxGradients[lx, ly+1] += 0.5 * (pixel - left) }
-                    if block.position.y != 0 { dyGradients[lx+1, ly] += 0.5 * (pixel - top) }
-                    dxGradients[lx+1, ly+1] += 0.5 * (right - pixel)
-                    dyGradients[lx+1, ly+1] += 0.5 * (bottom - pixel)
+//                    if let l = left {
+//                        let alpha: Float = dxGradients[lx, ly+1] == .zero
+//                            ? 1.0
+//                            : 0.5
+                    dxGradients[lx, ly+1] += 0.5 * (pixel - (left ?? .zero))
+//                    }
+//                    if let t = top {
+//                        let alpha: Float = dyGradients[lx+1, ly] == .zero
+//                            ? 1.0
+//                            : 0.5
+                        dyGradients[lx+1, ly] += 0.5 * (pixel - (top ?? .zero))
+//                    }
+//                    if let r = right {
+//                        let alpha: Float = y+1 >= Int(scene.camera.resolution.x)
+//                            ? 1.0
+//                            : 0.5
+                        dxGradients[lx+1, ly+1] += 0.5 * ((right ?? .zero) - pixel)
+//                    }
+//                    if let b = bottom {
+//                        let alpha: Float = y+1 >= Int(scene.camera.resolution.y)
+//                            ? 1.0
+//                            : 0.5
+                        dyGradients[lx+1, ly+1] += 0.5 * ((bottom ?? .zero) - pixel)
+//                    }
                 }
             }
-            
-            
         }
         
         let scaleFactor: Float = 1.0 / Float(mapper.sampler.nbSamples)
@@ -261,19 +270,43 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         block.update(img: img, dx: dxGradients, dy: dyGradients)
         return block
     }
+    
+    private func reconstruct(image img: Array2d<Color>, dxGradients: Array2d<Color>, dyGradients: Array2d<Color>) -> Array2d<Color> {
+        let j = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
+        var final = Array2d<Color>(copy: img)
+        let max: (x: Int, y: Int) = (x: Int(img.xSize - 1), y: Int(img.ySize - 1))
+        for _ in 0 ..< maxReconstructIterations {
+            for x in 0 ..< img.xSize {
+                for y in 0 ..< img.ySize {
+                    var value = final[x, y]
+                    
+                    if x != 0 { value += final[x - 1, y] + dxGradients[x - 1, y] }
+                    if y != 0 { value += final[x, y - 1] + dyGradients[x, y - 1] }
+                    if x != max.x { value += final[x + 1, y] }
+                    value -= dxGradients[x, y]
+                    if y != max.y { value += final[x, y + 1] }
+                    value -= dyGradients[x, y]
+                    j[x, y] = value / 5
+                }
+            }
+            
+            final = j
+        }
+        return final
+    }
 }
 
 private extension [GdmltIntegrator.Block] {
     func assemble(into image: Array2d<Color>, dx: Array2d<Color>, dy: Array2d<Color>) -> GradientDomainResult {
         for block in self {
-            for x in (0 ..< Int(block.size.x)) {
-                for y in (0 ..< Int(block.size.y)) {
-                    let (lx, ly): (Int, Int) = (x + Int(block.position.x), y + Int(block.position.y))
-                    image[lx, ly] = block.image[x, y]
-                    if x == 0 && lx != 0 { dx[lx - 1, ly] += block.dxGradients[x, y] }
-                    if y == 0 && ly != 0 { dy[lx, ly - 1] += block.dyGradients[x, y] }
-                    dx[lx, ly] += block.dxGradients[x+1, y+1]
-                    dy[lx, ly] += block.dyGradients[x+1, y+1]
+            for lx in (0 ..< Int(block.size.x)) {
+                for ly in (0 ..< Int(block.size.y)) {
+                    let (x, y): (Int, Int) = (lx + Int(block.position.x), ly + Int(block.position.y))
+                    image[x, y] = block.image[lx, ly]
+                    if lx == 0 && x != 0 { dx[x - 1, y] += block.dxGradients[lx, ly] }
+                    if ly == 0 && y != 0 { dy[x, y - 1] += block.dyGradients[lx, ly] }
+                    dx[x, y] += block.dxGradients[lx+1, ly+1]
+                    dy[x, y] += block.dyGradients[lx+1, ly+1]
                 }
             }
         }

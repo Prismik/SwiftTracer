@@ -36,7 +36,7 @@ struct AnySampler: Decodable {
     }
 }
 
-protocol Sampler {
+protocol Sampler: AnyObject {
     func next() -> Float
     func next2() -> Vec2
     func gen() -> Float

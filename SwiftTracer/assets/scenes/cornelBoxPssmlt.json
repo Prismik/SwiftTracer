@@ -11,7 +11,7 @@
     "background": [0, 0, 0],
     "sampler": {
         "type": "independent",
-        "nspp": 10
+        "nspp": 3
     },
     "integrator": {
         "type": "pssmlt",
@@ -64,22 +64,16 @@
         }
     ],
     "shapes": [{
-        "type": "mesh",
+        "type": "quad",
         "transform": [
             {
-                "scale": [80, 80, 5]
+                "axis": [1, 0, 0],
+                "angle": 90
             },
             {
-              "scale": 3.5
-            },
-            {
-                "rotation": [90, 90, -153.36]
-            },
-            {
-              "o": [0, 550, 0]
+                "translate": [0, 638, 0]
             }
         ],
-        "filename": "cube",
         "material": "intheway_box"
     }, {
         "transform": [

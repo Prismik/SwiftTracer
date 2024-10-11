@@ -81,7 +81,6 @@
 		196094F32CB88164009FDAC4 /* quad.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816A72C1A18160006B1E1 /* quad.json */; };
 		196094F42CB88164009FDAC4 /* triangle.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816A92C1A20680006B1E1 /* triangle.json */; };
 		196094F52CB88164009FDAC4 /* group.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816AB2C1A211A0006B1E1 /* group.json */; };
-		196094F62CB88169009FDAC4 /* out-diffuse.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196094EF2CB880B8009FDAC4 /* out-diffuse.png */; };
 		19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		196ECD562C0B7FC30052DEA6 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
 		196ECD582C0B80350052DEA6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
@@ -219,7 +218,6 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
-				196094F62CB88169009FDAC4 /* out-diffuse.png in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,7 +302,6 @@
 		196094D62CB8780E009FDAC4 /* scripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scripts.swift; sourceTree = "<group>"; };
 		196094DB2CB8782B009FDAC4 /* scripts */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = scripts; sourceTree = BUILT_PRODUCTS_DIR; };
 		196094E62CB87C68009FDAC4 /* float+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "float+extensions.swift"; sourceTree = "<group>"; };
-		196094EF2CB880B8009FDAC4 /* out-diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "out-diffuse.png"; sourceTree = "<group>"; };
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
 		196ECD572C0B80350052DEA6 /* mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mesh.swift; sourceTree = "<group>"; };
 		19737CF02C2B478D00F49204 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
@@ -461,18 +458,9 @@
 		196094D52CB877EE009FDAC4 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
-				196094EE2CB880AF009FDAC4 /* assets */,
 				196094D62CB8780E009FDAC4 /* scripts.swift */,
 			);
 			path = Scripts;
-			sourceTree = "<group>";
-		};
-		196094EE2CB880AF009FDAC4 /* assets */ = {
-			isa = PBXGroup;
-			children = (
-				196094EF2CB880B8009FDAC4 /* out-diffuse.png */,
-			);
-			path = assets;
 			sourceTree = "<group>";
 		};
 		1999D0482C0E3F5200358201 /* assets */ = {

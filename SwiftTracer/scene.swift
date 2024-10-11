@@ -154,7 +154,7 @@ extension Scene: Decodable {
     }
 }
 
-private extension Point3 {
+extension Point3 {
     func visible(from other: Self, within scene: Scene) -> Bool {
         var d = other - self
         var dist = d.length

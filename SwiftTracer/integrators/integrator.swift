@@ -18,7 +18,7 @@ enum IntegratorType: String, Decodable {
 }
 
 /// Integrating one pixel at a time.
-protocol SamplerIntegrator {
+protocol SamplerIntegrator: AnyObject {
     func preprocess(scene: Scene, sampler: Sampler)
     /// Estimate the incoming light for a given ray
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color
@@ -31,6 +31,12 @@ struct GradientDomainResult {
     let dy: Array2d<Color>
 }
 
+/// Integrating while constructing a path.
+protocol PathSpaceIntegrator: AnyObject {
+    func li(pixel: Vec2, scene: Scene, sampler: Sampler, stop: (Path) -> Bool) -> (Color, Path)
+}
+
+/// Integraeting in using gradients of the image plane.
 protocol GradientDomainIntegrator {
     func render(scene: Scene, sampler: Sampler) -> GradientDomainResult
 }
@@ -119,7 +125,7 @@ enum MonteCarloIntegrator {
         print("Integrator preprocessing ...")
         integrator.preprocess(scene: scene, sampler: sampler)
         
-        print("Rendering ...")
+        print("Rendering with \(integrator) ...")
         let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
         let gcd = DispatchGroup()
         gcd.enter()

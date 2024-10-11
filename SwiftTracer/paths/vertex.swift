@@ -39,3 +39,17 @@ struct CameraVertex: Vertex {
         self.outgoing = []
     }
 }
+
+extension Vertex {
+    // TODO Look into ratio for almost specular interactions + look into manifold exploration
+    var connectable: Bool {
+        if let surfaceVertex = self as? SurfaceVertex {
+            return !surfaceVertex.intersection.shape.material.hasDelta(
+                uv: surfaceVertex.intersection.uv,
+                p: surfaceVertex.position
+            )
+        }
+        
+        return false
+    }
+}
