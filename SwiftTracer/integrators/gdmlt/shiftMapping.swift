@@ -87,24 +87,15 @@ final class PathReconnection: ShiftMapping {
     func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color? {
         guard let path = params.path else { fatalError("Wrong params provided to \(String(describing: self))") }
         let pixel = pixel + offset
-        var shiftedPath = Path.start(at: CameraVertex())
-        _ = integrator.li(pixel: pixel, scene: scene, sampler: sampler, stop: { path in
-            return true
+        let (contrib, offsetPath) = integrator.li(pixel: pixel, scene: scene, sampler: sampler, stop: { shiftedPath in
+            let index = shiftedPath.vertices.count
+            let b = path.vertices[index]
+            let b1 = path.vertices[index+1]
+            return b.connectable && shiftedPath.connectable(with: b1, within: scene)
         })
-        /*{
-            let currentLength = shiftedPath.vertices.count
-            // End tracing here, connect path to base path
-            if path.vertices[currentLength].connectable {
-                // TODO Iterate over all of edges/vertices from (currentLength ... end) and add them to shiftedPath
-                return false
-            }
-            
-            return true
-        }*/
         
-        // TODO Find way to get shiftedPath to return it's contrib
-        // TODO Look into the path for valid reconnections
-        return nil
+        let connectedPath = offsetPath.connect(to: path, at: offsetPath.vertices.count)
+        return connectedPath.contribution
     }
     
     

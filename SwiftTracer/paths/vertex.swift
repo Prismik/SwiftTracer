@@ -11,14 +11,14 @@ enum VertexType {
     case camera
 }
 
-protocol Vertex: Equatable {
+protocol Vertex {
+    var type: VertexType { get }
     var position: Point3 { get }
     var incoming: Edge? { get set }
     var outgoing: Edge? { get set }
     var connectable: Bool { get }
 
     func contribution(of edge: Edge) -> Color
-    static func == (lhs: Self, rhs: Self) -> Bool
 }
 
 struct SurfaceVertex: Vertex {
@@ -34,10 +34,6 @@ struct SurfaceVertex: Vertex {
     
     var connectable: Bool {
         !intersection.shape.material.hasDelta(uv: intersection.uv, p: position)
-    }
-    
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.type == rhs.type && lhs.position == rhs.position
     }
 }
 
@@ -59,10 +55,6 @@ struct LightVertex: Vertex {
         guard let light = intersection.shape.light else { fatalError("Inconsistent vertex with scene description") }
         return light.L(p: position, n: n, uv: uv, wo: -edge.d)
     }
-    
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.type == rhs.type && lhs.position == rhs.position
-    }
 }
 
 struct CameraVertex: Vertex {
@@ -79,9 +71,5 @@ struct CameraVertex: Vertex {
     
     func contribution(of edge: Edge) -> Color {
         return .zero
-    }
-    
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.type == rhs.type && lhs.position == rhs.position
     }
 }

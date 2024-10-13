@@ -117,10 +117,9 @@ extension GdmltIntegrator: SamplerIntegrator {
 
 extension GdmltIntegrator: PathSpaceIntegrator {
     func li(ray: Ray, scene: Scene, sampler: any Sampler, stop: (Path) -> Bool) -> (contrib: Color, path: Path) {
-        let root = CameraVertex()
-        let path = Path.start(at: root)
-        
+        let path = Path.start(at: CameraVertex())
         guard let intersection = scene.hit(r: ray) else { return (scene.background, path) }
+
         let frame = Frame(n: intersection.n)
         let wo = frame.toLocal(v: -ray.d).normalized()
         if intersection.hasEmission {
