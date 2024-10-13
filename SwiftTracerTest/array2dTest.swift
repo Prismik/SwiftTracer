@@ -19,18 +19,18 @@ final class Array2dTest: XCTestCase {
  
     func testFlipVertically() throws {
         let a = Array2d(x: 3, y: 3, value: 5)
-        a.set(value: 0, 0, 0)
-        a.set(value: 0, 2, 2)
+        a[0, 0] = 0
+        a[0, 2] = 2
         
         let expected = Array2d(x: 3, y: 3, value: 5)
-        expected.set(value: 0, 0, 2)
-        expected.set(value: 0, 2, 0)
+        expected[0, 0] = 2
+        expected[0, 2] = 0
         
         a.flipVertically()
         
-        XCTAssertEqual(a.get(0, 0), expected.get(0, 0))
-        XCTAssertEqual(a.get(2, 2), expected.get(2, 2))
-        XCTAssertEqual(a.get(0, 2), expected.get(0, 2))
-        XCTAssertEqual(a.get(2, 0), expected.get(0, 2))
+        XCTAssertEqual(a[0, 0], expected[0, 0])
+        XCTAssertEqual(a[2, 2], expected[2, 2])
+        XCTAssertEqual(a[0, 2], expected[0, 2])
+        XCTAssertEqual(a[2, 0], expected[0, 2])
     }
 }

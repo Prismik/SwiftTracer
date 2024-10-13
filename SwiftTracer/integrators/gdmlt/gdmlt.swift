@@ -11,7 +11,7 @@ import Progress
 /// Gradient domain metropolis light transport integrator
 final class GdmltIntegrator: Integrator {
     enum CodingKeys: String, CodingKey {
-        case mis
+        case shiftMapping
         case maxDepth
         case minDepth
     }
@@ -21,7 +21,8 @@ final class GdmltIntegrator: Integrator {
     private let minDepth: Int
     private let mapper: ShiftMapping
 
-    init(maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
+    init(mapper: ShiftMapping, maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
+        self.mapper = mapper
         self.maxReconstructIterations = maxReconstructIterations
         self.minDepth = minDepth
         self.maxDepth = maxDepth
@@ -61,6 +62,7 @@ extension GdmltIntegrator: SamplerIntegrator {
         let s = sampler.next2()
         
         guard !intersection.hasEmission else {
+            path.add(vertex: LightVertex(intersection: intersection))
             return intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
         }
 
@@ -94,42 +96,46 @@ extension GdmltIntegrator: SamplerIntegrator {
             }
         }
 
+        path.add(vertex: SurfaceVertex(intersection: intersection), weight: direction.weight, contribution: contribution)
         return depth == maxDepth || (its?.hasEmission == true && depth >= minDepth)
             ? contribution
             : contribution + trace(intersection: its, ray: newRay, path: path, scene: scene, sampler: sampler, depth: depth + 1) * bsdfWeight
     }
     
+    private func defaultStop(path: Path) -> Bool {
+        return false
+    }
+    
     func li(ray: Ray, scene: Scene, sampler: any Sampler) -> Color {
-        guard let intersection = scene.hit(r: ray) else { return scene.background }
-        let frame = Frame(n: intersection.n)
-        let wo = frame.toLocal(v: -ray.d).normalized()
-        
-        let root = CameraVertex()
-        let path = Path.start(at: root)
-        return intersection.hasEmission
-            ? intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
-            : trace(intersection: intersection, ray: ray, path: path, scene: scene, sampler: sampler, depth: 0)
+        return li(ray: ray, scene: scene, sampler: sampler, stop: defaultStop).contrib
     }
     
     func li(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
-        let ray = scene.camera.createRay(from: pixel)
-        return li(ray: ray, scene: scene, sampler: sampler)
+        return li(pixel: pixel, scene: scene, sampler: sampler, stop: defaultStop).contrib
     }
 }
 
 extension GdmltIntegrator: PathSpaceIntegrator {
-    func li(pixel: Vec2, scene: Scene, sampler: any Sampler, stop: (Path) -> Bool) -> (Color, Path) {
-        let ray = scene.camera.createRay(from: pixel)
+    func li(ray: Ray, scene: Scene, sampler: any Sampler, stop: (Path) -> Bool) -> (contrib: Color, path: Path) {
         let root = CameraVertex()
         let path = Path.start(at: root)
         
         guard let intersection = scene.hit(r: ray) else { return (scene.background, path) }
         let frame = Frame(n: intersection.n)
         let wo = frame.toLocal(v: -ray.d).normalized()
-        return li(ray: ray, scene: scene, sampler: sampler)
+        if intersection.hasEmission {
+            // TODO Figure out intersection and wo geometry
+            path.add(vertex: LightVertex(intersection: intersection))
+            return (intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo), path)
+        } else {
+            return (trace(intersection: intersection, ray: ray, path: path, scene: scene, sampler: sampler, depth: 0), path)
+        }
     }
-    
-    
+
+    func li(pixel: Vec2, scene: Scene, sampler: any Sampler, stop: (Path) -> Bool) -> (contrib: Color, path: Path) {
+        let ray = scene.camera.createRay(from: pixel)
+        return li(ray: ray, scene: scene, sampler: sampler, stop: stop)
+    }
 }
                                 
 extension GdmltIntegrator: GradientDomainIntegrator {
@@ -155,8 +161,8 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
         let dxGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
         let dyGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        let mapper: ShiftMapping = RandomSequenceReplay(integrator: self, scene: scene, sampler: sampler)
-        
+        mapper.initialize(sampler: sampler, integrator: self, scene: scene)
+
         let gcd = DispatchGroup()
         gcd.enter()
         Task {

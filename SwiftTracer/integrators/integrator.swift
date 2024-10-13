@@ -33,7 +33,7 @@ struct GradientDomainResult {
 
 /// Integrating while constructing a path.
 protocol PathSpaceIntegrator: AnyObject {
-    func li(pixel: Vec2, scene: Scene, sampler: Sampler, stop: (Path) -> Bool) -> (Color, Path)
+    func li(pixel: Vec2, scene: Scene, sampler: Sampler, stop: (Path) -> Bool) -> (contrib: Color, path: Path)
 }
 
 /// Integraeting in using gradients of the image plane.
@@ -84,7 +84,9 @@ struct AnyIntegrator: Decodable {
                 integrator: integrator ?? PathIntegrator(minDepth: 0, maxDepth: 16)
             )
         case .gdmlt:
-            self.wrapped = GdmltIntegrator(maxReconstructIterations: 40)
+            let params = try container.nestedContainer(keyedBy: GdmltIntegrator.CodingKeys.self, forKey: .params)
+            let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
+            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, maxReconstructIterations: 40)
         }
     }
 }

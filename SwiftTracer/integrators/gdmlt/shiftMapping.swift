@@ -49,6 +49,8 @@ protocol ShiftMapping {
         offset: Vec2,
         params: ShiftMapParams
     ) -> Color?
+    
+    func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene)
 }
 
 final class RandomSequenceReplay: ShiftMapping {
@@ -56,7 +58,7 @@ final class RandomSequenceReplay: ShiftMapping {
     unowned var integrator: SamplerIntegrator!
     unowned var scene: Scene!
     
-    func initialize(sampler: Sampler, integrator: SamplerIntegrator, scene: Scene) {
+    func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene) {
         self.sampler = sampler
         self.integrator = integrator
         self.scene = scene
@@ -76,7 +78,7 @@ final class PathReconnection: ShiftMapping {
     unowned var integrator: PathSpaceIntegrator!
     unowned var scene: Scene!
 
-    func initialize(sampler: Sampler, integrator: PathSpaceIntegrator, scene: Scene) {
+    func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene) {
         self.sampler = sampler
         self.integrator = integrator
         self.scene = scene

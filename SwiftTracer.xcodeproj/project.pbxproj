@@ -81,6 +81,7 @@
 		196094F32CB88164009FDAC4 /* quad.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816A72C1A18160006B1E1 /* quad.json */; };
 		196094F42CB88164009FDAC4 /* triangle.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816A92C1A20680006B1E1 /* triangle.json */; };
 		196094F52CB88164009FDAC4 /* group.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816AB2C1A211A0006B1E1 /* group.json */; };
+		196094FB2CBB4699009FDAC4 /* pathTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094FA2CBB4696009FDAC4 /* pathTest.swift */; };
 		19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		196ECD562C0B7FC30052DEA6 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
 		196ECD582C0B80350052DEA6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
@@ -302,6 +303,7 @@
 		196094D62CB8780E009FDAC4 /* scripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scripts.swift; sourceTree = "<group>"; };
 		196094DB2CB8782B009FDAC4 /* scripts */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = scripts; sourceTree = BUILT_PRODUCTS_DIR; };
 		196094E62CB87C68009FDAC4 /* float+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "float+extensions.swift"; sourceTree = "<group>"; };
+		196094FA2CBB4696009FDAC4 /* pathTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pathTest.swift; sourceTree = "<group>"; };
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
 		196ECD572C0B80350052DEA6 /* mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mesh.swift; sourceTree = "<group>"; };
 		19737CF02C2B478D00F49204 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
@@ -578,6 +580,7 @@
 		19BBA7392BFD531B00981204 /* SwiftTracerTest */ = {
 			isa = PBXGroup;
 			children = (
+				196094FA2CBB4696009FDAC4 /* pathTest.swift */,
 				19EFB3BB2C00EF44005CC488 /* mathTest.swift */,
 				19EFB3C72C0274D2005CC488 /* array2dTest.swift */,
 				19EFB3CE2C0648B1005CC488 /* imageTest.swift */,
@@ -972,6 +975,7 @@
 				194480A52CA8C87B002A90C6 /* scene.swift in Sources */,
 				194480B92CA8C91D002A90C6 /* integrator.swift in Sources */,
 				194480B52CA8C905002A90C6 /* spot.swift in Sources */,
+				196094FB2CBB4699009FDAC4 /* pathTest.swift in Sources */,
 				196094E92CB87C6B009FDAC4 /* float+extensions.swift in Sources */,
 				194480AA2CA8C8AE002A90C6 /* mesh.swift in Sources */,
 				194480A32CA8C835002A90C6 /* shape.swift in Sources */,

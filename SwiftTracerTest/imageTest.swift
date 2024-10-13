@@ -26,7 +26,7 @@ final class ImageTest: XCTestCase {
                     color = colors[3]
                 }
                 
-                array.set(value: color, i, j)
+                array[i, j] = color
             }
         }
         let image = Image(array: array)
@@ -40,10 +40,10 @@ final class ImageTest: XCTestCase {
         let unwrapped = try XCTUnwrap(image)
         
         let data = unwrapped.read()
-        let rgb00 = data.get(0, 0)
-        let rgb10 = data.get(data.xSize - 1, 0)
-        let rgb01 = data.get(0, data.ySize - 1)
-        let rgb11 = data.get(data.xSize - 1, data.ySize - 1)
+        let rgb00 = data[0, 0]
+        let rgb10 = data[data.xSize - 1, 0]
+        let rgb01 = data[0, data.ySize - 1]
+        let rgb11 = data[data.xSize - 1, data.ySize - 1]
         XCTAssertEqual(rgb00, Color(1, 1, 1))
         XCTAssertEqual(rgb10, Color(1, 0, 0))
         XCTAssertEqual(rgb01, Color(0, 1, 0))
