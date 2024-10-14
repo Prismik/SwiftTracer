@@ -7,6 +7,8 @@
 
 import XCTest
 import simd
+@testable import SwiftTracer
+
 final class MathTest: XCTestCase {
     
     override func setUpWithError() throws {

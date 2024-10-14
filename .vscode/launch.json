@@ -5,24 +5,32 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "swift-lldb",
+            "type": "lldb",
             "request": "launch",
             "sourceLanguages": [
                 "swift"
             ],
-            "args": ["SwiftTracer/assets/cornelbox.json", "--output", "out.png"],
+            "args": [
+                "SwiftTracer/assets/cornelbox.json",
+                "--output",
+                "out.png"
+            ],
             "cwd": "${workspaceFolder:SwiftTracer}",
             "name": "Debug SwiftTracer",
             "program": "${workspaceFolder:SwiftTracer}/.build/debug/SwiftTracer",
             "preLaunchTask": "swift: Build Debug SwiftTracer"
         },
         {
-            "type": "swift-lldb",
+            "type": "lldb",
             "request": "launch",
             "sourceLanguages": [
                 "swift"
             ],
-            "args": ["SwiftTracer/assets/cornelbox.json", "--output", "out.png"],
+            "args": [
+                "SwiftTracer/assets/cornelbox.json",
+                "--output",
+                "out.png"
+            ],
             "cwd": "${workspaceFolder:SwiftTracer}",
             "name": "Release SwiftTracer",
             "program": "${workspaceFolder:SwiftTracer}/.build/release/SwiftTracer",

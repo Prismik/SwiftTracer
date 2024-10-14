@@ -39,7 +39,7 @@ class Image {
                     let r = Float(v.r) / 255
                     let g = Float(v.g) / 255
                     let b = Float(v.b) / 255
-                    pixels.set(value: Color(r, g, b).toLinearRGB(), x, y)
+                    pixels[x, y] = Color(r, g, b).toLinearRGB()
                 }
             }
         } catch {

@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import SwiftTracer
 
 final class RngTest: XCTestCase {
     func testSameSeedYieldsSameResult() {

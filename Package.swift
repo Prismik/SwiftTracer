@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let package = Package(
+let package: Package = Package(
     name: "SwiftTracer",
     dependencies: [
       .package(url: "git@github.com:Prismik/SwiftWavefront.git", branch: "main"),
@@ -27,5 +27,9 @@ let package = Package(
                 .product(name: "Algorithms", package: "swift-algorithms")
             ],
             path: "SwiftTracer"),
+        .testTarget(
+            name: "SwiftTracerTest",
+            dependencies: [.byName(name:"SwiftTracer")],
+            path: "SwiftTracerTest")
     ]
 )

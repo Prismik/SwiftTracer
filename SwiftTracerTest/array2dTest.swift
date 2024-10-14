@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import SwiftTracer
 
 final class Array2dTest: XCTestCase {
     

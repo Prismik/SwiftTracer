@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import SwiftTracer
 
 final class PathTest: XCTestCase {
     var path: Path!
@@ -36,7 +37,7 @@ final class PathTest: XCTestCase {
         XCTAssertEqual(path.edges[0], path.vertices[1].incoming)
         
         let edge = path.edges[0]
-        XCTAssertEqual(edge.d, v1)
+        XCTAssertEqual(edge.d, v1.normalized())
     }
     
     func testConnectPaths() {
