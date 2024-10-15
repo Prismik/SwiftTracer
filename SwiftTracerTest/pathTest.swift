@@ -18,6 +18,10 @@ final class PathTest: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         path.clear()
     }
+
+    func intersection(p: Point3) -> Intersection {
+        return Intersection(t: 10, p: p, n: Vec3(), tan: Vec3(), bitan: Vec3(), uv: Vec2(), shape: Quad(halfSize: Vec2(50, 50), transform: Transform(m: Mat4())))
+    }
     
     func testAddSurfaceVertex() {
         XCTAssertEqual(path.edges.count, 0)
@@ -41,10 +45,6 @@ final class PathTest: XCTestCase {
     }
     
     func testConnectPaths() {
-        func intersection(p: Point3) -> Intersection {
-            return Intersection(t: 10, p: p, n: Vec3(), tan: Vec3(), bitan: Vec3(), uv: Vec2(), shape: Quad(halfSize: Vec2(50, 50), transform: Transform(m: Mat4())))
-        }
-        
         // Camera vertex
         path.add(vertex: SurfaceVertex(intersection: intersection(p: Point3(2, 2, 8))))
         path.add(vertex: SurfaceVertex(intersection: intersection(p: Point3(5, 5, 5))))
@@ -77,6 +77,25 @@ final class PathTest: XCTestCase {
     }
     
     func testContribution() {
-        
+        path.add(
+            vertex: SurfaceVertex(intersection: intersection(p: Point3(3, 3, 9))), 
+            weight: Color(1, 0, 0),
+            contribution: Color(1, 1, 1)
+        )
+
+        path.add(
+            vertex: SurfaceVertex(intersection: intersection(p: Point3(3, 3, 9))), 
+            weight: Color(0, 1, 0),
+            contribution: Color(0.6, 0.6, 0.6)
+        )
+
+        path.add(
+            vertex: SurfaceVertex(intersection: intersection(p: Point3(3, 3, 9))), 
+            weight: Color(0, 0, 1),
+            contribution: Color(0.3, 0.3, 0.3)
+        )
+
+        let expected = Color(1, 0.6, 0.3)
+        XCTAssertEqual(path.contribution, expected)
     }
 }
