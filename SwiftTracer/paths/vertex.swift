@@ -17,56 +17,63 @@ protocol Vertex {
     var incoming: Edge? { get set }
     var outgoing: Edge? { get set }
     var connectable: Bool { get }
-
+    var intersection: Intersection? { get }
     func contribution(of edge: Edge) -> Color
 }
 
 struct SurfaceVertex: Vertex {
     let type: VertexType = .surface
-    var position: Point3 { intersection.p }
+    var position: Point3 { intersection?.p ?? .zero }
+    // TODO Allow for several incoming edges in the case of shadow rays
     var incoming: Edge?
     var outgoing: Edge?
-    let intersection: Intersection
+    let intersection: Intersection?
     
     func contribution(of edge: Edge) -> Color {
         return .zero
     }
     
     var connectable: Bool {
-        !intersection.shape.material.hasDelta(uv: intersection.uv, p: position)
+        guard let its = intersection else { return false }
+        return !its.shape.material.hasDelta(uv: its.uv, p: position)
     }
 }
 
 struct LightVertex: Vertex {
     let type: VertexType = .light
     // TODO Check that we want the point on the light source locally, or in world coordinates
-    var position: Point3 { intersection.p }
+    var position: Point3 { intersection?.p ?? .zero }
     var incoming: Edge?
     var outgoing: Edge?
     // Similar to this, check that we want the normal on the light source locally, or in world coordinates
-    var n: Vec3 { intersection.n }
-    var uv: Vec2 { intersection.uv }
-    /// Only type of light source we can intersect for now
-    let intersection: Intersection
+    var n: Vec3 { intersection?.n ?? .zero }
+    var uv: Vec2 { intersection?.uv ?? .zero }
     
     var connectable: Bool { false }
+    let intersection: Intersection?
     
     func contribution(of edge: Edge) -> Color {
-        guard let light = intersection.shape.light else { fatalError("Inconsistent vertex with scene description") }
+        guard let light = intersection?.shape.light else { fatalError("Inconsistent vertex with scene description") }
         return light.L(p: position, n: n, uv: uv, wo: -edge.d)
     }
 }
 
 struct CameraVertex: Vertex {
     let type: VertexType = .camera
-    let position: Point3 = .zero
+    let position: Point3
     var incoming: Edge?
     var outgoing: Edge?
     var connectable: Bool { false }
-    
-    init() {
+    var intersection: Intersection? { nil }
+    init(camera: Camera) {
+        self.position = camera.transform.point(.zero)
         self.incoming = nil
         self.outgoing = nil
+    }
+    
+    /// This initalializer yields incorrect results while rendering.
+    init() {
+        self.position = .zero
     }
     
     func contribution(of edge: Edge) -> Color {

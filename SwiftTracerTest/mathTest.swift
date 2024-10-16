@@ -7,7 +7,10 @@
 
 import XCTest
 import simd
+
+#if os(Linux)
 @testable import SwiftTracer
+#endif
 
 final class MathTest: XCTestCase {
     

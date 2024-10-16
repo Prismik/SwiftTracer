@@ -73,11 +73,11 @@ final class RandomSequenceReplay: ShiftMapping {
     }
 }
 
-final class PathReconnection: ShiftMapping {
+final class HalfVector: ShiftMapping {
     unowned var sampler: Sampler!
     unowned var integrator: PathSpaceIntegrator!
     unowned var scene: Scene!
-
+    
     func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene) {
         self.sampler = sampler
         self.integrator = integrator
@@ -86,17 +86,59 @@ final class PathReconnection: ShiftMapping {
     
     func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color? {
         guard let path = params.path else { fatalError("Wrong params provided to \(String(describing: self))") }
-        let pixel = pixel + offset
-        let (contrib, offsetPath) = integrator.li(pixel: pixel, scene: scene, sampler: sampler, stop: { shiftedPath in
-            let index = shiftedPath.vertices.count
-            let b = path.vertices[index]
-            let b1 = path.vertices[index+1]
-            return b.connectable && shiftedPath.connectable(with: b1, within: scene)
-        })
+        return nil
+    }
+}
+
+final class PathReconnection: ShiftMapping {
+    struct Stats {
+        var successfulConnections: Int = 0
+        var failedConnections: Int = 0
+        var total: Int { successfulConnections + failedConnections }
+    }
+
+    unowned var sampler: Sampler!
+    unowned var integrator: PathSpaceIntegrator!
+    unowned var scene: Scene!
+
+    var stats = Stats()
+
+    func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene) {
+        self.sampler = sampler
+        self.integrator = integrator
+        self.scene = scene
         
-        let connectedPath = offsetPath.connect(to: path, at: offsetPath.vertices.count)
-        return connectedPath.contribution
     }
     
-    
+    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color? {
+        guard let path = params.path, let seed = params.seed else { fatalError("Wrong params provided to \(String(describing: self))") }
+
+        let pixel = pixel + offset
+        guard pixel.x >= 0, pixel.y >= 0, pixel.x < scene.camera.resolution.x, pixel.y < scene.camera.resolution.y else { return nil }
+        
+        var connectable = false
+        sampler.rng.state = seed
+        let (contrib, offsetPath) = integrator.li(pixel: pixel, scene: scene, sampler: sampler, stop: { shiftedPath in
+            guard shiftedPath.edges.count > 1, path.edges.count > shiftedPath.edges.count else { return false }
+            let index = shiftedPath.vertices.count - 1
+            let b = path.vertices[index]
+            let b1 = path.vertices[index+1]
+            let valid = b.connectable && shiftedPath.connectable(with: b1, within: scene)
+            if valid { connectable = true }
+            
+            return valid
+        })
+        
+        guard connectable else {
+            stats.failedConnections += 1
+            return contrib
+        }
+        stats.successfulConnections += 1
+        let connectedPath = offsetPath.connect(to: path, at: offsetPath.vertices.count, integrator: integrator, scene: scene, sampler: sampler)
+        if connectedPath.contribution.hasNaN {
+            print("NaN!!!")
+        }
+        let c = connectedPath.contribution
+        return c
+    }
 }

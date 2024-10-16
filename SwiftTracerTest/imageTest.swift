@@ -6,7 +6,10 @@
 //
 
 import XCTest
+
+#if os(Linux)
 @testable import SwiftTracer
+#endif
 
 final class ImageTest: XCTestCase {
     func testSimpleGenerate() {

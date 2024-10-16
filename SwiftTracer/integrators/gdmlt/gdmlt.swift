@@ -20,6 +20,8 @@ final class GdmltIntegrator: Integrator {
     private let maxDepth: Int
     private let minDepth: Int
     private let mapper: ShiftMapping
+    private var successfulShifts: Int = 0
+    private var failedShifts: Int = 0
 
     init(mapper: ShiftMapping, maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
         self.mapper = mapper
@@ -53,7 +55,7 @@ extension GdmltIntegrator: SamplerIntegrator {
     }
 
     /// Recursively traces rays using MIS
-    private func trace(intersection: Intersection?, ray: Ray, path: Path, scene: Scene, sampler: Sampler, depth: Int) -> Color {
+    private func trace(intersection: Intersection?, ray: Ray, path: Path, scene: Scene, sampler: Sampler, depth: Int, stop: (Path) -> Bool) -> Color {
         guard ray.d.length.isFinite else { return .zero }
         guard let intersection = intersection else { return scene.background }
         var contribution = Color()
@@ -97,9 +99,10 @@ extension GdmltIntegrator: SamplerIntegrator {
         }
 
         path.add(vertex: SurfaceVertex(intersection: intersection), weight: direction.weight, contribution: contribution)
+        guard !stop(path) else { return contribution }
         return depth == maxDepth || (its?.hasEmission == true && depth >= minDepth)
             ? contribution
-            : contribution + trace(intersection: its, ray: newRay, path: path, scene: scene, sampler: sampler, depth: depth + 1) * bsdfWeight
+        : contribution + trace(intersection: its, ray: newRay, path: path, scene: scene, sampler: sampler, depth: depth + 1, stop: stop) * bsdfWeight
     }
     
     private func defaultStop(path: Path) -> Bool {
@@ -117,7 +120,7 @@ extension GdmltIntegrator: SamplerIntegrator {
 
 extension GdmltIntegrator: PathSpaceIntegrator {
     func li(ray: Ray, scene: Scene, sampler: any Sampler, stop: (Path) -> Bool) -> (contrib: Color, path: Path) {
-        let path = Path.start(at: CameraVertex())
+        let path = Path.start(at: CameraVertex(camera: scene.camera))
         guard let intersection = scene.hit(r: ray) else { return (scene.background, path) }
 
         let frame = Frame(n: intersection.n)
@@ -127,7 +130,7 @@ extension GdmltIntegrator: PathSpaceIntegrator {
             path.add(vertex: LightVertex(intersection: intersection))
             return (intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo), path)
         } else {
-            return (trace(intersection: intersection, ray: ray, path: path, scene: scene, sampler: sampler, depth: 0), path)
+            return (trace(intersection: intersection, ray: ray, path: path, scene: scene, sampler: sampler, depth: 0, stop: stop), path)
         }
     }
 
@@ -177,8 +180,12 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         gcd.wait()
         
         print("Reconstructing with dx and dy ...")
+        let reconstruction = reconstruct(image: img, dxGradients: dxGradients, dyGradients: dyGradients)
+        
+        print("Successful shifts => \(successfulShifts)")
+        print("Failed shifts     => \(failedShifts)")
         return GradientDomainResult(
-            img: reconstruct(image: img, dxGradients: dxGradients, dyGradients: dyGradients),
+            img: reconstruction,
             dx: dxGradients.transformed { $0.abs },
             dy: dyGradients.transformed { $0.abs }
         )
@@ -230,40 +237,35 @@ extension GdmltIntegrator: GradientDomainIntegrator {
 
                     let originalSeed = mapper.sampler.rng.state
                     let base = Vec2(Float(x), Float(y)) + mapper.sampler.next2()
-                    let pixel = li(pixel: base, scene: scene, sampler: mapper.sampler)
+                    let (pixel, path) = li(pixel: base, scene: scene, sampler: mapper.sampler, stop: { _ in false})
                     img[lx, ly] += pixel
                     
                     // TODO Figure out a way to build appripriately for path reconnection
-                    let params = ShiftMapParams(seed: originalSeed)
+                    let params = ShiftMapParams(seed: originalSeed, path: path)
                     let left = mapper.shift(pixel: base, offset: -Vec2(1, 0), params: params)
                     let right = mapper.shift(pixel: base, offset: Vec2(1, 0), params: params)
                     let top = mapper.shift(pixel: base, offset: -Vec2(0, 1), params: params)
                     let bottom = mapper.shift(pixel: base, offset: Vec2(0, 1), params: params)
                     
-//                    if let l = left {
-//                        let alpha: Float = dxGradients[lx, ly+1] == .zero
-//                            ? 1.0
-//                            : 0.5
+                    func updateStat(with color: Color?) {
+                        if color == nil {
+                            failedShifts += 1
+                        } else {
+                            successfulShifts += 1
+                        }
+                    }
+
+                    func updateStat(with colors: [Color?]) {
+                        for c in colors {
+                            updateStat(with: c)
+                        }
+                    }
+                    
+                    updateStat(with: [left, right, top, bottom])
                     dxGradients[lx, ly+1] += 0.5 * (pixel - (left ?? .zero))
-//                    }
-//                    if let t = top {
-//                        let alpha: Float = dyGradients[lx+1, ly] == .zero
-//                            ? 1.0
-//                            : 0.5
-                        dyGradients[lx+1, ly] += 0.5 * (pixel - (top ?? .zero))
-//                    }
-//                    if let r = right {
-//                        let alpha: Float = y+1 >= Int(scene.camera.resolution.x)
-//                            ? 1.0
-//                            : 0.5
-                        dxGradients[lx+1, ly+1] += 0.5 * ((right ?? .zero) - pixel)
-//                    }
-//                    if let b = bottom {
-//                        let alpha: Float = y+1 >= Int(scene.camera.resolution.y)
-//                            ? 1.0
-//                            : 0.5
-                        dyGradients[lx+1, ly+1] += 0.5 * ((bottom ?? .zero) - pixel)
-//                    }
+                    dyGradients[lx+1, ly] += 0.5 * (pixel - (top ?? .zero))
+                    dxGradients[lx+1, ly+1] += 0.5 * ((right ?? .zero) - pixel)
+                    dyGradients[lx+1, ly+1] += 0.5 * ((bottom ?? .zero) - pixel)
                 }
             }
         }

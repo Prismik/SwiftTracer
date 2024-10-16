@@ -63,7 +63,7 @@ extension Camera: Decodable {
         let aspectRatio = resolution.x / resolution.y
         let viewportHeight = 2 * tan(fov.toRadians() / 2) * focalDistance
         let viewportWidth = aspectRatio * viewportHeight
-        let origin = transform.point(Point3())
+        let origin = transform.point(.zero)
         let horizontal = transform.vector(Vec3(viewportWidth, 0, 0))
         let vertical = transform.vector(Vec3(0, -viewportHeight, 0))
         let firstPixel = origin

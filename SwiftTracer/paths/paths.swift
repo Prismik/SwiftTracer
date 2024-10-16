@@ -5,6 +5,9 @@
 //  Created by Francis Beauchamp on 2024-10-08.
 //
 
+/// Path traversed by a ray of light.
+/// > The edge-vertex recursive relationship ends at the first depth for now.
+/// Do not use instances deeper than the 1st level.
 final class Path {
     private(set) var edges: [Edge] = []
     private(set) var vertices: [Vertex] = []
@@ -29,14 +32,18 @@ final class Path {
         vertices = []
     }
 
-    // TODO Figure out what to default weight to
     func add(vertex: Vertex, weight: Color = Color(), contribution: Color = Color()) {
         guard let last = vertices.last else { return }
-        let edge = Edge(start: last, end: vertex, weight: weight, contribution: contribution)
+        
+        // Setup edge
+        let edge: Edge = .make(start: last, end: vertex, weight: weight, contribution: contribution)
+        if edges.count > 0 { edges[edges.count - 1].end.outgoing = edge }
+        edges.append(edge)
+        
+        // Setup vertices
         vertices[vertices.count - 1].outgoing = edge
         vertices.append(vertex)
         vertices[vertices.count - 1].incoming = edge
-        edges.append(edge)
     }
     
     func connectable(with vertex: Vertex, within scene: Scene) -> Bool {
@@ -48,27 +55,29 @@ final class Path {
         return false
     }
     
-    /// Connects the vertices of `self` to the suffix of `path`, start the suffix at a given 0-based index.
-    func connect(to path: Path, at index: Int) -> Path {
-        // TODO Possibly assert or guard against invalid indexes
-
+    /// Connects the vertices of `self` to the suffix of `path`, starting the suffix at a given vertex.
+    func connect(to path: Path, at index: Int, integrator: PathSpaceIntegrator, scene: Scene, sampler: Sampler) -> Path {
+        // TODO Possibly assert or guard against invalid indexes, especially (path.edges.count - index > 0)
+        let replacedEdge = path.edges[index - 1]
         let suffixVertices = path.vertices.suffix(path.vertices.count - index)
         let suffixEdges = path.edges.suffix(path.edges.count - index)
         guard let first = vertices.last, let second = suffixVertices.first else { fatalError("Trying to connect an invalid path") }
-        // TODO Bring back the weight
-        let connector = Edge(start: first, end: second, weight: Color())
+        // TODO Check that this contribution makes sense
+        let connector: Edge = .connector(start: first, end: second, contribution: replacedEdge.contribution)
         let vertices = vertices + suffixVertices
         let edges = edges + [connector] + suffixEdges
         return Path(edges: edges, vertices: vertices)
     }
     
     var contribution: Color {
-        guard let start = vertices.first else { return Color() }
-        return bounce(depth: 1)
+        guard !edges.isEmpty else { return Color() }
+        return trace(depth: 0)
     }
     
-    private func bounce(depth: Int) -> Color {
-        guard let edge = vertices[depth].incoming else { return Color() }
-        return edge.contribution + bounce(depth: depth + 1) * edge.weight
+    private func trace(depth: Int) -> Color {
+        let edge = edges[depth]
+        guard depth < edges.count - 1 else { return edge.contribution }
+        let acc = edge.contribution + trace(depth: depth + 1) * edge.weight
+        return acc
     }
 }

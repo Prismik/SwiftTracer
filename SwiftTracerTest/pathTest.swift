@@ -6,7 +6,10 @@
 //
 
 import XCTest
+
+#if os(Linux)
 @testable import SwiftTracer
+#endif
 
 final class PathTest: XCTestCase {
     var path: Path!
@@ -79,23 +82,29 @@ final class PathTest: XCTestCase {
     func testContribution() {
         path.add(
             vertex: SurfaceVertex(intersection: intersection(p: Point3(3, 3, 9))), 
-            weight: Color(1, 0, 0),
+            weight: Color(1, 0.5, 0.5),
+            contribution: Color(0.5, 0.5, 0.5)
+        )
+
+        path.add(
+            vertex: SurfaceVertex(intersection: intersection(p: Point3(6, 6, 6))),
+            weight: Color(0.5, 1, 0.5),
+            contribution: Color(0.5, 0.5, 0.5)
+        )
+        
+        path.add(
+            vertex: SurfaceVertex(intersection: intersection(p: Point3(6, 6, 9))),
+            weight: Color(0.5, 0.5, 1),
+            contribution: Color(0.5, 0.5, 0.5)
+        )
+
+        path.add(
+            vertex: LightVertex(intersection: intersection(p: Point3(12, 12, 6))),
+            weight: Color(0, 0, 0),
             contribution: Color(1, 1, 1)
         )
 
-        path.add(
-            vertex: SurfaceVertex(intersection: intersection(p: Point3(3, 3, 9))), 
-            weight: Color(0, 1, 0),
-            contribution: Color(0.6, 0.6, 0.6)
-        )
-
-        path.add(
-            vertex: SurfaceVertex(intersection: intersection(p: Point3(3, 3, 9))), 
-            weight: Color(0, 0, 1),
-            contribution: Color(0.3, 0.3, 0.3)
-        )
-
-        let expected = Color(1, 0.6, 0.3)
+        let expected = Color(1.5, 1.25, 1.125)
         XCTAssertEqual(path.contribution, expected)
     }
 }
