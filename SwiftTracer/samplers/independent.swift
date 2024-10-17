@@ -23,6 +23,6 @@ final class IndependentSampler: Sampler {
     }
     
     func gen() -> Float {
-        Float.random(in: 0 ... 1, using: &rng)
+        Float.random(in: 0 ..< 100, using: &rng) / 100
     }
 }

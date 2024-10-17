@@ -14,6 +14,43 @@ final class PSSMLTSampler: Sampler {
         var reject: Int
     }
 
+    enum Mutation {
+        case kelemen(sampler: Sampler, s2: Float, logRatio: Float)
+        case mitsuba(sampler: Sampler)
+        
+        func mutate(value: Float) -> Float {
+            var result = value
+            switch self {
+            case let .kelemen(sampler, s2, logRatio):
+                
+                var rand = sampler.gen()
+                let add: Bool
+                if rand < 0.5 {
+                    add = true
+                    rand *= 2
+                } else {
+                    add = false
+                    rand = 2 * (rand - 0.5)
+                }
+                
+                let dv = s2 * exp(rand * logRatio)
+                if add {
+                    result += dv
+                    if result > 1 { result -= 1 }
+                } else {
+                    result -= dv
+                    if result < 0 { result += 1 }
+                }
+            case .mitsuba(let sampler):
+                let temp: Float = sqrt(-2 * log(1 - sampler.gen()))
+                let dv = temp * (2.0 * Float.pi * sampler.gen()).cos()
+                result = (result + 1e-2 * dv).modulo(1.0)
+            }
+            
+            return result
+        }
+    }
+
     enum Step {
         case small
         case large
@@ -59,7 +96,7 @@ final class PSSMLTSampler: Sampler {
     private let s1: Float = 1 / 1024
     private let s2: Float = 1 / 64
     private lazy var logRatio = -log(s2/s1)
-    
+    private lazy var mutator: Mutation = .kelemen(sampler: self, s2: s2, logRatio: logRatio)
     var smallStats = Stats(times: 0, accept: 0, reject: 0)
     var largeStats = Stats(times: 0, accept: 0, reject: 0)
 
@@ -114,7 +151,7 @@ final class PSSMLTSampler: Sampler {
     }
 
     func gen() -> Float {
-        Float.random(in: 0 ... 1, using: &rng)
+        Float.random(in: 0 ..< 100, using: &rng) / 100
     }
     
     // TODO Add init with nb samples and copy value here
@@ -144,40 +181,14 @@ final class PSSMLTSampler: Sampler {
             
             while u[i].modify < time - 1 {
                 u[i].modify += 1
-                u[i].value = mutate(sample: u[i].value)
+                u[i].value = mutator.mutate(value: u[i].value)
             }
             
             backup.append((i, u[i]))
             u[i].modify += 1
-            u[i].value = mutate(sample: u[i].value)
+            u[i].value = mutator.mutate(value: u[i].value)
         }
         
         return u[i].value
-    }
-    
-    private func mutate(sample: Float) -> Float {
-        var result = sample
-        var rng = gen()
-        let add: Bool
-        if self.gen() < 0.5 {
-            add = true
-            rng *= 2
-        } else {
-            add = false
-            rng = 2 * (rng - 0.5)
-        }
-        
-        let dv = s2 * exp(logRatio * rng)
-        if add {
-            result += dv
-            if result > 1 { result -= 1 }
-        } else {
-            result -= dv
-            if result < 0 { result += 1 }
-        }
-        
-        assert(result < 1)
-        assert(result >= 0)
-        return result
     }
 }
