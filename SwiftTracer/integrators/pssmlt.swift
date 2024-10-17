@@ -139,9 +139,9 @@ final class PssmltIntegrator: Integrator {
         let rng2 = sampler.next2()
         let x = Int(min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1))
         let y = Int(min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1))
-        let contrib = integrator.li(pixel: Vec2(Float(x), Float(y)), scene: scene, sampler: sampler)
+        let contrib = integrator.li(pixel: Vec2(Float(x), Float(y)) + sampler.next2(), scene: scene, sampler: sampler)
         if !contrib.hasColor { zeroColorFound += 1 }
-        return StateMCMC(contrib: contrib.sanitized, pos: Vec2(Float(x), Float(y)))
+        return StateMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
     }
 
     /// Create the async blocks responsible for rendering with a Markov Chain
@@ -188,16 +188,15 @@ final class PssmltIntegrator: Integrator {
                 : .small
             
             var proposedState = self.sample(scene: scene, sampler: sampler)
-            let acceptProbability = min(
-                1.0,
-                proposedState.targetFunction / state.targetFunction
-            )
+            let acceptProbability = proposedState.targetFunction < 0 || proposedState.contrib.hasNaN
+                ? 0
+                : min(1.0, proposedState.targetFunction / state.targetFunction)
             
             // This is veach style expectations; See if using Kelemen style wouldn't be more appropriate
             state.weight += 1.0 - acceptProbability
             proposedState.weight += acceptProbability
             
-            if acceptProbability > Float.random(in: 0 ... 1) {
+            if acceptProbability == 1 || acceptProbability > Float.random(in: 0 ... 1) {
                 chain.add(state: &state)
                 sampler.accept()
                 state = proposedState
