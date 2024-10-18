@@ -98,7 +98,7 @@ extension GdmltIntegrator: SamplerIntegrator {
             }
         }
 
-        path.add(vertex: SurfaceVertex(intersection: intersection), weight: direction.weight, contribution: contribution)
+        path.add(vertex: SurfaceVertex(intersection: intersection), weight: direction.weight, contribution: contribution, pdf: direction.pdf)
         guard !stop(path) else { return contribution }
         return depth == maxDepth || (its?.hasEmission == true && depth >= minDepth)
             ? contribution
@@ -247,25 +247,10 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                     let top = mapper.shift(pixel: base, offset: -Vec2(0, 1), params: params)
                     let bottom = mapper.shift(pixel: base, offset: Vec2(0, 1), params: params)
                     
-                    func updateStat(with color: Color?) {
-                        if color == nil {
-                            failedShifts += 1
-                        } else {
-                            successfulShifts += 1
-                        }
-                    }
-
-                    func updateStat(with colors: [Color?]) {
-                        for c in colors {
-                            updateStat(with: c)
-                        }
-                    }
-                    
-                    updateStat(with: [left, right, top, bottom])
-                    dxGradients[lx, ly+1] += 0.5 * (pixel - (left ?? .zero))
-                    dyGradients[lx+1, ly] += 0.5 * (pixel - (top ?? .zero))
-                    dxGradients[lx+1, ly+1] += 0.5 * ((right ?? .zero) - pixel)
-                    dyGradients[lx+1, ly+1] += 0.5 * ((bottom ?? .zero) - pixel)
+                    dxGradients[lx, ly+1] += 0.5 * (pixel - left)
+                    dyGradients[lx+1, ly] += 0.5 * (pixel - top)
+                    dxGradients[lx+1, ly+1] += 0.5 * (right - pixel)
+                    dyGradients[lx+1, ly+1] += 0.5 * (bottom - pixel)
                 }
             }
         }

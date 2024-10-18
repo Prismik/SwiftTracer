@@ -22,15 +22,13 @@ final class Diffuse: Material {
         guard wo.z > 0 else { return nil }
         
         let wi = Sample.cosineHemisphere(sample: sample).normalized()
-        let cos = wi.dot(Vec3.unit(.z))
-        let albedo: Color = texture.get(uv: uv, p: p)
+        let eval = evaluate(wo: wo, wi: wi, uv: uv, p: p)
         let pdf = pdf(wo: wo, wi: wi, uv: uv, p: p)
-        let weight = (albedo / .pi) * cos / pdf
+        let weight = eval / pdf
         // Disregard samples where the weight results in a non finite number
-        guard weight.isFinite else {
-            return nil
-        }
-        return SampledDirection(weight: weight, wi: wi)
+        guard weight.isFinite else { return nil }
+
+        return SampledDirection(weight: weight, wi: wi, pdf: pdf)
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {

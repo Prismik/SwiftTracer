@@ -38,14 +38,16 @@ final class Metal: Material {
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
         switch roughness {
         case let r where r.isZero:
-            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: specularWi.normalized())
+            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: specularWi.normalized(), pdf: 0)
         case let r where r > 0:
             let frame = Frame(n: specularWi)
             let n = power(roughness: roughness)
             let localLobe = Sample.cosineHemispherePower(sample: sample, power: n)
             let lobe = frame.toWorld(v: localLobe)
             guard lobe.z >= 0 else { return nil }
-            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: lobe.normalized())
+            let wi = lobe.normalized()
+            let pdf = self.pdf(wo: wo, wi: wi, uv: uv, p : p)
+            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: lobe.normalized(), pdf: pdf) // TODO Not quite zero for that case
         default:
             return nil // Shouldn't happen
         }

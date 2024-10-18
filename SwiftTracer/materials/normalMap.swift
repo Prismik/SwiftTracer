@@ -31,7 +31,7 @@ final class NormalMap: Material {
         guard let s = material.sample(wo: wo, uv: uv, p: p, sample: sample) else { return nil }
         let wi = frame.toWorld(v: s.wi).normalized()
         guard wi.z >= 0, s.wi.z >= 0 else { return nil }
-        return SampledDirection(weight: s.weight, wi: wi)
+        return SampledDirection(weight: s.weight, wi: wi, pdf: pdf(wo: wo, wi: wi, uv: uv, p: p))
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {

@@ -96,7 +96,7 @@ final class PSSMLTSampler: Sampler {
     private let s1: Float = 1 / 1024
     private let s2: Float = 1 / 64
     private lazy var logRatio = -log(s2/s1)
-    private lazy var mutator: Mutation = .kelemen(sampler: self, s2: s2, logRatio: logRatio)
+    private lazy var mutator: Mutation = .mitsuba(sampler: self)//.kelemen(sampler: self, s2: s2, logRatio: logRatio)
     var smallStats = Stats(times: 0, accept: 0, reject: 0)
     var largeStats = Stats(times: 0, accept: 0, reject: 0)
 

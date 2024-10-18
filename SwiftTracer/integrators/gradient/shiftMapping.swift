@@ -48,7 +48,7 @@ protocol ShiftMapping {
         pixel: Vec2,
         offset: Vec2,
         params: ShiftMapParams
-    ) -> Color?
+    ) -> Color
     
     func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene)
 }
@@ -64,29 +64,12 @@ final class RandomSequenceReplay: ShiftMapping {
         self.scene = scene
     }
 
-    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color? {
+    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color {
         guard let seed = params.seed else { fatalError("Wrong params provided to \(String(describing: self))") }
         let pixel = pixel + offset
-        guard pixel.x >= 0, pixel.y >= 0, pixel.x < scene.camera.resolution.x, pixel.y < scene.camera.resolution.y else { return nil }
+        guard pixel.x >= 0, pixel.y >= 0, pixel.x < scene.camera.resolution.x, pixel.y < scene.camera.resolution.y else { return .zero }
         sampler.rng.state = seed
         return integrator.li(pixel: pixel, scene: scene, sampler: sampler)
-    }
-}
-
-final class HalfVector: ShiftMapping {
-    unowned var sampler: Sampler!
-    unowned var integrator: PathSpaceIntegrator!
-    unowned var scene: Scene!
-    
-    func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene) {
-        self.sampler = sampler
-        self.integrator = integrator
-        self.scene = scene
-    }
-    
-    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color? {
-        guard let path = params.path else { fatalError("Wrong params provided to \(String(describing: self))") }
-        return nil
     }
 }
 
@@ -110,11 +93,11 @@ final class PathReconnection: ShiftMapping {
         
     }
     
-    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color? {
+    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color {
         guard let path = params.path, let seed = params.seed else { fatalError("Wrong params provided to \(String(describing: self))") }
 
         let pixel = pixel + offset
-        guard pixel.x >= 0, pixel.y >= 0, pixel.x < scene.camera.resolution.x, pixel.y < scene.camera.resolution.y else { return nil }
+        guard pixel.x >= 0, pixel.y >= 0, pixel.x < scene.camera.resolution.x, pixel.y < scene.camera.resolution.y else { return .zero }
         
         var connectable = false
         sampler.rng.state = seed
@@ -133,12 +116,13 @@ final class PathReconnection: ShiftMapping {
             stats.failedConnections += 1
             return contrib
         }
-        stats.successfulConnections += 1
-        let connectedPath = offsetPath.connect(to: path, at: offsetPath.vertices.count, integrator: integrator, scene: scene, sampler: sampler)
-        if connectedPath.contribution.hasNaN {
-            print("NaN!!!")
+
+        guard let connectedPath = offsetPath.connect(to: path, at: offsetPath.vertices.count, integrator: integrator, scene: scene, sampler: sampler) else {
+            stats.failedConnections += 1
+            return .zero
         }
-        let c = connectedPath.contribution
-        return c
+
+        stats.successfulConnections += 1
+        return connectedPath.contribution
     }
 }

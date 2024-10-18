@@ -13,6 +13,8 @@ struct SampledDirection {
     
     /// Incident ray
     let wi: Vec3
+    
+    let pdf: Float
 }
 
 /// Box type for ``Material`` protocol that allows to decode materials in a type agnostic way.

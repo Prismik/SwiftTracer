@@ -78,13 +78,13 @@ final class Dielectric: Material {
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection? {
         let r = Refraction(material: self, wo: wo)
         if r.exterior.sin > 1 { // reflect
-            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: r.reflect())
+            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: r.reflect(), pdf: 0)
         } else { // tentative refraction
             let rng = sample.x
             let wi = rng < r.fresnel()
                 ? r.reflect()
                 : r.refract()
-            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: wi)
+            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: wi, pdf: 0)
         }
     }
     
