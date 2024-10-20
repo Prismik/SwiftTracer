@@ -42,22 +42,35 @@ struct Edge {
         edge.start.outgoing = edge
         edge.end.incoming = edge
         edge.weight = edge.li()
+        edge.pdf = edge.computePdf()
         return edge
     }
     
-    func li() -> Color {
+    private func li() -> Color {
+        let weight = computeEval() / computePdf()
+        guard weight.isFinite else { return .zero }
+
+        return weight
+    }
+
+    private func computeEval() -> Color {
         guard let intersection = end.intersection else { return .zero }
         guard let next = end.outgoing else { return .zero }
 
         let frame = Frame(n: intersection.n)
         let wo = frame.toLocal(v: -d)
         let wi = frame.toLocal(v: next.d)
-        let eval = intersection.shape.material.evaluate(wo: wo, wi: wi, uv: intersection.uv, p: intersection.p)
-        let pdf = intersection.shape.material.pdf(wo: wo, wi: wi, uv: intersection.uv, p: intersection.p)
-        let weight = eval / pdf
-        guard weight.isFinite else { return .zero }
-
-        return weight
+        return intersection.shape.material.evaluate(wo: wo, wi: wi, uv: intersection.uv, p: intersection.p)
+    }
+    
+    private func computePdf() -> Float {
+        guard let intersection = end.intersection else { return .zero }
+        guard let next = end.outgoing else { return .zero }
+        
+        let frame = Frame(n: intersection.n)
+        let wo = frame.toLocal(v: -d)
+        let wi = frame.toLocal(v: next.d)
+        return intersection.shape.material.pdf(wo: wo, wi: wi, uv: intersection.uv, p: intersection.p)
     }
 }
 

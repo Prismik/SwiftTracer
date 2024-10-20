@@ -137,9 +137,9 @@ final class PssmltIntegrator: Integrator {
     
     private func sample(scene: Scene, sampler: Sampler) -> StateMCMC {
         let rng2 = sampler.next2()
-        let x = Int(min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1))
-        let y = Int(min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1))
-        let contrib = integrator.li(pixel: Vec2(Float(x), Float(y)) + sampler.next2(), scene: scene, sampler: sampler)
+        let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
+        let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
+        let contrib = integrator.li(pixel: Vec2(Float(x), Float(y)), scene: scene, sampler: sampler)
         if !contrib.hasColor { zeroColorFound += 1 }
         return StateMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
     }

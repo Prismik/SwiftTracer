@@ -123,6 +123,7 @@ final class PathReconnection: ShiftMapping {
         }
 
         stats.successfulConnections += 1
+        // weight = pdf(path) / (pdf(path) + pdf(connectedPath) * jacobian)
         return connectedPath.contribution
     }
 }

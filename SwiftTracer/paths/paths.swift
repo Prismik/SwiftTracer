@@ -11,7 +11,8 @@
 final class Path {
     private(set) var edges: [Edge] = []
     private(set) var vertices: [Vertex] = []
-    
+    private var jacobian: Float = 1
+
     /// Constructs the root of a path starting at a given vertex
     static func start(at vertex: Vertex) -> Path {
         return Path(start: vertex)
@@ -64,9 +65,9 @@ final class Path {
         // TODO Check that this contribution makes sense
         var connector: Edge = .connector(start: first, end: second, contribution: replacedEdge.contribution)
         
-        let jacobian = self.jacobian(main: replacedEdge, shifted: connector)
-        connector.weight *= jacobian
-        connector.pdf *= jacobian
+        jacobian = computeJacobian(main: replacedEdge, shifted: connector)
+//        connector.weight *= jacobian
+//        connector.pdf *= jacobian
 
         let vertices = vertices + suffixVertices
         let edges = edges + [connector] + suffixEdges
@@ -76,7 +77,8 @@ final class Path {
     var contribution: Color {
         guard !edges.isEmpty else { return Color() }
 
-        return trace(depth: 0)
+        let contrib = trace(depth: 0)
+        return contrib * jacobian
     }
     
     private func trace(depth: Int) -> Color {
@@ -87,7 +89,7 @@ final class Path {
         return acc
     }
     
-    private func jacobian(main: Edge, shifted: Edge) -> Float {
+    private func computeJacobian(main: Edge, shifted: Edge) -> Float {
         guard let normal = main.end.intersection?.n else { return 0 }
 
         let mainCos = main.d.dot(normal)

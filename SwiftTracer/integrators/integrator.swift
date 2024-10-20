@@ -15,6 +15,7 @@ enum IntegratorType: String, Decodable {
     case direct
     case pssmlt
     case gdmlt
+    case gdpt
 }
 
 /// Integrating one pixel at a time.
@@ -83,10 +84,17 @@ struct AnyIntegrator: Decodable {
                 initSamplesCount: isc,
                 integrator: integrator ?? PathIntegrator(minDepth: 0, maxDepth: 16)
             )
+        case .gdpt:
+            let params = try container.nestedContainer(keyedBy: GdptIntegrator.CodingKeys.self, forKey: .params)
+            let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
+            let reconstructor = try params.decode(AnyReconstruction.self, forKey: .reconstruction)
+            self.wrapped = GdptIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, maxReconstructIterations: 40)
         case .gdmlt:
             let params = try container.nestedContainer(keyedBy: GdmltIntegrator.CodingKeys.self, forKey: .params)
             let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
-            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, maxReconstructIterations: 40)
+            let spc = try params.decode(Int.self, forKey: .samplesPerChain)
+            let isc = try params.decode(Int.self, forKey: .initSamplesCount)
+            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, samplesPerChain: spc, initSamplesCount: isc)
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  gdmlt.swift
+//  gdpt.swift
 //  SwiftTracer
 //
 //  Created by Francis Beauchamp on 2024-10-07.
@@ -9,23 +9,24 @@ import Foundation
 import Progress
 
 /// Gradient domain metropolis light transport integrator
-final class GdmltIntegrator: Integrator {
+final class GdptIntegrator: Integrator {
     enum CodingKeys: String, CodingKey {
         case shiftMapping
+        case reconstruction
         case maxDepth
         case minDepth
     }
     
-    private let maxReconstructIterations: Int
     private let maxDepth: Int
     private let minDepth: Int
     private let mapper: ShiftMapping
+    private let reconstructor: Reconstructing
     private var successfulShifts: Int = 0
     private var failedShifts: Int = 0
 
-    init(mapper: ShiftMapping, maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
+    init(mapper: ShiftMapping, reconstructor: Reconstructing, maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
         self.mapper = mapper
-        self.maxReconstructIterations = maxReconstructIterations
+        self.reconstructor = reconstructor
         self.minDepth = minDepth
         self.maxDepth = maxDepth
     }
@@ -36,7 +37,7 @@ final class GdmltIntegrator: Integrator {
     }
 }
 
-extension GdmltIntegrator: SamplerIntegrator {
+extension GdptIntegrator: SamplerIntegrator {
     func preprocess(scene: Scene, sampler: any Sampler) {
         // no op
     }
@@ -118,7 +119,7 @@ extension GdmltIntegrator: SamplerIntegrator {
     }
 }
 
-extension GdmltIntegrator: PathSpaceIntegrator {
+extension GdptIntegrator: PathSpaceIntegrator {
     func li(ray: Ray, scene: Scene, sampler: any Sampler, stop: (Path) -> Bool) -> (contrib: Color, path: Path) {
         let path = Path.start(at: CameraVertex(camera: scene.camera))
         guard let intersection = scene.hit(r: ray) else { return (scene.background, path) }
@@ -140,7 +141,7 @@ extension GdmltIntegrator: PathSpaceIntegrator {
     }
 }
                                 
-extension GdmltIntegrator: GradientDomainIntegrator {
+extension GdptIntegrator: GradientDomainIntegrator {
     internal struct Block {
         let position: Vec2
         let size: Vec2
@@ -180,7 +181,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         gcd.wait()
         
         print("Reconstructing with dx and dy ...")
-        let reconstruction = reconstruct(image: img, dxGradients: dxGradients, dyGradients: dyGradients)
+        let reconstruction = reconstructor.reconstruct(image: img, dx: dxGradients, dy: dyGradients)
         
         print("Successful shifts => \(successfulShifts)")
         print("Failed shifts     => \(failedShifts)")
@@ -262,33 +263,9 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         block.update(img: img, dx: dxGradients, dy: dyGradients)
         return block
     }
-    
-    private func reconstruct(image img: Array2d<Color>, dxGradients: Array2d<Color>, dyGradients: Array2d<Color>) -> Array2d<Color> {
-        let j = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        var final = Array2d<Color>(copy: img)
-        let max: (x: Int, y: Int) = (x: Int(img.xSize - 1), y: Int(img.ySize - 1))
-        for _ in 0 ..< maxReconstructIterations {
-            for x in 0 ..< img.xSize {
-                for y in 0 ..< img.ySize {
-                    var value = final[x, y]
-                    
-                    if x != 0 { value += final[x - 1, y] + dxGradients[x - 1, y] }
-                    if y != 0 { value += final[x, y - 1] + dyGradients[x, y - 1] }
-                    if x != max.x { value += final[x + 1, y] }
-                    value -= dxGradients[x, y]
-                    if y != max.y { value += final[x, y + 1] }
-                    value -= dyGradients[x, y]
-                    j[x, y] = value / 5
-                }
-            }
-            
-            final = j
-        }
-        return final
-    }
 }
 
-private extension [GdmltIntegrator.Block] {
+private extension [GdptIntegrator.Block] {
     func assemble(into image: Array2d<Color>, dx: Array2d<Color>, dy: Array2d<Color>) -> GradientDomainResult {
         for block in self {
             for lx in (0 ..< Int(block.size.x)) {
