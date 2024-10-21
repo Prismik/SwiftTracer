@@ -38,6 +38,7 @@ final class PssmltIntegrator: Integrator {
             img = Array2d(x: x, y: y, value: .zero)
         }
 
+        // TODO inout not necessary with current way weights are built
         func add(state: inout StateMCMC) {
             let w = state.targetFunction == 0
                 ? 0

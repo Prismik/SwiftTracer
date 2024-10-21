@@ -13,6 +13,7 @@ final class GdmltIntegrator: Integrator {
         case shiftMapping
         case samplesPerChain
         case initSamplesCount
+        case reconstruction
     }
 
     internal struct StateMCMC {
@@ -50,6 +51,44 @@ final class GdmltIntegrator: Integrator {
         }
     }
     
+    private class MarkovChain {
+        private(set) var img: Array2d<Color>
+        private(set) var dx: Array2d<Color>
+        private(set) var dy: Array2d<Color>
+        
+        init(x: Int, y: Int) {
+            self.img = Array2d(x: x, y: y, value: .zero)
+            self.dx = Array2d(x: x, y: y, value: .zero)
+            self.dy = Array2d(x: x, y: y, value: .zero)
+        }
+
+        // TODO Rework this
+        func add(state: inout StateMCMC) {
+            let w = state.targetFunction == 0
+                ? 0
+                : state.weight / state.targetFunction
+            let x = Int(state.pos.x)
+            let y = Int(state.pos.y)
+            img[x, y] += state.contrib * w
+            
+            let x2 = Int(state.pos.x + state.offset.x)
+            let y2 = Int(state.pos.y + state.offset.y)
+            switch state.offset {
+            case Vec2(1, 0):
+                dx[x2, y2] += (state.shiftContrib - state.contrib) * w
+            case Vec2(-1, 0):
+                dx[x2, y2] += (state.contrib - state.shiftContrib) * w
+            case Vec2(0, 1):
+                dy[x2, y2] += (state.shiftContrib - state.contrib) * w
+            case Vec2(0, -1):
+                dy[x2, y2] += (state.contrib - state.shiftContrib) * w
+            default:
+                fatalError("Invalid shift")
+            }
+            state.weight = 0
+        }
+    }
+    
     /// Samples Per Chain
     private let nspc: Int
     /// Initialization Samples Count
@@ -60,13 +99,15 @@ final class GdmltIntegrator: Integrator {
     private var result: GradientDomainResult?
 
     private let integrator: SamplerIntegrator
+    private let reconstructor: Reconstructing
     private let mapper: ShiftMapping
     private let shiftCdf: DistributionOneDimention
     private let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
     
-    init(mapper: ShiftMapping, samplesPerChain: Int, initSamplesCount: Int) {
+    init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int) {
         self.mapper = mapper
-        integrator = PathIntegrator(minDepth: 0, maxDepth: 16)
+        self.integrator = PathIntegrator(minDepth: 0, maxDepth: 16)
+        self.reconstructor = reconstructor
         let n = 4
         var cdf = DistributionOneDimention(count: n)
         for i in 0 ..< n {
@@ -124,12 +165,18 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         }
         gcd.wait()
         
-        guard let images = result else { fatalError("No result image was returned in the async task") }
+        guard let result = result else { fatalError("No result image was returned in the async task") }
         
         // TODO Print stats
         // TODO Scale contents of images
     
-        return images
+        let reconstruction = reconstructor.reconstruct(image: result.img, dx: result.dx, dy: result.dy)
+        
+        return GradientDomainResult(
+            img: reconstruction,
+            dx: result.dx.transformed { $0.abs },
+            dy: result.dy.transformed { $0.abs }
+        )
     }
     
     private func chains(samples: Int, nbChains: Int, scene: Scene, increment: @escaping () -> Void) async -> GradientDomainResult {
@@ -153,9 +200,45 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         
     }
     
-    private func renderChain(i: Int, total: Int, scene: Scene, into: inout GradientDomainResult) -> Void {
+    private func renderChain(i: Int, total: Int, scene: Scene, into acc: inout GradientDomainResult) -> Void {
         // TODO Make the actual rendering of a chain here
+        let sampler = PSSMLTSampler(nbSamples: nspp)
+        
+        let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
+        
+        var state = self.sample(scene: scene, sampler: sampler)
+        
+        for _ in 0 ..< nspc {
+            sampler.step = Float.random(in: 0 ... 1) < sampler.largeStepRatio
+                ? .large
+                : .small
+            
+            var proposedState = self.sample(scene: scene, sampler: sampler)
+            let acceptProbability = proposedState.targetFunction < 0 || proposedState.contrib.hasNaN
+                ? 0
+                : min(1.0, proposedState.targetFunction / state.targetFunction)
+            
+            state.weight += 1.0 - acceptProbability
+            proposedState.weight += acceptProbability
+            
+            if acceptProbability == 1 || acceptProbability > Float.random(in: 0 ... 1) {
+                chain.add(state: &state)
+                sampler.accept()
+                state = proposedState
+            } else {
+                chain.add(state: &proposedState)
+                sampler.reject()
+            }
+            
+            chain.add(state: &state)
+            chain.img.scale(by: 1 / Float(nspc))
+            chain.dx.scale(by: 1 / Float(nspc))
+            chain.dy.scale(by: 1 / Float(nspc))
+            acc.img.merge(with: chain.img)
+            acc.dx.merge(with: chain.dx)
+            acc.dy.merge(with: chain.dy)
+            
+            
+        }
     }
-    
-    // TODO Make a combine function for GradientDomain Result
 }

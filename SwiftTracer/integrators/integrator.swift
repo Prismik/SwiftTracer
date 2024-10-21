@@ -94,7 +94,8 @@ struct AnyIntegrator: Decodable {
             let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
             let spc = try params.decode(Int.self, forKey: .samplesPerChain)
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
-            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, samplesPerChain: spc, initSamplesCount: isc)
+            let reconstructor = try params.decode(AnyReconstruction.self, forKey: .reconstruction)
+            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc)
         }
     }
 }
