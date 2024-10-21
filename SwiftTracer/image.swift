@@ -137,7 +137,7 @@ class Image {
     }
     
     init?(filename: String) {
-        let url = URL(fileURLWithPath: "assets/\(filename)")
+        let url = URL(fileURLWithPath: filename, isDirectory: false, relativeTo: nil)
         guard let data = try? Data(contentsOf: url) else { return nil }
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         guard let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
@@ -182,14 +182,14 @@ class Image {
     /// Attempts to write the pixel values (RGB) into a new png file at the path `filename`.
     ///
     /// > Note: The pixel values are converted from linear RGB to [standard RGB](https://en.wikipedia.org/wiki/SRGB).
-    func write(to filename: String) -> Bool {
+    func write(to filename: String, directory: String = URL.documentsDirectory.absoluteString) -> Bool {
         for (i, pixel) in raw.enumerated() {
             let offset = i * MemoryLayout<BitmapPixel>.size
             pixels.storeBytes(of: BitmapPixel(from: pixel.toSRGB()), toByteOffset: offset, as: BitmapPixel.self)
         }
 
         // TODO Better url handling at a given folder
-        guard let url = URL(string: "file:///Users/fbp/code/\(filename)") else { return false }
+        guard let url = URL(string: "file://\(directory)/\(filename)") else { return false }
         guard let img = context.makeImage() else { return false }
         guard let destination = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else { return false }
                 

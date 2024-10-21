@@ -10,46 +10,41 @@ import ArgumentParser
 
 @main
 struct Scripts: ParsableCommand {
-    @Argument(help: "The name for the image to compute gradients from.")
-    var input: String
+    @Argument(help: "The name of the script to run.")
+    var runnable: Runnable
+    
+    @Option(help: "The names of the image inputs for the script being run.")
+    var inputs: [String] = []
+    
+    @Option(help: "The names of the directory containing the outputs of the script being run.")
+    var output: String = URL.documentsDirectory.absoluteString
     
     mutating func run() throws {
-        let input = input
-        Gradients.compute(from: input)
+        switch runnable {
+        case .gradient:
+            guard let input = inputs.first else { fatalError("Missing input to compute gradients from") }
+            guard let img = Image(filename: input)?.read() else { fatalError("Could not read image") }
+            
+            Gradients(image: img, outputDirectory: output).run()
+        case .mse:
+            guard inputs.count == 2, let first = inputs.first, let second = inputs.last else { fatalError("Missing input to compute gradients from") }
+            guard let original = Image(filename: first)?.read() else { fatalError("Could not read image") }
+            guard let compared = Image(filename: second)?.read() else { fatalError("Could not read image") }
+            
+            MeanSquaredError(original: original, compared: compared).run()
+        case .psnr:
+            guard inputs.count == 2, let first = inputs.first, let second = inputs.last else { fatalError("Missing input to compute gradients from") }
+            guard let original = Image(filename: first)?.read() else { fatalError("Could not read image") }
+            guard let compared = Image(filename: second)?.read() else { fatalError("Could not read image") }
+            
+            PeakSignalToNoiseRatio(original: original, compared: compared).run()
+        }
+        
     }
 }
 
-enum Gradients {
-    static func compute(from filename: String) {
-        guard let img = Image(filename: filename)?.read() else { fatalError("Could not read image") }
-        let dx = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        let dy = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        for x in 0 ..< img.xSize {
-            for y in 0 ..< img.ySize {
-                let base = img[x, y]
-                let left: Color = x == 0
-                    ? Color()
-                    : img[x - 1, y]
-                let right: Color = x == img.xSize - 1
-                    ? Color()
-                    : img[x + 1, y]
-                let top: Color = y == 0
-                    ? Color()
-                    : img[x, y - 1]
-                let bottom: Color = y == img.ySize - 1
-                    ? Color()
-                    : img[x, y + 1]
-                
-                if x != 0 { dx[x - 1, y] += 0.5 * (base - left) }
-                if y != 0 { dy[x, y - 1] += 0.5 * (base - top) }
-                dx[x, y] += 0.5 * (right - base)
-                dy[x, y] += 0.5 * (bottom - base)
-            }
-        }
-        
-        let dxImage = Image(array: dx.transformed { $0.abs })
-        _ = dxImage.write(to: "gradients-dx.png")
-        let dyImage = Image(array: dy.transformed { $0.abs })
-        _ = dyImage.write(to: "gradients-dy.png")
-    }
+enum Runnable: String, ExpressibleByArgument, CaseIterable {
+    case gradient
+    case mse
+    case psnr
 }

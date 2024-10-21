@@ -53,7 +53,19 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "out.png"
+            argument = "mse"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--output /Users/fbp/Code"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--inputs /Users/fbp/Code/ref.png"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--inputs  /Users/fbp/Code/out.png"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

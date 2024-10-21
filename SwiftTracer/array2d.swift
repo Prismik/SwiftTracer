@@ -73,6 +73,19 @@ class Array2d<T: AdditiveArithmetic> {
         self.storage = Array()
     }
 
+    subscript(i: Int) -> T {
+        get {
+            storage[i]
+        }
+        set {
+            lock.withLock {
+                let current = storage[i]
+                total += newValue - current
+                storage[i] = newValue
+            }
+        }
+    }
+    
     subscript(x: Int, y: Int) -> T {
         get {
             storage[index(x, y)]
