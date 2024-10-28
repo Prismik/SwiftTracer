@@ -32,11 +32,6 @@ struct GradientDomainResult {
     let dy: Array2d<Color>
 }
 
-/// Integrating while constructing a path.
-protocol PathSpaceIntegrator: AnyObject {
-    func li(pixel: Vec2, scene: Scene, sampler: Sampler, stop: (Path) -> Bool) -> (contrib: Color, path: Path)
-}
-
 /// Integraeting in using gradients of the image plane.
 protocol GradientDomainIntegrator {
     func render(scene: Scene, sampler: Sampler) -> GradientDomainResult

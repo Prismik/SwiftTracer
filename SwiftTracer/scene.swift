@@ -46,7 +46,7 @@ final class Scene {
         guard let sample = source.light.sampleLi(context: context, sample: updated) else { return nil }
         guard sample.p.visible(from: context.p, within: self) else { return nil }
         
-        return LightSample(L: sample.L, wi: sample.wi, p: sample.p, pdf: source.prob * sample.pdf)
+        return LightSample(L: sample.L, wi: sample.wi, p: sample.p, n: sample.n, pdf: source.prob * sample.pdf)
     }
     
     func render() -> [Array2d<Color>] {

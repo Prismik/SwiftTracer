@@ -26,7 +26,7 @@ final class PointLight: Light {
         let sqDistance = p.distance2(context.p)
         let wi = (p - context.p).normalized()
         let li = I / sqDistance
-        return LightSample(L: li, wi: wi, p: p, pdf: 1)
+        return LightSample(L: li, wi: wi, p: p, n: .zero, pdf: 1)
     }
     
     func phi() -> Color {

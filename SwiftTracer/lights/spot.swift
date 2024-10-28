@@ -34,7 +34,7 @@ final class SpotLight: Light {
         let wo = frame.toLocal(v: -wi).normalized()
         let li = I(wo: wo) / sqDistance
         guard li.length != 0 else { return nil }
-        return LightSample(L: li, wi: wi, p: p, pdf: 1)
+        return LightSample(L: li, wi: wi, p: p, n: n, pdf: 1)
     }
     
     func phi() -> Color {

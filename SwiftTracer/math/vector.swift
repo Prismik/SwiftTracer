@@ -56,7 +56,7 @@ extension Vec2 {
     }
 }
 
-extension Vec3: AdditiveArithmetic where Scalar: BinaryFloatingPoint {
+extension Vec3: @retroactive AdditiveArithmetic where Scalar: BinaryFloatingPoint {
     enum Axis {
         case x
         case y

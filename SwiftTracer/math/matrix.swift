@@ -32,7 +32,7 @@ extension Mat3: Codable {
     }
 }
 
-extension Mat4: Decodable {
+extension Mat4: @retroactive Decodable {
     enum CodingKeys: String, CodingKey {
         case o
         case x

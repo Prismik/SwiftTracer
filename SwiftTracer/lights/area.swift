@@ -26,7 +26,7 @@ final class AreaLight: Light {
         let frame = Frame(n: es.n)
         let wo = frame.toLocal(v: -wi).normalized()
         let Le = L(p: es.y, n: es.n, uv: es.uv, wo: wo)
-        return LightSample(L: Le, wi: wi, p: es.y, pdf: es.pdf)
+        return LightSample(L: Le, wi: wi, p: es.y, n: es.n, pdf: es.pdf)
     }
     
     func pdfLi(context: LightSample.Context, y: Point3) -> Float {

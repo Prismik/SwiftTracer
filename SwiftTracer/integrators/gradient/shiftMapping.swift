@@ -6,7 +6,7 @@
 //
 
 enum ShiftMappingOperator: String, Decodable {
-    case rsp
+    case rsr
     case pathReconnection
 }
 
@@ -21,7 +21,7 @@ struct AnyShiftMappingOperator: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(ShiftMappingOperator.self, forKey: .type)
         switch type {
-        case .rsp:
+        case .rsr:
             wrapped = RandomSequenceReplay()
         case .pathReconnection:
             wrapped = PathReconnection()
@@ -40,6 +40,16 @@ struct ShiftMapParams {
     }
 }
 
+enum ShiftResult {
+    case successful(path: Path, weight: Float)
+    case failed(weight: Float)
+}
+
+struct Shift {
+    let result: ShiftResult
+    let contrib: Color
+}
+
 protocol ShiftMapping {
     var sampler: Sampler! { get set }
 
@@ -48,9 +58,9 @@ protocol ShiftMapping {
         pixel: Vec2,
         offset: Vec2,
         params: ShiftMapParams
-    ) -> Color
+    ) -> Shift
     
-    func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene)
+    func initialize(sampler: Sampler, integrator: SamplerIntegrator & GradientDomainIntegrator, scene: Scene)
 }
 
 final class RandomSequenceReplay: ShiftMapping {
@@ -58,18 +68,21 @@ final class RandomSequenceReplay: ShiftMapping {
     unowned var integrator: SamplerIntegrator!
     unowned var scene: Scene!
     
-    func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene) {
+    func initialize(sampler: Sampler, integrator: SamplerIntegrator & GradientDomainIntegrator, scene: Scene) {
         self.sampler = sampler
         self.integrator = integrator
         self.scene = scene
     }
 
-    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color {
+    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Shift {
         guard let seed = params.seed else { fatalError("Wrong params provided to \(String(describing: self))") }
         let pixel = pixel + offset
-        guard pixel.x >= 0, pixel.y >= 0, pixel.x < scene.camera.resolution.x, pixel.y < scene.camera.resolution.y else { return .zero }
+        guard pixel.x >= 0, pixel.y >= 0, pixel.x < scene.camera.resolution.x, pixel.y < scene.camera.resolution.y else { return Shift(result: .failed(weight: 1), contrib: .zero) }
         sampler.rng.state = seed
-        return integrator.li(pixel: pixel, scene: scene, sampler: sampler)
+        // TODO Rework the way we interact with path
+        let path = Path.start(at: CameraVertex())
+        let contrib = integrator.li(pixel: pixel, scene: scene, sampler: sampler)
+        return Shift(result: .successful(path: path, weight: 0.5), contrib: contrib)
     }
 }
 
@@ -81,49 +94,45 @@ final class PathReconnection: ShiftMapping {
     }
 
     unowned var sampler: Sampler!
-    unowned var integrator: PathSpaceIntegrator!
+    var integrator: SamplerIntegrator!
     unowned var scene: Scene!
 
     var stats = Stats()
 
-    func initialize(sampler: Sampler, integrator: SamplerIntegrator & PathSpaceIntegrator, scene: Scene) {
+    func initialize(sampler: Sampler, integrator: SamplerIntegrator & GradientDomainIntegrator, scene: Scene) {
         self.sampler = sampler
         self.integrator = integrator
         self.scene = scene
         
     }
     
-    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Color {
+    func shift(pixel: Vec2, offset: Vec2, params: ShiftMapParams) -> Shift {
         guard let path = params.path, let seed = params.seed else { fatalError("Wrong params provided to \(String(describing: self))") }
 
         let pixel = pixel + offset
-        guard pixel.x >= 0, pixel.y >= 0, pixel.x < scene.camera.resolution.x, pixel.y < scene.camera.resolution.y else { return .zero }
+        guard pixel.x >= 0, pixel.y >= 0, pixel.x < scene.camera.resolution.x, pixel.y < scene.camera.resolution.y else {
+            return Shift(result: .failed(weight: 1), contrib: .zero)
+        }
         
         var connectable = false
         sampler.rng.state = seed
-        let (contrib, offsetPath) = integrator.li(pixel: pixel, scene: scene, sampler: sampler, stop: { shiftedPath in
-            guard shiftedPath.edges.count > 1, path.edges.count > shiftedPath.edges.count else { return false }
-            let index = shiftedPath.vertices.count - 1
-            let b = path.vertices[index]
-            let b1 = path.vertices[index+1]
-            let valid = b.connectable && shiftedPath.connectable(with: b1, within: scene)
-            if valid { connectable = true }
-            
-            return valid
-        })
+        // TODO Rework how we do this
+        let result = integrator.li(pixel: pixel, scene: scene, sampler: sampler)
         
         guard connectable else {
             stats.failedConnections += 1
-            return contrib
+            return Shift(result: .failed(weight: 1), contrib: .zero)
         }
 
-        guard let connectedPath = offsetPath.connect(to: path, at: offsetPath.vertices.count, integrator: integrator, scene: scene, sampler: sampler) else {
-            stats.failedConnections += 1
-            return .zero
-        }
+//        guard let connectedPath = offsetPath.connect(to: path, at: offsetPath.vertices.count, integrator: integrator, scene: scene) else {
+//            stats.failedConnections += 1
+//            return Shift(result: .failed(weight: 1), contrib: .zero)
+//        }
 
         stats.successfulConnections += 1
-        // weight = pdf(path) / (pdf(path) + pdf(connectedPath) * jacobian)
-        return connectedPath.contribution
+//        let w = path.pdf / (path.pdf + connectedPath.pdf * connectedPath.jacobian)
+        let w: Float = 0.5
+        let newPath = Path.start(at: CameraVertex())
+        return Shift(result: .successful(path: newPath, weight: w), contrib: result)
     }
 }

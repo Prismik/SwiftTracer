@@ -24,6 +24,7 @@ final class GdptIntegrator: Integrator {
     private var successfulShifts: Int = 0
     private var failedShifts: Int = 0
 
+    private let gradientOffsets: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
     init(mapper: ShiftMapping, reconstructor: Reconstructing, maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
         self.mapper = mapper
         self.reconstructor = reconstructor
@@ -37,123 +38,296 @@ final class GdptIntegrator: Integrator {
     }
 }
 
+// MARK:  Gradient tracing
+
 extension GdptIntegrator: SamplerIntegrator {
+    enum RayState {
+        struct Data {
+            var pdf: Float
+            var ray: Ray
+            var its: Intersection
+            var throughput: Color
+        }
+
+        case fresh(data: Data)
+        case connected(data: Data)
+        case connectedRecently(data: Data)
+        case dead
+        
+        func sanitized() -> RayState {
+            return switch self {
+            case .dead: .dead
+            case .fresh(let e):
+                e.its.n.dot(e.ray.d) > 0 ? .dead : .fresh(data: e)
+            case .connectedRecently(let e):
+                e.its.n.dot(e.ray.d) > 0 ? .dead : .connectedRecently(data: e)
+            case .connected(let e): .connected(data: e)
+            }
+        }
+        
+        static func new(pixel: Vec2, offset: Vec2, scene: Scene) -> RayState {
+            let pixel = pixel + offset
+            let max = scene.camera.resolution
+            guard (0 ..< max.x).contains(pixel.x) && (0 ..< max.y).contains(pixel.y) else {
+                return .dead
+            }
+            
+            let ray = scene.camera.createRay(from: pixel)
+            guard let its = scene.hit(r: ray) else { return .dead }
+            return .fresh(data: Data(pdf: 1, ray: ray, its: its, throughput: Color(repeating: 1)))
+        }
+    }
+
+    struct GradientColors {
+        var main: Color
+        var radiances: [Color]
+        var gradients: [Color]
+        
+        init() {
+            main = .zero
+            radiances = Array(repeating: .zero, count: 4)
+            gradients = Array(repeating: .zero, count: 4)
+        }
+    }
+
     func preprocess(scene: Scene, sampler: any Sampler) {
         // no op
     }
-    
-    
-    /// Evaluates direct lighting on a given intersection
-    private func light(wo: Vec3, scene: Scene, frame: Frame, intersection: Intersection, s: Vec2) -> Color {
-        let ctx = LightSample.Context(p: intersection.p, n: intersection.n, ns: intersection.n)
-        guard let lightSample = scene.sample(context: ctx, s: s) else { return .zero }
-        let localWi = frame.toLocal(v: lightSample.wi).normalized()
-        let pdf = intersection.shape.material.pdf(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)
-        let eval = intersection.shape.material.evaluate(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)
-        let weight = lightSample.pdf / (pdf + lightSample.pdf)
-        
-        return (weight * eval / lightSample.pdf) * lightSample.L
-    }
 
-    /// Recursively traces rays using MIS
-    private func trace(intersection: Intersection?, ray: Ray, path: Path, scene: Scene, sampler: Sampler, depth: Int, stop: (Path) -> Bool) -> Color {
-        guard ray.d.length.isFinite else { return .zero }
-        guard let intersection = intersection else { return scene.background }
-        var contribution = Color()
-        let frame = Frame(n: intersection.n)
-        let wo = frame.toLocal(v: -ray.d).normalized()
-        let s = sampler.next2()
-        
-        guard !intersection.hasEmission else {
-            path.add(vertex: LightVertex(intersection: intersection))
-            return intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
-        }
-
-        // MIS Emitter
-        contribution += light(wo: wo, scene: scene, frame: frame, intersection: intersection, s: s)
-
-        // MIS Material
-        guard let direction = intersection.shape.material.sample(wo: wo, uv: intersection.uv, p: intersection.p, sample: s) else {
-            return contribution
+    private func newTrace(pixel: Vec2, scene: Scene) -> GradientColors {
+        var li = GradientColors()
+        guard var main: RayState.Data = switch RayState.new(pixel: pixel, offset: .zero, scene: scene) {
+            case .dead: nil
+            case .connected(let data), .connectedRecently(let data), .fresh(let data): data
+        } else {
+            return li
         }
         
-        let bsdfWeight = direction.weight
-        let wi = frame.toWorld(v: direction.wi).normalized()
-        let newRay = Ray(origin: intersection.p, direction: wi)
-        var its: Intersection? = nil
-        if let newIntersection = scene.hit(r: newRay) {
-            its = newIntersection
-            if newIntersection.hasEmission, let light = newIntersection.shape.light {
-                let localFrame = Frame(n: newIntersection.n)
-                let newWo = localFrame.toLocal(v: -newRay.d).normalized()
-                let pdf = intersection.shape.material.pdf(wo: wo, wi: direction.wi, uv: intersection.uv, p: intersection.p)
-                var weight: Float = 1
-                if !intersection.shape.material.hasDelta(uv: intersection.uv, p: intersection.p) {
-                    let ctx = LightSample.Context(p: intersection.p, n: intersection.n, ns: intersection.n)
-                    let pdfDirect = light.pdfLi(context: ctx, y: newIntersection.p)
-                    weight = pdf / (pdf + pdfDirect)
+        var offsets = gradientOffsets.map { RayState.new(pixel: pixel, offset: $0, scene: scene) }
+        
+        var depth = 1
+        while depth <= self.maxDepth && depth >= self.minDepth {
+            if main.its.hasEmission {
+                let frame = Frame(n: main.its.n)
+                let wo = frame.toLocal(v: -main.ray.d)
+                li.main += main.its.shape.light.L(p: main.its.p, n: main.its.n, uv: main.its.uv, wo: wo)
+                // TODO Should we return early here
+            } else if main.its.shape.material.hasDelta(uv: main.its.uv, p: main.its.p) == false {
+                // Light sampling
+                let rngLight = scene.sampler.next2()
+                let lightSample: LightSample?
+                let mainBsdfEval: Color
+                let mainBsdfPdf: Float
+                let mainFrame = Frame(n: main.its.n)
+                let mainLightOutLocal: Vec3
+                
+                if let sample = scene.sample(context: LightSample.Context(p: main.its.p, n: main.its.n, ns: main.its.n), s: rngLight) {
+                    lightSample = sample
+                    mainLightOutLocal = mainFrame.toLocal(v: sample.wi)
+                    let mainLightInLocal = mainFrame.toLocal(v: -main.ray.d)
+                    mainBsdfEval = main.its.shape.material.evaluate(wo: mainLightInLocal, wi: mainLightOutLocal, uv: main.its.uv, p: main.its.p)
+                    mainBsdfPdf = main.its.shape.material.pdf(wo: mainLightInLocal, wi: mainLightOutLocal, uv: main.its.uv, p: main.its.p)
+                } else {
+                    lightSample = nil
+                    mainBsdfEval = .zero
+                    mainBsdfPdf = 0
+                    mainLightOutLocal = .zero
                 }
+                
+                if let lightSample = lightSample {
+                    let mainWeightNum = lightSample.pdf
+                    let mainWeightDem = lightSample.pdf + mainBsdfPdf
+                    let mainContrib = main.throughput * mainBsdfEval * lightSample.L
+                    let mainGeometrySquaredLength = (main.its.p - lightSample.p).lengthSquared
+                    let mainGeometryCosLight = lightSample.n.dot(lightSample.wi)
+                    // Compute shift maps
+                    for (i, o) in offsets.enumerated() {
+                        let result: (shiftWeightDem: Float, shiftContrib: Color)
+                        switch o {
+                        case .dead: result = (mainWeightNum / (0.0001 + mainWeightDem), .zero)
+                        case .connected(let s):
+                            let dem = (s.pdf / main.pdf) * (lightSample.pdf + mainBsdfPdf)
+                            let contrib = s.throughput * mainBsdfEval * lightSample.L
+                            result = (dem, contrib)
+                        case .connectedRecently(let s):
+                            let shiftDirectionInGlobal = (s.its.p - main.its.p).normalized()
+                            let shiftDirectionInLocal = mainFrame.toLocal(v: shiftDirectionInGlobal)
+                            guard shiftDirectionInLocal.z > 0 else { result = (0.0, Color.zero); break }
 
-                contribution += (weight * bsdfWeight)
-                    * light.L(p: newIntersection.p, n: newIntersection.n, uv: newIntersection.uv, wo: newWo)
+                            let shiftBsdfPdf = main.its.shape.material.pdf(wo: shiftDirectionInLocal, wi: mainLightOutLocal, uv: s.its.uv, p: s.its.p)
+                            let shiftBsdfValue = main.its.shape.material.evaluate(wo: shiftDirectionInLocal, wi: mainLightOutLocal, uv: s.its.uv, p: s.its.p)
+                            let weightDem = (s.pdf / main.pdf) * (lightSample.pdf + shiftBsdfPdf)
+                            let contrib = s.throughput * shiftBsdfValue * lightSample.L
+                            result = (weightDem, contrib)
+                        case .fresh(let s):
+                            guard !s.its.hasEmission else { result = (0, .zero); break }
+                            
+                            let ctx = LightSample.Context(p: s.its.p, n: s.its.n, ns: s.its.n)
+                            let frame = Frame(n: s.its.n)
+                            guard let shiftLightSample = scene.sample(context: ctx, s: rngLight) else { result = (0, .zero); break }
+
+                            let shiftEmmiterRadiance = shiftLightSample.L * (shiftLightSample.pdf / lightSample.pdf)
+                            let shiftDirectionOutLocal = frame.toLocal(v: shiftLightSample.wi)
+                            let shiftInLocal = mainFrame.toLocal(v: -s.ray.d)
+                            let shiftBsdfValue = s.its.shape.material.evaluate(wo: shiftInLocal, wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
+                            let shiftBsdfPdf = s.its.shape.material.pdf(wo: shiftInLocal, wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
+                            let jacobian = (shiftLightSample.n.dot(shiftLightSample.wi) * mainGeometrySquaredLength).abs()
+                                / (mainGeometryCosLight * (s.its.p - shiftLightSample.p).lengthSquared).abs()
+                            
+                            assert(jacobian.isFinite)
+                            assert(jacobian >= 0)
+                            let weightDem = (jacobian * (s.pdf / main.pdf)) * (shiftLightSample.pdf + shiftBsdfPdf)
+                            let contrib = jacobian * s.throughput * shiftBsdfValue * shiftEmmiterRadiance
+                            result = (weightDem, contrib)
+                        }
+                        
+                        let weight = mainWeightNum / (mainWeightDem + result.shiftWeightDem)
+                        assert(weight.isFinite)
+                        assert(weight >= 0 && weight <= 1)
+                        li.main += mainContrib * weight
+                        li.radiances[i] += result.shiftContrib * weight
+                        li.gradients[i] += (result.shiftContrib - mainContrib) * weight
+                    }
+                }
             }
+        
+            // BSDF Sampling
+            let frame = Frame(n: main.its.n)
+            let wo = frame.toLocal(v: -main.ray.d)
+            guard !main.its.hasEmission, let mainSampledBsdf = main.its.shape.material.sample(wo: wo, uv: main.its.uv, p: main.its.p, sample: scene.sampler.next2()) else { return li }
+            
+            let mainDirectionOutGlobal = frame.toWorld(v: mainSampledBsdf.wi)
+            main.ray = Ray(origin: main.its.p, direction: mainDirectionOutGlobal)
+            let mainPrevIts = main.its
+            guard let newIts = scene.hit(r: main.ray) else { return li }
+            main.its = newIts
+            
+            // Verify light intersection
+            let bounceLightPdf: Float
+            let bounceLightRadiance: Color
+            if main.its.hasEmission {
+                let ctx = LightSample.Context(p: mainPrevIts.p, n: mainPrevIts.n, ns: mainPrevIts.n)
+                bounceLightPdf = main.its.shape.light.pdfLi(context: ctx, y: main.its.p)
+                let frame = Frame(n: main.its.n)
+                let wo = frame.toLocal(v: -main.ray.d)
+                bounceLightRadiance = main.its.shape.light.L(p: main.its.p, n: main.its.n, uv: main.its.uv, wo: wo)
+            } else {
+                bounceLightPdf = 0
+                bounceLightRadiance = .zero
+            }
+            
+            let mainPdfPrev = main.pdf
+            main.throughput *= mainSampledBsdf.weight
+            main.pdf *= mainSampledBsdf.pdf
+            guard main.pdf != 0 && main.throughput != .zero else { return li }
+            
+            let mainBsdfContrib = main.throughput * bounceLightRadiance
+            offsets = offsets.enumerated().map { (i, o) in
+                let result: (weightDem: Float, contrib: Color, state: RayState)
+                switch o {
+                case .dead: result = (0, .zero, .dead)
+                case .connected(let s):
+                    let prevShiftPdf = s.pdf
+                    let newThroughput = s.throughput * mainSampledBsdf.weight
+                    let newPdf = s.pdf * mainSampledBsdf.pdf
+                    let shiftWeightDem = (prevShiftPdf / mainPdfPrev) * (mainSampledBsdf.pdf + bounceLightPdf)
+                    let shiftContrib = newThroughput * bounceLightRadiance
+                    result = (
+                        shiftWeightDem,
+                        shiftContrib,
+                        .connected(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
+                    )
+                case .connectedRecently(let s):
+                    let frame = Frame(n: mainPrevIts.n)
+                    let shiftDirectionInGlobal = (s.its.p - main.ray.o).normalized()
+                    let shiftDirectionInLocal = frame.toLocal(v: shiftDirectionInGlobal)
+                    guard shiftDirectionInLocal.z > 0 else { result = (0.0, .zero, .dead); break }
+                    
+                    let shiftBsdfPdf = mainPrevIts.shape.material.pdf(wo: shiftDirectionInLocal, wi: mainSampledBsdf.wi, uv: mainPrevIts.uv, p: mainPrevIts.p)
+                    let shiftBsdfValue = mainPrevIts.shape.material.evaluate(wo: shiftDirectionInLocal, wi: mainSampledBsdf.wi, uv: mainPrevIts.uv, p: mainPrevIts.p)
+                    let prevShiftPdf = s.pdf
+                    let newThroughput = s.throughput * (shiftBsdfValue / mainSampledBsdf.pdf)
+                    let newPdf = s.pdf * shiftBsdfPdf
+                    let shiftWeightDem = (prevShiftPdf / mainPdfPrev) * (shiftBsdfPdf + bounceLightPdf)
+                    let shiftContrib = newThroughput * bounceLightRadiance
+                    result = (
+                        shiftWeightDem,
+                        shiftContrib,
+                        .connected(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
+                    )
+                case .fresh(let s):
+                    guard !s.its.hasEmission && s.its.p.visible(from: main.its.p, within: scene) else { result = (0.0, .zero, .dead); break }
+                    
+                    let frame = Frame(n: s.its.n)
+                    let shiftDirectionOutGlobal = (main.its.p - s.its.p).normalized()
+                    let shiftDirectionOutLocal = frame.toLocal(v: shiftDirectionOutGlobal)
+                    
+                    let jacobian = (main.its.n.dot(-shiftDirectionOutGlobal) * main.its.t.pow(2)).abs()
+                        / (main.its.n.dot(-main.ray.d) * (s.its.p - main.its.p).lengthSquared).abs()
+                    assert(jacobian.isFinite)
+                    assert(jacobian >= 0)
+    
+                    let shiftBsdfValue = s.its.shape.material.evaluate(wo: frame.toLocal(v: -s.ray.d), wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
+                    let shiftBsdfPdf = s.its.shape.material.pdf(wo: frame.toLocal(v: -s.ray.d), wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
+                    let shiftPdfPrev = s.pdf
+                    let newThroughput = s.throughput * shiftBsdfValue * (jacobian / mainSampledBsdf.pdf)
+                    let newPdf = s.pdf * shiftBsdfPdf * jacobian
+                    let shiftLightRadiance: Color
+                    let shiftLightPdf: Float
+                    if bounceLightPdf == 0 {
+                        shiftLightRadiance = .zero
+                        shiftLightPdf = 0
+                    } else {
+                        let ctx = LightSample.Context(p: s.its.p, n: s.its.n, ns: s.its.n)
+                        shiftLightRadiance = bounceLightRadiance
+                        shiftLightPdf = main.its.shape.light.pdfLi(context: ctx, y: main.its.p)
+                    }
+                    
+                    let shiftWeightDem = (shiftPdfPrev / mainPdfPrev) * (shiftBsdfPdf + shiftLightPdf)
+                    let shiftContrib = s.throughput * shiftLightRadiance
+                    // TODO
+                    result = (
+                        shiftWeightDem,
+                        shiftContrib,
+                        .connectedRecently(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
+                    )
+                }
+                
+                let mainWeightDem = mainSampledBsdf.pdf + bounceLightPdf
+                let weight = (mainSampledBsdf.pdf / (mainWeightDem + result.weightDem))
+                assert(weight.isFinite)
+                assert(weight >= 0 && weight <= 1)
+                li.main += mainBsdfContrib * weight
+                li.radiances[i] += result.contrib * weight
+                li.gradients[i] += (result.contrib - mainBsdfContrib) * weight
+                return result.state
+            }
+            
+            depth += 1
         }
 
-        path.add(vertex: SurfaceVertex(intersection: intersection), weight: direction.weight, contribution: contribution, pdf: direction.pdf)
-        guard !stop(path) else { return contribution }
-        return depth == maxDepth || (its?.hasEmission == true && depth >= minDepth)
-            ? contribution
-        : contribution + trace(intersection: its, ray: newRay, path: path, scene: scene, sampler: sampler, depth: depth + 1, stop: stop) * bsdfWeight
-    }
-    
-    private func defaultStop(path: Path) -> Bool {
-        return false
+        return li
     }
     
     func li(ray: Ray, scene: Scene, sampler: any Sampler) -> Color {
-        return li(ray: ray, scene: scene, sampler: sampler, stop: defaultStop).contrib
+        fatalError("Not implemented")
     }
     
     func li(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
-        return li(pixel: pixel, scene: scene, sampler: sampler, stop: defaultStop).contrib
+        let result = newTrace(pixel: pixel, scene: scene)
+        return result.main
     }
 }
+                 
+// MARK:  Rendering blocks
 
-extension GdptIntegrator: PathSpaceIntegrator {
-    func li(ray: Ray, scene: Scene, sampler: any Sampler, stop: (Path) -> Bool) -> (contrib: Color, path: Path) {
-        let path = Path.start(at: CameraVertex(camera: scene.camera))
-        guard let intersection = scene.hit(r: ray) else { return (scene.background, path) }
-
-        let frame = Frame(n: intersection.n)
-        let wo = frame.toLocal(v: -ray.d).normalized()
-        if intersection.hasEmission {
-            // TODO Figure out intersection and wo geometry
-            path.add(vertex: LightVertex(intersection: intersection))
-            return (intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo), path)
-        } else {
-            return (trace(intersection: intersection, ray: ray, path: path, scene: scene, sampler: sampler, depth: 0, stop: stop), path)
-        }
-    }
-
-    func li(pixel: Vec2, scene: Scene, sampler: any Sampler, stop: (Path) -> Bool) -> (contrib: Color, path: Path) {
-        let ray = scene.camera.createRay(from: pixel)
-        return li(ray: ray, scene: scene, sampler: sampler, stop: stop)
-    }
-}
-                                
 extension GdptIntegrator: GradientDomainIntegrator {
     internal struct Block {
         let position: Vec2
         let size: Vec2
-        var image: Array2d<Color>
-        var dxGradients: Array2d<Color>
-        var dyGradients: Array2d<Color>
-        
-        mutating func update(img: Array2d<Color>, dx: Array2d<Color>, dy: Array2d<Color>) {
-            self.image = img
-            self.dxGradients = dx
-            self.dyGradients = dy
-        }
+        let image: Array2d<Color>
+        let dxGradients: Array2d<Color>
+        let dyGradients: Array2d<Color>
     }
     
     func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
@@ -222,46 +396,49 @@ extension GdptIntegrator: GradientDomainIntegrator {
         let img = Array2d(x: Int(size.x), y: Int(size.y), value: Color())
         let dxGradients = Array2d<Color>(x: img.xSize + 1, y: img.ySize + 1, value: .zero)
         let dyGradients = Array2d<Color>(x: img.xSize + 1, y: img.ySize + 1, value: .zero)
-        var block = Block(
+        for lx in 0 ..< Int(size.x) {
+            for ly in 0 ..< Int(size.y) {
+                for _ in 0 ..< mapper.sampler.nbSamples {
+                    let x = lx + x
+                    let y = ly + y
+
+                    let base = Vec2(Float(x), Float(y)) + mapper.sampler.next2()
+                    let newResult = newTrace(pixel: base, scene: scene)
+                    img[lx, ly] += newResult.main
+                    
+                    for (i, offset) in gradientOffsets.enumerated() {
+                        let xShift = lx + Int(offset.x)
+                        let yShift = ly + Int(offset.y)
+                        
+                        // TODO Cleaner check
+                        // TODO img needs to be of the same size as dx and dy now, since we reuse primal from radiances of shifted paths
+                        if (0 ..< Int(size.x)).contains(xShift) && (0 ..< Int(size.y)).contains(yShift) {
+                            img[xShift, yShift] += newResult.radiances[i]
+                        }
+                        
+                        let forward = offset.sum() > 0
+                        let delta = if forward { newResult.gradients[i] } else { newResult.gradients[i] * -1 }
+                        if offset.x == 0 {
+                            dyGradients[lx+1, forward ? ly+1 : ly] += delta
+                        } else {
+                            dxGradients[forward ? lx+1 : lx, ly+1] += delta
+                        }
+                    }
+                }
+            }
+        }
+        
+        let scaleFactor: Float = 1.0 / Float(mapper.sampler.nbSamples)
+        img.scale(by: scaleFactor * 0.2)
+        dxGradients.scale(by: scaleFactor)
+        dyGradients.scale(by: scaleFactor)
+        return Block(
             position: Vec2(Float(x), Float(y)),
             size: size,
             image: img,
             dxGradients: dxGradients,
             dyGradients: dyGradients
         )
-
-        for _ in 0 ..< mapper.sampler.nbSamples {
-            for lx in 0 ..< Int(block.size.x) {
-                for ly in 0 ..< Int(block.size.y) {
-                    let x = lx + Int(block.position.x)
-                    let y = ly + Int(block.position.y)
-
-                    let originalSeed = mapper.sampler.rng.state
-                    let base = Vec2(Float(x), Float(y)) + mapper.sampler.next2()
-                    let (pixel, path) = li(pixel: base, scene: scene, sampler: mapper.sampler, stop: { _ in false})
-                    img[lx, ly] += pixel
-                    
-                    // TODO Figure out a way to build appripriately for path reconnection
-                    let params = ShiftMapParams(seed: originalSeed, path: path)
-                    let left = mapper.shift(pixel: base, offset: -Vec2(1, 0), params: params)
-                    let right = mapper.shift(pixel: base, offset: Vec2(1, 0), params: params)
-                    let top = mapper.shift(pixel: base, offset: -Vec2(0, 1), params: params)
-                    let bottom = mapper.shift(pixel: base, offset: Vec2(0, 1), params: params)
-                    
-                    dxGradients[lx, ly+1] += 0.5 * (pixel - left)
-                    dyGradients[lx+1, ly] += 0.5 * (pixel - top)
-                    dxGradients[lx+1, ly+1] += 0.5 * (right - pixel)
-                    dyGradients[lx+1, ly+1] += 0.5 * (bottom - pixel)
-                }
-            }
-        }
-        
-        let scaleFactor: Float = 1.0 / Float(mapper.sampler.nbSamples)
-        img.scale(by: scaleFactor)
-        dxGradients.scale(by: scaleFactor)
-        dyGradients.scale(by: scaleFactor)
-        block.update(img: img, dx: dxGradients, dy: dyGradients)
-        return block
     }
 }
 

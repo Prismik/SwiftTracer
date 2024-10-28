@@ -9,6 +9,7 @@ enum VertexType {
     case light
     case surface
     case camera
+    case null
 }
 
 protocol Vertex {
@@ -18,20 +19,21 @@ protocol Vertex {
     var outgoing: Edge? { get set }
     var connectable: Bool { get }
     var intersection: Intersection? { get }
-    func contribution(of edge: Edge) -> Color
 }
 
 struct SurfaceVertex: Vertex {
     let type: VertexType = .surface
     var position: Point3 { intersection?.p ?? .zero }
-    // TODO Allow for several incoming edges in the case of shadow rays
     var incoming: Edge?
     var outgoing: Edge?
     let intersection: Intersection?
     
-    func contribution(of edge: Edge) -> Color {
-        return .zero
-    }
+    let indirectRng: Vec2
+    let indirectPdf: Float
+    let indirectL: Color
+    let indirectDem: Float
+
+    var contribution: Color { .zero }
     
     var connectable: Bool {
         guard let its = intersection else { return false }
@@ -48,7 +50,7 @@ struct LightVertex: Vertex {
     // Similar to this, check that we want the normal on the light source locally, or in world coordinates
     var n: Vec3 { intersection?.n ?? .zero }
     var uv: Vec2 { intersection?.uv ?? .zero }
-    
+    var contribution: Color { Color(repeating: 1) }
     var connectable: Bool { false }
     let intersection: Intersection?
     
@@ -65,6 +67,7 @@ struct CameraVertex: Vertex {
     var outgoing: Edge?
     var connectable: Bool { false }
     var intersection: Intersection? { nil }
+    var contribution: Color { .zero }
     init(camera: Camera) {
         self.position = camera.transform.point(.zero)
         self.incoming = nil
@@ -79,4 +82,14 @@ struct CameraVertex: Vertex {
     func contribution(of edge: Edge) -> Color {
         return .zero
     }
+}
+
+struct NullVertex: Vertex {
+    let type: VertexType = .null
+    let position: Point3
+    var incoming: Edge?
+    var outgoing: Edge? = nil
+    var connectable: Bool { false }
+    var intersection: Intersection? { nil }
+    var contribution: Color { .zero }
 }

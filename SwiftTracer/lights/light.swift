@@ -24,6 +24,8 @@ public struct LightSample {
     let wi: Vec3
     /// Point on the light source
     let p: Point3
+    /// Normal on the light source
+    let n: Vec3
     let pdf: Float
 }
 

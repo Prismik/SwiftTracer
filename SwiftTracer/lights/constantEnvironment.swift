@@ -31,7 +31,7 @@ final class ConstantEnvironmentLight: Light {
         // Any point at 2*radius will 100% of the time be outside the scene. If visible, then the point receives light.
         let outsidePoint = context.p + transform.vector(Vec3.unit(.z)).normalized() * 2 * sceneRadius
         let wi = (outsidePoint - context.p).normalized()
-        return LightSample(L: I, wi: wi, p: outsidePoint, pdf: 1)
+        return LightSample(L: I, wi: wi, p: outsidePoint, n: .zero, pdf: 1)
     }
     
     // Approximation of the power by the area of the circle that bounds the sphere
