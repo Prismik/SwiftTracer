@@ -58,7 +58,7 @@ extension GdptIntegrator: SamplerIntegrator {
             return switch self {
             case .dead: .dead
             case .fresh(let e):
-                e.its.n.dot(e.ray.d) > 0 ? .dead : .fresh(data: e)
+                Frame(n: e.its.n).toLocal(v: -e.ray.d).z <= 0 ? .dead : .fresh(data: e)
             case .connectedRecently(let e):
                 e.its.n.dot(e.ray.d) > 0 ? .dead : .connectedRecently(data: e)
             case .connected(let e): .connected(data: e)
@@ -107,12 +107,14 @@ extension GdptIntegrator: SamplerIntegrator {
         
         var depth = 1
         while depth <= self.maxDepth && depth >= self.minDepth {
-            if main.its.hasEmission {
+            offsets = offsets.map { $0.sanitized() }
+
+            if main.its.hasEmission && depth == 1 {
                 let frame = Frame(n: main.its.n)
                 let wo = frame.toLocal(v: -main.ray.d)
                 li.main += main.its.shape.light.L(p: main.its.p, n: main.its.n, uv: main.its.uv, wo: wo)
                 // TODO Should we return early here
-            } else if main.its.shape.material.hasDelta(uv: main.its.uv, p: main.its.p) == false {
+            } else if !main.its.hasEmission && main.its.shape.material.hasDelta(uv: main.its.uv, p: main.its.p) == false {
                 // Light sampling
                 let rngLight = scene.sampler.next2()
                 let lightSample: LightSample?
@@ -133,7 +135,7 @@ extension GdptIntegrator: SamplerIntegrator {
                     mainBsdfPdf = 0
                     mainLightOutLocal = .zero
                 }
-                
+
                 if let lightSample = lightSample {
                     let mainWeightNum = lightSample.pdf
                     let mainWeightDem = lightSample.pdf + mainBsdfPdf
@@ -168,7 +170,8 @@ extension GdptIntegrator: SamplerIntegrator {
 
                             let shiftEmmiterRadiance = shiftLightSample.L * (shiftLightSample.pdf / lightSample.pdf)
                             let shiftDirectionOutLocal = frame.toLocal(v: shiftLightSample.wi)
-                            let shiftInLocal = mainFrame.toLocal(v: -s.ray.d)
+                            let shiftFrame = Frame(n: s.its.n)
+                            let shiftInLocal = shiftFrame.toLocal(v: -s.ray.d)
                             let shiftBsdfValue = s.its.shape.material.evaluate(wo: shiftInLocal, wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
                             let shiftBsdfPdf = s.its.shape.material.pdf(wo: shiftInLocal, wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
                             let jacobian = (shiftLightSample.n.dot(shiftLightSample.wi) * mainGeometrySquaredLength).abs()
@@ -196,7 +199,7 @@ extension GdptIntegrator: SamplerIntegrator {
             let wo = frame.toLocal(v: -main.ray.d)
             guard !main.its.hasEmission, let mainSampledBsdf = main.its.shape.material.sample(wo: wo, uv: main.its.uv, p: main.its.p, sample: scene.sampler.next2()) else { return li }
             
-            let mainDirectionOutGlobal = frame.toWorld(v: mainSampledBsdf.wi)
+            let mainDirectionOutGlobal = frame.toWorld(v: mainSampledBsdf.wi).normalized()
             main.ray = Ray(origin: main.its.p, direction: mainDirectionOutGlobal)
             let mainPrevIts = main.its
             guard let newIts = scene.hit(r: main.ray) else { return li }
@@ -205,12 +208,12 @@ extension GdptIntegrator: SamplerIntegrator {
             // Verify light intersection
             let bounceLightPdf: Float
             let bounceLightRadiance: Color
-            if main.its.hasEmission {
+            if main.its.hasEmission, let light = main.its.shape.light {
                 let ctx = LightSample.Context(p: mainPrevIts.p, n: mainPrevIts.n, ns: mainPrevIts.n)
-                bounceLightPdf = main.its.shape.light.pdfLi(context: ctx, y: main.its.p)
+                bounceLightPdf = light.pdfLi(context: ctx, y: main.its.p)
                 let frame = Frame(n: main.its.n)
                 let wo = frame.toLocal(v: -main.ray.d)
-                bounceLightRadiance = main.its.shape.light.L(p: main.its.p, n: main.its.n, uv: main.its.uv, wo: wo)
+                bounceLightRadiance = light.L(p: main.its.p, n: main.its.n, uv: main.its.uv, wo: wo)
             } else {
                 bounceLightPdf = 0
                 bounceLightRadiance = .zero
@@ -227,10 +230,9 @@ extension GdptIntegrator: SamplerIntegrator {
                 switch o {
                 case .dead: result = (0, .zero, .dead)
                 case .connected(let s):
-                    let prevShiftPdf = s.pdf
                     let newThroughput = s.throughput * mainSampledBsdf.weight
                     let newPdf = s.pdf * mainSampledBsdf.pdf
-                    let shiftWeightDem = (prevShiftPdf / mainPdfPrev) * (mainSampledBsdf.pdf + bounceLightPdf)
+                    let shiftWeightDem = (s.pdf / mainPdfPrev) * (mainSampledBsdf.pdf + bounceLightPdf)
                     let shiftContrib = newThroughput * bounceLightRadiance
                     result = (
                         shiftWeightDem,
@@ -238,6 +240,8 @@ extension GdptIntegrator: SamplerIntegrator {
                         .connected(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
                     )
                 case .connectedRecently(let s):
+                    guard mainPrevIts.shape.material.hasDelta(uv: mainPrevIts.uv, p: mainPrevIts.p) == false else { result = (0.0, .zero, .dead); break }
+
                     let frame = Frame(n: mainPrevIts.n)
                     let shiftDirectionInGlobal = (s.its.p - main.ray.o).normalized()
                     let shiftDirectionInLocal = frame.toLocal(v: shiftDirectionInGlobal)
@@ -245,10 +249,9 @@ extension GdptIntegrator: SamplerIntegrator {
                     
                     let shiftBsdfPdf = mainPrevIts.shape.material.pdf(wo: shiftDirectionInLocal, wi: mainSampledBsdf.wi, uv: mainPrevIts.uv, p: mainPrevIts.p)
                     let shiftBsdfValue = mainPrevIts.shape.material.evaluate(wo: shiftDirectionInLocal, wi: mainSampledBsdf.wi, uv: mainPrevIts.uv, p: mainPrevIts.p)
-                    let prevShiftPdf = s.pdf
                     let newThroughput = s.throughput * (shiftBsdfValue / mainSampledBsdf.pdf)
                     let newPdf = s.pdf * shiftBsdfPdf
-                    let shiftWeightDem = (prevShiftPdf / mainPdfPrev) * (shiftBsdfPdf + bounceLightPdf)
+                    let shiftWeightDem = (s.pdf / mainPdfPrev) * (shiftBsdfPdf + bounceLightPdf)
                     let shiftContrib = newThroughput * bounceLightRadiance
                     result = (
                         shiftWeightDem,
@@ -269,7 +272,6 @@ extension GdptIntegrator: SamplerIntegrator {
     
                     let shiftBsdfValue = s.its.shape.material.evaluate(wo: frame.toLocal(v: -s.ray.d), wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
                     let shiftBsdfPdf = s.its.shape.material.pdf(wo: frame.toLocal(v: -s.ray.d), wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
-                    let shiftPdfPrev = s.pdf
                     let newThroughput = s.throughput * shiftBsdfValue * (jacobian / mainSampledBsdf.pdf)
                     let newPdf = s.pdf * shiftBsdfPdf * jacobian
                     let shiftLightRadiance: Color
@@ -283,9 +285,8 @@ extension GdptIntegrator: SamplerIntegrator {
                         shiftLightPdf = main.its.shape.light.pdfLi(context: ctx, y: main.its.p)
                     }
                     
-                    let shiftWeightDem = (shiftPdfPrev / mainPdfPrev) * (shiftBsdfPdf + shiftLightPdf)
-                    let shiftContrib = s.throughput * shiftLightRadiance
-                    // TODO
+                    let shiftWeightDem = (s.pdf / mainPdfPrev) * (shiftBsdfPdf + shiftLightPdf)
+                    let shiftContrib = newThroughput * shiftLightRadiance
                     result = (
                         shiftWeightDem,
                         shiftContrib,
@@ -294,7 +295,7 @@ extension GdptIntegrator: SamplerIntegrator {
                 }
                 
                 let mainWeightDem = mainSampledBsdf.pdf + bounceLightPdf
-                let weight = (mainSampledBsdf.pdf / (mainWeightDem + result.weightDem))
+                let weight = mainSampledBsdf.pdf / (mainWeightDem + result.weightDem)
                 assert(weight.isFinite)
                 assert(weight >= 0 && weight <= 1)
                 li.main += mainBsdfContrib * weight
@@ -357,8 +358,9 @@ extension GdptIntegrator: GradientDomainIntegrator {
         print("Reconstructing with dx and dy ...")
         let reconstruction = reconstructor.reconstruct(image: img, dx: dxGradients, dy: dyGradients)
         
-        print("Successful shifts => \(successfulShifts)")
-        print("Failed shifts     => \(failedShifts)")
+        // Rework how these stats are built within the shift happening along the main path
+//        print("Successful shifts => \(successfulShifts)")
+//        print("Failed shifts     => \(failedShifts)")
         return GradientDomainResult(
             img: reconstruction,
             dx: dxGradients.transformed { $0.abs },
@@ -429,7 +431,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
         }
         
         let scaleFactor: Float = 1.0 / Float(mapper.sampler.nbSamples)
-        img.scale(by: scaleFactor * 0.2)
+        img.scale(by: scaleFactor * 0.25)
         dxGradients.scale(by: scaleFactor)
         dyGradients.scale(by: scaleFactor)
         return Block(
