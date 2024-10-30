@@ -42,7 +42,7 @@ final class GdptIntegrator: Integrator {
 
 extension GdptIntegrator: SamplerIntegrator {
     func preprocess(scene: Scene, sampler: any Sampler) {
-        mapper.initialize(sampler: sampler, scene: scene)
+        mapper.initialize(scene: scene)
     }
     
     func li(ray: Ray, scene: Scene, sampler: any Sampler) -> Color {
@@ -50,7 +50,7 @@ extension GdptIntegrator: SamplerIntegrator {
     }
     
     func li(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
-        let result = mapper.shift(pixel: pixel)
+        let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil))
         return result.main
     }
 }
@@ -80,7 +80,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
         Task {
             defer { gcd.leave() }
             var progress = ProgressBar(count: Int(scene.camera.resolution.x) / 32 * Int(scene.camera.resolution.y) / 32, printer: Printer())
-            let blocks = await renderBlocks(scene: scene, mapper: mapper) {
+            let blocks = await renderBlocks(scene: scene, mapper: mapper, sampler: sampler) {
                 progress.next()
             }
             
@@ -103,7 +103,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
         
     }
     
-    private func renderBlocks(blockSize: Int = 32, scene: Scene, mapper: ShiftMapping, increment: @escaping () -> Void) async -> [Block] {
+    private func renderBlocks(blockSize: Int = 32, scene: Scene, mapper: ShiftMapping, sampler: Sampler, increment: @escaping () -> Void) async -> [Block] {
         return await withTaskGroup(of: Block.self) { group in
             for x in stride(from: 0, to: Int(scene.camera.resolution.x), by: blockSize) {
                 for y in stride(from: 0, to: Int(scene.camera.resolution.y), by: blockSize) {
@@ -114,7 +114,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
                     
                     group.addTask {
                         increment()
-                        return self.renderBlock(scene: scene, size: size, x: x, y: y, mapper: mapper)
+                        return self.renderBlock(scene: scene, size: size, x: x, y: y, mapper: mapper, sampler: sampler)
                     }
                 }
             }
@@ -128,18 +128,18 @@ extension GdptIntegrator: GradientDomainIntegrator {
         }
     }
 
-    private func renderBlock(scene: Scene, size: Vec2, x: Int, y: Int, mapper: ShiftMapping) -> Block {
+    private func renderBlock(scene: Scene, size: Vec2, x: Int, y: Int, mapper: ShiftMapping, sampler: Sampler) -> Block {
         let img = Array2d(x: Int(size.x), y: Int(size.y), value: Color())
         let dxGradients = Array2d<Color>(x: img.xSize + 1, y: img.ySize + 1, value: .zero)
         let dyGradients = Array2d<Color>(x: img.xSize + 1, y: img.ySize + 1, value: .zero)
         for lx in 0 ..< Int(size.x) {
             for ly in 0 ..< Int(size.y) {
-                for _ in 0 ..< mapper.sampler.nbSamples {
+                for _ in 0 ..< sampler.nbSamples {
                     let x = lx + x
                     let y = ly + y
 
-                    let base = Vec2(Float(x), Float(y)) + mapper.sampler.next2()
-                    let newResult = mapper.shift(pixel: base)
+                    let base = Vec2(Float(x), Float(y)) + sampler.next2()
+                    let newResult = mapper.shift(pixel: base, sampler: sampler, params: ShiftMappingParams(offsets: nil))
                     img[lx, ly] += newResult.main
                     
                     for (i, offset) in gradientOffsets.enumerated() {
@@ -164,7 +164,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
             }
         }
         
-        let scaleFactor: Float = 1.0 / Float(mapper.sampler.nbSamples)
+        let scaleFactor: Float = 1.0 / Float(sampler.nbSamples)
         img.scale(by: scaleFactor * 0.25)
         dxGradients.scale(by: scaleFactor)
         dyGradients.scale(by: scaleFactor)

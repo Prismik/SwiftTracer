@@ -42,14 +42,18 @@ struct ShiftResult {
 }
 
 protocol ShiftMapping {
-    var sampler: Sampler! { get set }
-
     /// Tries calculating the contribution of a shifted pixel, returning nil when the shift fails.
     func shift(
-        pixel: Vec2
+        pixel: Vec2,
+        sampler: Sampler,
+        params: ShiftMappingParams
     ) -> ShiftResult
     
-    func initialize(sampler: Sampler, scene: Scene)
+    func initialize(scene: Scene)
+}
+
+struct ShiftMappingParams {
+    let offsets: [Vec2]?
 }
 
 enum RayState {
@@ -90,17 +94,18 @@ enum RayState {
 }
 
 final class RandomSequenceReplay: ShiftMapping {
-    unowned var sampler: Sampler!
     unowned var scene: Scene!
     
-    private let gradientOffsets: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
-    
-    func initialize(sampler: Sampler, scene: Scene) {
-        self.sampler = sampler
+    private var gradientOffsets: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+
+    func initialize(scene: Scene) {
         self.scene = scene
     }
 
-    func shift(pixel: Vec2) -> ShiftResult {
+    func shift(pixel: Vec2, sampler: Sampler, params: ShiftMappingParams) -> ShiftResult {
+        if let forceOffsets = params.offsets {
+            gradientOffsets = forceOffsets
+        }
         let maxDepth = 16
         let minDepth = 0
         
@@ -124,18 +129,18 @@ final class RandomSequenceReplay: ShiftMapping {
                 li.main += main.its.shape.light.L(p: main.its.p, n: main.its.n, uv: main.its.uv, wo: wo)
                 // TODO Should we return early here
             } else if !main.its.hasEmission && !main.its.shape.material.hasDelta(uv: main.its.uv, p: main.its.p) {
-                light(main: &main, offsets: offsets, li: &li) // Direct light sampling
+                light(main: &main, offsets: offsets, li: &li, sampler: sampler) // Direct light sampling
             }
         
             // Sample material, or return current values if it fails
-            guard let updated = bsdf(main: &main, offsets: offsets, li: &li) else { return li }
+            guard let updated = bsdf(main: &main, offsets: offsets, li: &li, sampler: sampler) else { return li }
             offsets = updated
             depth += 1
         }
         return li
     }
     
-    private func light(main: inout RayState.Data, offsets: [RayState], li: inout ShiftResult) -> Void {
+    private func light(main: inout RayState.Data, offsets: [RayState], li: inout ShiftResult, sampler: Sampler) -> Void {
         let rngLight = sampler.next2()
         guard let lightSample = scene.sample(context: LightSample.Context(p: main.its.p, n: main.its.n, ns: main.its.n), s: rngLight) else { return }
         let mainFrame = Frame(n: main.its.n)
@@ -181,7 +186,7 @@ final class RandomSequenceReplay: ShiftMapping {
         }
     }
     
-    private func bsdf(main: inout RayState.Data, offsets: [RayState], li: inout ShiftResult) -> [RayState]? {
+    private func bsdf(main: inout RayState.Data, offsets: [RayState], li: inout ShiftResult, sampler: Sampler) -> [RayState]? {
         let frame = Frame(n: main.its.n)
         let wo = frame.toLocal(v: -main.ray.d).normalized()
         let seed = sampler.rng.state
@@ -279,20 +284,22 @@ final class PathReconnection: ShiftMapping {
         var total: Int { successfulConnections + failedConnections }
     }
 
-    unowned var sampler: Sampler!
     unowned var scene: Scene!
 
     var stats = Stats()
 
-    private let gradientOffsets: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+    private var gradientOffsets: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
-    func initialize(sampler: Sampler, scene: Scene) {
-        self.sampler = sampler
+    func initialize(scene: Scene) {
         self.scene = scene
         
     }
     
-    func shift(pixel: Vec2) -> ShiftResult {
+    func shift(pixel: Vec2, sampler: Sampler, params: ShiftMappingParams) -> ShiftResult {
+        if let forceOffsets = params.offsets {
+            gradientOffsets = forceOffsets
+        }
+
         // TODO
         let maxDepth = 16
         let minDepth = 0
@@ -317,11 +324,11 @@ final class PathReconnection: ShiftMapping {
                 li.main += main.its.shape.light.L(p: main.its.p, n: main.its.n, uv: main.its.uv, wo: wo)
                 // TODO Should we return early here
             } else if !main.its.hasEmission && !main.its.shape.material.hasDelta(uv: main.its.uv, p: main.its.p) {
-                light(main: &main, offsets: offsets, li: &li) // Direct light sampling
+                light(main: &main, offsets: offsets, li: &li, sampler: sampler) // Direct light sampling
             }
         
             // Sample material, or return current values if it fails
-            guard let updated = bsdf(main: &main, offsets: offsets, li: &li) else { return li }
+            guard let updated = bsdf(main: &main, offsets: offsets, li: &li, sampler: sampler) else { return li }
             offsets = updated
             depth += 1
         }
@@ -330,7 +337,7 @@ final class PathReconnection: ShiftMapping {
     }
     
     /// Computes next event estimation lighting
-    private func light(main: inout RayState.Data, offsets: [RayState], li: inout ShiftResult) -> Void {
+    private func light(main: inout RayState.Data, offsets: [RayState], li: inout ShiftResult, sampler: Sampler) -> Void {
         let rngLight = sampler.next2()
         guard let lightSample = scene.sample(context: LightSample.Context(p: main.its.p, n: main.its.n, ns: main.its.n), s: rngLight) else { return }
         let mainFrame = Frame(n: main.its.n)
@@ -396,7 +403,7 @@ final class PathReconnection: ShiftMapping {
     }
 
     /// Computes the throughput resulting from bounces on a bsdf
-    private func bsdf(main: inout RayState.Data, offsets: [RayState], li: inout ShiftResult) -> [RayState]? {
+    private func bsdf(main: inout RayState.Data, offsets: [RayState], li: inout ShiftResult, sampler: Sampler) -> [RayState]? {
         let frame = Frame(n: main.its.n)
         let wo = frame.toLocal(v: -main.ray.d).normalized()
         guard !main.its.hasEmission, let mainSampledBsdf = main.its.shape.material.sample(wo: wo, uv: main.its.uv, p: main.its.p, sample: sampler.next2()) else { return nil }

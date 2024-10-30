@@ -82,7 +82,7 @@ final class PssmltIntegrator: Integrator {
         Task {
             defer { gcd.leave() }
             var progress = ProgressBar(count: nbChains, printer: Printer())
-            let img = await chains(samples: totalSamples, nbChains: nbChains, seeds: seeds, cdf: cdf, integrator: integrator, scene: scene) {
+            let img = await chains(samples: totalSamples, nbChains: nbChains, seeds: seeds, cdf: cdf, scene: scene) {
                 progress.next()
             }
             self.result = img
@@ -146,7 +146,7 @@ final class PssmltIntegrator: Integrator {
     }
 
     /// Create the async blocks responsible for rendering with a Markov Chain
-    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, integrator: SamplerIntegrator, scene: Scene, increment: @escaping () -> Void) async -> Array2d<Color> {
+    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, increment: @escaping () -> Void) async -> Array2d<Color> {
         return await withTaskGroup(of: Void.self, returning: Array2d<Color>.self) { group in
             let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
             var processed = 0
