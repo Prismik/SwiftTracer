@@ -39,8 +39,7 @@ final class GdmltIntegrator: Integrator {
             case Vec2(-1, 0), Vec2(0, -1):
                 delta = contrib - shiftContrib
             default:
-                // impossible
-                delta = .zero
+                fatalError("Invalid shift")
             }
             
             self.delta = delta
@@ -230,10 +229,11 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                 sampler.reject()
             }
             
+            let scale = 1 / Float(nspc)
             chain.add(state: &state)
-            chain.img.scale(by: 1 / Float(nspc))
-            chain.dx.scale(by: 1 / Float(nspc))
-            chain.dy.scale(by: 1 / Float(nspc))
+            chain.img.scale(by: scale)
+            chain.dx.scale(by: scale)
+            chain.dy.scale(by: scale)
             acc.img.merge(with: chain.img)
             acc.dx.merge(with: chain.dx)
             acc.dy.merge(with: chain.dy)
