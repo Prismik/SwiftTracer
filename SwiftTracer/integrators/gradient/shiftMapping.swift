@@ -53,7 +53,7 @@ protocol ShiftMapping {
 }
 
 struct ShiftMappingParams {
-    let offsets: [Vec2]?
+    let offsets: Set<Vec2>?
 }
 
 enum RayState {
@@ -96,16 +96,14 @@ enum RayState {
 final class RandomSequenceReplay: ShiftMapping {
     unowned var scene: Scene!
     
-    private var gradientOffsets: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+    private let gradientOffsets: Set<Vec2> = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
     func initialize(scene: Scene) {
         self.scene = scene
     }
 
     func shift(pixel: Vec2, sampler: Sampler, params: ShiftMappingParams) -> ShiftResult {
-        if let forceOffsets = params.offsets {
-            gradientOffsets = forceOffsets
-        }
+        let filteredOffsets = params.offsets.map { o in gradientOffsets.union(o) } ?? gradientOffsets
         let maxDepth = 16
         let minDepth = 0
         
@@ -288,7 +286,7 @@ final class PathReconnection: ShiftMapping {
 
     var stats = Stats()
 
-    private var gradientOffsets: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+    private let gradientOffsets: Set<Vec2> = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
     func initialize(scene: Scene) {
         self.scene = scene
@@ -296,9 +294,7 @@ final class PathReconnection: ShiftMapping {
     }
     
     func shift(pixel: Vec2, sampler: Sampler, params: ShiftMappingParams) -> ShiftResult {
-        if let forceOffsets = params.offsets {
-            gradientOffsets = forceOffsets
-        }
+        let filteredOffsets = params.offsets.map { o in gradientOffsets.union(o) } ?? gradientOffsets
 
         // TODO
         let maxDepth = 16
@@ -312,7 +308,7 @@ final class PathReconnection: ShiftMapping {
             return li
         }
         
-        var offsets = gradientOffsets.map { RayState.new(pixel: pixel, offset: $0, scene: scene) }
+        var offsets = filteredOffsets.map { RayState.new(pixel: pixel, offset: $0, scene: scene) }
         
         var depth = 1
         while depth <= maxDepth && depth >= minDepth {

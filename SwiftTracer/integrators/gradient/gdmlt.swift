@@ -77,6 +77,16 @@ final class GdmltIntegrator: Integrator {
         }
     }
     
+    private struct StartupSeed {
+        let value: UInt64
+        let targetFunction: Float
+        let shift: Color
+        let main: Color
+        let gradient: Color
+        let pos: Vec2
+        let offset: Vec2
+    }
+    
     /// Samples Per Chain
     private let nspc: Int
     /// Initialization Samples Count
@@ -190,14 +200,23 @@ extension GdmltIntegrator: GradientDomainIntegrator {
     }
     
     /// Computes the normalization factor
-    private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [(Float, UInt64)]) {
-        var seeds: [(Float, UInt64)] = []
+    private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [StartupSeed]) {
+        var seeds: [StartupSeed] = []
         let b = (0 ..< isc).map { _ in
             let currentSeed = sampler.rng.state
             
             let s = sample(scene: scene, sampler: sampler)
             if s.targetFunction > 0 {
-                seeds.append((s.targetFunction, currentSeed))
+                let values = StartupSeed(
+                    value: currentSeed,
+                    targetFunction: s.targetFunction,
+                    shift: s.shiftContrib,
+                    main: s.contrib,
+                    gradient: s.delta,
+                    pos: s.pos,
+                    offset: s.offset
+                )
+                seeds.append(values)
             }
 
             return s.targetFunction
@@ -206,7 +225,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
         for s in seeds {
-            cdf.add(s.0)
+            cdf.add(s.targetFunction)
         }
         
         print("Seeds count => \(seeds.count)")
@@ -214,7 +233,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         return (b, cdf, seeds)
     }
     
-    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, increment: @escaping () -> Void) async -> GradientDomainResult {
+    private func chains(samples: Int, nbChains: Int, seeds: [StartupSeed], cdf: DistributionOneDimention, scene: Scene, increment: @escaping () -> Void) async -> GradientDomainResult {
         return await withTaskGroup(of: Void.self, returning: GradientDomainResult.self) { group in
             let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
             let dx = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
@@ -236,20 +255,20 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         }
     }
     
-    private func renderChain(i: Int, total: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, into acc: inout GradientDomainResult) -> Void {
+    private func renderChain(i: Int, total: Int, seeds: [StartupSeed], cdf: DistributionOneDimention, scene: Scene, into acc: inout GradientDomainResult) -> Void {
         let id = (Float(i) + 0.5) / Float(total)
         let i = cdf.sampleDiscrete(id)
         let seed = seeds[i]
         let sampler = PSSMLTSampler(nbSamples: nspp)
         let previousSeed = sampler.rng.state
-        sampler.rng.state = seed.1
+        sampler.rng.state = seed.value
         
         // Reinitialize with appropriate sampler
         let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
         sampler.step = .large
         
         var state = self.sample(scene: scene, sampler: sampler)
-        guard state.targetFunction == seed.0 else { fatalError("Inconsistent seed-sample") }
+        guard state.targetFunction == seed.targetFunction else { fatalError("Inconsistent seed-sample") }
         sampler.accept()
 
         sampler.rng.state = previousSeed
