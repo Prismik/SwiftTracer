@@ -46,13 +46,14 @@ final class Scene {
         guard let sample = source.light.sampleLi(context: context, sample: updated) else { return nil }
         guard sample.p.visible(from: context.p, within: self) else { return nil }
         
+        // TODO Check the appropriate computations for source.prob
         return LightSample(L: sample.L / source.prob, wi: sample.wi, p: sample.p, n: sample.n, pdf: source.prob * sample.pdf)
     }
     
     func render() -> [Array2d<Color>] {
         if let gradientIntegrator = integrator as? GradientDomainIntegrator {
             let result: GradientDomainResult = gradientIntegrator.render(scene: self, sampler: sampler)
-            return [result.img, result.dx, result.dy]
+            return [result.img, result.dx, result.dy, result.primal]
         } else {
             return [integrator.render(scene: self, sampler: sampler)]
         }

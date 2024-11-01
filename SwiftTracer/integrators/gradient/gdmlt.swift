@@ -182,6 +182,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         let reconstruction = reconstructor.reconstruct(image: result.img, dx: result.dx, dy: result.dy)
         
         return GradientDomainResult(
+            primal: result.img,
             img: reconstruction,
             dx: result.dx.transformed { $0.abs },
             dy: result.dy.transformed { $0.abs }
@@ -218,7 +219,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
             let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
             let dx = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
             let dy = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-            var result = GradientDomainResult(img: img, dx: dx, dy: dy)
+            var result = GradientDomainResult(primal: img, img: img, dx: dx, dy: dy)
             var processed = 0
             for i in 0 ..< nbChains {
                 group.addTask {
@@ -253,7 +254,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
 
         sampler.rng.state = previousSeed
         
-        for n in 0 ..< nspc {
+        for _ in 0 ..< nspc {
             sampler.step = Float.random(in: 0 ... 1) < sampler.largeStepRatio
                 ? .large
                 : .small

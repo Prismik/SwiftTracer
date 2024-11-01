@@ -27,6 +27,7 @@ protocol SamplerIntegrator: AnyObject {
 }
 
 struct GradientDomainResult {
+    let primal: Array2d<Color>
     let img: Array2d<Color>
     let dx: Array2d<Color>
     let dy: Array2d<Color>

@@ -96,6 +96,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
 //        print("Successful shifts => \(successfulShifts)")
 //        print("Failed shifts     => \(failedShifts)")
         return GradientDomainResult(
+            primal: img,
             img: reconstruction,
             dx: dxGradients.transformed { $0.abs },
             dy: dyGradients.transformed { $0.abs }
@@ -129,9 +130,10 @@ extension GdptIntegrator: GradientDomainIntegrator {
     }
 
     private func renderBlock(scene: Scene, size: Vec2, x: Int, y: Int, mapper: ShiftMapping, sampler: Sampler) -> Block {
-        let img = Array2d(x: Int(size.x), y: Int(size.y), value: Color())
-        let dxGradients = Array2d<Color>(x: img.xSize + 1, y: img.ySize + 1, value: .zero)
-        let dyGradients = Array2d<Color>(x: img.xSize + 1, y: img.ySize + 1, value: .zero)
+        let imgSize = Vec2(size.x + 2, size.y + 2)
+        let img = Array2d(x: Int(imgSize.x), y: Int(imgSize.y), value: Color())
+        let dxGradients = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
+        let dyGradients = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
         for lx in 0 ..< Int(size.x) {
             for ly in 0 ..< Int(size.y) {
                 for _ in 0 ..< sampler.nbSamples {
@@ -140,15 +142,13 @@ extension GdptIntegrator: GradientDomainIntegrator {
 
                     let base = Vec2(Float(x), Float(y)) + sampler.next2()
                     let newResult = mapper.shift(pixel: base, sampler: sampler, params: ShiftMappingParams(offsets: nil))
-                    img[lx, ly] += newResult.main
+                    img[lx+1, ly+1] += newResult.main
                     
                     for (i, offset) in gradientOffsets.enumerated() {
-                        let xShift = lx + Int(offset.x)
-                        let yShift = ly + Int(offset.y)
+                        let xShift = lx + 1 + Int(offset.x)
+                        let yShift = ly + 1 + Int(offset.y)
                         
-                        // TODO Cleaner check
-                        // TODO img needs to be of the same size as dx and dy now, since we reuse primal from radiances of shifted paths
-                        if (0 ..< Int(size.x)).contains(xShift) && (0 ..< Int(size.y)).contains(yShift) {
+                        if (0 ..< img.xSize).contains(xShift) && (0 ..< img.ySize).contains(yShift) {
                             img[xShift, yShift] += newResult.radiances[i]
                         }
                         
@@ -181,18 +181,22 @@ extension GdptIntegrator: GradientDomainIntegrator {
 private extension [GdptIntegrator.Block] {
     func assemble(into image: Array2d<Color>, dx: Array2d<Color>, dy: Array2d<Color>) -> GradientDomainResult {
         for block in self {
-            for lx in (0 ..< Int(block.size.x)) {
-                for ly in (0 ..< Int(block.size.y)) {
+            for lx in (-1 ..< Int(block.size.x) + 1) {
+                for ly in (-1 ..< Int(block.size.y) + 1) {
                     let (x, y): (Int, Int) = (lx + Int(block.position.x), ly + Int(block.position.y))
-                    image[x, y] = block.image[lx, ly]
-                    if lx == 0 && x != 0 { dx[x - 1, y] += block.dxGradients[lx, ly] }
-                    if ly == 0 && y != 0 { dy[x, y - 1] += block.dyGradients[lx, ly] }
+                    guard x >= 0 && x < image.xSize else { continue }
+                    guard y >= 0 && y < image.ySize else { continue }
+
+                    // Radiances from shift, computed into previous positions
+                    image[x, y] += block.image[lx+1, ly+1]
+
+                    // Backward facing gradients
                     dx[x, y] += block.dxGradients[lx+1, ly+1]
                     dy[x, y] += block.dyGradients[lx+1, ly+1]
                 }
             }
         }
         
-        return GradientDomainResult(img: image, dx: dx, dy: dy)
+        return GradientDomainResult(primal: image, img: image, dx: dx, dy: dy)
     }
 }

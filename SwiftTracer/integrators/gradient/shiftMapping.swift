@@ -301,7 +301,7 @@ final class PathReconnection: ShiftMapping {
         }
 
         // TODO
-        let maxDepth = 16
+        let maxDepth = 1
         let minDepth = 0
         
         var li = ShiftResult()
@@ -473,7 +473,7 @@ final class PathReconnection: ShiftMapping {
                 let shiftDirectionOutLocal = frame.toLocal(v: shiftDirectionOutGlobal).normalized()
                 
                 let jacobian = (main.its.n.dot(-shiftDirectionOutGlobal) * main.its.t.pow(2)).abs()
-                / (main.its.n.dot(-main.ray.d) * (s.its.p - main.its.p).lengthSquared).abs()
+                    / (main.its.n.dot(-main.ray.d) * (s.its.p - main.its.p).lengthSquared).abs()
                 assert(jacobian.isFinite)
                 assert(jacobian >= 0)
                 
@@ -481,14 +481,15 @@ final class PathReconnection: ShiftMapping {
                 let shiftBsdfPdf = s.its.shape.material.pdf(wo: frame.toLocal(v: -s.ray.d), wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
                 let newThroughput = s.throughput * shiftBsdfValue * (jacobian / mainSampledBsdf.pdf)
                 let newPdf = s.pdf * shiftBsdfPdf * jacobian
-                let shiftLightPdf: Float = bounceLight.map { _ in
-                    guard bounceLightPdf != 0 else { return 0 }
+                let pair: (shiftLightRadiance: Color, shiftLightPdf: Float) = bounceLight.map { _ in
+                    guard bounceLightPdf != 0 else { return (.zero, 0) }
                     let ctx = LightSample.Context(p: s.its.p, n: s.its.n, ns: s.its.n)
-                    return main.its.shape.light.pdfLi(context: ctx, y: main.its.p)
-                } ?? 0
+                    let pdf = main.its.shape.light.pdfLi(context: ctx, y: main.its.p)
+                    return (shiftLightRadiance: bounceLightRadiance, shiftLightPdf: pdf)
+                } ?? (.zero, 0)
                 
-                let shiftWeightDem = (s.pdf / mainPdfPrev) * (shiftBsdfPdf + shiftLightPdf)
-                let shiftContrib = newThroughput * bounceLightRadiance
+                let shiftWeightDem = (s.pdf / mainPdfPrev) * (shiftBsdfPdf + pair.shiftLightPdf)
+                let shiftContrib = newThroughput * pair.shiftLightRadiance
                 result = (
                     shiftWeightDem,
                     shiftContrib,
@@ -498,7 +499,7 @@ final class PathReconnection: ShiftMapping {
             
             let lightDem = bounceLightPdf == 0 ? 1 : bounceLightPdf
             let mainWeightDem = mainSampledBsdf.pdf + bounceLightPdf
-            let weight = mainSampledBsdf.pdf / (mainWeightDem + result.weightDem + 0.00001)
+            let weight = mainSampledBsdf.pdf / (mainWeightDem + result.weightDem + 0.0000001)
             assert(weight.isFinite)
             assert(weight >= 0 && weight <= 1)
             li.main += mainBsdfContrib * weight / lightDem
