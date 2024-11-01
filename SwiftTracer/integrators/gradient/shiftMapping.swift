@@ -301,7 +301,7 @@ final class PathReconnection: ShiftMapping {
         }
 
         // TODO
-        let maxDepth = 1
+        let maxDepth = 16
         let minDepth = 0
         
         var li = ShiftResult()
@@ -348,7 +348,7 @@ final class PathReconnection: ShiftMapping {
 
         let mainWeightNum = lightSample.pdf
         let mainWeightDem = lightSample.pdf + mainBsdfPdf
-        let mainContrib = main.throughput * mainBsdfEval * lightSample.L
+        let mainContrib = main.throughput * mainBsdfEval * lightSample.L  / lightSample.pdf
         let mainGeometrySquaredLength = (main.its.p - lightSample.p).lengthSquared
         let mainGeometryCosLight = lightSample.n.dot(lightSample.wi)
         // Compute shift maps
@@ -358,7 +358,7 @@ final class PathReconnection: ShiftMapping {
             case .dead: result = (mainWeightNum / (0.0001 + mainWeightDem), .zero)
             case .connected(let s):
                 let dem = (s.pdf / main.pdf) * (lightSample.pdf + mainBsdfPdf)
-                let contrib = s.throughput * mainBsdfEval * lightSample.L
+                let contrib = s.throughput * mainBsdfEval * lightSample.L / lightSample.pdf
                 result = (dem, contrib)
             case .connectedRecently(let s):
                 let shiftDirectionInGlobal = (s.its.p - main.its.p).normalized()
@@ -368,10 +368,15 @@ final class PathReconnection: ShiftMapping {
                 let shiftBsdfPdf = main.its.shape.material.pdf(wo: shiftDirectionInLocal, wi: mainLightOutLocal, uv: s.its.uv, p: s.its.p)
                 let shiftBsdfValue = main.its.shape.material.evaluate(wo: shiftDirectionInLocal, wi: mainLightOutLocal, uv: s.its.uv, p: s.its.p)
                 let weightDem = (s.pdf / main.pdf) * (lightSample.pdf + shiftBsdfPdf)
-                let contrib = s.throughput * shiftBsdfValue * lightSample.L
+                let contrib = s.throughput * shiftBsdfValue * lightSample.L / lightSample.pdf
                 result = (weightDem, contrib)
             case .fresh(let s):
-                guard !s.its.hasEmission else { result = (0, .zero); break }
+                guard !s.its.hasEmission else {
+                    let frame = Frame(n: s.its.n)
+                    let wo = frame.toLocal(v: -s.ray.d)
+                    let contrib = s.its.shape.light.L(p: s.its.p, n: s.its.n, uv: s.its.uv, wo: wo)
+                    result = (0, contrib); break
+                }
                 
                 let ctx = LightSample.Context(p: s.its.p, n: s.its.n, ns: s.its.n)
                 let frame = Frame(n: s.its.n)
@@ -389,16 +394,17 @@ final class PathReconnection: ShiftMapping {
                 assert(jacobian.isFinite)
                 assert(jacobian >= 0)
                 let weightDem = (jacobian * (s.pdf / main.pdf)) * (shiftLightSample.pdf + shiftBsdfPdf)
-                let contrib = jacobian * s.throughput * shiftBsdfValue * shiftEmmiterRadiance
+                let contrib = jacobian * s.throughput * shiftBsdfValue * shiftEmmiterRadiance / shiftLightSample.pdf
                 result = (weightDem, contrib)
             }
             
             let weight = mainWeightNum / (mainWeightDem + result.shiftWeightDem)
+//            let weight: Float = 1
             assert(weight.isFinite)
             assert(weight >= 0 && weight <= 1)
-            li.main += mainContrib * weight / lightSample.pdf
-            li.radiances[i] += result.shiftContrib * weight / lightSample.pdf
-            li.gradients[i] += (result.shiftContrib / lightSample.pdf - mainContrib / lightSample.pdf) * weight
+            li.main += mainContrib * weight
+            li.radiances[i] += result.shiftContrib * weight
+            li.gradients[i] += (result.shiftContrib - mainContrib) * weight
         }
     }
 

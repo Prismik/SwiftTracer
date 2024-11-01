@@ -58,7 +58,7 @@ class Array2d<T: AdditiveArithmetic> {
     init(copy: Array2d<T>) {
         self.xSize = copy.xSize
         self.ySize = copy.ySize
-        self.storage = copy.storage
+        self.storage = Array(copy.storage)
     }
     
     init(x: Int, y: Int, value: T) {
