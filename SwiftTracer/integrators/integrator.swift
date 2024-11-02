@@ -16,6 +16,7 @@ enum IntegratorType: String, Decodable {
     case pssmlt
     case gdmlt
     case gdpt
+    case timeboxed
 }
 
 /// Integrating one pixel at a time.
@@ -36,6 +37,7 @@ struct GradientDomainResult {
 /// Integraeting in using gradients of the image plane.
 protocol GradientDomainIntegrator {
     func render(scene: Scene, sampler: Sampler) -> GradientDomainResult
+    func reconstruct(using gdr: GradientDomainResult) -> GradientDomainResult
 }
 
 protocol Integrator {
@@ -92,6 +94,11 @@ struct AnyIntegrator: Decodable {
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
             let reconstructor = try params.decode(AnyReconstruction.self, forKey: .reconstruction)
             self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc)
+        case .timeboxed:
+            let params = try container.nestedContainer(keyedBy: TimeboxedIntegrator.CodingKeys.self, forKey: .params)
+            let time = try params.decode(Int.self, forKey: .time)
+            let integrator = try params.decode(AnyIntegrator.self, forKey: .integrator)
+            self.wrapped = TimeboxedIntegrator(integrator: integrator.wrapped, time: time)
         }
     }
 }

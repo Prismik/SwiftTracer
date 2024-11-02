@@ -61,6 +61,12 @@ class Array2d<T: AdditiveArithmetic> {
         self.storage = Array(copy.storage)
     }
     
+    init(xSize: Int, ySize: Int, storage: [T]) {
+        self.xSize = xSize
+        self.ySize = ySize
+        self.storage = storage
+    }
+
     init(x: Int, y: Int, value: T) {
         self.xSize = x
         self.ySize = y
@@ -107,13 +113,6 @@ class Array2d<T: AdditiveArithmetic> {
             total += value
             storage[i] = current + value
         }
-    }
-
-    /// Substracts `value` to the current value at index (x, y)
-    func substract(value: T, _ x: Int, _ y: Int) {
-        let current = storage[index(x, y)]
-        total -= value
-        storage[index(x, y)] = current - value
     }
     
     /// For each values in `other`, add them into `self`.
@@ -163,6 +162,20 @@ class Array2d<T: AdditiveArithmetic> {
     
     internal func index2d(_ i: Int) -> (Int, Int) {
         return (i % xSize, i / xSize)
+    }
+}
+
+extension Array2d {
+    static func +(lhs: Array2d, rhs: Array2d) -> Array2d {
+        guard lhs.size == rhs.size else {
+            fatalError("Attempting to add \(lhs.size) sized Array2d to \(rhs.size) sized Array2d. Size values must match.")
+        }
+
+        return Array2d(xSize: lhs.xSize, ySize: lhs.ySize, storage: zip(lhs.storage, rhs.storage).map(+))
+    }
+    
+    static func +=(lhs: inout Array2d, rhs: Array2d) {
+        lhs = lhs + rhs
     }
 }
 

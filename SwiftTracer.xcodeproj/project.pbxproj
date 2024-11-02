@@ -51,6 +51,10 @@
 		194480C52CA8CA0C002A90C6 /* SwiftWavefront in Frameworks */ = {isa = PBXBuildFile; productRef = 194480C42CA8CA0C002A90C6 /* SwiftWavefront */; };
 		194480C72CA8CA22002A90C6 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 194480C62CA8CA22002A90C6 /* Progress */; };
 		194480C92CA8CA38002A90C6 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 194480C82CA8CA38002A90C6 /* Algorithms */; };
+		1946325B2CD6B9C8003D52BA /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 1946325A2CD6B9C8003D52BA /* Collections */; };
+		1946325D2CD6B9C8003D52BA /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 1946325C2CD6B9C8003D52BA /* OrderedCollections */; };
+		1946325F2CD6BB07003D52BA /* timeboxed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946325E2CD6BAF5003D52BA /* timeboxed.swift */; };
+		194632602CD6BB07003D52BA /* timeboxed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946325E2CD6BAF5003D52BA /* timeboxed.swift */; };
 		194D901E2C90D3B200D05F58 /* pssmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901D2C90D3B200D05F58 /* pssmlt.swift */; };
 		194D90202C90D63400D05F58 /* pssmltSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901F2C90D63400D05F58 /* pssmltSampler.swift */; };
 		196094BD2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */; };
@@ -299,6 +303,7 @@
 		194480992CA8A5C1002A90C6 /* rng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rng.swift; sourceTree = "<group>"; };
 		1944809B2CA8AD30002A90C6 /* distribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = distribution.swift; sourceTree = "<group>"; };
 		194480A02CA8C788002A90C6 /* rngTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rngTest.swift; sourceTree = "<group>"; };
+		1946325E2CD6BAF5003D52BA /* timeboxed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = timeboxed.swift; sourceTree = "<group>"; };
 		194D901D2C90D3B200D05F58 /* pssmlt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmlt.swift; sourceTree = "<group>"; };
 		194D901F2C90D63400D05F58 /* pssmltSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmltSampler.swift; sourceTree = "<group>"; };
 		196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBoxPssmlt.json; sourceTree = "<group>"; };
@@ -439,10 +444,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1946325B2CD6B9C8003D52BA /* Collections in Frameworks */,
 				1982F6B32C9B8757000FF286 /* PNG in Frameworks */,
 				19E808392B2B698900A37D37 /* ArgumentParser in Frameworks */,
 				19737CED2C27457900F49204 /* SwiftWavefront in Frameworks */,
 				1944809F2CA8B0D5002A90C6 /* Algorithms in Frameworks */,
+				1946325D2CD6B9C8003D52BA /* OrderedCollections in Frameworks */,
 				1999D07C2C1003A100358201 /* Progress in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -713,6 +720,7 @@
 				1999D0512C0F853000358201 /* uv.swift */,
 				1999D09F2C1361BB00358201 /* direct.swift */,
 				194D901D2C90D3B200D05F58 /* pssmlt.swift */,
+				1946325E2CD6BAF5003D52BA /* timeboxed.swift */,
 			);
 			path = integrators;
 			sourceTree = "<group>";
@@ -821,6 +829,8 @@
 				19737CEC2C27457900F49204 /* SwiftWavefront */,
 				1982F6B22C9B8757000FF286 /* PNG */,
 				1944809E2CA8B0D5002A90C6 /* Algorithms */,
+				1946325A2CD6B9C8003D52BA /* Collections */,
+				1946325C2CD6B9C8003D52BA /* OrderedCollections */,
 			);
 			productName = SwiftTracer;
 			productReference = 19E8082B2B2B664400A37D37 /* SwiftTracer */;
@@ -869,6 +879,7 @@
 				19737CEB2C27445100F49204 /* XCRemoteSwiftPackageReference "SwiftWavefront" */,
 				1982F6B12C9B8757000FF286 /* XCRemoteSwiftPackageReference "swift-png" */,
 				1944809D2CA8B0D5002A90C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+				194632592CD6B9C8003D52BA /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 19E8082C2B2B664400A37D37 /* Products */;
 			projectDirPath = "";
@@ -997,6 +1008,7 @@
 				194480B92CA8C91D002A90C6 /* integrator.swift in Sources */,
 				194480B52CA8C905002A90C6 /* spot.swift in Sources */,
 				196094FB2CBB4699009FDAC4 /* pathTest.swift in Sources */,
+				1946325F2CD6BB07003D52BA /* timeboxed.swift in Sources */,
 				196094E92CB87C6B009FDAC4 /* float+extensions.swift in Sources */,
 				194480AA2CA8C8AE002A90C6 /* mesh.swift in Sources */,
 				194480A32CA8C835002A90C6 /* shape.swift in Sources */,
@@ -1039,6 +1051,7 @@
 				19BBA7272BF97AAA00981204 /* integrator.swift in Sources */,
 				1917635E2C20E927007688D4 /* spot.swift in Sources */,
 				19C0A70F2C06AA8400A7A0FD /* bvh.swift in Sources */,
+				194632602CD6BB07003D52BA /* timeboxed.swift in Sources */,
 				19EFB3C22C010833005CC488 /* sampler.swift in Sources */,
 				1944809A2CA8A5C1002A90C6 /* rng.swift in Sources */,
 				19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */,
@@ -1407,6 +1420,14 @@
 				minimumVersion = 1.2.0;
 			};
 		};
+		194632592CD6B9C8003D52BA /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.4;
+			};
+		};
 		19737CEB2C27445100F49204 /* XCRemoteSwiftPackageReference "SwiftWavefront" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Prismik/SwiftWavefront";
@@ -1461,6 +1482,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1944809D2CA8B0D5002A90C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
 			productName = Algorithms;
+		};
+		1946325A2CD6B9C8003D52BA /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 194632592CD6B9C8003D52BA /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		1946325C2CD6B9C8003D52BA /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 194632592CD6B9C8003D52BA /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 		196094EC2CB87EFB009FDAC4 /* ArgumentParser */ = {
 			isa = XCSwiftPackageProductDependency;

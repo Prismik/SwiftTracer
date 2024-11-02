@@ -8,6 +8,12 @@
 import Foundation
 import Progress
 
+protocol GradientStateMCMC {
+    var pos: Vec2 { get }
+    var weight: Float { get }
+    var targetFunction: Float { get }
+}
+
 final class GdmltIntegrator: Integrator {
     enum CodingKeys: String, CodingKey {
         case shiftMapping
@@ -16,7 +22,57 @@ final class GdmltIntegrator: Integrator {
         case reconstruction
     }
 
-    internal struct StateMCMC {
+    internal enum StrategyGradientMCMC {
+        case multi
+        case single
+        
+        func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention) -> GradientStateMCMC {
+            return switch self {
+                case .multi: MultiStateMCMC.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: cdf)
+                case .single: SingleStateMCMC.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: cdf)
+            }
+        }
+    }
+    
+    internal struct MultiStateMCMC: GradientStateMCMC {
+        var pos: Vec2
+        var weight: Float = 0
+        var targetFunction: Float = 0
+        
+        private static let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
+
+        init(contrib: Color, pos: Vec2, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2) {
+            self.pos = pos
+            
+            let shiftedLuminance: Float = MultiStateMCMC.shifts.enumerated().reduce(into: 0) { (acc, pair) in
+                let (i, offset) = pair
+                let forward = offset.sum() > 0
+                let delta = if forward { gradients[i] } else { gradients[i] * -1 }
+                acc += (shiftContribs[i].x + shiftContribs[i].y + shiftContribs[i].z) / 3
+            } / Float(MultiStateMCMC.shifts.count)
+            
+            let luminance = (contrib.x + contrib.y + contrib.z) / 3
+            self.targetFunction = shiftedLuminance.abs() + alpha * (luminance).abs()
+        }
+        
+        static func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention) -> GradientStateMCMC {
+            let rng2 = sampler.next2()
+
+            let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
+            let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
+            let pixel = Vec2(Float(x), Float(y))
+            let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil))
+
+            return MultiStateMCMC(
+                contrib: result.main,
+                pos: pixel,
+                shiftContribs: result.radiances,
+                gradients: result.gradients
+            )
+        }
+    }
+    
+    internal struct SingleStateMCMC: GradientStateMCMC {
         var pos: Vec2
         var offset: Vec2
         var contrib: Color
@@ -25,7 +81,9 @@ final class GdmltIntegrator: Integrator {
         var targetFunction: Float = 0
         let delta: Color
 
-        init(contrib: Color, pos: Vec2, offset: Vec2, shiftContrib: Color, gradient: Color, alpha: Float = 0.3) {
+        private static let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
+
+        init(contrib: Color, pos: Vec2, offset: Vec2, shiftContrib: Color, gradient: Color, alpha: Float = 0.2) {
             self.contrib = contrib
             self.pos = pos
             self.offset = offset
@@ -34,9 +92,30 @@ final class GdmltIntegrator: Integrator {
             let forward = offset.sum() > 0
             self.delta = if forward { gradient } else { gradient * -1 }
             
+            let nz: Float = contrib != .zero && shiftContrib != .zero
+                ? 0.5
+                : 1
             let luminance = (contrib.x + contrib.y + contrib.z) / 3
-            let shiftedLuminance = (shiftContrib.x + shiftContrib.y + shiftContrib.z) / 3
-            self.targetFunction = shiftedLuminance.abs() + alpha * (0.25 * luminance).abs()
+            let gradientLuminance = (delta.x + delta.y + delta.z) * nz / 3
+            self.targetFunction = gradientLuminance.abs() + alpha * (0.25 * luminance).abs()
+        }
+        
+        static func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention) -> GradientStateMCMC {
+            let rng2 = sampler.next2()
+
+            let id = cdf.sampleDiscrete(sampler.next())
+            let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
+            let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
+            let pixel = Vec2(Float(x), Float(y))
+            let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: [shifts[id]]))
+
+            return SingleStateMCMC(
+                contrib: result.main,
+                pos: pixel,
+                offset: shifts[id],
+                shiftContrib: result.radiances[id],
+                gradient: result.gradients[id]
+            )
         }
     }
     
@@ -52,7 +131,7 @@ final class GdmltIntegrator: Integrator {
         }
 
         // TODO Rework this
-        func add(state: inout StateMCMC) {
+        func add(state: inout SingleStateMCMC) {
             let w = state.targetFunction == 0
                 ? 0
                 : state.weight / state.targetFunction
@@ -123,7 +202,7 @@ final class GdmltIntegrator: Integrator {
         return result.img
     }
     
-    func sample(scene: Scene, sampler: Sampler) -> StateMCMC {
+    func sample(scene: Scene, sampler: Sampler) -> SingleStateMCMC {
         let rng2 = sampler.next2()
 
         let id = shiftCdf.sampleDiscrete(sampler.next())
@@ -132,8 +211,7 @@ final class GdmltIntegrator: Integrator {
         let pixel = Vec2(Float(x), Float(y))
         let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: [shifts[id]]))
 
-        //if !contrib.hasColor { zeroColorFound += 1 }
-        return StateMCMC(
+        return SingleStateMCMC(
             contrib: result.main,
             pos: pixel,
             offset: shifts[id],
@@ -174,7 +252,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         Task {
             defer { gcd.leave() }
             var progress = ProgressBar(count: nbChains, printer: Printer())
-            let result = await chains(samples: totalSamples, nbChains: nbChains, seeds: seeds, cdf: cdf, scene: scene) { progress.next() }
+            let result = await chains(samples: totalSamples, nbChains: nbChains, seeds: seeds, cdf: cdf, b: b, scene: scene) { progress.next() }
             self.result = result
         }
         gcd.wait()
@@ -189,13 +267,23 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         // TODO Scale contents of images
         print("Reconstructing with dx and dy ...")
         result.img.scale(by: b / averageLuminance)
-        let reconstruction = reconstructor.reconstruct(image: result.img, dx: result.dx, dy: result.dy)
-        
+
         return GradientDomainResult(
             primal: result.img,
-            img: reconstruction,
+            img: result.img,
             dx: result.dx.transformed { $0.abs },
             dy: result.dy.transformed { $0.abs }
+        )
+    }
+    
+    func reconstruct(using gdr: GradientDomainResult) -> GradientDomainResult {
+        print("Reconstructing with dx and dy ...")
+        let reconstruction = reconstructor.reconstruct(image: gdr.img, dx: gdr.dx, dy: gdr.dy)
+        return GradientDomainResult(
+            primal: gdr.img,
+            img: reconstruction,
+            dx: gdr.dx,
+            dy: gdr.dy
         )
     }
     
@@ -233,7 +321,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         return (b, cdf, seeds)
     }
     
-    private func chains(samples: Int, nbChains: Int, seeds: [StartupSeed], cdf: DistributionOneDimention, scene: Scene, increment: @escaping () -> Void) async -> GradientDomainResult {
+    private func chains(samples: Int, nbChains: Int, seeds: [StartupSeed], cdf: DistributionOneDimention, b: Float, scene: Scene, increment: @escaping () -> Void) async -> GradientDomainResult {
         return await withTaskGroup(of: Void.self, returning: GradientDomainResult.self) { group in
             let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
             let dx = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
@@ -243,7 +331,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
             for i in 0 ..< nbChains {
                 group.addTask {
                     increment()
-                    return self.renderChain(i: i, total: nbChains, seeds: seeds, cdf: cdf, scene: scene, into: &result)
+                    return self.renderChain(i: i, total: nbChains, seeds: seeds, cdf: cdf, b: b, scene: scene, into: &result)
                 }
             }
             
@@ -255,7 +343,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         }
     }
     
-    private func renderChain(i: Int, total: Int, seeds: [StartupSeed], cdf: DistributionOneDimention, scene: Scene, into acc: inout GradientDomainResult) -> Void {
+    private func renderChain(i: Int, total: Int, seeds: [StartupSeed], cdf: DistributionOneDimention, b: Float, scene: Scene, into acc: inout GradientDomainResult) -> Void {
         let id = (Float(i) + 0.5) / Float(total)
         let i = cdf.sampleDiscrete(id)
         let seed = seeds[i]

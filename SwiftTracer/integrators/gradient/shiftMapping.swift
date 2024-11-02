@@ -5,6 +5,8 @@
 //  Created by Francis Beauchamp on 2024-10-08.
 //
 
+import Collections
+
 enum ShiftMappingOperator: String, Decodable {
     case rsr
     case pathReconnection
@@ -42,7 +44,9 @@ struct ShiftResult {
 }
 
 protocol ShiftMapping {
-    /// Tries calculating the contribution of a shifted pixel, returning nil when the shift fails.
+    var gradientOffsets: OrderedSet<Vec2> { get }
+
+    /// Calculating the contribution of shifted pixels along with the base path and their finite differences.
     func shift(
         pixel: Vec2,
         sampler: Sampler,
@@ -93,10 +97,12 @@ enum RayState {
     }
 }
 
+// MARK:  Random sequence replay
+
 final class RandomSequenceReplay: ShiftMapping {
     unowned var scene: Scene!
     
-    private let gradientOffsets: Set<Vec2> = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+    let gradientOffsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
     func initialize(scene: Scene) {
         self.scene = scene
@@ -275,6 +281,8 @@ final class RandomSequenceReplay: ShiftMapping {
     }
 }
 
+// MARK:  Path reconnection
+
 final class PathReconnection: ShiftMapping {
     struct Stats {
         var successfulConnections: Int = 0
@@ -286,7 +294,7 @@ final class PathReconnection: ShiftMapping {
 
     var stats = Stats()
 
-    private let gradientOffsets: Set<Vec2> = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+    let gradientOffsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
     func initialize(scene: Scene) {
         self.scene = scene

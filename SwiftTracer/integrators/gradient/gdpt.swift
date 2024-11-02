@@ -24,7 +24,6 @@ final class GdptIntegrator: Integrator {
     private var successfulShifts: Int = 0
     private var failedShifts: Int = 0
 
-    private let gradientOffsets: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
     init(mapper: ShiftMapping, reconstructor: Reconstructing, maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
         self.mapper = mapper
         self.reconstructor = reconstructor
@@ -89,19 +88,27 @@ extension GdptIntegrator: GradientDomainIntegrator {
         
         gcd.wait()
         
-        print("Reconstructing with dx and dy ...")
-        let reconstruction = reconstructor.reconstruct(image: img, dx: dxGradients, dy: dyGradients)
-        
         // Rework how these stats are built within the shift happening along the main path
 //        print("Successful shifts => \(successfulShifts)")
 //        print("Failed shifts     => \(failedShifts)")
         return GradientDomainResult(
             primal: img,
-            img: reconstruction,
+            img: img,
             dx: dxGradients.transformed { $0.abs },
             dy: dyGradients.transformed { $0.abs }
         )
         
+    }
+    
+    func reconstruct(using gdr: GradientDomainResult) -> GradientDomainResult {
+        print("Reconstructing with dx and dy ...")
+        let reconstruction = reconstructor.reconstruct(image: gdr.img, dx: gdr.dx, dy: gdr.dy)
+        return GradientDomainResult(
+            primal: gdr.img,
+            img: reconstruction,
+            dx: gdr.dx,
+            dy: gdr.dy
+        )
     }
     
     private func renderBlocks(blockSize: Int = 32, scene: Scene, mapper: ShiftMapping, sampler: Sampler, increment: @escaping () -> Void) async -> [Block] {
@@ -144,7 +151,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
                     let newResult = mapper.shift(pixel: base, sampler: sampler, params: ShiftMappingParams(offsets: nil))
                     img[lx+1, ly+1] += newResult.main
                     
-                    for (i, offset) in gradientOffsets.enumerated() {
+                    for (i, offset) in mapper.gradientOffsets.enumerated() {
                         let xShift = lx + 1 + Int(offset.x)
                         let yShift = ly + 1 + Int(offset.y)
                         
