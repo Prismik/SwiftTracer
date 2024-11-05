@@ -14,12 +14,32 @@
         "nspp": 3
     },
     "integrator": {
-        "type": "pssmlt",
+        "type": "timeboxed",
         "params": {
             "samplesPerChain": 1000,
             "initSamplesCount": 100000,
             "mis": true,
-            "strategy": "mis"
+            "strategy": "mis",
+            "shiftMapping": { "type": "pathReconnection" },
+            "reconstruction": {
+                "type": "iterative",
+                "maxIterations": 50
+            },
+            "time": 90,
+            "integrator": {
+                "type": "gdmlt",
+                "params": {
+                    "samplesPerChain": 1000,
+                    "initSamplesCount": 100000,
+                    "mis": true,
+                    "strategy": "mis",
+                    "shiftMapping": { "type": "pathReconnection" },
+                    "reconstruction": {
+                        "type": "iterative",
+                        "maxIterations": 50
+                    }
+                }
+            }
         }
     },
     "materials": [
@@ -64,16 +84,19 @@
         }
     ],
     "shapes": [{
-        "type": "quad",
+        "type": "mesh",
         "transform": [
             {
-                "axis": [1, 0, 0],
-                "angle": 90
+                "scale": [350, 20, 350]
             },
             {
-                "translate": [0, 638, 0]
+                "rotation": [0, 0, 0]
+            },
+            {
+                "o": [0, 572, 0]
             }
         ],
+        "filename": "cube",
         "material": "intheway_box"
     }, {
         "transform": [

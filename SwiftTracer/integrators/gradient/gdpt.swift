@@ -94,10 +94,9 @@ extension GdptIntegrator: GradientDomainIntegrator {
         return GradientDomainResult(
             primal: img,
             img: img,
-            dx: dxGradients.transformed { $0.abs },
-            dy: dyGradients.transformed { $0.abs }
+            dx: dxGradients,
+            dy: dyGradients
         )
-        
     }
     
     func reconstruct(using gdr: GradientDomainResult) -> GradientDomainResult {
@@ -106,8 +105,8 @@ extension GdptIntegrator: GradientDomainIntegrator {
         return GradientDomainResult(
             primal: gdr.img,
             img: reconstruction,
-            dx: gdr.dx,
-            dy: gdr.dy
+            dx: gdr.dx.transformed { $0.abs },
+            dy: gdr.dy.transformed { $0.abs }
         )
     }
     
@@ -137,6 +136,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
     }
 
     private func renderBlock(scene: Scene, size: Vec2, x: Int, y: Int, mapper: ShiftMapping, sampler: Sampler) -> Block {
+        let sampler = sampler.new()
         let imgSize = Vec2(size.x + 2, size.y + 2)
         let img = Array2d(x: Int(imgSize.x), y: Int(imgSize.y), value: Color())
         let dxGradients = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)

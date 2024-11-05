@@ -10,8 +10,12 @@ import Progress
 
 protocol GradientStateMCMC {
     var pos: Vec2 { get }
-    var weight: Float { get }
+    var weight: Float { get set }
     var targetFunction: Float { get }
+    var offsets: [Vec2] { get }
+    var delta: [Color] { get }
+    var shiftContrib: [Color] { get }
+    var contrib: Color { get }
 }
 
 final class GdmltIntegrator: Integrator {
@@ -35,24 +39,37 @@ final class GdmltIntegrator: Integrator {
     }
     
     internal struct MultiStateMCMC: GradientStateMCMC {
+        let contrib: Color
         var pos: Vec2
         var weight: Float = 0
         var targetFunction: Float = 0
-        
-        private static let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
+        let delta: [Color]
+        let shiftContrib: [Color]
+        let offsets = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
         init(contrib: Color, pos: Vec2, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2) {
+            self.contrib = contrib
             self.pos = pos
-            
-            let shiftedLuminance: Float = MultiStateMCMC.shifts.enumerated().reduce(into: 0) { (acc, pair) in
-                let (i, offset) = pair
-                let forward = offset.sum() > 0
-                let delta = if forward { gradients[i] } else { gradients[i] * -1 }
-                acc += (shiftContribs[i].x + shiftContribs[i].y + shiftContribs[i].z) / 3
-            } / Float(MultiStateMCMC.shifts.count)
+            self.shiftContrib = shiftContribs
+            let offsets = self.offsets // Weird quirk about accessing self.delta
+            self.delta = gradients.enumerated().map({ (i, gradient) in
+                let forward = offsets[i].sum() > 0
+                let nz: Float = contrib != .zero && shiftContribs[i] != .zero
+                    ? 0.5
+                    : 1
+                return if forward { gradient * nz } else { gradient * nz * -1 }
+            })
+
+            let gradientLuminance: Float = offsets.enumerated().reduce(into: 0) { (acc, pair) in
+                let (i, _) = pair
+                let nz: Float = contrib != .zero && shiftContribs[i] != .zero
+                    ? 0.5
+                    : 1
+                acc += nz * (gradients[i].x + gradients[i].y + gradients[i].z) / 3
+            } / Float(offsets.count)
             
             let luminance = (contrib.x + contrib.y + contrib.z) / 3
-            self.targetFunction = shiftedLuminance.abs() + alpha * (luminance).abs()
+            self.targetFunction = gradientLuminance.abs() + alpha * (luminance).abs()
         }
         
         static func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention) -> GradientStateMCMC {
@@ -74,29 +91,29 @@ final class GdmltIntegrator: Integrator {
     
     internal struct SingleStateMCMC: GradientStateMCMC {
         var pos: Vec2
-        var offset: Vec2
         var contrib: Color
-        var shiftContrib: Color
+        let shiftContrib: [Color]
         var weight: Float = 0
         var targetFunction: Float = 0
-        let delta: Color
+        let delta: [Color]
+        let offsets: [Vec2]
 
         private static let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
 
         init(contrib: Color, pos: Vec2, offset: Vec2, shiftContrib: Color, gradient: Color, alpha: Float = 0.2) {
             self.contrib = contrib
             self.pos = pos
-            self.offset = offset
-            self.shiftContrib = shiftContrib
+            self.offsets = [offset]
+            self.shiftContrib = [shiftContrib]
             
             let forward = offset.sum() > 0
-            self.delta = if forward { gradient } else { gradient * -1 }
+            self.delta = if forward { [gradient] } else { [gradient * -1] }
             
             let nz: Float = contrib != .zero && shiftContrib != .zero
                 ? 0.5
                 : 1
             let luminance = (contrib.x + contrib.y + contrib.z) / 3
-            let gradientLuminance = (delta.x + delta.y + delta.z) * nz / 3
+            let gradientLuminance = (delta[0].x + delta[0].y + delta[0].z) * nz / 3
             self.targetFunction = gradientLuminance.abs() + alpha * (0.25 * luminance).abs()
         }
         
@@ -131,7 +148,7 @@ final class GdmltIntegrator: Integrator {
         }
 
         // TODO Rework this
-        func add(state: inout SingleStateMCMC) {
+        func add(state: inout GradientStateMCMC) {
             let w = state.targetFunction == 0
                 ? 0
                 : state.weight / state.targetFunction
@@ -140,18 +157,24 @@ final class GdmltIntegrator: Integrator {
             img[x, y] += state.contrib * w
             
             state.weight = 0
-            
-            let x2 = Int(state.pos.x + state.offset.x)
-            let y2 = Int(state.pos.y + state.offset.y)
-            switch state.offset {
-            case Vec2(1, 0),  Vec2(-1, 0):
-                guard (0 ..< dx.xSize).contains(x2) && (0 ..< dx.ySize).contains(y2) else { return }
-                dx[x2, y2] += state.delta * w
-            case Vec2(0, 1), Vec2(0, -1):
-                guard (0 ..< dy.xSize).contains(x2) && (0 ..< dy.ySize).contains(y2) else { return }
-                dy[x2, y2] += state.delta * w
-            default:
-                fatalError("Invalid shift")
+            for (i, offset) in state.offsets.enumerated() {
+                let x2 = Int(state.pos.x + offset.x)
+                let y2 = Int(state.pos.y + offset.y)
+                
+                if (0 ..< img.xSize).contains(x2) && (0 ..< img.ySize).contains(y2) {
+                    img[x2, y2] += state.shiftContrib[i] * w
+                }
+                
+                switch offset {
+                case Vec2(1, 0),  Vec2(-1, 0):
+                    guard (0 ..< dx.xSize).contains(x2) && (0 ..< dx.ySize).contains(y2) else { return }
+                    dx[x2, y2] += state.delta[i] * w
+                case Vec2(0, 1), Vec2(0, -1):
+                    guard (0 ..< dy.xSize).contains(x2) && (0 ..< dy.ySize).contains(y2) else { return }
+                    dy[x2, y2] += state.delta[i] * w
+                default:
+                    fatalError("Invalid shift")
+                }
             }
         }
     }
@@ -159,11 +182,6 @@ final class GdmltIntegrator: Integrator {
     private struct StartupSeed {
         let value: UInt64
         let targetFunction: Float
-        let shift: Color
-        let main: Color
-        let gradient: Color
-        let pos: Vec2
-        let offset: Vec2
     }
     
     /// Samples Per Chain
@@ -175,6 +193,7 @@ final class GdmltIntegrator: Integrator {
 
     private var result: GradientDomainResult?
 
+    private let strategy: StrategyGradientMCMC = .multi
     private let integrator: SamplerIntegrator
     private let reconstructor: Reconstructing
     private let mapper: any ShiftMapping
@@ -200,24 +219,6 @@ final class GdmltIntegrator: Integrator {
     func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
         let result: GradientDomainResult = render(scene: scene, sampler: sampler)
         return result.img
-    }
-    
-    func sample(scene: Scene, sampler: Sampler) -> SingleStateMCMC {
-        let rng2 = sampler.next2()
-
-        let id = shiftCdf.sampleDiscrete(sampler.next())
-        let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
-        let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
-        let pixel = Vec2(Float(x), Float(y))
-        let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: [shifts[id]]))
-
-        return SingleStateMCMC(
-            contrib: result.main,
-            pos: pixel,
-            offset: shifts[id],
-            shiftContrib: result.radiances[id],
-            gradient: result.gradients[id]
-        )
     }
 }
 
@@ -265,14 +266,13 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         
         // TODO Print stats
         // TODO Scale contents of images
-        print("Reconstructing with dx and dy ...")
         result.img.scale(by: b / averageLuminance)
 
         return GradientDomainResult(
             primal: result.img,
             img: result.img,
-            dx: result.dx.transformed { $0.abs },
-            dy: result.dy.transformed { $0.abs }
+            dx: result.dx,
+            dy: result.dy
         )
     }
     
@@ -282,8 +282,8 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         return GradientDomainResult(
             primal: gdr.img,
             img: reconstruction,
-            dx: gdr.dx,
-            dy: gdr.dy
+            dx: gdr.dx.transformed { $0.abs },
+            dy: gdr.dy.transformed { $0.abs }
         )
     }
     
@@ -293,16 +293,11 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         let b = (0 ..< isc).map { _ in
             let currentSeed = sampler.rng.state
             
-            let s = sample(scene: scene, sampler: sampler)
+            let s = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf)
             if s.targetFunction > 0 {
                 let values = StartupSeed(
                     value: currentSeed,
-                    targetFunction: s.targetFunction,
-                    shift: s.shiftContrib,
-                    main: s.contrib,
-                    gradient: s.delta,
-                    pos: s.pos,
-                    offset: s.offset
+                    targetFunction: s.targetFunction
                 )
                 seeds.append(values)
             }
@@ -355,7 +350,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
         sampler.step = .large
         
-        var state = self.sample(scene: scene, sampler: sampler)
+        var state = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf)
         guard state.targetFunction == seed.targetFunction else { fatalError("Inconsistent seed-sample") }
         sampler.accept()
 
@@ -366,7 +361,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                 ? .large
                 : .small
             
-            var proposedState = self.sample(scene: scene, sampler: sampler)
+            var proposedState = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf)
             let acceptProbability = proposedState.targetFunction < 0 || proposedState.contrib.hasNaN
                 ? 0
                 : min(1.0, proposedState.targetFunction / state.targetFunction)

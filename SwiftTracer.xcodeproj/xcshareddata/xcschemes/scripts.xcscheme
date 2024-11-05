@@ -65,7 +65,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--inputs  /Users/fbp/Code/out.png"
+            argument = "--inputs  /Users/fbp/Documents/out.png"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

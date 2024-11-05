@@ -25,7 +25,6 @@ struct MeanSquaredError {
             let delta = o * max - compared[i] * max
             let squared = delta * delta
             acc += (squared.x + squared.y + squared.z) / 3
-            
         }
 
         let result = squaredErrorSum / Float(original.size)

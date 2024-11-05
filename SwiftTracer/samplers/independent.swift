@@ -26,7 +26,14 @@ final class IndependentSampler: Sampler {
         Float.random(in: 0 ..< 100, using: &rng) / 100
     }
     
-    func new() -> Self {
-        return .init(nspp: self.nbSamples)
+    func copy() -> IndependentSampler {
+        let new = IndependentSampler(nspp: self.nbSamples)
+        new.rng.state = rng.state
+        return new
+    }
+    
+    func new() -> IndependentSampler {
+        let new = IndependentSampler(nspp: self.nbSamples)
+        return new
     }
 }

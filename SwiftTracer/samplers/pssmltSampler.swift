@@ -106,6 +106,10 @@ final class PSSMLTSampler: Sampler {
     }
 
     // TODO Make sure the new instence maintains integrity of the vectors
+    func copy() -> Self {
+        return .init(nbSamples: self.nbSamples, largeStepRatio: self.largeStepRatio)
+    }
+    
     func new() -> Self {
         return .init(nbSamples: self.nbSamples, largeStepRatio: self.largeStepRatio)
     }
