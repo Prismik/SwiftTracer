@@ -190,8 +190,14 @@ class Image {
 
         // TODO Better url handling at a given folder
         guard let url = URL(string: "file://\(directory)/\(filename)") else { return false }
+        guard let type = filename.components(separatedBy: ".").last else { return false }
+        let uttype: UTType = switch type {
+            case "png": UTType.png
+            case "jpg": UTType.jpeg
+            default: fatalError("Invalid image type")
+        }
         guard let img = context.makeImage() else { return false }
-        guard let destination = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else { return false }
+        guard let destination = CGImageDestinationCreateWithURL(url as CFURL, uttype.identifier as CFString, 1, nil) else { return false }
                 
         CGImageDestinationAddImage(destination, img, nil)
         return CGImageDestinationFinalize(destination)

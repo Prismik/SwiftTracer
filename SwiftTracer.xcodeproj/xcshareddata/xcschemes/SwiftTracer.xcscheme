@@ -54,7 +54,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "assets/cornelBoxPssmlt.json"
+            argument = "assets/doorajar.json"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

@@ -112,18 +112,22 @@ final class PssmltIntegrator: Integrator {
     /// Computes the normalization factor
     private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [(Float, UInt64)]) {
         var seeds: [(Float, UInt64)] = []
+        var totalValid = isc
         let b = (0 ..< isc).map { _ in
             let currentSeed = sampler.rng.state
             
             let s = sample(scene: scene, sampler: sampler)
-            if s.targetFunction > 0 {
+            let validSample = s.targetFunction.isFinite && !s.targetFunction.isNaN && !s.targetFunction.isZero
+            if validSample {
                 seeds.append((s.targetFunction, currentSeed))
+            } else {
+                totalValid -= 1
             }
 
-            return s.targetFunction
-        }.reduce(0, +) / Float(isc)
+            return validSample ? s.targetFunction : 0
+        }.reduce(0, +) / Float(totalValid)
         
-        guard b != 0 else { fatalError("Invalid computation of b") }
+        guard b.isFinite, !b.isNaN, !b.isZero else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
         for s in seeds {
             cdf.add(s.0)

@@ -1,0 +1,390 @@
+{
+    "camera": {
+        "transform": [
+            {
+                "angle": 180,
+                "axis": [0, 1, 0]
+            },
+            {
+                "matrix": [
+                    -0.137283, -0.0319925, -0.990015, 4.05402,
+                    2.71355e-008, 0.999478, -0.0322983, 1.61647,
+                    0.990532, -0.00443408, -0.137213, -2.30652,
+                    0, 0, 0, 1
+                ]
+            },
+            {
+                "translate": [-2, 0, 0]
+            }
+        ],
+        "fov": 60,
+        "resolution": [1280, 720]
+    },
+    "accelerator": {
+        "builder": "sah"
+    },
+    "sampler": {
+        "type": "independent",
+        "nspp": 64
+    },
+    "integrator": {
+        "type": "pssmlt",
+        "params": {
+            "samplesPerChain": 1000,
+            "initSamplesCount": 100000,
+            "mis": true,
+            "time": 900,
+            "integrator": {
+                "type": "pssmlt",
+                "params": {
+                    "samplesPerChain": 1000,
+                    "initSamplesCount": 100000,
+                    "mis": true,
+                    "strategy": "mis",
+                    "shiftMapping": { "type": "pathReconnection" },
+                    "reconstruction": {
+                        "type": "iterative",
+                        "maxIterations": 50
+                    }
+                }
+            }
+        }
+    },
+    "materials": [{
+        "name": "LandscapeBSDF",
+        "type": "diffuse",
+        "albedo": {
+            "type": "texture",
+            "filename": "assets/landscape-with-a-lake.jpg"
+        }
+    }, {
+        "name": "TableBSDF",
+        "type": "diffuse",
+        "albedo": {
+            "type": "texture",
+            "filename": "assets/Good Textures_005844.jpg"
+        }
+    }, {
+        "name": "DoorHandleBSDF",
+        "type": "metal",
+        "roughness": 0.25,
+        "ks": 0.7
+    }, {
+        "name": "DoorBSDF",
+        "type": "diffuse",
+        "albedo": {
+            "type": "texture",
+            "filename": "assets/cherry-wood-texture.jpg"
+        }
+    }, {
+        "name": "DiffuseBSDF",
+        "type": "diffuse",
+        "albedo": 0.8
+    }, {
+        "name": "FloorBSDF",
+        "type": "metal",
+        "roughness": 0.1,
+        "ks": {
+            "type": "checkerboard2d",
+            "color1" : [0.2, 0.2, 0.2],
+            "color2" : [0.8, 0.8, 0.8],
+            "uv_scale" : [20, 80]
+        }
+    }, {
+        "name": "DoorFrameBSDF",
+        "type": "diffuse",
+        "albedo": [0.247059, 0.168627, 0.0901961]
+    }, {
+        "name": "PictureFrameBSDF",
+        "type": "diffuse",
+        "albedo": [0.258824, 0.207843, 0.145098]
+    }, {
+        "name": "HingeBSDF",
+        "type": "metal",
+        "roughness": 0.1,
+        "ks": 0.7
+    }, {
+        "name": "Pot2BSDF",
+        "type": "metal",
+        "roughness": 0.15,
+        "ks": 0.7
+    }, {
+        "name": "MaterialBSDF",
+        "type": "dielectric",
+        "eta_int": 1.5
+    }, {
+        "name": "Pot3BSDF",
+        "type": "diffuse",
+        "albedo": 0.8
+    }],
+    "lights": [{
+            "name": "light",
+            "type": { "category": "area" },
+            "radiance": 1000
+    }],
+    "shapes": [{
+        "type": "quad",
+        "transform": {
+            "matrix": [
+                0.730445, 0, 0, -4.4391,
+                0, -1.32136, -1.42138e-007, 1.50656,
+                0, 1.42138e-007, -1.93037, -4.44377,
+                0, 0, 0, 1
+            ]
+        },
+        "size": 1,
+        "light": "light"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh008",
+        "material": "LandscapeBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh013",
+        "material": "PictureFrameBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1.8, 0, 0, 2.3,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh011",
+        "material": "FloorBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh015",
+        "material": "DoorHandleBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh016",
+        "material": "HingeBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh012",
+        "material": "HingeBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh010",
+        "material": "HingeBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh006",
+        "material": "DoorBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh005",
+        "material": "DoorFrameBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh007",
+        "material": "DiffuseBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh003",
+        "material": "DiffuseBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh002",
+        "material": "DiffuseBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh001",
+        "material": "DiffuseBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh004",
+        "material": "TableBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                1.8, 0, 0, 2.3,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh014",
+        "material": "DiffuseBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                -0.0757886, 0, -0.0468591, -1.95645,
+                0, 0.0891049, 0, 0.648205,
+                0.0468591, 0, -0.0757886, -1.77687,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh009",
+        "material": "Pot2BSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                -0.0757886, 0, -0.0468591, -1.95645,
+                0, 0.0891049, 0, 0.648205,
+                0.0468591, 0, -0.0757886, -1.77687,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh000",
+        "material": "Pot2BSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                -0.0891049, 0, 7.7898e-009, -1.95645,
+                0, 0.0891049, 0, 0.648205,
+                -7.7898e-009, 0, -0.0891049, -2.67687,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh000",
+        "material": "Pot3BSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                -0.0891049, 0, 7.7898e-009, -1.95645,
+                0, 0.0891049, 0, 0.648205,
+                -7.7898e-009, 0, -0.0891049, -2.67687,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh009",
+        "material": "Pot3BSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                -0.0837611, 0, 0.0303939, -1.95645,
+                0, 0.0891049, 0, 0.651268,
+                -0.0303939, 0, -0.0837611, -3.57687,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh009",
+        "material": "MaterialBSDF"
+    }, {
+        "type": "mesh",
+        "transform": {
+            "matrix": [
+                -0.083761, 0, 0.0303938, -1.95645,
+                0, 0.0891049, 0, 0.651268,
+                -0.0303938, 0, -0.083761, -3.57687,
+                0, 0, 0, 1
+            ]
+        },
+        "filename": "Mesh000",
+        "material": "MaterialBSDF"
+    }]
+}
