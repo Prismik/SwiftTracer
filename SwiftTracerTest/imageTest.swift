@@ -12,7 +12,7 @@ import XCTest
 #endif
 
 final class ImageTest: XCTestCase {
-    func testSimpleGenerate() {
+    var sample: Array2d<Color> {
         let length = 32
         let array = Array2d(x: length, y: length, value: Color(repeating: 1))
         let colors: [Color] = [Color(1, 1, 1), Color(1, 0, 0), Color(0, 1, 0), Color(0, 0, 1)]
@@ -33,13 +33,17 @@ final class ImageTest: XCTestCase {
                 array[i, j] = color
             }
         }
-        let image = Image(array: array)
+        
+        return array
+    }
+    
+    func testSimpleGenerate() {
+        let image = Image(array: sample)
         let success = image.write(to: "xctest.png")
         XCTAssertEqual(success, true)
     }
     
     func testSimpleLoad() throws {
-        let bundle = Bundle(for: type(of: self))
         let image = Image(filename: "xctest.png")
         let unwrapped = try XCTUnwrap(image)
         
@@ -52,5 +56,11 @@ final class ImageTest: XCTestCase {
         XCTAssertEqual(rgb10, Color(1, 0, 0))
         XCTAssertEqual(rgb01, Color(0, 1, 0))
         XCTAssertEqual(rgb11, Color(0, 0, 1))
+    }
+    
+    func testPfmWrite() {
+        let url = URL.documentsDirectory
+        let result = PFM().write(img: sample, to: url.appending(path: "test.pfm"))
+        XCTAssertTrue(result)
     }
 }

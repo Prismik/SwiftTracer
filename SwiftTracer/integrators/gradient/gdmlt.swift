@@ -193,7 +193,7 @@ final class GdmltIntegrator: Integrator {
 
     private var result: GradientDomainResult?
 
-    private let strategy: StrategyGradientMCMC = .multi
+    private let strategy: StrategyGradientMCMC = .single
     private let integrator: SamplerIntegrator
     private let reconstructor: Reconstructing
     private let mapper: any ShiftMapping

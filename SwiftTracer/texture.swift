@@ -46,8 +46,8 @@ enum Texture {
         
         let xDistance = (p10.x - p00.x).abs()
         let yDistance = (p01.y - p00.y).abs()
-        let a = (xy.x - p00.x) / xDistance
-        let b = (xy.y - p00.y) / yDistance
+        let a: Float = if xDistance == 0 { 1.0 } else { (xy.x - p00.x) / xDistance }
+        let b: Float = if yDistance == 0 { 1.0 } else { (xy.y - p00.y) / yDistance }
         
         let rp00 = values[Int(p00.x), Int(p00.y)]
         let rp01 = values[Int(p01.x), Int(p01.y)]
@@ -103,7 +103,9 @@ extension Texture: Decodable {
                 #if os(Linux)
                 let values = Image(filename: file).read()
                 #else
-                guard let values = Image(filename: file)?.read() else { fatalError("Error while reading image \(file)") }
+                guard let encoding = EncodingIdentifier(filename: file) else { fatalError("Bad or unsupported image encoding") }
+                let url = URL(fileURLWithPath: file, isDirectory: false, relativeTo: nil)
+                guard let values = Image(encoding: encoding).read(file: url) else { fatalError("Error while reading image \(file)") }
                 #endif
                 if vflip {
                     values.flipVertically()
@@ -145,7 +147,9 @@ extension Texture: Decodable {
         #if os(Linux)
         let values = Image(filename: filename).read()
         #else
-        guard let values = Image(filename: filename)?.read() else { fatalError("Error while reading image \(filename)") }
+        guard let encoding = EncodingIdentifier(filename: filename) else { fatalError("Bad or unsupported image encoding") }
+        let url = URL(fileURLWithPath: filename, isDirectory: false, relativeTo: nil)
+        guard let values = Image(encoding: encoding).read(file: url) else { fatalError("Error while reading image \(filename)") }
         #endif
         values.flipVertically()
         return .textureMap(values: values, scale: 1.0, uvScale: Vec2(repeating: 1), uvOffset: Vec2())

@@ -188,8 +188,11 @@ final class RandomSequenceReplay: ShiftMapping {
     }
     
     private func light(wo: Vec3, scene: Scene, frame: Frame, intersection: Intersection, s: Vec2) -> Color {
+        guard !intersection.shape.material.hasDelta(uv: intersection.uv, p: intersection.p) else { return .zero }
+
         let ctx = LightSample.Context(p: intersection.p, n: intersection.n, ns: intersection.n)
         guard let lightSample = scene.sample(context: ctx, s: s) else { return .zero }
+
         let localWi = frame.toLocal(v: lightSample.wi).normalized()
         let pdf = intersection.shape.material.pdf(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)
         let eval = intersection.shape.material.evaluate(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)

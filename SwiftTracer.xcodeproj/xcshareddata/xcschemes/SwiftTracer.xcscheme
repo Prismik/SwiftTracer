@@ -54,11 +54,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "assets/doorajar.json"
+            argument = "assets/cornelbox.json"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--output out.png"
+            argument = "--output out.pfm"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

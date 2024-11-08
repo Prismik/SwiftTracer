@@ -27,7 +27,7 @@ final class PssmltIntegrator: Integrator {
         init(contrib: Color, pos: Vec2) {
             self.contrib = contrib
             self.pos = pos
-            self.targetFunction = (contrib.x + contrib.y + contrib.z) / 3
+            self.targetFunction = contrib.luminance
         }
     }
 
@@ -76,6 +76,8 @@ final class PssmltIntegrator: Integrator {
         let nbChains = totalSamples / nspc
         
         let beforeBlackCount = zeroColorFound
+        
+        print("Rendering pssmlt with \(integrator)")
         // Run chains in parallel
         let gcd = DispatchGroup()
         gcd.enter()
@@ -92,9 +94,8 @@ final class PssmltIntegrator: Integrator {
         guard let image = result else { fatalError("No result image was returned in the async task") }
         //let average = image.total / Float(image.size)
         let average = image.reduce(into: .zero) { acc, cur in
-            acc += cur.sanitized / Float(image.size)
-        }
-        let averageLuminance = (average.x + average.y + average.z) / 3.0
+            acc += cur.sanitized.luminance
+        } / Float(image.size)
         
         print("Nb of black pixels found in chains => \(zeroColorFound - beforeBlackCount)")
         print("largeStepCount => \(stats.large.times)")
@@ -102,10 +103,9 @@ final class PssmltIntegrator: Integrator {
         print("smallStepAcceptRatio => \(Float(stats.small.accept) / Float(stats.small.accept + stats.small.reject))")
         print("largeStepAcceptRatio => \(Float(stats.large.accept) / Float(stats.large.accept + stats.large.reject))")
         print("average => \(average)")
-        print("average luminance => \(averageLuminance)")
         print("b => \(b)")
 
-        image.scale(by: b / averageLuminance)
+        image.scale(by: b / average)
         return image
     }
     

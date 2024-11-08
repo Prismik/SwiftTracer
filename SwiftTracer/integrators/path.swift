@@ -30,8 +30,11 @@ final class PathIntegrator: Integrator {
     
     /// Evaluates direct lighting on a given intersection
     private func light(wo: Vec3, scene: Scene, frame: Frame, intersection: Intersection, s: Vec2) -> Color {
+        guard !intersection.shape.material.hasDelta(uv: intersection.uv, p: intersection.p) else { return .zero }
+
         let ctx = LightSample.Context(p: intersection.p, n: intersection.n, ns: intersection.n)
         guard let lightSample = scene.sample(context: ctx, s: s) else { return .zero }
+
         let localWi = frame.toLocal(v: lightSample.wi).normalized()
         let pdf = intersection.shape.material.pdf(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)
         let eval = intersection.shape.material.evaluate(wo: wo, wi: localWi, uv: intersection.uv, p: intersection.p)
@@ -47,17 +50,16 @@ final class PathIntegrator: Integrator {
         var contribution = Color()
         let frame = Frame(n: intersection.n)
         let wo = frame.toLocal(v: -ray.d).normalized()
-        let s = sampler.next2()
         
         guard !intersection.hasEmission else {
             return intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
         }
-
+        
         // MIS Emitter
-        contribution += light(wo: wo, scene: scene, frame: frame, intersection: intersection, s: s)
+        contribution += light(wo: wo, scene: scene, frame: frame, intersection: intersection, s: sampler.next2())
 
         // MIS Material
-        guard let direction = intersection.shape.material.sample(wo: wo, uv: intersection.uv, p: intersection.p, sample: s) else {
+        guard let direction = intersection.shape.material.sample(wo: wo, uv: intersection.uv, p: intersection.p, sample: sampler.next2()) else {
             return contribution
         }
         
@@ -80,7 +82,15 @@ final class PathIntegrator: Integrator {
 
                 contribution += (weight * bsdfWeight)
                     * light.L(p: newIntersection.p, n: newIntersection.n, uv: newIntersection.uv, wo: newWo)
+                
+                if contribution.hasNaN {
+                    print("nan found in explicit light")
+                }
             }
+        }
+        
+        if bsdfWeight.hasNaN {
+            print("nan found in bsdf")
         }
 
         return depth == maxDepth || (its?.hasEmission == true && depth >= minDepth)

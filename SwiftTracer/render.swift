@@ -17,7 +17,7 @@ struct Tracer: ParsableCommand {
     var output: String?
     
     mutating func run() throws {
-        let out = output ?? "out.png"
+        let out = output ?? "out.pfm"
         Render.run(input: input, output: out)
     }
 }
@@ -36,9 +36,10 @@ enum Render {
                 let result = scene.render()
                 var successes: Int = 0
                 for (i, item) in result.enumerated() {
-                    let image = Image(array: item)
+                    guard let encoding = EncodingIdentifier(filename: output) else { fatalError("Invalid output file encoding") }
+                    let image = Image(encoding: encoding)
                     let id = i == 0 ? "" : "\(i)-"
-                    let writeResult = image.write(to: "\(id)\(output)")
+                    let writeResult = image.write(img: item, to: "\(id)\(output)")
                     if writeResult { successes += 1 }
                 }
                 

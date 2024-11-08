@@ -93,6 +93,24 @@
 		1945A9F92CDA783D008E72BD /* cherry-wood-texture.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9BF2CDA7808008E72BD /* cherry-wood-texture.jpg */; };
 		1945A9FA2CDA783D008E72BD /* Good Textures_005844.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9C02CDA7808008E72BD /* Good Textures_005844.jpg */; };
 		1945A9FB2CDA783D008E72BD /* landscape-with-a-lake.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9C12CDA7808008E72BD /* landscape-with-a-lake.jpg */; };
+		1945A9FE2CDD9342008E72BD /* pfm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945A9FD2CDD933E008E72BD /* pfm.swift */; };
+		1945A9FF2CDD9342008E72BD /* pfm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945A9FD2CDD933E008E72BD /* pfm.swift */; };
+		1945AA002CDD9342008E72BD /* pfm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945A9FD2CDD933E008E72BD /* pfm.swift */; };
+		1945AA012CDD9342008E72BD /* pfm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945A9FD2CDD933E008E72BD /* pfm.swift */; };
+		1945AA032CDD9D2C008E72BD /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 1945AA022CDD9D2C008E72BD /* OrderedCollections */; };
+		1945AA052CDD9D39008E72BD /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 1945AA042CDD9D39008E72BD /* Collections */; };
+		1945AA072CDDA5F9008E72BD /* png.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA062CDDA5EC008E72BD /* png.swift */; };
+		1945AA082CDDA5F9008E72BD /* png.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA062CDDA5EC008E72BD /* png.swift */; };
+		1945AA092CDDA5F9008E72BD /* png.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA062CDDA5EC008E72BD /* png.swift */; };
+		1945AA0A2CDDA5F9008E72BD /* png.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA062CDDA5EC008E72BD /* png.swift */; };
+		1945AA0D2CDDA618008E72BD /* imageEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA0C2CDDA616008E72BD /* imageEncoding.swift */; };
+		1945AA0E2CDDA618008E72BD /* imageEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA0C2CDDA616008E72BD /* imageEncoding.swift */; };
+		1945AA0F2CDDA618008E72BD /* imageEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA0C2CDDA616008E72BD /* imageEncoding.swift */; };
+		1945AA102CDDA618008E72BD /* imageEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA0C2CDDA616008E72BD /* imageEncoding.swift */; };
+		1945AA122CDDAB23008E72BD /* jpg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA112CDDAB21008E72BD /* jpg.swift */; };
+		1945AA132CDDAB23008E72BD /* jpg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA112CDDAB21008E72BD /* jpg.swift */; };
+		1945AA142CDDAB23008E72BD /* jpg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA112CDDAB21008E72BD /* jpg.swift */; };
+		1945AA152CDDAB23008E72BD /* jpg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA112CDDAB21008E72BD /* jpg.swift */; };
 		1946325B2CD6B9C8003D52BA /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 1946325A2CD6B9C8003D52BA /* Collections */; };
 		1946325D2CD6B9C8003D52BA /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 1946325C2CD6B9C8003D52BA /* OrderedCollections */; };
 		1946325F2CD6BB07003D52BA /* timeboxed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946325E2CD6BAF5003D52BA /* timeboxed.swift */; };
@@ -127,7 +145,6 @@
 		196094F32CB88164009FDAC4 /* quad.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816A72C1A18160006B1E1 /* quad.json */; };
 		196094F42CB88164009FDAC4 /* triangle.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816A92C1A20680006B1E1 /* triangle.json */; };
 		196094F52CB88164009FDAC4 /* group.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816AB2C1A211A0006B1E1 /* group.json */; };
-		196094FB2CBB4699009FDAC4 /* pathTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094FA2CBB4696009FDAC4 /* pathTest.swift */; };
 		19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		196ECD562C0B7FC30052DEA6 /* triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD552C0B7FC30052DEA6 /* triangle.swift */; };
 		196ECD582C0B80350052DEA6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
@@ -387,6 +404,10 @@
 		1945A9D32CDA781B008E72BD /* Mesh014.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Mesh014.obj; sourceTree = "<group>"; };
 		1945A9D42CDA781B008E72BD /* Mesh015.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Mesh015.obj; sourceTree = "<group>"; };
 		1945A9D52CDA781B008E72BD /* Mesh016.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Mesh016.obj; sourceTree = "<group>"; };
+		1945A9FD2CDD933E008E72BD /* pfm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pfm.swift; sourceTree = "<group>"; };
+		1945AA062CDDA5EC008E72BD /* png.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = png.swift; sourceTree = "<group>"; };
+		1945AA0C2CDDA616008E72BD /* imageEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = imageEncoding.swift; sourceTree = "<group>"; };
+		1945AA112CDDAB21008E72BD /* jpg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jpg.swift; sourceTree = "<group>"; };
 		1946325E2CD6BAF5003D52BA /* timeboxed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = timeboxed.swift; sourceTree = "<group>"; };
 		194D901D2C90D3B200D05F58 /* pssmlt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmlt.swift; sourceTree = "<group>"; };
 		194D901F2C90D63400D05F58 /* pssmltSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmltSampler.swift; sourceTree = "<group>"; };
@@ -399,7 +420,6 @@
 		196094D62CB8780E009FDAC4 /* scripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scripts.swift; sourceTree = "<group>"; };
 		196094DB2CB8782B009FDAC4 /* scripts */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = scripts; sourceTree = BUILT_PRODUCTS_DIR; };
 		196094E62CB87C68009FDAC4 /* float+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "float+extensions.swift"; sourceTree = "<group>"; };
-		196094FA2CBB4696009FDAC4 /* pathTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pathTest.swift; sourceTree = "<group>"; };
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
 		196ECD572C0B80350052DEA6 /* mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mesh.swift; sourceTree = "<group>"; };
 		19737CF02C2B478D00F49204 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
@@ -520,6 +540,8 @@
 			files = (
 				194480C92CA8CA38002A90C6 /* Algorithms in Frameworks */,
 				194480C52CA8CA0C002A90C6 /* SwiftWavefront in Frameworks */,
+				1945AA052CDD9D39008E72BD /* Collections in Frameworks */,
+				1945AA032CDD9D2C008E72BD /* OrderedCollections in Frameworks */,
 				194480C72CA8CA22002A90C6 /* Progress in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -541,6 +563,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1945A9FC2CDD931C008E72BD /* image */ = {
+			isa = PBXGroup;
+			children = (
+				1945AA112CDDAB21008E72BD /* jpg.swift */,
+				1945AA0C2CDDA616008E72BD /* imageEncoding.swift */,
+				1945AA062CDDA5EC008E72BD /* png.swift */,
+				1945A9FD2CDD933E008E72BD /* pfm.swift */,
+				19EFB3CA2C03B88B005CC488 /* image.swift */,
+			);
+			path = image;
+			sourceTree = "<group>";
+		};
 		196094C12CB5A0F5009FDAC4 /* gradient */ = {
 			isa = PBXGroup;
 			children = (
@@ -709,7 +743,6 @@
 		19BBA7392BFD531B00981204 /* SwiftTracerTest */ = {
 			isa = PBXGroup;
 			children = (
-				196094FA2CBB4696009FDAC4 /* pathTest.swift */,
 				19EFB3BB2C00EF44005CC488 /* mathTest.swift */,
 				19EFB3C72C0274D2005CC488 /* array2dTest.swift */,
 				19EFB3CE2C0648B1005CC488 /* imageTest.swift */,
@@ -775,6 +808,7 @@
 				196094C92CB5CD78009FDAC4 /* paths */,
 				19E8083B2B2B6DC300A37D37 /* shapes */,
 				19E8083A2B2B6D9B00A37D37 /* materials */,
+				1945A9FC2CDD931C008E72BD /* image */,
 				19E808472B2B730600A37D37 /* aabb.swift */,
 				19E8082E2B2B664400A37D37 /* render.swift */,
 				19BBA7192BF7D32F00981204 /* transform.swift */,
@@ -783,7 +817,6 @@
 				19BBA7322BFD4F0000981204 /* scene.swift */,
 				193E424F2BFE5EA300D96A37 /* camera.swift */,
 				19EFB3C52C010CB8005CC488 /* array2d.swift */,
-				19EFB3CA2C03B88B005CC488 /* image.swift */,
 				194480992CA8A5C1002A90C6 /* rng.swift */,
 			);
 			path = SwiftTracer;
@@ -909,6 +942,8 @@
 				194480C42CA8CA0C002A90C6 /* SwiftWavefront */,
 				194480C62CA8CA22002A90C6 /* Progress */,
 				194480C82CA8CA38002A90C6 /* Algorithms */,
+				1945AA022CDD9D2C008E72BD /* OrderedCollections */,
+				1945AA042CDD9D39008E72BD /* Collections */,
 			);
 			productName = SwiftTracerTest;
 			productReference = 19BBA7382BFD531B00981204 /* SwiftTracerTest.xctest */;
@@ -1050,9 +1085,13 @@
 				19E1E5F62CC6A82A00A1F259 /* psnr.swift in Sources */,
 				19E1E5F82CC6A83A00A1F259 /* mse.swift in Sources */,
 				196094E42CB87887009FDAC4 /* image.swift in Sources */,
+				1945AA072CDDA5F9008E72BD /* png.swift in Sources */,
 				196094EB2CB87D58009FDAC4 /* scripts.swift in Sources */,
 				196094E22CB87868009FDAC4 /* array2d.swift in Sources */,
+				1945AA002CDD9342008E72BD /* pfm.swift in Sources */,
 				196094EA2CB87C6B009FDAC4 /* float+extensions.swift in Sources */,
+				1945AA0F2CDDA618008E72BD /* imageEncoding.swift in Sources */,
+				1945AA152CDDAB23008E72BD /* jpg.swift in Sources */,
 				196094E32CB8787D009FDAC4 /* vector.swift in Sources */,
 				19E1E5FA2CC6AC4800A1F259 /* gradients.swift in Sources */,
 			);
@@ -1065,6 +1104,8 @@
 				1999D0BE2C179F1B00358201 /* sampler.swift in Sources */,
 				1999D0D12C17A0EA00358201 /* dielectric.swift in Sources */,
 				1999D0D02C17A0E500358201 /* metal.swift in Sources */,
+				1945AA082CDDA5F9008E72BD /* png.swift in Sources */,
+				1945AA102CDDA618008E72BD /* imageEncoding.swift in Sources */,
 				1999D0CD2C17A0CC00358201 /* sampling.swift in Sources */,
 				1999D0BD2C179E8600358201 /* material.swift in Sources */,
 				1999D0CE2C17A0D900358201 /* texture.swift in Sources */,
@@ -1078,6 +1119,7 @@
 				1999D0CC2C17A0A600358201 /* triangle.swift in Sources */,
 				1999D0C32C17A07000358201 /* aabb.swift in Sources */,
 				1999D0CA2C17A09C00358201 /* mesh.swift in Sources */,
+				1945AA122CDDAB23008E72BD /* jpg.swift in Sources */,
 				1999D0B82C1797DC00358201 /* array2d.swift in Sources */,
 				1999D0CF2C17A0E200358201 /* diffuse.swift in Sources */,
 				1999D0D52C17A12200358201 /* blend.swift in Sources */,
@@ -1093,6 +1135,7 @@
 				196094E82CB87C6B009FDAC4 /* float+extensions.swift in Sources */,
 				1999D0D32C17A11600358201 /* area.swift in Sources */,
 				1999D0BC2C17996800358201 /* vector.swift in Sources */,
+				1945A9FE2CDD9342008E72BD /* pfm.swift in Sources */,
 				1999D0B72C1797D400358201 /* utils.swift in Sources */,
 				1999D0D62C17A24B00358201 /* image.swift in Sources */,
 			);
@@ -1121,6 +1164,7 @@
 				196094CD2CB5CE4F009FDAC4 /* vertex.swift in Sources */,
 				194480A42CA8C86B002A90C6 /* sampler.swift in Sources */,
 				19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */,
+				1945AA092CDDA5F9008E72BD /* png.swift in Sources */,
 				194480B22CA8C8F7002A90C6 /* texture.swift in Sources */,
 				194480A72CA8C8A8002A90C6 /* quad.swift in Sources */,
 				194480B72CA8C912002A90C6 /* lightSampler.swift in Sources */,
@@ -1133,12 +1177,13 @@
 				19E1E5F12CC2D24E00A1F259 /* gdmlt.swift in Sources */,
 				194480B92CA8C91D002A90C6 /* integrator.swift in Sources */,
 				194480B52CA8C905002A90C6 /* spot.swift in Sources */,
-				196094FB2CBB4699009FDAC4 /* pathTest.swift in Sources */,
 				1946325F2CD6BB07003D52BA /* timeboxed.swift in Sources */,
+				1945A9FF2CDD9342008E72BD /* pfm.swift in Sources */,
 				196094E92CB87C6B009FDAC4 /* float+extensions.swift in Sources */,
 				194480AA2CA8C8AE002A90C6 /* mesh.swift in Sources */,
 				194480A32CA8C835002A90C6 /* shape.swift in Sources */,
 				194480AD2CA8C8D8002A90C6 /* diffuse.swift in Sources */,
+				1945AA0E2CDDA618008E72BD /* imageEncoding.swift in Sources */,
 				194480B02CA8C8DE002A90C6 /* blend.swift in Sources */,
 				194480BC2CA8C924002A90C6 /* uv.swift in Sources */,
 				194480C32CA8C9DF002A90C6 /* bvh.swift in Sources */,
@@ -1157,6 +1202,7 @@
 				194480B42CA8C902002A90C6 /* point.swift in Sources */,
 				19BBA73F2BFD54C100981204 /* vector.swift in Sources */,
 				194480B32CA8C900002A90C6 /* area.swift in Sources */,
+				1945AA142CDDAB23008E72BD /* jpg.swift in Sources */,
 				196094BF2CB46638009FDAC4 /* gdpt.swift in Sources */,
 				194480A12CA8C788002A90C6 /* rngTest.swift in Sources */,
 			);
@@ -1169,6 +1215,7 @@
 				19EFB3C42C01085F005CC488 /* independent.swift in Sources */,
 				19E808442B2B728C00A37D37 /* sphere.swift in Sources */,
 				19C0A7182C08FB1B00A7A0FD /* area.swift in Sources */,
+				1945AA012CDD9342008E72BD /* pfm.swift in Sources */,
 				19737CF12C2B478D00F49204 /* Documentation.docc in Sources */,
 				196094D12CB5D02B009FDAC4 /* edge.swift in Sources */,
 				1999D08C2C10F37D00358201 /* blend.swift in Sources */,
@@ -1180,8 +1227,10 @@
 				194632602CD6BB07003D52BA /* timeboxed.swift in Sources */,
 				19EFB3C22C010833005CC488 /* sampler.swift in Sources */,
 				1944809A2CA8A5C1002A90C6 /* rng.swift in Sources */,
+				1945AA132CDDAB23008E72BD /* jpg.swift in Sources */,
 				19EFB3BE2C00F63E005CC488 /* shapeGroup.swift in Sources */,
 				19E8083E2B2B6DE900A37D37 /* material.swift in Sources */,
+				1945AA0A2CDDA5F9008E72BD /* png.swift in Sources */,
 				196094C02CB46638009FDAC4 /* gdpt.swift in Sources */,
 				19E958972C1BD19E00F63FA5 /* point.swift in Sources */,
 				19BBA72F2BFC089A00981204 /* sampling.swift in Sources */,
@@ -1207,6 +1256,7 @@
 				196094CC2CB5CE4E009FDAC4 /* vertex.swift in Sources */,
 				19EFB3CB2C03B88B005CC488 /* image.swift in Sources */,
 				196094C62CB5CD17009FDAC4 /* paths.swift in Sources */,
+				1945AA0D2CDDA618008E72BD /* imageEncoding.swift in Sources */,
 				19BBA7232BF82CE800981204 /* ray.swift in Sources */,
 				19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */,
 				19E9589E2C1C907C00F63FA5 /* uniform.swift in Sources */,
@@ -1608,6 +1658,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1944809D2CA8B0D5002A90C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
 			productName = Algorithms;
+		};
+		1945AA022CDD9D2C008E72BD /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 194632592CD6B9C8003D52BA /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
+		1945AA042CDD9D39008E72BD /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 194632592CD6B9C8003D52BA /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
 		};
 		1946325A2CD6B9C8003D52BA /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;
