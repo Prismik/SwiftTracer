@@ -16,22 +16,37 @@ enum IntegratorType: String, Decodable {
     case pssmlt
     case gdmlt
     case gdpt
+    // The following integrators are used for generating validation images
     case timeboxed
+    case convergence
 }
 
 /// Integrating one pixel at a time.
 protocol SamplerIntegrator: AnyObject {
-    func preprocess(scene: Scene, sampler: Sampler)
     /// Estimate the incoming light for a given ray
     func li(ray: Ray, scene: Scene, sampler: Sampler) -> Color
     func li(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color
 }
 
 struct GradientDomainResult {
-    let primal: Array2d<Color>
-    let img: Array2d<Color>
-    let dx: Array2d<Color>
-    let dy: Array2d<Color>
+    var primal: Array2d<Color>
+    var img: Array2d<Color>
+    var dx: Array2d<Color>
+    var dy: Array2d<Color>
+    
+    mutating func scale(by factor: Float) {
+        primal.scale(by: factor)
+        img.scale(by: factor)
+        dx.scale(by: factor)
+        dy.scale(by: factor)
+    }
+    
+    mutating func merge(with other: GradientDomainResult) {
+        primal.merge(with: other.primal)
+        img.merge(with: other.img)
+        dx.merge(with: other.dx)
+        dy.merge(with: other.dy)
+    }
 }
 
 /// Integraeting in using gradients of the image plane.
@@ -41,6 +56,7 @@ protocol GradientDomainIntegrator {
 }
 
 protocol Integrator {
+    func preprocess(scene: Scene, sampler: Sampler)
     func render(scene: Scene, sampler: Sampler) -> Array2d<Color>
 }
 
@@ -99,6 +115,11 @@ struct AnyIntegrator: Decodable {
             let time = try params.decode(Int.self, forKey: .time)
             let integrator = try params.decode(AnyIntegrator.self, forKey: .integrator)
             self.wrapped = TimeboxedIntegrator(integrator: integrator.wrapped, time: time)
+        case .convergence:
+            let params = try container.nestedContainer(keyedBy: ConvergenceIntegrator.CodingKeys.self, forKey: .params)
+            let steps = try params.decode(Int.self, forKey: .steps)
+            let integrator = try params.decode(AnyIntegrator.self, forKey: .integrator)
+            self.wrapped = ConvergenceIntegrator(integrator: integrator.wrapped, steps: steps)
         }
     }
 }
@@ -135,11 +156,9 @@ enum MonteCarloIntegrator {
         var images: [Array2d<Color>] { [image] }
     }
 
-    static func render<T: SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler) -> Array2d<Color> {
-        print("Integrator preprocessing ...")
-        integrator.preprocess(scene: scene, sampler: sampler)
+    static func render<T: Integrator & SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler) -> Array2d<Color> {
         
-        print("Rendering with \(integrator) ...")
+        print("Rendering with \(integrator) and \(sampler.nbSamples) samples per pixel ...")
         let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
         let gcd = DispatchGroup()
         gcd.enter()

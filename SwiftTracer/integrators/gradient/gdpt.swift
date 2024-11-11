@@ -66,9 +66,6 @@ extension GdptIntegrator: GradientDomainIntegrator {
     }
     
     func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
-        print("Integrator preprocessing ...")
-        preprocess(scene: scene, sampler: sampler)
-        
         print("Rendering ...")
         let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
         let dxGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
@@ -93,7 +90,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
 //        print("Failed shifts     => \(failedShifts)")
         return GradientDomainResult(
             primal: img,
-            img: img,
+            img: .empty,
             dx: dxGradients,
             dy: dyGradients
         )
@@ -101,12 +98,12 @@ extension GdptIntegrator: GradientDomainIntegrator {
     
     func reconstruct(using gdr: GradientDomainResult) -> GradientDomainResult {
         print("Reconstructing with dx and dy ...")
-        let reconstruction = reconstructor.reconstruct(image: gdr.img, dx: gdr.dx, dy: gdr.dy)
+        let reconstruction = reconstructor.reconstruct(image: gdr.primal, dx: gdr.dx, dy: gdr.dy)
         return GradientDomainResult(
-            primal: gdr.img,
+            primal: gdr.primal,
             img: reconstruction,
-            dx: gdr.dx.transformed { $0.abs },
-            dy: gdr.dy.transformed { $0.abs }
+            dx: gdr.dx,
+            dy: gdr.dy
         )
     }
     
@@ -136,7 +133,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
     }
 
     private func renderBlock(scene: Scene, size: Vec2, x: Int, y: Int, mapper: ShiftMapping, sampler: Sampler) -> Block {
-        let sampler = sampler.new()
+        let sampler = sampler.new(nspp: sampler.nbSamples)
         let imgSize = Vec2(size.x + 2, size.y + 2)
         let img = Array2d(x: Int(imgSize.x), y: Int(imgSize.y), value: Color())
         let dxGradients = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)

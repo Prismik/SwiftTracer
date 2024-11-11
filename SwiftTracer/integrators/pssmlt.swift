@@ -62,6 +62,10 @@ final class PssmltIntegrator: Integrator {
     private var result: Array2d<Color>?
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
 
+    private var b: Float = 0
+    private var cdf = DistributionOneDimention(count: 0)
+    private var seeds: [(Float, UInt64)] = []
+
     init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator) {
         self.nspc = samplesPerChain
         self.isc = initSamplesCount
@@ -69,13 +73,17 @@ final class PssmltIntegrator: Integrator {
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 
+    func preprocess(scene: Scene, sampler: any Sampler) {
+        let (b, cdf, seeds) = normalizationConstant(scene: scene, sampler: sampler)
+        self.b = b
+        self.cdf = cdf
+        self.seeds = seeds
+    }
+
     func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
         self.nspp = sampler.nbSamples
-        let (b, cdf, seeds) = normalizationConstant(scene: scene, sampler: sampler)
-        let totalSamples = sampler.nbSamples * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
+        let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
         let nbChains = totalSamples / nspc
-        
-        let beforeBlackCount = zeroColorFound
         
         print("Rendering pssmlt with \(integrator)")
         // Run chains in parallel
@@ -97,7 +105,6 @@ final class PssmltIntegrator: Integrator {
             acc += cur.sanitized.luminance
         } / Float(image.size)
         
-        print("Nb of black pixels found in chains => \(zeroColorFound - beforeBlackCount)")
         print("largeStepCount => \(stats.large.times)")
         print("smallStepCount => \(stats.small.times)")
         print("smallStepAcceptRatio => \(Float(stats.small.accept) / Float(stats.small.accept + stats.small.reject))")
@@ -138,14 +145,11 @@ final class PssmltIntegrator: Integrator {
         return (b, cdf, seeds)
     }
     
-    private var zeroColorFound: Int = 0
-    
     private func sample(scene: Scene, sampler: Sampler) -> StateMCMC {
         let rng2 = sampler.next2()
         let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
         let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
         let contrib = integrator.li(pixel: Vec2(Float(x), Float(y)), scene: scene, sampler: sampler)
-        if !contrib.hasColor { zeroColorFound += 1 }
         return StateMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
     }
 

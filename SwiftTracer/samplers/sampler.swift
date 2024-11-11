@@ -41,7 +41,7 @@ protocol Sampler: AnyObject {
     func next2() -> Vec2
     func gen() -> Float
     func copy() -> Self
-    func new() -> Self
+    func new(nspp: Int) -> Self
     var nbSamples: Int { get }
     var rng: RNG { get set }
 }

@@ -32,6 +32,7 @@ enum Render {
             }
             let scene = try decoder.decode(Scene.self, from: data)
             let clock = ContinuousClock()
+            scene.preprocess()
             let time = clock.measure {
                 let result = scene.render()
                 var successes: Int = 0

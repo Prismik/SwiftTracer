@@ -25,17 +25,18 @@
     },
     "sampler": {
         "type": "independent",
-        "nspp": 64
+        "nspp": 256
     },
     "integrator": {
-        "type": "pssmlt",
+        "type": "path",
         "params": {
             "samplesPerChain": 1000,
             "initSamplesCount": 100000,
             "mis": true,
             "time": 900,
+            "steps": 5,
             "integrator": {
-                "type": "pssmlt",
+                "type": "path",
                 "params": {
                     "samplesPerChain": 1000,
                     "initSamplesCount": 100000,

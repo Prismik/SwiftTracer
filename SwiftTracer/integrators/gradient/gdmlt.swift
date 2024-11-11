@@ -238,11 +238,7 @@ extension GdmltIntegrator: SamplerIntegrator {
 
 extension GdmltIntegrator: GradientDomainIntegrator {
     func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
-        print("Integrator preprocessing ...")
-        preprocess(scene: scene, sampler: sampler)
-
         self.nspp = sampler.nbSamples
-        
         let (b, cdf, seeds) = normalizationConstant(scene: scene, sampler: sampler)
         let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
         let nbChains = totalSamples / nspc

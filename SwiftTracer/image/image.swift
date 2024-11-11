@@ -11,12 +11,14 @@ class Image {
     let encoding: EncodingIdentifier
 
     private let encoder: ImageEncoding
+    // TODO Fallback on pfm when exr not available, and change file extension. Alternatively, find linux compatible implementation of exr
     init(encoding: EncodingIdentifier) {
         self.encoding = encoding
         self.encoder = switch encoding {
             case .jpg: JPG()
             case .png: PNG()
             case .pfm: PFM()
+            case .exr: EXR()
         }
     }
     /// Reads the bytes of the associated file found at the path `filename` given in the initializer. The content will be returned as an `Array2d` where values between 0 and 1.

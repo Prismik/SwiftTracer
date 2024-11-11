@@ -32,6 +32,28 @@ struct BitmapPixel {
     }
 }
 
+struct HDRPixel {
+    let r: Float
+    let g: Float
+    let b: Float
+    let u: Float // For 32 bits alignment
+    
+    init(r: Float, g: Float, b: Float) {
+        self.r = r
+        self.g = g
+        self.b = b
+        self.u = 0
+    }
+
+    init(from: Color) {
+        self.init(
+            r: from.x,
+            g: from.y,
+            b: from.z
+        )
+    }
+}
+
 protocol ImageEncoding {
     func read(file: URL) -> Array2d<Color>?
     func write(img: Array2d<Color>, to destination: URL) -> Bool
@@ -41,12 +63,14 @@ enum EncodingIdentifier {
     case png
     case jpg
     case pfm
+    case exr
     
     init?(filename: String) {
         switch filename.components(separatedBy: ".").last {
             case .some("png"): self = .png
             case .some("pfm"): self = .pfm
             case .some("jpg"): self = .jpg
+            case .some("exr"): self = .exr
             default: return nil
         }
     }

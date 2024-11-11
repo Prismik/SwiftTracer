@@ -110,8 +110,8 @@ final class PSSMLTSampler: Sampler {
         return .init(nbSamples: self.nbSamples, largeStepRatio: self.largeStepRatio)
     }
     
-    func new() -> Self {
-        return .init(nbSamples: self.nbSamples, largeStepRatio: self.largeStepRatio)
+    func new(nspp: Int) -> Self {
+        return .init(nbSamples: nspp, largeStepRatio: self.largeStepRatio)
     }
 
     func accept() {

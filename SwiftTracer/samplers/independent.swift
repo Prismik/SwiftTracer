@@ -32,8 +32,8 @@ final class IndependentSampler: Sampler {
         return new
     }
     
-    func new() -> IndependentSampler {
-        let new = IndependentSampler(nspp: self.nbSamples)
+    func new(nspp: Int) -> IndependentSampler {
+        let new = IndependentSampler(nspp: nspp)
         return new
     }
 }

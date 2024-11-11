@@ -192,4 +192,8 @@ extension Array2d<Color> {
             self[x, y] = item * factor
         }
     }
+    
+    static var empty: Array2d<Color> {
+        return Array2d<Color>()
+    }
 }

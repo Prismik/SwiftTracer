@@ -111,6 +111,12 @@
 		1945AA132CDDAB23008E72BD /* jpg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA112CDDAB21008E72BD /* jpg.swift */; };
 		1945AA142CDDAB23008E72BD /* jpg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA112CDDAB21008E72BD /* jpg.swift */; };
 		1945AA152CDDAB23008E72BD /* jpg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA112CDDAB21008E72BD /* jpg.swift */; };
+		1945AA172CDE6E60008E72BD /* convergence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA162CDE6E5A008E72BD /* convergence.swift */; };
+		1945AA182CDE6E60008E72BD /* convergence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA162CDE6E5A008E72BD /* convergence.swift */; };
+		1945AA1B2CDE9452008E72BD /* exr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA1A2CDE944F008E72BD /* exr.swift */; };
+		1945AA1C2CDE9452008E72BD /* exr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA1A2CDE944F008E72BD /* exr.swift */; };
+		1945AA1D2CDE9452008E72BD /* exr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA1A2CDE944F008E72BD /* exr.swift */; };
+		1945AA1E2CDE9452008E72BD /* exr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945AA1A2CDE944F008E72BD /* exr.swift */; };
 		1946325B2CD6B9C8003D52BA /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 1946325A2CD6B9C8003D52BA /* Collections */; };
 		1946325D2CD6B9C8003D52BA /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 1946325C2CD6B9C8003D52BA /* OrderedCollections */; };
 		1946325F2CD6BB07003D52BA /* timeboxed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946325E2CD6BAF5003D52BA /* timeboxed.swift */; };
@@ -408,6 +414,8 @@
 		1945AA062CDDA5EC008E72BD /* png.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = png.swift; sourceTree = "<group>"; };
 		1945AA0C2CDDA616008E72BD /* imageEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = imageEncoding.swift; sourceTree = "<group>"; };
 		1945AA112CDDAB21008E72BD /* jpg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jpg.swift; sourceTree = "<group>"; };
+		1945AA162CDE6E5A008E72BD /* convergence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = convergence.swift; sourceTree = "<group>"; };
+		1945AA1A2CDE944F008E72BD /* exr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = exr.swift; sourceTree = "<group>"; };
 		1946325E2CD6BAF5003D52BA /* timeboxed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = timeboxed.swift; sourceTree = "<group>"; };
 		194D901D2C90D3B200D05F58 /* pssmlt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmlt.swift; sourceTree = "<group>"; };
 		194D901F2C90D63400D05F58 /* pssmltSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmltSampler.swift; sourceTree = "<group>"; };
@@ -566,6 +574,7 @@
 		1945A9FC2CDD931C008E72BD /* image */ = {
 			isa = PBXGroup;
 			children = (
+				1945AA1A2CDE944F008E72BD /* exr.swift */,
 				1945AA112CDDAB21008E72BD /* jpg.swift */,
 				1945AA0C2CDDA616008E72BD /* imageEncoding.swift */,
 				1945AA062CDDA5EC008E72BD /* png.swift */,
@@ -573,6 +582,15 @@
 				19EFB3CA2C03B88B005CC488 /* image.swift */,
 			);
 			path = image;
+			sourceTree = "<group>";
+		};
+		1945AA192CDE6E68008E72BD /* validation */ = {
+			isa = PBXGroup;
+			children = (
+				1946325E2CD6BAF5003D52BA /* timeboxed.swift */,
+				1945AA162CDE6E5A008E72BD /* convergence.swift */,
+			);
+			path = validation;
 			sourceTree = "<group>";
 		};
 		196094C12CB5A0F5009FDAC4 /* gradient */ = {
@@ -851,6 +869,7 @@
 		19E8083C2B2B6DCA00A37D37 /* integrators */ = {
 			isa = PBXGroup;
 			children = (
+				1945AA192CDE6E68008E72BD /* validation */,
 				196094C12CB5A0F5009FDAC4 /* gradient */,
 				19BBA7242BF97A9700981204 /* path.swift */,
 				19BBA7262BF97AAA00981204 /* integrator.swift */,
@@ -858,7 +877,6 @@
 				1999D0512C0F853000358201 /* uv.swift */,
 				1999D09F2C1361BB00358201 /* direct.swift */,
 				194D901D2C90D3B200D05F58 /* pssmlt.swift */,
-				1946325E2CD6BAF5003D52BA /* timeboxed.swift */,
 			);
 			path = integrators;
 			sourceTree = "<group>";
@@ -1094,6 +1112,7 @@
 				1945AA152CDDAB23008E72BD /* jpg.swift in Sources */,
 				196094E32CB8787D009FDAC4 /* vector.swift in Sources */,
 				19E1E5FA2CC6AC4800A1F259 /* gradients.swift in Sources */,
+				1945AA1D2CDE9452008E72BD /* exr.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1126,6 +1145,7 @@
 				1999D0BF2C179F8E00358201 /* independent.swift in Sources */,
 				1999D0C72C17A08900358201 /* transform.swift in Sources */,
 				1999D0C02C17A05500358201 /* scene.swift in Sources */,
+				1945AA1E2CDE9452008E72BD /* exr.swift in Sources */,
 				1999D0C82C17A08E00358201 /* matrix.swift in Sources */,
 				1999D0C92C17A09400358201 /* sphere.swift in Sources */,
 				196094C72CB5CD17009FDAC4 /* paths.swift in Sources */,
@@ -1162,6 +1182,7 @@
 				194480C02CA8C937002A90C6 /* pssmltSampler.swift in Sources */,
 				196094C32CB5A100009FDAC4 /* shiftMapping.swift in Sources */,
 				196094CD2CB5CE4F009FDAC4 /* vertex.swift in Sources */,
+				1945AA172CDE6E60008E72BD /* convergence.swift in Sources */,
 				194480A42CA8C86B002A90C6 /* sampler.swift in Sources */,
 				19694BDA2C0E2012007AD6A4 /* camera.swift in Sources */,
 				1945AA092CDDA5F9008E72BD /* png.swift in Sources */,
@@ -1189,6 +1210,7 @@
 				194480C32CA8C9DF002A90C6 /* bvh.swift in Sources */,
 				19EFB3B32BFE7B92005CC488 /* utils.swift in Sources */,
 				19EFB3B22BFE7B82005CC488 /* sampling.swift in Sources */,
+				1945AA1C2CDE9452008E72BD /* exr.swift in Sources */,
 				19EFB3BC2C00EF44005CC488 /* mathTest.swift in Sources */,
 				193E42532BFE738F00D96A37 /* ray.swift in Sources */,
 				193E42522BFE737F00D96A37 /* transform.swift in Sources */,
@@ -1219,6 +1241,7 @@
 				19737CF12C2B478D00F49204 /* Documentation.docc in Sources */,
 				196094D12CB5D02B009FDAC4 /* edge.swift in Sources */,
 				1999D08C2C10F37D00358201 /* blend.swift in Sources */,
+				1945AA1B2CDE9452008E72BD /* exr.swift in Sources */,
 				19E9589B2C1C8F1B00F63FA5 /* lightSampler.swift in Sources */,
 				19E808462B2B729700A37D37 /* shape.swift in Sources */,
 				19BBA7272BF97AAA00981204 /* integrator.swift in Sources */,
@@ -1263,6 +1286,7 @@
 				19E958992C1BD1AD00F63FA5 /* light.swift in Sources */,
 				19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */,
 				19BBA71A2BF7D32F00981204 /* transform.swift in Sources */,
+				1945AA182CDE6E60008E72BD /* convergence.swift in Sources */,
 				1944809C2CA8AD30002A90C6 /* distribution.swift in Sources */,
 				194D90202C90D63400D05F58 /* pssmltSampler.swift in Sources */,
 				196094E72CB87C6B009FDAC4 /* float+extensions.swift in Sources */,

@@ -54,15 +54,24 @@ final class Scene {
         if let timeboxedIntegrator = integrator as? TimeboxedIntegrator {
             if timeboxedIntegrator.gradientDomain {
                 let result: GradientDomainResult = timeboxedIntegrator.render(scene: self, sampler: sampler)
-                return [result.img, result.dx, result.dy, result.primal]
+                return [
+                    result.img,
+                    result.dx.transformed { $0.abs },
+                    result.dy.transformed { $0.abs },
+                    result.primal
+                ]
             } else {
-                let result: Array2d<Color> = timeboxedIntegrator.render(scene: self, sampler: sampler)
-                return [result]
+                return [timeboxedIntegrator.render(scene: self, sampler: sampler)]
             }
         } else if let gradientIntegrator = integrator as? GradientDomainIntegrator {
             let intermediate: GradientDomainResult = gradientIntegrator.render(scene: self, sampler: sampler)
             let result = gradientIntegrator.reconstruct(using: intermediate)
-            return [result.img, result.dx, result.dy, result.primal]
+            return [
+                result.img,
+                result.dx.transformed { $0.abs },
+                result.dy.transformed { $0.abs },
+                result.primal
+            ]
         } else {
             return [integrator.render(scene: self, sampler: sampler)]
         }
@@ -72,6 +81,8 @@ final class Scene {
         for light in lightSampler.lights {
             light.preprocess(scene: self)
         }
+        
+        integrator.preprocess(scene: self, sampler: sampler)
     }
 }
 

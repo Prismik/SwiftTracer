@@ -87,7 +87,7 @@ struct PNG: ImageEncoding {
     func read(file: URL) -> Array2d<Color>? {
         guard let data = try? Data(contentsOf: file) else { return nil }
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
-        guard var cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
+        guard let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
 
         let size = cgImage.height * cgImage.width * 4
         let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)
