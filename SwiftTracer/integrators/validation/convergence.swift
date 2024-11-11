@@ -30,7 +30,7 @@ final class ConvergenceIntegrator: Integrator {
     
     init(integrator: Integrator, steps: Int) {
         self.integrator = integrator
-        self.accumulatedResult = GradientDomainResult(primal: .empty, img: .empty, dx: .empty, dy: .empty)
+        self.accumulatedResult = GradientDomainResult(primal: .empty, directLight: .empty, img: .empty, dx: .empty, dy: .empty)
         self.steps = steps
     }
     
@@ -50,7 +50,7 @@ final class ConvergenceIntegrator: Integrator {
                 newResult = gradientIntegrator.render(scene: scene, sampler: sampler)
             } else {
                 let result = integrator.render(scene: scene, sampler: sampler)
-                newResult = GradientDomainResult(primal: result, img: .empty, dx: .empty, dy: .empty)
+                newResult = GradientDomainResult(primal: result, directLight: .empty, img: .empty, dx: .empty, dy: .empty)
             }
             
             if iteration == 1 {

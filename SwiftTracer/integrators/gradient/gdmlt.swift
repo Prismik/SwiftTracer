@@ -16,6 +16,7 @@ protocol GradientStateMCMC {
     var delta: [Color] { get }
     var shiftContrib: [Color] { get }
     var contrib: Color { get }
+    var directLight: Color { get }
 }
 
 final class GdmltIntegrator: Integrator {
@@ -45,12 +46,14 @@ final class GdmltIntegrator: Integrator {
         var targetFunction: Float = 0
         let delta: [Color]
         let shiftContrib: [Color]
+        let directLight: Color
         let offsets = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
-        init(contrib: Color, pos: Vec2, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2) {
+        init(contrib: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2) {
             self.contrib = contrib
             self.pos = pos
             self.shiftContrib = shiftContribs
+            self.directLight = directLight
             let offsets = self.offsets // Weird quirk about accessing self.delta
             self.delta = gradients.enumerated().map({ (i, gradient) in
                 let forward = offsets[i].sum() > 0
@@ -68,7 +71,7 @@ final class GdmltIntegrator: Integrator {
                 acc += nz * (gradients[i].x + gradients[i].y + gradients[i].z) / 3
             } / Float(offsets.count)
             
-            let luminance = (contrib.x + contrib.y + contrib.z) / 3
+            let luminance = (contrib.x + contrib.y + contrib.z) / 3 + (directLight.x + directLight.y + directLight.z) / 3
             self.targetFunction = gradientLuminance.abs() + alpha * (luminance).abs()
         }
         
@@ -83,6 +86,7 @@ final class GdmltIntegrator: Integrator {
             return MultiStateMCMC(
                 contrib: result.main,
                 pos: pixel,
+                directLight: result.directLight,
                 shiftContribs: result.radiances,
                 gradients: result.gradients
             )
@@ -93,6 +97,7 @@ final class GdmltIntegrator: Integrator {
         var pos: Vec2
         var contrib: Color
         let shiftContrib: [Color]
+        let directLight: Color
         var weight: Float = 0
         var targetFunction: Float = 0
         let delta: [Color]
@@ -100,19 +105,20 @@ final class GdmltIntegrator: Integrator {
 
         private static let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
 
-        init(contrib: Color, pos: Vec2, offset: Vec2, shiftContrib: Color, gradient: Color, alpha: Float = 0.2) {
+        init(contrib: Color, pos: Vec2, offset: Vec2, directLight: Color, shiftContrib: Color, gradient: Color, alpha: Float = 0.2) {
             self.contrib = contrib
             self.pos = pos
             self.offsets = [offset]
             self.shiftContrib = [shiftContrib]
-            
+            self.directLight = directLight
+
             let forward = offset.sum() > 0
             self.delta = if forward { [gradient] } else { [gradient * -1] }
             
             let nz: Float = contrib != .zero && shiftContrib != .zero
                 ? 0.5
                 : 1
-            let luminance = (contrib.x + contrib.y + contrib.z) / 3
+            let luminance = (contrib.x + contrib.y + contrib.z) / 3 + (directLight.x + directLight.y + directLight.z) / 3
             let gradientLuminance = (delta[0].x + delta[0].y + delta[0].z) * nz / 3
             self.targetFunction = gradientLuminance.abs() + alpha * (0.25 * luminance).abs()
         }
@@ -130,6 +136,7 @@ final class GdmltIntegrator: Integrator {
                 contrib: result.main,
                 pos: pixel,
                 offset: shifts[id],
+                directLight: result.directLight,
                 shiftContrib: result.radiances[id],
                 gradient: result.gradients[id]
             )
@@ -140,11 +147,13 @@ final class GdmltIntegrator: Integrator {
         private(set) var img: Array2d<Color>
         private(set) var dx: Array2d<Color>
         private(set) var dy: Array2d<Color>
+        private(set) var directLight: Array2d<Color>
         
         init(x: Int, y: Int) {
             self.img = Array2d(x: x, y: y, value: .zero)
             self.dx = Array2d(x: x, y: y, value: .zero)
             self.dy = Array2d(x: x, y: y, value: .zero)
+            self.directLight = Array2d(x: x, y: y, value: .zero)
         }
 
         // TODO Rework this
@@ -155,6 +164,7 @@ final class GdmltIntegrator: Integrator {
             let x = Int(state.pos.x)
             let y = Int(state.pos.y)
             img[x, y] += state.contrib * w
+            directLight[x, y] += state.directLight
             
             state.weight = 0
             for (i, offset) in state.offsets.enumerated() {
@@ -193,7 +203,7 @@ final class GdmltIntegrator: Integrator {
 
     private var result: GradientDomainResult?
 
-    private let strategy: StrategyGradientMCMC = .single
+    private let strategy: StrategyGradientMCMC = .multi
     private let integrator: SamplerIntegrator
     private let reconstructor: Reconstructing
     private let mapper: any ShiftMapping
@@ -262,10 +272,12 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         
         // TODO Print stats
         // TODO Scale contents of images
-        result.img.scale(by: b / averageLuminance)
+        result.primal.scale(by: b / averageLuminance)
+        result.directLight.scale(by: b / averageLuminance)
 
         return GradientDomainResult(
-            primal: result.img,
+            primal: result.primal,
+            directLight: result.directLight,
             img: result.img,
             dx: result.dx,
             dy: result.dy
@@ -274,12 +286,13 @@ extension GdmltIntegrator: GradientDomainIntegrator {
     
     func reconstruct(using gdr: GradientDomainResult) -> GradientDomainResult {
         print("Reconstructing with dx and dy ...")
-        let reconstruction = reconstructor.reconstruct(image: gdr.img, dx: gdr.dx, dy: gdr.dy)
+        let reconstruction = reconstructor.reconstruct(gradientDomainResult: gdr)
         return GradientDomainResult(
-            primal: gdr.img,
+            primal: gdr.primal,
+            directLight: gdr.directLight,
             img: reconstruction,
-            dx: gdr.dx.transformed { $0.abs },
-            dy: gdr.dy.transformed { $0.abs }
+            dx: gdr.dx,
+            dy: gdr.dy
         )
     }
     
@@ -317,7 +330,8 @@ extension GdmltIntegrator: GradientDomainIntegrator {
             let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
             let dx = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
             let dy = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-            var result = GradientDomainResult(primal: img, img: img, dx: dx, dy: dy)
+            let directLight = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
+            var result = GradientDomainResult(primal: img, directLight: directLight, img: img, dx: dx, dy: dy)
             var processed = 0
             for i in 0 ..< nbChains {
                 group.addTask {
@@ -380,9 +394,10 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         chain.img.scale(by: scale)
         chain.dx.scale(by: scale)
         chain.dy.scale(by: scale)
+        chain.directLight.scale(by: scale)
         acc.img.merge(with: chain.img)
         acc.dx.merge(with: chain.dx)
         acc.dy.merge(with: chain.dy)
-//            print("Chain \(i )step \(n)")
+        acc.directLight.merge(with: chain.directLight)
     }
 }

@@ -33,11 +33,13 @@ struct AnyShiftMappingOperator: Decodable {
 
 struct ShiftResult {
     var main: Color
+    var directLight: Color
     var radiances: [Color]
     var gradients: [Color]
     
     init() {
         main = .zero
+        directLight = .zero
         radiances = Array(repeating: .zero, count: 4)
         gradients = Array(repeating: .zero, count: 4)
     }
@@ -246,7 +248,7 @@ final class PathReconnection: ShiftMapping {
             if main.its.hasEmission && depth == 1 {
                 let frame = Frame(n: main.its.n)
                 let wo = frame.toLocal(v: -main.ray.d)
-                li.main += main.its.shape.light.L(p: main.its.p, n: main.its.n, uv: main.its.uv, wo: wo)
+                li.directLight += main.its.shape.light.L(p: main.its.p, n: main.its.n, uv: main.its.uv, wo: wo)
             }
             
             if !main.its.hasEmission && !main.its.shape.material.hasDelta(uv: main.its.uv, p: main.its.p) {
@@ -301,7 +303,7 @@ final class PathReconnection: ShiftMapping {
                     let frame = Frame(n: s.its.n)
                     let wo = frame.toLocal(v: -s.ray.d)
                     let contrib = s.its.shape.light.L(p: s.its.p, n: s.its.n, uv: s.its.uv, wo: wo)
-                    result = (1, contrib); break
+                    result = (1, .zero); break
                 }
                 
                 let ctx = LightSample.Context(p: s.its.p, n: s.its.n, ns: s.its.n)

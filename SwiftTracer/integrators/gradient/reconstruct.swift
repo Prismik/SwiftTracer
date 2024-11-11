@@ -28,13 +28,16 @@ struct AnyReconstruction: Decodable {
 }
 
 protocol Reconstructing {
-    func reconstruct(image img: Array2d<Color>, dx dxGradients: Array2d<Color>, dy dyGradients: Array2d<Color>) -> Array2d<Color>
+    func reconstruct(gradientDomainResult: GradientDomainResult) -> Array2d<Color>
 }
 
 struct IterativeReconstruction: Reconstructing {
     let maxIterations: Int
     
-    func reconstruct(image img: Array2d<Color>, dx dxGradients: Array2d<Color>, dy dyGradients: Array2d<Color>) -> Array2d<Color> {
+    func reconstruct(gradientDomainResult: GradientDomainResult) -> Array2d<Color> {
+        let img = gradientDomainResult.primal
+        let dx = gradientDomainResult.dx
+        let dy = gradientDomainResult.dy
         let j = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
         var final = Array2d<Color>(copy: img)
         let max: (x: Int, y: Int) = (x: Int(img.xSize - 1), y: Int(img.ySize - 1))
@@ -44,20 +47,20 @@ struct IterativeReconstruction: Reconstructing {
                     var value = final[x, y]
                     var w: Float = 1
                     if x != 0 {
-                        value += final[x - 1, y] + dxGradients[x - 1, y]
+                        value += final[x - 1, y] + dx[x - 1, y]
                         w += 1
                     }
                     if y != 0 {
-                        value += final[x, y - 1] + dyGradients[x, y - 1]
+                        value += final[x, y - 1] + dy[x, y - 1]
                         w += 1
                     }
                     
                     if x != max.x {
-                        value += final[x + 1, y] - dxGradients[x, y]
+                        value += final[x + 1, y] - dx[x, y]
                         w += 1
                     }
                     if y != max.y {
-                        value += final[x, y + 1] - dyGradients[x, y]
+                        value += final[x, y + 1] - dy[x, y]
                         w += 1
                     }
                     j[x, y] = value / w
@@ -66,46 +69,9 @@ struct IterativeReconstruction: Reconstructing {
             
             final = j
         }
+        
+        final.merge(with: gradientDomainResult.directLight)
         return final
     }
 }
 
-struct WeightedIterativeReconstruction: Reconstructing {
-    let maxIterations: Int
-    
-    // TODO
-    func reconstruct(image img: Array2d<Color>, dx dxGradients: Array2d<Color>, dy dyGradients: Array2d<Color>) -> Array2d<Color> {
-        let j = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        var final = Array2d<Color>(copy: img)
-        let max: (x: Int, y: Int) = (x: Int(img.xSize - 1), y: Int(img.ySize - 1))
-        for _ in 0 ..< maxIterations {
-            for x in 0 ..< img.xSize {
-                for y in 0 ..< img.ySize {
-                    var value = final[x, y]
-                    var w: Float = 1
-                    if x != 0 {
-                        value += final[x - 1, y] + dxGradients[x - 1, y]
-                        w += 1
-                    }
-                    if y != 0 {
-                        value += final[x, y - 1] + dyGradients[x, y - 1]
-                        w += 1
-                    }
-                    
-                    if x != max.x {
-                        value += final[x + 1, y] - dxGradients[x, y]
-                        w += 1
-                    }
-                    if y != max.y {
-                        value += final[x, y + 1] - dyGradients[x, y]
-                        w += 1
-                    }
-                    j[x, y] = value / w
-                }
-            }
-            
-            final = j
-        }
-        return final
-    }
-}

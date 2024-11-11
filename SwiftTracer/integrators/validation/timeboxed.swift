@@ -63,12 +63,14 @@ final class TimeboxedIntegrator: Integrator {
         var primal: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
         var dx: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
         var dy: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
+        var directLight: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
         while true {
             let result: GradientDomainResult = integrator.render(scene: scene, sampler: sampler)
             img += result.img
             primal += result.primal
             dx += result.dx
             dy += result.dy
+            directLight += result.directLight
             
             renderTime = start.duration(to: .now)
             guard renderTime <= maxDuration else { break }
@@ -85,7 +87,7 @@ final class TimeboxedIntegrator: Integrator {
         print("Iterations => \(iterations)")
         print("nspp => \(iterations * scene.sampler.nbSamples)")
         
-        let intermediate = GradientDomainResult(primal: primal, img: img, dx: dx, dy: dy)
+        let intermediate = GradientDomainResult(primal: primal, directLight: directLight, img: img, dx: dx, dy: dy)
         return integrator.reconstruct(using: intermediate)
     }
 }

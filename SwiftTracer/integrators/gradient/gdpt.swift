@@ -61,6 +61,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
         let position: Vec2
         let size: Vec2
         let image: Array2d<Color>
+        let directLight: Array2d<Color>
         let dxGradients: Array2d<Color>
         let dyGradients: Array2d<Color>
     }
@@ -68,6 +69,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
     func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
         print("Rendering ...")
         let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
+        let directLight = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
         let dxGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
         let dyGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
 
@@ -80,7 +82,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
                 progress.next()
             }
             
-            return blocks.assemble(into: img, dx: dxGradients, dy: dyGradients)
+            return blocks.assemble(into: img, directLight: directLight, dx: dxGradients, dy: dyGradients)
         }
         
         gcd.wait()
@@ -90,6 +92,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
 //        print("Failed shifts     => \(failedShifts)")
         return GradientDomainResult(
             primal: img,
+            directLight: directLight,
             img: .empty,
             dx: dxGradients,
             dy: dyGradients
@@ -98,9 +101,10 @@ extension GdptIntegrator: GradientDomainIntegrator {
     
     func reconstruct(using gdr: GradientDomainResult) -> GradientDomainResult {
         print("Reconstructing with dx and dy ...")
-        let reconstruction = reconstructor.reconstruct(image: gdr.primal, dx: gdr.dx, dy: gdr.dy)
+        let reconstruction = reconstructor.reconstruct(gradientDomainResult: gdr)
         return GradientDomainResult(
             primal: gdr.primal,
+            directLight: gdr.directLight,
             img: reconstruction,
             dx: gdr.dx,
             dy: gdr.dy
@@ -135,7 +139,8 @@ extension GdptIntegrator: GradientDomainIntegrator {
     private func renderBlock(scene: Scene, size: Vec2, x: Int, y: Int, mapper: ShiftMapping, sampler: Sampler) -> Block {
         let sampler = sampler.new(nspp: sampler.nbSamples)
         let imgSize = Vec2(size.x + 2, size.y + 2)
-        let img = Array2d(x: Int(imgSize.x), y: Int(imgSize.y), value: Color())
+        let img = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
+        let directLight = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
         let dxGradients = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
         let dyGradients = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
         for lx in 0 ..< Int(size.x) {
@@ -147,7 +152,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
                     let base = Vec2(Float(x), Float(y)) + sampler.next2()
                     let newResult = mapper.shift(pixel: base, sampler: sampler, params: ShiftMappingParams(offsets: nil))
                     img[lx+1, ly+1] += newResult.main
-                    
+                    directLight[lx+1, ly+1] += newResult.directLight
                     for (i, offset) in mapper.gradientOffsets.enumerated() {
                         let xShift = lx + 1 + Int(offset.x)
                         let yShift = ly + 1 + Int(offset.y)
@@ -170,12 +175,14 @@ extension GdptIntegrator: GradientDomainIntegrator {
         
         let scaleFactor: Float = 1.0 / Float(sampler.nbSamples)
         img.scale(by: scaleFactor * 0.25)
+        directLight.scale(by: scaleFactor)
         dxGradients.scale(by: scaleFactor)
         dyGradients.scale(by: scaleFactor)
         return Block(
             position: Vec2(Float(x), Float(y)),
             size: size,
             image: img,
+            directLight: directLight,
             dxGradients: dxGradients,
             dyGradients: dyGradients
         )
@@ -183,7 +190,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
 }
 
 private extension [GdptIntegrator.Block] {
-    func assemble(into image: Array2d<Color>, dx: Array2d<Color>, dy: Array2d<Color>) -> GradientDomainResult {
+    func assemble(into image: Array2d<Color>, directLight: Array2d<Color>, dx: Array2d<Color>, dy: Array2d<Color>) -> GradientDomainResult {
         for block in self {
             for lx in (-1 ..< Int(block.size.x) + 1) {
                 for ly in (-1 ..< Int(block.size.y) + 1) {
@@ -193,6 +200,7 @@ private extension [GdptIntegrator.Block] {
 
                     // Radiances from shift, computed into previous positions
                     image[x, y] += block.image[lx+1, ly+1]
+                    directLight[x, y] += block.directLight[lx+1, ly+1]
 
                     // Backward facing gradients
                     dx[x, y] += block.dxGradients[lx+1, ly+1]
@@ -201,6 +209,6 @@ private extension [GdptIntegrator.Block] {
             }
         }
         
-        return GradientDomainResult(primal: image, img: image, dx: dx, dy: dy)
+        return GradientDomainResult(primal: image, directLight: directLight, img: .empty, dx: dx, dy: dy)
     }
 }

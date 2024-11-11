@@ -30,6 +30,7 @@ protocol SamplerIntegrator: AnyObject {
 
 struct GradientDomainResult {
     var primal: Array2d<Color>
+    var directLight: Array2d<Color>
     var img: Array2d<Color>
     var dx: Array2d<Color>
     var dy: Array2d<Color>
@@ -37,6 +38,7 @@ struct GradientDomainResult {
     mutating func scale(by factor: Float) {
         primal.scale(by: factor)
         img.scale(by: factor)
+        directLight.scale(by: factor)
         dx.scale(by: factor)
         dy.scale(by: factor)
     }
@@ -44,6 +46,7 @@ struct GradientDomainResult {
     mutating func merge(with other: GradientDomainResult) {
         primal.merge(with: other.primal)
         img.merge(with: other.img)
+        directLight.merge(with: other.directLight)
         dx.merge(with: other.dx)
         dy.merge(with: other.dy)
     }
