@@ -47,7 +47,7 @@ struct ShiftResult {
 
 protocol ShiftMapping {
     var gradientOffsets: OrderedSet<Vec2> { get }
-
+    var identifier: String { get }
     /// Calculating the contribution of shifted pixels along with the base path and their finite differences.
     func shift(
         pixel: Vec2,
@@ -102,6 +102,8 @@ enum RayState {
 // MARK:  Random sequence replay
 
 final class RandomSequenceReplay: ShiftMapping {
+    let identifier = "rsr"
+
     unowned var scene: Scene!
     
     let gradientOffsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
@@ -117,29 +119,39 @@ final class RandomSequenceReplay: ShiftMapping {
         let base = trace(pixel: pixel, scene: scene, sampler: sampler)
 
         var li = ShiftResult()
-        let offsets: [Color] = filteredOffsets.map {
+        let offsets: [ShiftResult] = filteredOffsets.map {
             sampler.rng.state = seed
             let shift = pixel + $0
             let max = scene.camera.resolution
-            guard (0 ..< max.x).contains(shift.x) && (0 ..< max.y).contains(shift.y) else { return .zero }
+            guard (0 ..< max.x).contains(shift.x) && (0 ..< max.y).contains(shift.y) else { return ShiftResult() }
+            
             return trace(pixel: shift, scene: scene, sampler: sampler)
         }
 
-        li.main = base
-        li.radiances = offsets.map { $0 * 0.5 }
-        li.gradients = offsets.map { ($0 - base) * 0.5 }
+        li.main += base.main * 4 * 0.5
+        li.directLight += base.directLight * 0.5
+        li.radiances = offsets.map { $0.main * 0.5 }
+        li.gradients = offsets.map { ($0.main - base.main) * 0.5 }
         return li
     }
     
-    private func trace(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
+    private func trace(pixel: Vec2, scene: Scene, sampler: Sampler) -> ShiftResult {
+        var li = ShiftResult()
         let ray = scene.camera.createRay(from: pixel)
-        guard let intersection = scene.hit(r: ray) else { return scene.background }
-        let frame = Frame(n: intersection.n)
-        let wo = frame.toLocal(v: -ray.d).normalized()
+        guard let intersection = scene.hit(r: ray) else {
+            li.main = scene.background
+            return li
+        }
         
-        return intersection.hasEmission
-            ? intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
-            : trace(intersection: intersection, ray: ray, scene: scene, sampler: sampler, depth: 0)
+        if intersection.hasEmission {
+            let frame = Frame(n: intersection.n)
+            let wo = frame.toLocal(v: -ray.d).normalized()
+            li.directLight += intersection.shape.light.L(p: intersection.p, n: intersection.n, uv: intersection.uv, wo: wo)
+        } else {
+            li.main += trace(intersection: intersection, ray: ray, scene: scene, sampler: sampler, depth: 0)
+        }
+        
+        return li
     }
     
     private func trace(intersection: Intersection?, ray: Ray, scene: Scene, sampler: Sampler, depth: Int) -> Color {
@@ -207,6 +219,8 @@ final class RandomSequenceReplay: ShiftMapping {
 // MARK:  Path reconnection
 
 final class PathReconnection: ShiftMapping {
+    let identifier = "path reconnect"
+    
     struct Stats {
         var successfulConnections: Int = 0
         var failedConnections: Int = 0
@@ -299,12 +313,7 @@ final class PathReconnection: ShiftMapping {
                 let contrib = s.throughput * shiftBsdfValue * lightSample.L / lightSample.pdf
                 result = (weightDem, contrib)
             case .fresh(let s):
-                guard !s.its.hasEmission else {
-                    let frame = Frame(n: s.its.n)
-                    let wo = frame.toLocal(v: -s.ray.d)
-                    let contrib = s.its.shape.light.L(p: s.its.p, n: s.its.n, uv: s.its.uv, wo: wo)
-                    result = (1, .zero); break
-                }
+                guard !s.its.hasEmission else { result = (1, .zero); break }
                 
                 let ctx = LightSample.Context(p: s.its.p, n: s.its.n, ns: s.its.n)
                 let frame = Frame(n: s.its.n)

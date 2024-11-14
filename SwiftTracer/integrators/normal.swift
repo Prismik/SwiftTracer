@@ -8,6 +8,8 @@
 import Foundation
 
 final class NormalIntegrator: Integrator {
+    let identifier = "normal"
+
     func render(scene: Scene, sampler: Sampler) -> Array2d<Color> {
         return MonteCarloIntegrator.render(integrator: self, scene: scene, sampler: sampler)
     }

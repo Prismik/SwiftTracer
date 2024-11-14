@@ -17,6 +17,8 @@ final class GdptIntegrator: Integrator {
         case minDepth
     }
     
+    let identifier = "gdpt"
+
     private let maxDepth: Int
     private let minDepth: Int
     private let mapper: ShiftMapping
@@ -86,10 +88,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
         }
         
         gcd.wait()
-        
-        // Rework how these stats are built within the shift happening along the main path
-//        print("Successful shifts => \(successfulShifts)")
-//        print("Failed shifts     => \(failedShifts)")
+
         return GradientDomainResult(
             primal: img,
             directLight: directLight,

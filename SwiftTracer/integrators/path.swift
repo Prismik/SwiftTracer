@@ -14,6 +14,7 @@ final class PathIntegrator: Integrator {
         case minDepth
     }
 
+    let identifier = "path"
     let minDepth: Int
     let maxDepth: Int
     let mis: Bool

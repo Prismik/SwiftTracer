@@ -19,6 +19,7 @@ final class DirectIntegrator: Integrator {
         case emitter
     }
 
+    let identifier = "direct"
     let strategy: Strategy
     init(strategy: Strategy) {
         self.strategy = strategy

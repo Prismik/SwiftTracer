@@ -61,6 +61,8 @@ protocol GradientDomainIntegrator {
 protocol Integrator {
     func preprocess(scene: Scene, sampler: Sampler)
     func render(scene: Scene, sampler: Sampler) -> Array2d<Color>
+    
+    var identifier: String { get }
 }
 
 /// Box type for ``Integrator`` protocol that allows to decode integrators in a type agnostic way.

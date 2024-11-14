@@ -171,8 +171,6 @@
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
 		1999D0502C0E48F400358201 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D04F2C0E48C500358201 /* cube.obj */; };
 		1999D0522C0F853000358201 /* uv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0512C0F853000358201 /* uv.swift */; };
-		1999D0592C0F8A4100358201 /* dragon.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0572C0F8A3600358201 /* dragon.obj */; };
-		1999D05A2C0F8A4100358201 /* buddha.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0532C0F8A3100358201 /* buddha.obj */; };
 		1999D05B2C0F8A4100358201 /* bunny.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0542C0F8A3100358201 /* bunny.obj */; };
 		1999D0612C0FE01400358201 /* simple.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D05F2C0FDF7D00358201 /* simple.json */; };
 		1999D06C2C0FE16F00358201 /* threeSpheres.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0622C0FE0A100358201 /* threeSpheres.json */; };
@@ -373,8 +371,6 @@
 				1999D06E2C0FE16F00358201 /* triangle.json in CopyFiles */,
 				1999D06F2C0FE16F00358201 /* cornelBox.json in CopyFiles */,
 				1999D0612C0FE01400358201 /* simple.json in CopyFiles */,
-				1999D0592C0F8A4100358201 /* dragon.obj in CopyFiles */,
-				1999D05A2C0F8A4100358201 /* buddha.obj in CopyFiles */,
 				1999D05B2C0F8A4100358201 /* bunny.obj in CopyFiles */,
 				1999D0502C0E48F400358201 /* cube.obj in CopyFiles */,
 				1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */,

@@ -49,6 +49,8 @@ final class PssmltIntegrator: Integrator {
             state.weight = 0
         }
     }
+    
+    let identifier = "pssmlt"
 
     // TODO Allow to plug and play this thing
     private let integrator: SamplerIntegrator

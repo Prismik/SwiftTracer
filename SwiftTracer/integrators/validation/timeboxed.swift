@@ -14,6 +14,8 @@ final class TimeboxedIntegrator: Integrator {
         case integrator
     }
     
+    let identifier = "timeboxed"
+    
     var gradientDomain: Bool {
         return integrator as? GradientDomainIntegrator != nil
     }

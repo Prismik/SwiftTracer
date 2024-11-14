@@ -16,6 +16,8 @@ final class ConvergenceIntegrator: Integrator {
         case strategy
     }
     
+    let identifier = "convergence"
+    
     var gradientDomain: Bool {
         return integrator as? GradientDomainIntegrator != nil
     }
@@ -65,15 +67,17 @@ final class ConvergenceIntegrator: Integrator {
             
             if let gradientIntegrator = integrator as? GradientDomainIntegrator {
                 let recontsruction = gradientIntegrator.reconstruct(using: accumulatedResult)
-                guard Image(encoding: .exr).write(img: recontsruction.img, to: "convergence-\(iteration).exr") else {
+                guard Image(encoding: .exr).write(img: recontsruction.img, to: "\(integrator.identifier)_\(iteration).exr") else {
                     fatalError("Error in saving convergence image")
                 }
             } else {
-                guard Image(encoding: .exr).write(img: accumulatedResult.primal, to: "convergence-\(iteration).exr") else {
+                guard Image(encoding: .exr).write(img: accumulatedResult.primal, to: "\(integrator.identifier)_\(iteration).exr") else {
                     fatalError("Error in saving convergence image")
                 }
             }
         }
+        
+        dumpTimesToCsv()
         
         if let gradientIntegrator = integrator as? GradientDomainIntegrator {
             return gradientIntegrator.reconstruct(using: accumulatedResult).img
@@ -87,5 +91,21 @@ final class ConvergenceIntegrator: Integrator {
         renderTime += duration
         print("Convergence image \(iteration)/\(steps) rendered in \(duration.components.seconds) seconds")
         times.append(renderTime.components.seconds)
+    }
+    
+    private func dumpTimesToCsv() {
+        let fileManager = FileManager.default
+        var csvString = times.reduce(into: "") { acc, time in
+            acc += "\(time)\n"
+        }
+        csvString.removeLast()
+
+        do {
+            let path = try fileManager.url(for: .documentDirectory, in: .allDomainsMask, appropriateFor: nil, create: false)
+            let filename = path.appendingPathComponent("_time.csv")
+            try csvString.write(to: filename, atomically: true, encoding: .utf8)
+        } catch {
+            print("error creating file")
+        }
     }
 }
