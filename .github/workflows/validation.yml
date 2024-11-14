@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy validation content
 
 on:
   # Runs on pushes targeting the default branch
@@ -25,7 +25,7 @@ jobs:
   # Single deploy job since we're just deploying
   deploy:
     environment:
-      name: github-pages
+      name: validation-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
@@ -37,6 +37,6 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'validation'
-      - name: Deploy to GitHub Pages
+      - name: Deploy to validation Pages
         id: deployment
         uses: actions/deploy-pages@v4
