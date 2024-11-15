@@ -22,7 +22,6 @@ final class PSSMLTSampler: Sampler {
             var result = value
             switch self {
             case let .kelemen(sampler, s2, logRatio):
-                
                 var rand = sampler.gen()
                 let add: Bool
                 if rand < 0.5 {
@@ -56,7 +55,7 @@ final class PSSMLTSampler: Sampler {
         case large
     }
 
-    private struct PrimarySample {
+    struct PrimarySample {
         var value: Float
         /// `time` value when this sample was modified most recently.
         var modify: Int
@@ -83,8 +82,8 @@ final class PSSMLTSampler: Sampler {
     let largeStepRatio: Float
     
     var rng: RNG = RNG()
-
-    private var sampleIndex = 0
+    var sampleIndex = 0
+    var replay: [Float] = []
     private var largeStepTime = 0
     
     /// Number of accepted mutations
@@ -105,9 +104,15 @@ final class PSSMLTSampler: Sampler {
         self.largeStepRatio = largeStepRatio
     }
 
-    // TODO Make sure the new instence maintains integrity of the vectors
-    func copy() -> Self {
-        return .init(nbSamples: self.nbSamples, largeStepRatio: self.largeStepRatio)
+    func copy() -> PSSMLTSampler {
+        let copy = PSSMLTSampler(nbSamples: self.nbSamples, largeStepRatio: self.largeStepRatio)
+        copy.sampleIndex = sampleIndex
+        copy.u = u
+        copy.backup = backup
+        copy.time = time
+        copy.largeStepTime = largeStepTime
+        copy.rng.state = rng.state
+        return copy
     }
     
     func new(nspp: Int) -> Self {
@@ -159,16 +164,9 @@ final class PSSMLTSampler: Sampler {
         return Vec2(next(), next())
     }
 
+    // TODO Find a way to uniform [0 ... 100(, which includes 99.99999999999999 and so on.
     func gen() -> Float {
         Float.random(in: 0 ..< 100, using: &rng) / 100
-    }
-    
-    // TODO Add init with nb samples and copy value here
-    func clone() -> PSSMLTSampler {
-        let newSampler = PSSMLTSampler(nbSamples: nbSamples)
-        newSampler.id = PSSMLTSampler.count + 1
-        PSSMLTSampler.count += 1
-        return newSampler
     }
 
     private func primarySpaceGen(i: Int) -> Float {
@@ -198,6 +196,8 @@ final class PSSMLTSampler: Sampler {
             u[i].value = mutator.mutate(value: u[i].value)
         }
         
-        return u[i].value
+        let value = u[i].value
+        replay.append(value)
+        return value
     }
 }

@@ -115,21 +115,21 @@ final class RandomSequenceReplay: ShiftMapping {
     func shift(pixel: Vec2, sampler: Sampler, params: ShiftMappingParams) -> ShiftResult {
         let filteredOffsets = params.offsets.map { o in gradientOffsets.union(o) } ?? gradientOffsets
 
-        let seed = sampler.rng.state
-        let base = trace(pixel: pixel, scene: scene, sampler: sampler)
-
+        let replaySampler = ReplaySampler(sampler: sampler, random: [])
+        let base = trace(pixel: pixel, scene: scene, sampler: replaySampler)
+    
         var li = ShiftResult()
         let offsets: [ShiftResult] = filteredOffsets.map {
-            sampler.rng.state = seed
+            let shiftSampler = ReplaySampler(sampler: sampler, random: replaySampler.random)
             let shift = pixel + $0
             let max = scene.camera.resolution
             guard (0 ..< max.x).contains(shift.x) && (0 ..< max.y).contains(shift.y) else { return ShiftResult() }
             
-            return trace(pixel: shift, scene: scene, sampler: sampler)
+            return trace(pixel: shift, scene: scene, sampler: shiftSampler)
         }
 
         li.main += base.main * 4 * 0.5
-        li.directLight += base.directLight * 0.5
+        li.directLight += base.directLight
         li.radiances = offsets.map { $0.main * 0.5 }
         li.gradients = offsets.map { ($0.main - base.main) * 0.5 }
         return li

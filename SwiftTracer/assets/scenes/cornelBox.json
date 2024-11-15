@@ -11,10 +11,10 @@
     "background": [0, 0, 0],
     "sampler": {
         "type": "independent",
-        "nspp": 3
+        "nspp": 24
     },
     "integrator": {
-        "type": "timeboxed",
+        "type": "gdmlt",
         "params": {
             "samplesPerChain": 1000,
             "initSamplesCount": 100000,
@@ -23,7 +23,7 @@
             "shiftMapping": { "type": "pathReconnection" },
             "reconstruction": {
                 "type": "iterative",
-                "maxIterations": 50
+                "maxIterations": 100
             },
             "time": 90,
             "integrator": {
@@ -36,7 +36,7 @@
                     "shiftMapping": { "type": "pathReconnection" },
                     "reconstruction": {
                         "type": "iterative",
-                        "maxIterations": 50
+                        "maxIterations": 100
                     }
                 }
             }
@@ -64,11 +64,6 @@
             "albedo": [0.725, 0.71, 0.68]
         },
         {
-            "name": "intheway_box",
-            "type": "diffuse",
-            "albedo": [0.33, 0.33, 0.87]
-        },
-        {
             "name": "short_box",
             "type": "diffuse",
             "albedo": [0.725, 0.71, 0.68]
@@ -84,21 +79,6 @@
         }
     ],
     "shapes": [{
-        "type": "mesh",
-        "transform": [
-            {
-                "scale": [350, 20, 350]
-            },
-            {
-                "rotation": [0, 0, 0]
-            },
-            {
-                "o": [0, 572, 0]
-            }
-        ],
-        "filename": "cube",
-        "material": "intheway_box"
-    }, {
         "transform": [
             {
                 "scale": [59.4811, 60.4394, 60]

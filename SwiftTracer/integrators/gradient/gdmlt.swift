@@ -282,12 +282,13 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         guard let result = result else { fatalError("No result image was returned in the async task") }
         let average = result.primal.reduce(into: .zero) { acc, cur in
             acc += cur.sanitized.luminance
-        } / Float(result.primal.size)
+        }
 
-        result.primal.scale(by: b / average)
-        result.directLight.scale(by: b / average)
-        result.dx.scale(by: b / average)
-        result.dy.scale(by: b / average)
+        let combinedAvg = (average + result.directLight.total.luminance) / Float(result.primal.size)
+        result.primal.scale(by: b / combinedAvg)
+        result.directLight.scale(by: b / combinedAvg)
+        result.dx.scale(by: b / combinedAvg)
+        result.dy.scale(by: b / combinedAvg)
         
         print("smallStepCount => \(stats.small.times)")
         print("largeStepCount => \(stats.large.times)")

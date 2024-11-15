@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19165AD02CE7BA58005E8FB0 /* replay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19165ACF2CE7B984005E8FB0 /* replay.swift */; };
+		19165AD12CE7BA58005E8FB0 /* replay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19165ACF2CE7B984005E8FB0 /* replay.swift */; };
+		19165AD22CE7BA58005E8FB0 /* replay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19165ACF2CE7B984005E8FB0 /* replay.swift */; };
 		1917635E2C20E927007688D4 /* spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1917635D2C20E927007688D4 /* spot.swift */; };
 		193E42502BFE5EA300D96A37 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		193E42522BFE737F00D96A37 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
@@ -52,47 +55,25 @@
 		194480C72CA8CA22002A90C6 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 194480C62CA8CA22002A90C6 /* Progress */; };
 		194480C92CA8CA38002A90C6 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 194480C82CA8CA38002A90C6 /* Algorithms */; };
 		1945A9BE2CDA7687008E72BD /* doorajar.json in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9BD2CDA767D008E72BD /* doorajar.json */; };
-		1945A9C22CDA7808008E72BD /* landscape-with-a-lake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9C12CDA7808008E72BD /* landscape-with-a-lake.jpg */; };
 		1945A9C32CDA7808008E72BD /* Good Textures_005844.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9C02CDA7808008E72BD /* Good Textures_005844.jpg */; };
-		1945A9C42CDA7808008E72BD /* cherry-wood-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9BF2CDA7808008E72BD /* cherry-wood-texture.jpg */; };
-		1945A9D62CDA781B008E72BD /* Mesh015.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9D42CDA781B008E72BD /* Mesh015.obj */; };
 		1945A9D72CDA781B008E72BD /* Mesh010.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9CF2CDA781B008E72BD /* Mesh010.obj */; };
-		1945A9D82CDA781B008E72BD /* Mesh011.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9D02CDA781B008E72BD /* Mesh011.obj */; };
-		1945A9D92CDA781B008E72BD /* Mesh005.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9CA2CDA781B008E72BD /* Mesh005.obj */; };
-		1945A9DA2CDA781B008E72BD /* Mesh006.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9CB2CDA781B008E72BD /* Mesh006.obj */; };
 		1945A9DB2CDA781B008E72BD /* Mesh014.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9D32CDA781B008E72BD /* Mesh014.obj */; };
 		1945A9DC2CDA781B008E72BD /* Mesh013.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9D22CDA781B008E72BD /* Mesh013.obj */; };
 		1945A9DD2CDA781B008E72BD /* Mesh004.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9C92CDA781B008E72BD /* Mesh004.obj */; };
 		1945A9DE2CDA781B008E72BD /* Mesh002.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9C72CDA781B008E72BD /* Mesh002.obj */; };
-		1945A9DF2CDA781B008E72BD /* Mesh016.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9D52CDA781B008E72BD /* Mesh016.obj */; };
-		1945A9E02CDA781B008E72BD /* Mesh008.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9CD2CDA781B008E72BD /* Mesh008.obj */; };
 		1945A9E12CDA781B008E72BD /* Mesh000.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9C52CDA781B008E72BD /* Mesh000.obj */; };
 		1945A9E22CDA781B008E72BD /* Mesh003.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9C82CDA781B008E72BD /* Mesh003.obj */; };
-		1945A9E32CDA781B008E72BD /* Mesh009.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9CE2CDA781B008E72BD /* Mesh009.obj */; };
-		1945A9E42CDA781B008E72BD /* Mesh001.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9C62CDA781B008E72BD /* Mesh001.obj */; };
 		1945A9E52CDA781B008E72BD /* Mesh007.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9CC2CDA781B008E72BD /* Mesh007.obj */; };
-		1945A9E62CDA781B008E72BD /* Mesh012.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1945A9D12CDA781B008E72BD /* Mesh012.obj */; };
 		1945A9E72CDA7834008E72BD /* Mesh000.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9C52CDA781B008E72BD /* Mesh000.obj */; };
-		1945A9E82CDA7834008E72BD /* Mesh001.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9C62CDA781B008E72BD /* Mesh001.obj */; };
 		1945A9E92CDA7834008E72BD /* Mesh002.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9C72CDA781B008E72BD /* Mesh002.obj */; };
 		1945A9EA2CDA7834008E72BD /* Mesh003.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9C82CDA781B008E72BD /* Mesh003.obj */; };
 		1945A9EB2CDA7834008E72BD /* Mesh004.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9C92CDA781B008E72BD /* Mesh004.obj */; };
-		1945A9EC2CDA7834008E72BD /* Mesh005.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9CA2CDA781B008E72BD /* Mesh005.obj */; };
-		1945A9ED2CDA7834008E72BD /* Mesh006.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9CB2CDA781B008E72BD /* Mesh006.obj */; };
 		1945A9EE2CDA7834008E72BD /* Mesh007.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9CC2CDA781B008E72BD /* Mesh007.obj */; };
-		1945A9EF2CDA7834008E72BD /* Mesh008.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9CD2CDA781B008E72BD /* Mesh008.obj */; };
-		1945A9F02CDA7834008E72BD /* Mesh009.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9CE2CDA781B008E72BD /* Mesh009.obj */; };
 		1945A9F12CDA7834008E72BD /* Mesh010.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9CF2CDA781B008E72BD /* Mesh010.obj */; };
-		1945A9F22CDA7834008E72BD /* Mesh011.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9D02CDA781B008E72BD /* Mesh011.obj */; };
-		1945A9F32CDA7834008E72BD /* Mesh012.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9D12CDA781B008E72BD /* Mesh012.obj */; };
 		1945A9F42CDA7834008E72BD /* Mesh013.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9D22CDA781B008E72BD /* Mesh013.obj */; };
 		1945A9F52CDA7834008E72BD /* Mesh014.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9D32CDA781B008E72BD /* Mesh014.obj */; };
-		1945A9F62CDA7834008E72BD /* Mesh015.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9D42CDA781B008E72BD /* Mesh015.obj */; };
-		1945A9F72CDA7834008E72BD /* Mesh016.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9D52CDA781B008E72BD /* Mesh016.obj */; };
 		1945A9F82CDA783D008E72BD /* doorajar.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9BD2CDA767D008E72BD /* doorajar.json */; };
-		1945A9F92CDA783D008E72BD /* cherry-wood-texture.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9BF2CDA7808008E72BD /* cherry-wood-texture.jpg */; };
 		1945A9FA2CDA783D008E72BD /* Good Textures_005844.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9C02CDA7808008E72BD /* Good Textures_005844.jpg */; };
-		1945A9FB2CDA783D008E72BD /* landscape-with-a-lake.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1945A9C12CDA7808008E72BD /* landscape-with-a-lake.jpg */; };
 		1945A9FE2CDD9342008E72BD /* pfm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945A9FD2CDD933E008E72BD /* pfm.swift */; };
 		1945A9FF2CDD9342008E72BD /* pfm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945A9FD2CDD933E008E72BD /* pfm.swift */; };
 		1945AA002CDD9342008E72BD /* pfm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945A9FD2CDD933E008E72BD /* pfm.swift */; };
@@ -123,7 +104,7 @@
 		194632602CD6BB07003D52BA /* timeboxed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946325E2CD6BAF5003D52BA /* timeboxed.swift */; };
 		194D901E2C90D3B200D05F58 /* pssmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901D2C90D3B200D05F58 /* pssmlt.swift */; };
 		194D90202C90D63400D05F58 /* pssmltSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194D901F2C90D63400D05F58 /* pssmltSampler.swift */; };
-		196094BD2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */; };
+		196094BD2CB2FD7F009FDAC4 /* cornelBox.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196094BC2CB2FD7F009FDAC4 /* cornelBox.json */; };
 		196094BF2CB46638009FDAC4 /* gdpt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094BE2CB46636009FDAC4 /* gdpt.swift */; };
 		196094C02CB46638009FDAC4 /* gdpt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094BE2CB46636009FDAC4 /* gdpt.swift */; };
 		196094C32CB5A100009FDAC4 /* shiftMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094C22CB5A0FD009FDAC4 /* shiftMapping.swift */; };
@@ -157,39 +138,15 @@
 		19737CED2C27457900F49204 /* SwiftWavefront in Frameworks */ = {isa = PBXBuildFile; productRef = 19737CEC2C27457900F49204 /* SwiftWavefront */; };
 		19737CF12C2B478D00F49204 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19737CF02C2B478D00F49204 /* Documentation.docc */; };
 		1982F6B32C9B8757000FF286 /* PNG in Frameworks */ = {isa = PBXBuildFile; productRef = 1982F6B22C9B8757000FF286 /* PNG */; };
-		1982F6B52C9B9A17000FF286 /* sun.png in Resources */ = {isa = PBXBuildFile; fileRef = 1982F6B42C9B9A17000FF286 /* sun.png */; };
-		1982F6B62C9B9A59000FF286 /* sun.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1982F6B42C9B9A17000FF286 /* sun.png */; };
-		1982F6BB2C9BA2B9000FF286 /* chest_rough.png in Resources */ = {isa = PBXBuildFile; fileRef = 1982F6B72C9BA2B9000FF286 /* chest_rough.png */; };
-		1982F6BC2C9BA2B9000FF286 /* chest_blend.png in Resources */ = {isa = PBXBuildFile; fileRef = 1982F6B82C9BA2B9000FF286 /* chest_blend.png */; };
-		1982F6BD2C9BA2B9000FF286 /* chest_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1982F6B92C9BA2B9000FF286 /* chest_normal.png */; };
-		1982F6BE2C9BA2B9000FF286 /* chest_albedo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1982F6BA2C9BA2B9000FF286 /* chest_albedo.png */; };
-		1982F6BF2C9BA2D1000FF286 /* chest_rough.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1982F6B72C9BA2B9000FF286 /* chest_rough.png */; };
-		1982F6C02C9BA2D4000FF286 /* chest_normal.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1982F6B92C9BA2B9000FF286 /* chest_normal.png */; };
-		1982F6C12C9BA2D6000FF286 /* chest_blend.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1982F6B82C9BA2B9000FF286 /* chest_blend.png */; };
-		1982F6C22C9BA2D9000FF286 /* chest_albedo.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1982F6BA2C9BA2B9000FF286 /* chest_albedo.png */; };
 		1986951F2C2F367A00EEF672 /* constantEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1986951E2C2F367A00EEF672 /* constantEnvironment.swift */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
 		1999D0502C0E48F400358201 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D04F2C0E48C500358201 /* cube.obj */; };
 		1999D0522C0F853000358201 /* uv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0512C0F853000358201 /* uv.swift */; };
-		1999D05B2C0F8A4100358201 /* bunny.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0542C0F8A3100358201 /* bunny.obj */; };
-		1999D0612C0FE01400358201 /* simple.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D05F2C0FDF7D00358201 /* simple.json */; };
-		1999D06C2C0FE16F00358201 /* threeSpheres.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0622C0FE0A100358201 /* threeSpheres.json */; };
-		1999D06D2C0FE16F00358201 /* teapot.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0642C0FE0EB00358201 /* teapot.json */; };
-		1999D06E2C0FE16F00358201 /* triangle.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0662C0FE10B00358201 /* triangle.json */; };
-		1999D06F2C0FE16F00358201 /* cornelBox.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D06A2C0FE15200358201 /* cornelBox.json */; };
 		1999D0762C0FEF7200358201 /* xctest.png in Resources */ = {isa = PBXBuildFile; fileRef = 1999D0702C0FEC7700358201 /* xctest.png */; };
-		1999D0792C0FF68E00358201 /* roughness.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0772C0FF52100358201 /* roughness.json */; };
 		1999D07C2C1003A100358201 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 1999D07B2C1003A100358201 /* Progress */; };
-		1999D0812C100A6C00358201 /* checkerboardXY.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D07F2C100A1A00358201 /* checkerboardXY.json */; };
-		1999D0842C10E71E00358201 /* textures.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0822C10E61D00358201 /* textures.json */; };
-		1999D08A2C10E8F500358201 /* uv-texture.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0852C10E8EF00358201 /* uv-texture.png */; };
 		1999D08C2C10F37D00358201 /* blend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D08B2C10F37D00358201 /* blend.swift */; };
-		1999D0972C1246B700358201 /* blend.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D08D2C12443800358201 /* blend.json */; };
-		1999D09E2C12490400358201 /* chest.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D09C2C1248F800358201 /* chest.obj */; };
 		1999D0A02C1361BB00358201 /* direct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D09F2C1361BB00358201 /* direct.swift */; };
 		1999D0A42C137BF900358201 /* normalMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0A32C137BF900358201 /* normalMap.swift */; };
-		1999D0A62C1615EE00358201 /* direct.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0A12C136D4100358201 /* direct.json */; };
-		1999D0A72C1615EE00358201 /* metal_normals.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0A52C1615E300358201 /* metal_normals.exr */; };
 		1999D0B22C1797A000358201 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0B12C1797A000358201 /* main.swift */; };
 		1999D0B72C1797D400358201 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA72C2BFBB48100981204 /* utils.swift */; };
 		1999D0B82C1797DC00358201 /* array2d.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3C52C010CB8005CC488 /* array2d.swift */; };
@@ -250,11 +207,6 @@
 		19E808442B2B728C00A37D37 /* sphere.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808432B2B728C00A37D37 /* sphere.swift */; };
 		19E808462B2B729700A37D37 /* shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808452B2B729700A37D37 /* shape.swift */; };
 		19E808482B2B730600A37D37 /* aabb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E808472B2B730600A37D37 /* aabb.swift */; };
-		19E9588F2C1B90E800F63FA5 /* test.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19E958852C1B905900F63FA5 /* test.json */; };
-		19E958902C1B90E800F63FA5 /* mitsuba_mat0.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19E9588A2C1B90D900F63FA5 /* mitsuba_mat0.obj */; };
-		19E958912C1B90E800F63FA5 /* mitsuba_mat1.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19E958892C1B90D900F63FA5 /* mitsuba_mat1.obj */; };
-		19E958922C1B90E800F63FA5 /* mitsuba_mat2.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19E958882C1B90D900F63FA5 /* mitsuba_mat2.obj */; };
-		19E958932C1B90E800F63FA5 /* Plane_mat0.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19E958872C1B90D900F63FA5 /* Plane_mat0.obj */; };
 		19E958972C1BD19E00F63FA5 /* point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E958962C1BD19E00F63FA5 /* point.swift */; };
 		19E958992C1BD1AD00F63FA5 /* light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E958982C1BD1AD00F63FA5 /* light.swift */; };
 		19E9589B2C1C8F1B00F63FA5 /* lightSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E9589A2C1C8F1B00F63FA5 /* lightSampler.swift */; };
@@ -274,16 +226,6 @@
 		19EFB3CD2C03FDDF005CC488 /* normal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CC2C03FDDF005CC488 /* normal.swift */; };
 		19EFB3CF2C0648B1005CC488 /* imageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CE2C0648B1005CC488 /* imageTest.swift */; };
 		19EFB3D02C064A7F005CC488 /* image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CA2C03B88B005CC488 /* image.swift */; };
-		19F816B12C1A27780006B1E1 /* reflect.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816AD2C1A270B0006B1E1 /* reflect.json */; };
-		19F816B22C1A27780006B1E1 /* refract.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816AF2C1A27430006B1E1 /* refract.json */; };
-		19F816B92C1A7CAF0006B1E1 /* odyssey_triangle.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816B52C1A7CA80006B1E1 /* odyssey_triangle.json */; };
-		19F816BA2C1A7CAF0006B1E1 /* odyssey.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816B32C1A7CA80006B1E1 /* odyssey.json */; };
-		19F816BB2C1A7CAF0006B1E1 /* veach.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816B42C1A7CA80006B1E1 /* veach.json */; };
-		19F816C62C1A7D8D0006B1E1 /* floor.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816BF2C1A7D800006B1E1 /* floor.obj */; };
-		19F816C72C1A7D8D0006B1E1 /* plate1.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816BC2C1A7D800006B1E1 /* plate1.obj */; };
-		19F816C82C1A7D8D0006B1E1 /* plate2.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816BD2C1A7D800006B1E1 /* plate2.obj */; };
-		19F816C92C1A7D8D0006B1E1 /* plate3.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816C02C1A7D800006B1E1 /* plate3.obj */; };
-		19F816CA2C1A7D8D0006B1E1 /* plate4.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19F816BE2C1A7D800006B1E1 /* plate4.obj */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -317,61 +259,16 @@
 			dstSubfolderSpec = 7;
 			files = (
 				1945A9F82CDA783D008E72BD /* doorajar.json in CopyFiles */,
-				1945A9F92CDA783D008E72BD /* cherry-wood-texture.jpg in CopyFiles */,
 				1945A9FA2CDA783D008E72BD /* Good Textures_005844.jpg in CopyFiles */,
-				1945A9FB2CDA783D008E72BD /* landscape-with-a-lake.jpg in CopyFiles */,
 				1945A9E72CDA7834008E72BD /* Mesh000.obj in CopyFiles */,
-				1945A9E82CDA7834008E72BD /* Mesh001.obj in CopyFiles */,
 				1945A9E92CDA7834008E72BD /* Mesh002.obj in CopyFiles */,
 				1945A9EA2CDA7834008E72BD /* Mesh003.obj in CopyFiles */,
 				1945A9EB2CDA7834008E72BD /* Mesh004.obj in CopyFiles */,
-				1945A9EC2CDA7834008E72BD /* Mesh005.obj in CopyFiles */,
-				1945A9ED2CDA7834008E72BD /* Mesh006.obj in CopyFiles */,
 				1945A9EE2CDA7834008E72BD /* Mesh007.obj in CopyFiles */,
-				1945A9EF2CDA7834008E72BD /* Mesh008.obj in CopyFiles */,
-				1945A9F02CDA7834008E72BD /* Mesh009.obj in CopyFiles */,
 				1945A9F12CDA7834008E72BD /* Mesh010.obj in CopyFiles */,
-				1945A9F22CDA7834008E72BD /* Mesh011.obj in CopyFiles */,
-				1945A9F32CDA7834008E72BD /* Mesh012.obj in CopyFiles */,
 				1945A9F42CDA7834008E72BD /* Mesh013.obj in CopyFiles */,
 				1945A9F52CDA7834008E72BD /* Mesh014.obj in CopyFiles */,
-				1945A9F62CDA7834008E72BD /* Mesh015.obj in CopyFiles */,
-				1945A9F72CDA7834008E72BD /* Mesh016.obj in CopyFiles */,
-				19E9588F2C1B90E800F63FA5 /* test.json in CopyFiles */,
-				19E958902C1B90E800F63FA5 /* mitsuba_mat0.obj in CopyFiles */,
-				19E958912C1B90E800F63FA5 /* mitsuba_mat1.obj in CopyFiles */,
-				19E958922C1B90E800F63FA5 /* mitsuba_mat2.obj in CopyFiles */,
-				19E958932C1B90E800F63FA5 /* Plane_mat0.obj in CopyFiles */,
-				19F816C62C1A7D8D0006B1E1 /* floor.obj in CopyFiles */,
-				19F816C72C1A7D8D0006B1E1 /* plate1.obj in CopyFiles */,
-				19F816C82C1A7D8D0006B1E1 /* plate2.obj in CopyFiles */,
-				19F816C92C1A7D8D0006B1E1 /* plate3.obj in CopyFiles */,
-				19F816CA2C1A7D8D0006B1E1 /* plate4.obj in CopyFiles */,
-				19F816B92C1A7CAF0006B1E1 /* odyssey_triangle.json in CopyFiles */,
-				19F816BA2C1A7CAF0006B1E1 /* odyssey.json in CopyFiles */,
-				19F816BB2C1A7CAF0006B1E1 /* veach.json in CopyFiles */,
-				19F816B12C1A27780006B1E1 /* reflect.json in CopyFiles */,
-				19F816B22C1A27780006B1E1 /* refract.json in CopyFiles */,
-				1999D0A62C1615EE00358201 /* direct.json in CopyFiles */,
-				1999D0A72C1615EE00358201 /* metal_normals.exr in CopyFiles */,
-				1999D09E2C12490400358201 /* chest.obj in CopyFiles */,
-				1999D0972C1246B700358201 /* blend.json in CopyFiles */,
-				1999D08A2C10E8F500358201 /* uv-texture.png in CopyFiles */,
-				1982F6C22C9BA2D9000FF286 /* chest_albedo.png in CopyFiles */,
-				1982F6C12C9BA2D6000FF286 /* chest_blend.png in CopyFiles */,
-				1982F6C02C9BA2D4000FF286 /* chest_normal.png in CopyFiles */,
-				1982F6BF2C9BA2D1000FF286 /* chest_rough.png in CopyFiles */,
-				1982F6B62C9B9A59000FF286 /* sun.png in CopyFiles */,
-				1999D0842C10E71E00358201 /* textures.json in CopyFiles */,
-				196094BD2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json in CopyFiles */,
-				1999D0812C100A6C00358201 /* checkerboardXY.json in CopyFiles */,
-				1999D0792C0FF68E00358201 /* roughness.json in CopyFiles */,
-				1999D06C2C0FE16F00358201 /* threeSpheres.json in CopyFiles */,
-				1999D06D2C0FE16F00358201 /* teapot.json in CopyFiles */,
-				1999D06E2C0FE16F00358201 /* triangle.json in CopyFiles */,
-				1999D06F2C0FE16F00358201 /* cornelBox.json in CopyFiles */,
-				1999D0612C0FE01400358201 /* simple.json in CopyFiles */,
-				1999D05B2C0F8A4100358201 /* bunny.obj in CopyFiles */,
+				196094BD2CB2FD7F009FDAC4 /* cornelBox.json in CopyFiles */,
 				1999D0502C0E48F400358201 /* cube.obj in CopyFiles */,
 				1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */,
 			);
@@ -380,6 +277,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		19165ACF2CE7B984005E8FB0 /* replay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = replay.swift; sourceTree = "<group>"; };
 		1917635D2C20E927007688D4 /* spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = spot.swift; sourceTree = "<group>"; };
 		193E424F2BFE5EA300D96A37 /* camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = camera.swift; sourceTree = "<group>"; };
 		194480992CA8A5C1002A90C6 /* rng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rng.swift; sourceTree = "<group>"; };
@@ -415,7 +313,7 @@
 		1946325E2CD6BAF5003D52BA /* timeboxed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = timeboxed.swift; sourceTree = "<group>"; };
 		194D901D2C90D3B200D05F58 /* pssmlt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmlt.swift; sourceTree = "<group>"; };
 		194D901F2C90D63400D05F58 /* pssmltSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmltSampler.swift; sourceTree = "<group>"; };
-		196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBoxPssmlt.json; sourceTree = "<group>"; };
+		196094BC2CB2FD7F009FDAC4 /* cornelBox.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBox.json; sourceTree = "<group>"; };
 		196094BE2CB46636009FDAC4 /* gdpt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gdpt.swift; sourceTree = "<group>"; };
 		196094C22CB5A0FD009FDAC4 /* shiftMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shiftMapping.swift; sourceTree = "<group>"; };
 		196094C52CB5CD0B009FDAC4 /* paths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = paths.swift; sourceTree = "<group>"; };
@@ -439,21 +337,11 @@
 		1999D0532C0F8A3100358201 /* buddha.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = buddha.obj; sourceTree = "<group>"; };
 		1999D0542C0F8A3100358201 /* bunny.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bunny.obj; sourceTree = "<group>"; };
 		1999D0572C0F8A3600358201 /* dragon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dragon.obj; sourceTree = "<group>"; };
-		1999D05F2C0FDF7D00358201 /* simple.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = simple.json; sourceTree = "<group>"; };
-		1999D0622C0FE0A100358201 /* threeSpheres.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = threeSpheres.json; sourceTree = "<group>"; };
-		1999D0642C0FE0EB00358201 /* teapot.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = teapot.json; sourceTree = "<group>"; };
-		1999D0662C0FE10B00358201 /* triangle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = triangle.json; sourceTree = "<group>"; };
-		1999D06A2C0FE15200358201 /* cornelBox.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBox.json; sourceTree = "<group>"; };
 		1999D0702C0FEC7700358201 /* xctest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xctest.png; sourceTree = "<group>"; };
-		1999D0772C0FF52100358201 /* roughness.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = roughness.json; sourceTree = "<group>"; };
-		1999D07F2C100A1A00358201 /* checkerboardXY.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = checkerboardXY.json; sourceTree = "<group>"; };
-		1999D0822C10E61D00358201 /* textures.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = textures.json; sourceTree = "<group>"; };
 		1999D0852C10E8EF00358201 /* uv-texture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uv-texture.png"; sourceTree = "<group>"; };
 		1999D08B2C10F37D00358201 /* blend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blend.swift; sourceTree = "<group>"; };
-		1999D08D2C12443800358201 /* blend.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blend.json; sourceTree = "<group>"; };
 		1999D09C2C1248F800358201 /* chest.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = chest.obj; sourceTree = "<group>"; };
 		1999D09F2C1361BB00358201 /* direct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = direct.swift; sourceTree = "<group>"; };
-		1999D0A12C136D4100358201 /* direct.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = direct.json; sourceTree = "<group>"; };
 		1999D0A32C137BF900358201 /* normalMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = normalMap.swift; sourceTree = "<group>"; };
 		1999D0A52C1615E300358201 /* metal_normals.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = metal_normals.exr; sourceTree = "<group>"; };
 		1999D0AF2C1797A000358201 /* histogram */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = histogram; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -486,7 +374,6 @@
 		19E808432B2B728C00A37D37 /* sphere.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sphere.swift; sourceTree = "<group>"; };
 		19E808452B2B729700A37D37 /* shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shape.swift; sourceTree = "<group>"; };
 		19E808472B2B730600A37D37 /* aabb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = aabb.swift; sourceTree = "<group>"; };
-		19E958852C1B905900F63FA5 /* test.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
 		19E958872C1B90D900F63FA5 /* Plane_mat0.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Plane_mat0.obj; sourceTree = "<group>"; };
 		19E958882C1B90D900F63FA5 /* mitsuba_mat2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mitsuba_mat2.obj; sourceTree = "<group>"; };
 		19E958892C1B90D900F63FA5 /* mitsuba_mat1.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mitsuba_mat1.obj; sourceTree = "<group>"; };
@@ -509,11 +396,6 @@
 		19F816A72C1A18160006B1E1 /* quad.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = quad.json; sourceTree = "<group>"; };
 		19F816A92C1A20680006B1E1 /* triangle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = triangle.json; sourceTree = "<group>"; };
 		19F816AB2C1A211A0006B1E1 /* group.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = group.json; sourceTree = "<group>"; };
-		19F816AD2C1A270B0006B1E1 /* reflect.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = reflect.json; sourceTree = "<group>"; };
-		19F816AF2C1A27430006B1E1 /* refract.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = refract.json; sourceTree = "<group>"; };
-		19F816B32C1A7CA80006B1E1 /* odyssey.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = odyssey.json; sourceTree = "<group>"; };
-		19F816B42C1A7CA80006B1E1 /* veach.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = veach.json; sourceTree = "<group>"; };
-		19F816B52C1A7CA80006B1E1 /* odyssey_triangle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = odyssey_triangle.json; sourceTree = "<group>"; };
 		19F816BC2C1A7D800006B1E1 /* plate1.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plate1.obj; sourceTree = "<group>"; };
 		19F816BD2C1A7D800006B1E1 /* plate2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plate2.obj; sourceTree = "<group>"; };
 		19F816BE2C1A7D800006B1E1 /* plate4.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plate4.obj; sourceTree = "<group>"; };
@@ -692,23 +574,7 @@
 			isa = PBXGroup;
 			children = (
 				1945A9BD2CDA767D008E72BD /* doorajar.json */,
-				196094BC2CB2FD7F009FDAC4 /* cornelBoxPssmlt.json */,
-				19F816B52C1A7CA80006B1E1 /* odyssey_triangle.json */,
-				19F816B32C1A7CA80006B1E1 /* odyssey.json */,
-				19F816B42C1A7CA80006B1E1 /* veach.json */,
-				1999D05F2C0FDF7D00358201 /* simple.json */,
-				1999D0622C0FE0A100358201 /* threeSpheres.json */,
-				1999D0642C0FE0EB00358201 /* teapot.json */,
-				1999D0662C0FE10B00358201 /* triangle.json */,
-				1999D06A2C0FE15200358201 /* cornelBox.json */,
-				1999D0772C0FF52100358201 /* roughness.json */,
-				1999D07F2C100A1A00358201 /* checkerboardXY.json */,
-				1999D0822C10E61D00358201 /* textures.json */,
-				1999D08D2C12443800358201 /* blend.json */,
-				1999D0A12C136D4100358201 /* direct.json */,
-				19F816AD2C1A270B0006B1E1 /* reflect.json */,
-				19F816AF2C1A27430006B1E1 /* refract.json */,
-				19E958852C1B905900F63FA5 /* test.json */,
+				196094BC2CB2FD7F009FDAC4 /* cornelBox.json */,
 			);
 			path = scenes;
 			sourceTree = "<group>";
@@ -889,6 +755,7 @@
 		19EFB3C02C010827005CC488 /* samplers */ = {
 			isa = PBXGroup;
 			children = (
+				19165ACF2CE7B984005E8FB0 /* replay.swift */,
 				19EFB3C12C010833005CC488 /* sampler.swift */,
 				19EFB3C32C01085F005CC488 /* independent.swift */,
 				194D901F2C90D63400D05F58 /* pssmltSampler.swift */,
@@ -1052,32 +919,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1982F6BC2C9BA2B9000FF286 /* chest_blend.png in Resources */,
 				1945A9BE2CDA7687008E72BD /* doorajar.json in Resources */,
-				1982F6BE2C9BA2B9000FF286 /* chest_albedo.png in Resources */,
-				1982F6B52C9B9A17000FF286 /* sun.png in Resources */,
-				1945A9D62CDA781B008E72BD /* Mesh015.obj in Resources */,
 				1945A9D72CDA781B008E72BD /* Mesh010.obj in Resources */,
-				1945A9D82CDA781B008E72BD /* Mesh011.obj in Resources */,
-				1945A9D92CDA781B008E72BD /* Mesh005.obj in Resources */,
-				1945A9DA2CDA781B008E72BD /* Mesh006.obj in Resources */,
 				1945A9DB2CDA781B008E72BD /* Mesh014.obj in Resources */,
 				1945A9DC2CDA781B008E72BD /* Mesh013.obj in Resources */,
 				1945A9DD2CDA781B008E72BD /* Mesh004.obj in Resources */,
 				1945A9DE2CDA781B008E72BD /* Mesh002.obj in Resources */,
-				1945A9DF2CDA781B008E72BD /* Mesh016.obj in Resources */,
-				1945A9E02CDA781B008E72BD /* Mesh008.obj in Resources */,
 				1945A9E12CDA781B008E72BD /* Mesh000.obj in Resources */,
 				1945A9E22CDA781B008E72BD /* Mesh003.obj in Resources */,
-				1945A9E32CDA781B008E72BD /* Mesh009.obj in Resources */,
-				1945A9E42CDA781B008E72BD /* Mesh001.obj in Resources */,
 				1945A9E52CDA781B008E72BD /* Mesh007.obj in Resources */,
-				1945A9E62CDA781B008E72BD /* Mesh012.obj in Resources */,
-				1945A9C22CDA7808008E72BD /* landscape-with-a-lake.jpg in Resources */,
 				1945A9C32CDA7808008E72BD /* Good Textures_005844.jpg in Resources */,
-				1945A9C42CDA7808008E72BD /* cherry-wood-texture.jpg in Resources */,
-				1982F6BD2C9BA2B9000FF286 /* chest_normal.png in Resources */,
-				1982F6BB2C9BA2B9000FF286 /* chest_rough.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1144,6 +995,7 @@
 				1945AA1E2CDE9452008E72BD /* exr.swift in Sources */,
 				1999D0C82C17A08E00358201 /* matrix.swift in Sources */,
 				1999D0C92C17A09400358201 /* sphere.swift in Sources */,
+				19165AD12CE7BA58005E8FB0 /* replay.swift in Sources */,
 				196094C72CB5CD17009FDAC4 /* paths.swift in Sources */,
 				1999D0B22C1797A000358201 /* main.swift in Sources */,
 				196094D02CB5D02B009FDAC4 /* edge.swift in Sources */,
@@ -1174,6 +1026,7 @@
 				194480BD2CA8C926002A90C6 /* direct.swift in Sources */,
 				194480B82CA8C914002A90C6 /* uniform.swift in Sources */,
 				194480AB2CA8C8BE002A90C6 /* light.swift in Sources */,
+				19165AD22CE7BA58005E8FB0 /* replay.swift in Sources */,
 				194480BA2CA8C920002A90C6 /* path.swift in Sources */,
 				194480C02CA8C937002A90C6 /* pssmltSampler.swift in Sources */,
 				196094C32CB5A100009FDAC4 /* shiftMapping.swift in Sources */,
@@ -1288,6 +1141,7 @@
 				196094E72CB87C6B009FDAC4 /* float+extensions.swift in Sources */,
 				19BBA7252BF97A9700981204 /* path.swift in Sources */,
 				1986951F2C2F367A00EEF672 /* constantEnvironment.swift in Sources */,
+				19165AD02CE7BA58005E8FB0 /* replay.swift in Sources */,
 				19E808402B2B6E7000A37D37 /* diffuse.swift in Sources */,
 				19BBA7332BFD4F0000981204 /* scene.swift in Sources */,
 			);
