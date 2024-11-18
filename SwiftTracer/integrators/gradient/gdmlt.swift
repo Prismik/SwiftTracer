@@ -31,6 +31,12 @@ final class GdmltIntegrator: Integrator {
         case multi
         case single
         
+        var scalingFactor: Float {
+            switch self {
+            case .single: return 0.25
+            case .multi: return 0.25
+            }
+        }
         func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention) -> GradientStateMCMC {
             return switch self {
                 case .multi: MultiStateMCMC.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: cdf)
@@ -66,7 +72,7 @@ final class GdmltIntegrator: Integrator {
             let gradientLuminance: Float = offsets.enumerated().reduce(into: 0) { (acc, pair) in
                 let (i, _) = pair
                 acc += delta[i].abs.luminance
-            } / Float(offsets.count)
+            }
             
             let luminance = contrib.abs.luminance + directLight.abs.luminance
             self.targetFunction = gradientLuminance + alpha * luminance
@@ -156,7 +162,7 @@ final class GdmltIntegrator: Integrator {
 
         // TODO Rework this
         func add(state: inout GradientStateMCMC) {
-            let w = state.targetFunction == 0
+            let w = state.targetFunction <= 0
                 ? 0
                 : state.weight / state.targetFunction
             
@@ -165,7 +171,6 @@ final class GdmltIntegrator: Integrator {
             img[x, y] += state.contrib * w
             directLight[x, y] += state.directLight * w
             
-            state.weight = 0
             for (i, offset) in state.offsets.enumerated() {
                 let x2 = Int(state.pos.x + offset.x)
                 let y2 = Int(state.pos.y + offset.y)
@@ -179,7 +184,7 @@ final class GdmltIntegrator: Integrator {
                 if offset.x == 0 {
                     let lx = x
                     let ly = forward ? y : y - 1
-                    if (0 ..< dx.xSize).contains(lx) && (0 ..< dx.ySize).contains(ly) {
+                    if (0 ..< dy.xSize).contains(lx) && (0 ..< dy.ySize).contains(ly) {
                         dy[lx, ly] += state.delta[i] * w
                     }
                 } else {
@@ -232,7 +237,6 @@ final class GdmltIntegrator: Integrator {
         }
         cdf.normalize()
         self.shiftCdf = cdf
-        
         self.nspc = samplesPerChain
         self.isc = initSamplesCount
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
@@ -321,20 +325,24 @@ extension GdmltIntegrator: GradientDomainIntegrator {
     /// Computes the normalization factor
     private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [StartupSeed]) {
         var seeds: [StartupSeed] = []
+        var totalValid = isc
         let b = (0 ..< isc).map { _ in
             let currentSeed = sampler.rng.state
             
             let s = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf)
-            if s.targetFunction > 0 {
+            let validSample = s.targetFunction.isFinite && !s.targetFunction.isNaN && !s.targetFunction.isZero
+            if validSample {
                 let values = StartupSeed(
                     value: currentSeed,
                     targetFunction: s.targetFunction
                 )
                 seeds.append(values)
+            } else {
+                totalValid -= 1
             }
 
-            return s.targetFunction
-        }.reduce(0, +) / Float(isc)
+            return validSample ? s.contrib.luminance : 0
+        }.reduce(0, +) / Float(totalValid)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
@@ -412,13 +420,12 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         }
         
         // b * F / (TF * totalSample)
-        let scale = 1 / Float(nspc)
-//        let scale = b / (state.targetFunction * Float(total))
+        // let scale = b / (state.targetFunction * Float(total))
         chain.add(state: &state)
         
+        let scale = 1 / Float(nspc)
         // TODO whats the proper value for single gradient state
-        let primalReuseScale: Float =  (1 / Float(state.offsets.count))
-        chain.img.scale(by: scale * primalReuseScale)
+        chain.img.scale(by: scale * strategy.scalingFactor)
         chain.dx.scale(by: scale)
         chain.dy.scale(by: scale)
         chain.directLight.scale(by: scale)
