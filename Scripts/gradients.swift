@@ -37,11 +37,9 @@ struct Gradients {
             }
         }
         
-        let dxImage = Image(array: dx.transformed { $0.abs })
-        _ = dxImage.write(to: "gradients-dx.png", directory: outputDirectory)
-        let dyImage = Image(array: dy.transformed { $0.abs })
-        _ = dyImage.write(to: "gradients-dy.png", directory: outputDirectory)
+        _ = Image(encoding: .exr).write(img: dx.transformed { $0.abs }, to: "gradients-dx.exr")
+        _ = Image(encoding: .exr).write(img: dy.transformed { $0.abs }, to: "gradients-dy.exr")
         
-        print("Gradient images saved in \(outputDirectory)/gradients-dx.png and \(outputDirectory)/gradients-dy.png.")
+        print("Gradient images saved in \(outputDirectory)/gradients-dx.exr and \(outputDirectory)/gradients-dy.exr.")
     }
 }

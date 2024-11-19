@@ -54,6 +54,7 @@ struct GradientDomainResult {
 
 /// Integraeting in using gradients of the image plane.
 protocol GradientDomainIntegrator {
+    var mapper: ShiftMapping { get }
     func render(scene: Scene, sampler: Sampler) -> GradientDomainResult
     func reconstruct(using gdr: GradientDomainResult) -> GradientDomainResult
 }
@@ -122,9 +123,9 @@ struct AnyIntegrator: Decodable {
             self.wrapped = TimeboxedIntegrator(integrator: integrator.wrapped, time: time)
         case .convergence:
             let params = try container.nestedContainer(keyedBy: ConvergenceIntegrator.CodingKeys.self, forKey: .params)
-            let steps = try params.decode(Int.self, forKey: .steps)
+            let timeout = try params.decode(Int.self, forKey: .timeout)
             let integrator = try params.decode(AnyIntegrator.self, forKey: .integrator)
-            self.wrapped = ConvergenceIntegrator(integrator: integrator.wrapped, steps: steps)
+            self.wrapped = ConvergenceIntegrator(integrator: integrator.wrapped, timeout: timeout)
         }
     }
 }

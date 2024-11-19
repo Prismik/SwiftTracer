@@ -18,10 +18,10 @@ final class GdptIntegrator: Integrator {
     }
     
     let identifier = "gdpt"
-
+    let mapper: ShiftMapping
+    
     private let maxDepth: Int
     private let minDepth: Int
-    private let mapper: ShiftMapping
     private let reconstructor: Reconstructing
     private var successfulShifts: Int = 0
     private var failedShifts: Int = 0

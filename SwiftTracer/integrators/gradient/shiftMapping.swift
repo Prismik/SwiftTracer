@@ -219,7 +219,7 @@ final class RandomSequenceReplay: ShiftMapping {
 // MARK:  Path reconnection
 
 final class PathReconnection: ShiftMapping {
-    let identifier = "path reconnect"
+    let identifier = "pathReconnect"
     
     struct Stats {
         var successfulConnections: Int = 0

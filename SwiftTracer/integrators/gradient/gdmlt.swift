@@ -217,7 +217,7 @@ final class GdmltIntegrator: Integrator {
     private let strategy: StrategyGradientMCMC = .multi
     private let integrator: SamplerIntegrator
     private let reconstructor: Reconstructing
-    private let mapper: any ShiftMapping
+    let mapper: any ShiftMapping
     private let shiftCdf: DistributionOneDimention
     private let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
     
@@ -283,22 +283,16 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         }
         gcd.wait()
         
-        guard let result = result else { fatalError("No result image was returned in the async task") }
-        let average = result.primal.reduce(into: .zero) { acc, cur in
-            acc += cur.sanitized.luminance
-        }
+        guard var result = result else { fatalError("No result image was returned in the async task") }
 
-        let combinedAvg = (average + result.directLight.total.luminance) / Float(result.primal.size)
-        result.primal.scale(by: b / combinedAvg)
-        result.directLight.scale(by: b / combinedAvg)
-        result.dx.scale(by: b / combinedAvg)
-        result.dy.scale(by: b / combinedAvg)
+        let combinedAvg = (result.primal.total.luminance + result.directLight.total.luminance) / Float(result.primal.size)
+        result.scale(by: b / combinedAvg)
         
         print("smallStepCount => \(stats.small.times)")
         print("largeStepCount => \(stats.large.times)")
         print("smallStepAcceptRatio => \(Float(stats.small.accept) / Float(stats.small.accept + stats.small.reject))")
         print("largeStepAcceptRatio => \(Float(stats.large.accept) / Float(stats.large.accept + stats.large.reject))")
-        print("Average luminance => \(average)")
+        print("Average luminance => \(combinedAvg)")
         print("b => \(b)")
 
         return GradientDomainResult(
@@ -358,10 +352,11 @@ extension GdmltIntegrator: GradientDomainIntegrator {
     private func chains(samples: Int, nbChains: Int, scene: Scene, increment: @escaping () -> Void) async -> GradientDomainResult {
         return await withTaskGroup(of: Void.self, returning: GradientDomainResult.self) { group in
             let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
+            let primal = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
             let dx = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
             let dy = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
             let directLight = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-            var result = GradientDomainResult(primal: img, directLight: directLight, img: img, dx: dx, dy: dy)
+            var result = GradientDomainResult(primal: primal, directLight: directLight, img: img, dx: dx, dy: dy)
             var processed = 0
             for i in 0 ..< nbChains {
                 group.addTask {

@@ -10,8 +10,8 @@ import Foundation
 /// Integrates a scene by keeping intermediate rendered images
 final class ConvergenceIntegrator: Integrator {
     enum CodingKeys: String, CodingKey {
-        /// Number of steps, each of them rendering with 2^n samples, where n is the current step.
-        case steps
+        /// Maximum rendering time ine seconds, after which the rendering will end even if target `steps` was not reached.
+        case timeout
         case integrator
         case strategy
     }
@@ -22,7 +22,8 @@ final class ConvergenceIntegrator: Integrator {
         return integrator as? GradientDomainIntegrator != nil
     }
     
-    private(set) var steps: Int
+    /// Timeout in seconds
+    private(set) var timeout: Duration
     private(set) var times: [Int64] = []
 
     private let integrator: Integrator
@@ -30,10 +31,10 @@ final class ConvergenceIntegrator: Integrator {
     private var renderTime: Duration = .zero
     private var accumulatedResult: GradientDomainResult
     
-    init(integrator: Integrator, steps: Int) {
+    init(integrator: Integrator, timeout: Int) {
         self.integrator = integrator
         self.accumulatedResult = GradientDomainResult(primal: .empty, directLight: .empty, img: .empty, dx: .empty, dy: .empty)
-        self.steps = steps
+        self.timeout = Duration.seconds(timeout)
     }
     
     func preprocess(scene: Scene, sampler: any Sampler) {
@@ -43,8 +44,8 @@ final class ConvergenceIntegrator: Integrator {
     func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
         let sampler = sampler.new(nspp: 1)
 
-        for iteration in 1 ... steps {
-            print("Creating convergence image \(iteration)/\(steps) ...")
+        for iteration in 1 ... Int.max {
+            print("Creating convergence image \(iteration) ...")
             
             let start = clock.now
             let newResult: GradientDomainResult
@@ -67,7 +68,7 @@ final class ConvergenceIntegrator: Integrator {
             
             if let gradientIntegrator = integrator as? GradientDomainIntegrator {
                 let recontsruction = gradientIntegrator.reconstruct(using: accumulatedResult)
-                guard Image(encoding: .exr).write(img: recontsruction.img, to: "\(integrator.identifier)_\(iteration).exr") else {
+                guard Image(encoding: .exr).write(img: recontsruction.img, to: "\(integrator.identifier)-\(gradientIntegrator.mapper.identifier)_\(iteration).exr") else {
                     fatalError("Error in saving convergence image")
                 }
             } else {
@@ -75,6 +76,8 @@ final class ConvergenceIntegrator: Integrator {
                     fatalError("Error in saving convergence image")
                 }
             }
+            
+            guard renderTime < timeout else { break }
         }
         
         dumpTimesToCsv()
@@ -89,7 +92,7 @@ final class ConvergenceIntegrator: Integrator {
     private func registerTime(start: ContinuousClock.Instant, iteration: Int) {
         let duration = start.duration(to: .now)
         renderTime += duration
-        print("Convergence image \(iteration)/\(steps) rendered in \(duration.components.seconds) seconds")
+        print("Convergence image \(iteration) rendered in \(duration.components.seconds) seconds")
         times.append(renderTime.components.seconds)
     }
     
