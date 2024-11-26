@@ -9,7 +9,7 @@ import Foundation
 
 enum Texture {
     case constant(value: Color)
-    case textureMap(values: Array2d<Color>, scale: Float, uvScale: Vec2, uvOffset: Vec2)
+    case textureMap(values: PixelBuffer, scale: Float, uvScale: Vec2, uvOffset: Vec2)
     case checkerboard2d(color1: Color, color2: Color, uvScale: Vec2, uvOffset: Vec2)
     
     /// Get the texture `Float` value at the given uv point `(R=G=B)`.
@@ -37,8 +37,8 @@ enum Texture {
     }
     
     
-    private func bilinearInterpolate(uv: Vec2, values: Array2d<Color>, scale: Vec2, offset: Vec2) -> Color {
-        let xy = uv.toXY(lengths: Vec2(Float(values.xSize), Float(values.ySize)), scale: scale, offset: offset)
+    private func bilinearInterpolate(uv: Vec2, values: PixelBuffer, scale: Vec2, offset: Vec2) -> Color {
+        let xy = uv.toXY(lengths: Vec2(Float(values.width), Float(values.height)), scale: scale, offset: offset)
         let p00 = Vec2(floor(xy.x), floor(xy.y))
         let p01 = Vec2(floor(xy.x), ceil(xy.y))
         let p10 = Vec2(ceil(xy.x), floor(xy.y))

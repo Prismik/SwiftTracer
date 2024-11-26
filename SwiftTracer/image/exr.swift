@@ -11,42 +11,15 @@ import UniformTypeIdentifiers
 import ModelIO
 
 struct EXR: ImageEncoding {
-    func read(file: URL) -> Array2d<Color>? {
-        guard let data = try? Data(contentsOf: file) else { return nil }
+    func read(file: URL) -> PixelBuffer? {
+        guard let texture = MDLTexture(named: file.absoluteString) else { return nil }
+        guard let data = texture.texelDataWithTopLeftOrigin(atMipLevel: 0, create: true) else { return nil }
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         guard let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
-
-        let size = cgImage.height * cgImage.width * 8
-        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)
-        let raw = Array2d<Color>(x: cgImage.width, y: cgImage.height, value: .zero)
-        guard let pixels = malloc(size) else { return nil }
-        guard let context = CGContext(
-            data: pixels,
-            width: cgImage.width,
-            height: cgImage.height,
-            bitsPerComponent: 8,
-            bytesPerRow: 4 * cgImage.width,
-            space: colorSpace!,
-            bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
-        ) else { return nil }
-
-        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: context.width, height: context.height), byTiling: false)
-        let mem = pixels.assumingMemoryBound(to: UInt8.self)
-        for x in 0 ..< context.width {
-            for y in 0 ..< context.height {
-                let i = context.bytesPerRow * y + MemoryLayout<BitmapPixel>.size * x
-                let r = Float(mem[i]) / 255
-                let g = Float(mem[i + 1]) / 255
-                let b = Float(mem[i + 2]) / 255
-                raw[x, y] = Color(r, g, b).toLinearRGB()
-            }
-        }
-        
-        free(pixels)
-        return raw
+        return nil
     }
 
-    func write(img: Array2d<Color>, to destination: URL) -> Bool {
+    func write(img: PixelBuffer, to destination: URL) -> Bool {
         let buffer = UnsafeMutableBufferPointer<Float32>.allocate(capacity: img.size * 4)
         for (i, pixel) in img.enumerated() {
             let srgb = pixel.toSRGB()
@@ -63,8 +36,8 @@ struct EXR: ImageEncoding {
             data: data,
             topLeftOrigin: true,
             name: destination.absoluteString,
-            dimensions: SIMD2<Int32>(Int32(img.xSize), Int32(img.ySize)),
-            rowStride: img.xSize * MemoryLayout<Float>.size * 4,
+            dimensions: SIMD2<Int32>(Int32(img.width), Int32(img.height)),
+            rowStride: img.width * MemoryLayout<Float>.size * 4,
             channelCount: 4,
             channelEncoding: .float32,
             isCube: false

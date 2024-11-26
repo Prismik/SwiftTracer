@@ -33,7 +33,7 @@ final class GdptIntegrator: Integrator {
         self.maxDepth = maxDepth
     }
 
-    func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
+    func render(scene: Scene, sampler: any Sampler) -> PixelBuffer {
         let result: GradientDomainResult = render(scene: scene, sampler: sampler)
         return result.img
     }
@@ -62,18 +62,18 @@ extension GdptIntegrator: GradientDomainIntegrator {
     internal struct Block {
         let position: Vec2
         let size: Vec2
-        let image: Array2d<Color>
-        let directLight: Array2d<Color>
-        let dxGradients: Array2d<Color>
-        let dyGradients: Array2d<Color>
+        let image: PixelBuffer
+        let directLight: PixelBuffer
+        let dxGradients: PixelBuffer
+        let dyGradients: PixelBuffer
     }
     
     func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
         print("Rendering ...")
-        let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
-        let directLight = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
-        let dxGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        let dyGradients = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
+        let img = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
+        let directLight = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
+        let dxGradients = PixelBuffer(width: img.width, height: img.height, value: .zero)
+        let dyGradients = PixelBuffer(width: img.width, height: img.height, value: .zero)
 
         let gcd = DispatchGroup()
         gcd.enter()
@@ -138,10 +138,10 @@ extension GdptIntegrator: GradientDomainIntegrator {
     private func renderBlock(scene: Scene, size: Vec2, x: Int, y: Int, mapper: ShiftMapping, sampler: Sampler) -> Block {
         let sampler = sampler.new(nspp: sampler.nbSamples)
         let imgSize = Vec2(size.x + 2, size.y + 2)
-        let img = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
-        let directLight = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
-        let dxGradients = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
-        let dyGradients = Array2d<Color>(x: Int(imgSize.x), y: Int(imgSize.y), value: .zero)
+        let img = PixelBuffer(width: Int(imgSize.x), height: Int(imgSize.y), value: .zero)
+        let directLight = PixelBuffer(width: Int(imgSize.x), height: Int(imgSize.y), value: .zero)
+        let dxGradients = PixelBuffer(width: Int(imgSize.x), height: Int(imgSize.y), value: .zero)
+        let dyGradients = PixelBuffer(width: Int(imgSize.x), height: Int(imgSize.y), value: .zero)
         for lx in 0 ..< Int(size.x) {
             for ly in 0 ..< Int(size.y) {
                 for _ in 0 ..< sampler.nbSamples {
@@ -156,7 +156,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
                         let xShift = lx + 1 + Int(offset.x)
                         let yShift = ly + 1 + Int(offset.y)
                         
-                        if (0 ..< img.xSize).contains(xShift) && (0 ..< img.ySize).contains(yShift) {
+                        if (0 ..< img.width).contains(xShift) && (0 ..< img.height).contains(yShift) {
                             img[xShift, yShift] += newResult.radiances[i]
                         }
                         
@@ -189,13 +189,13 @@ extension GdptIntegrator: GradientDomainIntegrator {
 }
 
 private extension [GdptIntegrator.Block] {
-    func assemble(into image: Array2d<Color>, directLight: Array2d<Color>, dx: Array2d<Color>, dy: Array2d<Color>) -> GradientDomainResult {
+    func assemble(into image: PixelBuffer, directLight: PixelBuffer, dx: PixelBuffer, dy: PixelBuffer) -> GradientDomainResult {
         for block in self {
             for lx in (-1 ..< Int(block.size.x) + 1) {
                 for ly in (-1 ..< Int(block.size.y) + 1) {
                     let (x, y): (Int, Int) = (lx + Int(block.position.x), ly + Int(block.position.y))
-                    guard x >= 0 && x < image.xSize else { continue }
-                    guard y >= 0 && y < image.ySize else { continue }
+                    guard x >= 0 && x < image.width else { continue }
+                    guard y >= 0 && y < image.height else { continue }
 
                     // Radiances from shift, computed into previous positions
                     image[x, y] += block.image[lx+1, ly+1]

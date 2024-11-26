@@ -7,26 +7,26 @@
 
 
 struct Gradients {
-    let image: Array2d<Color>
+    let image: PixelBuffer
     let outputDirectory: String
 
     func run() {
         let img = image
-        let dx = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        let dy = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        for x in 0 ..< img.xSize {
-            for y in 0 ..< img.ySize {
+        let dx = PixelBuffer(width: img.width, height: img.height, value: .zero)
+        let dy = PixelBuffer(width: img.width, height: img.height, value: .zero)
+        for x in 0 ..< img.width {
+            for y in 0 ..< img.height {
                 let base = img[x, y]
                 let left: Color = x == 0
                     ? Color()
                     : img[x - 1, y]
-                let right: Color = x == img.xSize - 1
+                let right: Color = x == img.width - 1
                     ? Color()
                     : img[x + 1, y]
                 let top: Color = y == 0
                     ? Color()
                     : img[x, y - 1]
-                let bottom: Color = y == img.ySize - 1
+                let bottom: Color = y == img.height - 1
                     ? Color()
                     : img[x, y + 1]
                 
@@ -37,9 +37,9 @@ struct Gradients {
             }
         }
         
-        _ = Image(encoding: .exr).write(img: dx.transformed { $0.abs }, to: "gradients-dx.exr")
-        _ = Image(encoding: .exr).write(img: dy.transformed { $0.abs }, to: "gradients-dy.exr")
+        _ = Image(encoding: .png).write(img: dx.transformed { $0.abs }, to: "gradients-dx.png")
+        _ = Image(encoding: .png).write(img: dy.transformed { $0.abs }, to: "gradients-dy.png")
         
-        print("Gradient images saved in \(outputDirectory)/gradients-dx.exr and \(outputDirectory)/gradients-dy.exr.")
+        print("Gradient images saved in \(outputDirectory)/gradients-dx.png and \(outputDirectory)/gradients-dy.png.")
     }
 }

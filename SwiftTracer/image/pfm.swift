@@ -8,12 +8,12 @@
 import Foundation
 
 struct PFM: ImageEncoding {
-    func read(file: URL) -> Array2d<Color>? {
-        let result = Array2d<Color>()
+    func read(file: URL) -> PixelBuffer? {
+        let result = PixelBuffer()
         return result
     }
     
-    func write(img: Array2d<Color>, to destination: URL) -> Bool {
+    func write(img: PixelBuffer, to destination: URL) -> Bool {
         img.flipVertically()
         var data = Data()
         for var pixel in img {
@@ -25,7 +25,7 @@ struct PFM: ImageEncoding {
         guard FileManager.default.createFile(atPath: destination.path, contents: nil, attributes: nil) else { return false }
         guard let handle = FileHandle(forWritingAtPath: destination.path) else { return false }
         guard let line1 = "PF\n".data(using: .utf8) else { return false }
-        guard let line2 = "\(img.xSize) \(img.ySize)\n".data(using: .utf8) else { return false }
+        guard let line2 = "\(img.width) \(img.height)\n".data(using: .utf8) else { return false }
         guard let line3 = "-1.0\n".data(using: .utf8) else { return false }
         
         do {

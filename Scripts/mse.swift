@@ -8,8 +8,8 @@
 /// Contains the computations for the mean squared error between to images.
 /// > Important: The size of both `original` and `compared` must be the same.
 struct MeanSquaredError {
-    let original: Array2d<Color>
-    let compared: Array2d<Color>
+    let original: PixelBuffer
+    let compared: PixelBuffer
     
     private let max: Float = 255
     func run() -> Void {
@@ -18,7 +18,7 @@ struct MeanSquaredError {
     }
     
     func eval() -> Float {
-        guard original.xSize == compared.xSize && original.ySize == compared.ySize else { fatalError("Cannot compute MSE of differently sized images") }
+        guard original.width == compared.width && original.height == compared.height else { fatalError("Cannot compute MSE of differently sized images") }
         
         let squaredErrorSum: Float = original.enumerated().reduce(into: 0) { acc, pair in
             let (i, o) = pair

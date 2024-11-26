@@ -50,7 +50,7 @@ final class Scene {
         return LightSample(L: sample.L / source.prob, wi: sample.wi, p: sample.p, n: sample.n, pdf: source.prob * sample.pdf)
     }
     
-    func render() -> [Array2d<Color>] {
+    func render() -> [PixelBuffer] {
         if let timeboxedIntegrator = integrator as? TimeboxedIntegrator {
             if timeboxedIntegrator.gradientDomain {
                 let result: GradientDomainResult = timeboxedIntegrator.render(scene: self, sampler: sampler)

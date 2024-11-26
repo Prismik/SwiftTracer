@@ -25,6 +25,7 @@ final class GdmltIntegrator: Integrator {
         case samplesPerChain
         case initSamplesCount
         case reconstruction
+        case heatmap
     }
 
     internal enum StrategyGradientMCMC {
@@ -33,7 +34,7 @@ final class GdmltIntegrator: Integrator {
         
         var scalingFactor: Float {
             switch self {
-            case .single: return 0.25
+            case .single: return 0.5
             case .multi: return 0.25
             }
         }
@@ -75,7 +76,7 @@ final class GdmltIntegrator: Integrator {
             }
             
             let luminance = contrib.abs.luminance + directLight.abs.luminance
-            self.targetFunction = gradientLuminance + alpha * luminance
+            self.targetFunction = gradientLuminance + alpha * 0.25 * luminance
         }
         
         static func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention) -> GradientStateMCMC {
@@ -106,7 +107,7 @@ final class GdmltIntegrator: Integrator {
         let delta: [Color]
         let offsets: [Vec2]
 
-        private static let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
+        private static let shifts: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
         init(contrib: Color, pos: Vec2, offset: Vec2, directLight: Color, shiftContrib: Color, gradient: Color, alpha: Float = 0.2) {
             self.contrib = contrib
@@ -118,8 +119,8 @@ final class GdmltIntegrator: Integrator {
             let forward = offset.sum() > 0
             self.delta = if forward { [gradient] } else { [gradient * -1] }
             
-            let luminance = contrib.luminance.abs() + directLight.luminance.abs()
-            let gradientLuminance = delta[0].luminance.abs()
+            let luminance = contrib.abs.luminance + directLight.abs.luminance
+            let gradientLuminance = delta[0].abs.luminance
             self.targetFunction = gradientLuminance + alpha * (0.25 * luminance)
         }
         
@@ -148,20 +149,20 @@ final class GdmltIntegrator: Integrator {
     }
     
     private class MarkovChain {
-        private(set) var img: Array2d<Color>
-        private(set) var dx: Array2d<Color>
-        private(set) var dy: Array2d<Color>
-        private(set) var directLight: Array2d<Color>
+        private(set) var img: PixelBuffer
+        private(set) var dx: PixelBuffer
+        private(set) var dy: PixelBuffer
+        private(set) var directLight: PixelBuffer
         
         init(x: Int, y: Int) {
-            self.img = Array2d(x: x, y: y, value: .zero)
-            self.dx = Array2d(x: x, y: y, value: .zero)
-            self.dy = Array2d(x: x, y: y, value: .zero)
-            self.directLight = Array2d(x: x, y: y, value: .zero)
+            self.img = PixelBuffer(width: x, height: y, value: .zero)
+            self.dx = PixelBuffer(width: x, height: y, value: .zero)
+            self.dy = PixelBuffer(width: x, height: y, value: .zero)
+            self.directLight = PixelBuffer(width: x, height: y, value: .zero)
         }
 
         // TODO Rework this
-        func add(state: inout GradientStateMCMC) {
+        func add(state: inout GradientStateMCMC, heatmap: inout Heatmap?) {
             let w = state.targetFunction <= 0
                 ? 0
                 : state.weight / state.targetFunction
@@ -170,13 +171,15 @@ final class GdmltIntegrator: Integrator {
             let y = Int(state.pos.y)
             img[x, y] += state.contrib * w
             directLight[x, y] += state.directLight * w
+            heatmap?.increment(at: state.pos)
             
             for (i, offset) in state.offsets.enumerated() {
                 let x2 = Int(state.pos.x + offset.x)
                 let y2 = Int(state.pos.y + offset.y)
                 
-                if (0 ..< img.xSize).contains(x2) && (0 ..< img.ySize).contains(y2) {
+                if (0 ..< img.width).contains(x2) && (0 ..< img.height).contains(y2) {
                     img[x2, y2] += state.shiftContrib[i] * w
+                    heatmap?.increment(at: state.pos + offset)
                 }
                 
                 let forward = offset.sum() > 0
@@ -184,13 +187,13 @@ final class GdmltIntegrator: Integrator {
                 if offset.x == 0 {
                     let lx = x
                     let ly = forward ? y : y - 1
-                    if (0 ..< dy.xSize).contains(lx) && (0 ..< dy.ySize).contains(ly) {
+                    if (0 ..< dy.width).contains(lx) && (0 ..< dy.height).contains(ly) {
                         dy[lx, ly] += state.delta[i] * w
                     }
                 } else {
                     let lx = forward ? x : x - 1
                     let ly = y
-                    if (0 ..< dx.xSize).contains(lx) && (0 ..< dx.ySize).contains(ly) {
+                    if (0 ..< dx.width).contains(lx) && (0 ..< dx.height).contains(ly) {
                         dx[lx, ly] += state.delta[i] * w
                     }
                 }
@@ -226,8 +229,8 @@ final class GdmltIntegrator: Integrator {
     private var seeds: [StartupSeed] = []
     
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
-
-    init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int) {
+    private var heatmap: Heatmap?
+    init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, heatmap: Bool) {
         self.mapper = mapper
         self.integrator = PathIntegrator(minDepth: 0, maxDepth: 16)
         self.reconstructor = reconstructor
@@ -239,10 +242,11 @@ final class GdmltIntegrator: Integrator {
         self.shiftCdf = cdf
         self.nspc = samplesPerChain
         self.isc = initSamplesCount
+        self.heatmap = heatmap ? Heatmap(floor: Color(0, 0, 1), ceil: Color(1, 1, 0)) : nil
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 
-    func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
+    func render(scene: Scene, sampler: any Sampler) -> PixelBuffer {
         let result: GradientDomainResult = render(scene: scene, sampler: sampler)
         return result.img
     }
@@ -294,6 +298,10 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         print("largeStepAcceptRatio => \(Float(stats.large.accept) / Float(stats.large.accept + stats.large.reject))")
         print("Average luminance => \(combinedAvg)")
         print("b => \(b)")
+
+        if let img = heatmap?.generate(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y)) {
+            _ = Image(encoding: .png).write(img: img, to: "\(identifier)_heatmap.png")
+        }
 
         return GradientDomainResult(
             primal: result.primal,
@@ -351,11 +359,11 @@ extension GdmltIntegrator: GradientDomainIntegrator {
     
     private func chains(samples: Int, nbChains: Int, scene: Scene, increment: @escaping () -> Void) async -> GradientDomainResult {
         return await withTaskGroup(of: Void.self, returning: GradientDomainResult.self) { group in
-            let img = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
-            let primal = Array2d<Color>(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
-            let dx = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-            let dy = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-            let directLight = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
+            let img = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
+            let primal = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
+            let dx = PixelBuffer(width: img.width, height: img.height, value: .zero)
+            let dy = PixelBuffer(width: img.width, height: img.height, value: .zero)
+            let directLight = PixelBuffer(width: img.width, height: img.height, value: .zero)
             var result = GradientDomainResult(primal: primal, directLight: directLight, img: img, dx: dx, dy: dy)
             var processed = 0
             for i in 0 ..< nbChains {
@@ -405,18 +413,18 @@ extension GdmltIntegrator: GradientDomainIntegrator {
             proposedState.weight += acceptProbability
             
             if acceptProbability == 1 || acceptProbability > Float.random(in: 0 ... 1) {
-                chain.add(state: &state)
+                chain.add(state: &state, heatmap: &heatmap)
                 sampler.accept()
                 state = proposedState
             } else {
-                chain.add(state: &proposedState)
+                chain.add(state: &proposedState, heatmap: &heatmap)
                 sampler.reject()
             }
         }
         
         // b * F / (TF * totalSample)
         // let scale = b / (state.targetFunction * Float(total))
-        chain.add(state: &state)
+        chain.add(state: &state, heatmap: &heatmap)
         
         let scale = 1 / Float(nspc)
         // TODO whats the proper value for single gradient state

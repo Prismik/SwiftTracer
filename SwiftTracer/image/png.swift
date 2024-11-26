@@ -12,18 +12,18 @@ import PNG
 
 class Image {
     private var path: String = ""
-    private var pixels: Array2d<Color>
-    init(array: Array2d<Color>) {
+    private var pixels: PixelBuffer
+    init(array: PixelBuffer) {
         self.pixels = array
     }
 
     init(filename: String) {
         let url = URL(fileURLWithPath: "SwiftTracer/assets/scenes/\(filename)")
         self.path = url.absoluteString
-        self.pixels = Array2d<Color>()
+        self.pixels = PixelBuffer()
     }
 
-    func read() -> Array2d<Color> {
+    func read() -> PixelBuffer {
         do {
             guard let image:PNG.Image = try .decompress(path: path) else {
                 return pixels
@@ -31,7 +31,7 @@ class Image {
 
             let rgba: [PNG.RGBA<UInt8>] = image.unpack(as: PNG.RGBA<UInt8>.self)
             let size: (x:Int, y:Int) = image.size
-            self.pixels = Array2d<Color>(x: size.x, y: size.x, value: .zero)
+            self.pixels = PixelBuffer(width: size.x, height: size.x, value: .zero)
             for x in 0 ..< size.x {
                 for y in 0 ..< size.y {
                     let i = x + y * size.x
@@ -61,7 +61,7 @@ class Image {
                 )
             )
         })
-        let size = (pixels.xSize, pixels.ySize)
+        let size = (pixels.width, pixels.height)
         let image: PNG.Image = .init(
             packing: packed,
             size: size,
@@ -84,14 +84,14 @@ import UniformTypeIdentifiers
 ///
 /// Based on [SwiftRay](https://github.com/Ceroce/SwiftRay/blob/master/SwiftRay/SwiftRay/Bitmap.swift) by Renaud Pradenc.
 struct PNG: ImageEncoding {
-    func read(file: URL) -> Array2d<Color>? {
+    func read(file: URL) -> PixelBuffer? {
         guard let data = try? Data(contentsOf: file) else { return nil }
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         guard let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
 
         let size = cgImage.height * cgImage.width * 4
         let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)
-        let raw = Array2d<Color>(x: cgImage.width, y: cgImage.height, value: .zero)
+        let raw = PixelBuffer(width: cgImage.width, height: cgImage.height, value: .zero)
         guard let pixels = malloc(size) else { return nil }
         guard let context = CGContext(
             data: pixels,
@@ -119,16 +119,16 @@ struct PNG: ImageEncoding {
         return raw
     }
 
-    func write(img: Array2d<Color>, to destination: URL) -> Bool {
-        let bytesPerRow = img.xSize * MemoryLayout<BitmapPixel>.size
-        let size = img.ySize * bytesPerRow
+    func write(img: PixelBuffer, to destination: URL) -> Bool {
+        let bytesPerRow = img.width * MemoryLayout<BitmapPixel>.size
+        let size = img.height * bytesPerRow
         let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)
         
         guard let pixels = malloc(size) else { return false }
         guard let context = CGContext(
             data: pixels,
-            width: img.xSize,
-            height: img.ySize,
+            width: img.width,
+            height: img.height,
             bitsPerComponent: 8,
             bytesPerRow: bytesPerRow,
             space: colorSpace!,

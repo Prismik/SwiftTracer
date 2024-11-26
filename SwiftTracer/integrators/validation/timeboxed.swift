@@ -28,12 +28,12 @@ final class TimeboxedIntegrator: Integrator {
         self.maxDuration = .seconds(time)
     }
 
-    func render(scene: Scene, sampler: Sampler) -> Array2d<Color> {
+    func render(scene: Scene, sampler: Sampler) -> PixelBuffer {
         let clock = ContinuousClock()
         let start = clock.now
         var renderTime: Duration = .zero
         var iterations = 1
-        var img: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
+        var img = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
         while true {
             let result = integrator.render(scene: scene, sampler: sampler)
             img += result
@@ -61,11 +61,11 @@ final class TimeboxedIntegrator: Integrator {
         let start = clock.now
         var renderTime: Duration = .zero
         var iterations = 1
-        var img: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
-        var primal: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
-        var dx: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
-        var dy: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
-        var directLight: Array2d<Color> = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: .zero)
+        var img = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
+        var primal = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
+        var dx = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
+        var dy = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
+        var directLight = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
         while true {
             let result: GradientDomainResult = integrator.render(scene: scene, sampler: sampler)
             img += result.img

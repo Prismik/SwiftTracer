@@ -32,10 +32,10 @@ final class PssmltIntegrator: Integrator {
     }
 
     private class MarkovChain {
-        private(set) var img: Array2d<Color>
+        private(set) var img: PixelBuffer
         
         init(x: Int, y: Int) {
-            img = Array2d(x: x, y: y, value: .zero)
+            img = PixelBuffer(width: x, height: y, value: .zero)
         }
 
         // TODO inout not necessary with current way weights are built
@@ -61,7 +61,7 @@ final class PssmltIntegrator: Integrator {
     /// Samples per pixel (can derive total sample from this).
     private var nspp: Int = 10
 
-    private var result: Array2d<Color>?
+    private var result: PixelBuffer?
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
 
     private var b: Float = 0
@@ -82,7 +82,7 @@ final class PssmltIntegrator: Integrator {
         self.seeds = seeds
     }
 
-    func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
+    func render(scene: Scene, sampler: any Sampler) -> PixelBuffer {
         self.nspp = sampler.nbSamples
         let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
         let nbChains = totalSamples / nspc
@@ -156,9 +156,9 @@ final class PssmltIntegrator: Integrator {
     }
 
     /// Create the async blocks responsible for rendering with a Markov Chain
-    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, increment: @escaping () -> Void) async -> Array2d<Color> {
-        return await withTaskGroup(of: Void.self, returning: Array2d<Color>.self) { group in
-            let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
+    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, increment: @escaping () -> Void) async -> PixelBuffer {
+        return await withTaskGroup(of: Void.self, returning: PixelBuffer.self) { group in
+            let image = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: Color())
             var processed = 0
             for i in 0 ..< nbChains {
                 group.addTask {
@@ -176,7 +176,7 @@ final class PssmltIntegrator: Integrator {
     }
     
     /// Random walk rendering of MCMC
-    private func renderChain(i: Int, total: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, into image: Array2d<Color>) -> Void {
+    private func renderChain(i: Int, total: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, into image: PixelBuffer) -> Void {
         let id = (Float(i) + 0.5) / Float(total)
         let i = cdf.sampleDiscrete(id)
         let seed = seeds[i]

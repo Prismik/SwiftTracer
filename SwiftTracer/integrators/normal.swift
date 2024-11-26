@@ -10,7 +10,7 @@ import Foundation
 final class NormalIntegrator: Integrator {
     let identifier = "normal"
 
-    func render(scene: Scene, sampler: Sampler) -> Array2d<Color> {
+    func render(scene: Scene, sampler: Sampler) -> PixelBuffer {
         return MonteCarloIntegrator.render(integrator: self, scene: scene, sampler: sampler)
     }
 }

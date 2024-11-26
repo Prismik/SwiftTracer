@@ -8,8 +8,8 @@
 import Foundation
 
 struct PeakSignalToNoiseRatio {
-    let original: Array2d<Color>
-    let compared: Array2d<Color>
+    let original: PixelBuffer
+    let compared: PixelBuffer
     
     private let max: Float = 255
 

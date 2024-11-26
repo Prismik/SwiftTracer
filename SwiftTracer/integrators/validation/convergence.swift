@@ -41,7 +41,7 @@ final class ConvergenceIntegrator: Integrator {
         integrator.preprocess(scene: scene, sampler: sampler)
     }
 
-    func render(scene: Scene, sampler: any Sampler) -> Array2d<Color> {
+    func render(scene: Scene, sampler: any Sampler) -> PixelBuffer {
         let sampler = sampler.new(nspp: 1)
 
         for iteration in 1 ... Int.max {

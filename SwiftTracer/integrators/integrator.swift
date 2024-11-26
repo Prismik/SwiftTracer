@@ -29,11 +29,11 @@ protocol SamplerIntegrator: AnyObject {
 }
 
 struct GradientDomainResult {
-    var primal: Array2d<Color>
-    var directLight: Array2d<Color>
-    var img: Array2d<Color>
-    var dx: Array2d<Color>
-    var dy: Array2d<Color>
+    var primal: PixelBuffer
+    var directLight: PixelBuffer
+    var img: PixelBuffer
+    var dx: PixelBuffer
+    var dy: PixelBuffer
     
     mutating func scale(by factor: Float) {
         primal.scale(by: factor)
@@ -61,7 +61,7 @@ protocol GradientDomainIntegrator {
 
 protocol Integrator {
     func preprocess(scene: Scene, sampler: Sampler)
-    func render(scene: Scene, sampler: Sampler) -> Array2d<Color>
+    func render(scene: Scene, sampler: Sampler) -> PixelBuffer
     
     var identifier: String { get }
 }
@@ -114,8 +114,9 @@ struct AnyIntegrator: Decodable {
             let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
             let spc = try params.decode(Int.self, forKey: .samplesPerChain)
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
+            let heatmap = try params.decodeIfPresent(Bool.self, forKey: .heatmap) ?? false
             let reconstructor = try params.decode(AnyReconstruction.self, forKey: .reconstruction)
-            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc)
+            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, heatmap: heatmap)
         case .timeboxed:
             let params = try container.nestedContainer(keyedBy: TimeboxedIntegrator.CodingKeys.self, forKey: .params)
             let time = try params.decode(Int.self, forKey: .time)
@@ -155,17 +156,17 @@ enum MonteCarloIntegrator {
         let position: Vec2
         let size: Vec2
         let sample: Sampler
-        var image: Array2d<Color>
+        var image: PixelBuffer
         var intersectionCount: Int
         var rayCount: Int
         
-        var images: [Array2d<Color>] { [image] }
+        var images: [PixelBuffer] { [image] }
     }
 
-    static func render<T: Integrator & SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler) -> Array2d<Color> {
+    static func render<T: Integrator & SamplerIntegrator>(integrator: T, scene: Scene, sampler: Sampler) -> PixelBuffer {
         
         print("Rendering with \(integrator) and \(sampler.nbSamples) samples per pixel ...")
-        let image = Array2d(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y), value: Color())
+        let image = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: Color())
         let gcd = DispatchGroup()
         gcd.enter()
         Task {
@@ -207,7 +208,7 @@ enum MonteCarloIntegrator {
     }
     
     private static func renderMonteCarlo(scene: Scene, integrator: SamplerIntegrator, size: Vec2, x: Int, y: Int, sampler: Sampler) -> Block {
-        let partialImage = Array2d(x: Int(size.x), y: Int(size.y), value: Color())
+        let partialImage = PixelBuffer(width: Int(size.x), height: Int(size.y), value: Color())
         var block = Block(position: Vec2(Float(x), Float(y)), size: size, sample: sampler, image: partialImage, intersectionCount: 0, rayCount: 0)
         
         for lx in 0 ..< Int(block.size.x) {
@@ -237,7 +238,7 @@ enum MonteCarloIntegrator {
 }
 
 private extension [MonteCarloIntegrator.Block] {
-    func assemble(into image: Array2d<Color>) -> Array2d<Color> {
+    func assemble(into image: PixelBuffer) -> PixelBuffer {
         for block in self {
             for x in (0 ..< Int(block.size.x)) {
                 for y in (0 ..< Int(block.size.y)) {

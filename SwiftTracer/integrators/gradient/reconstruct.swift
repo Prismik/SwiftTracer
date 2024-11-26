@@ -28,22 +28,22 @@ struct AnyReconstruction: Decodable {
 }
 
 protocol Reconstructing {
-    func reconstruct(gradientDomainResult: GradientDomainResult) -> Array2d<Color>
+    func reconstruct(gradientDomainResult: GradientDomainResult) -> PixelBuffer
 }
 
 struct IterativeReconstruction: Reconstructing {
     let maxIterations: Int
     
-    func reconstruct(gradientDomainResult: GradientDomainResult) -> Array2d<Color> {
+    func reconstruct(gradientDomainResult: GradientDomainResult) -> PixelBuffer {
         let img = gradientDomainResult.primal
         let dx = gradientDomainResult.dx
         let dy = gradientDomainResult.dy
-        let j = Array2d<Color>(x: img.xSize, y: img.ySize, value: .zero)
-        var final = Array2d<Color>(copy: img)
-        let max: (x: Int, y: Int) = (x: Int(img.xSize - 1), y: Int(img.ySize - 1))
+        let j = PixelBuffer(width: img.width, height: img.height, value: .zero)
+        var final = PixelBuffer(copy: img)
+        let max: (x: Int, y: Int) = (x: Int(img.width - 1), y: Int(img.height - 1))
         for _ in 0 ..< maxIterations {
-            for y in 0 ..< img.ySize {
-                for x in 0 ..< img.xSize {
+            for y in 0 ..< img.height {
+                for x in 0 ..< img.width {
                     var value = final[x, y]
                     var w: Float = 1
                     if x != 0 {
@@ -75,3 +75,46 @@ struct IterativeReconstruction: Reconstructing {
     }
 }
 
+struct WeightedReconstruction: Reconstructing {
+    let maxIterations: Int
+
+    private enum Metric {
+        case mean
+        case variance
+        
+        func compute(x: Int, y: Int) -> Color {
+            return switch self {
+            case .mean: .zero
+            case .variance: .zero
+            }
+            
+        }
+    }
+
+    func reconstruct(gradientDomainResult gdr: GradientDomainResult) -> PixelBuffer {
+        let img = gdr.primal
+        let dx = gdr.dx
+        let dy = gdr.dy
+        let j = PixelBuffer(width: img.width, height: img.height, value: .zero)
+        var final = PixelBuffer(copy: img)
+        let max: (x: Int, y: Int) = (x: Int(img.width - 1), y: Int(img.height - 1))
+        
+        let avgAndVariance = compute(metrics: [.mean, .variance], on: gdr)
+
+        for y in 0 ..< img.height {
+            for x in 0 ..< img.width {
+                
+            }
+        }
+        return img
+    }
+    
+    private func compute(metrics: Set<Metric>, on gdr: GradientDomainResult) -> [Metric: GradientDomainResult] {
+        
+        var result: [Metric: GradientDomainResult] = [:]
+        for image in [gdr.primal, gdr.dx, gdr.dy] {
+            
+        }
+        return result
+    }
+}

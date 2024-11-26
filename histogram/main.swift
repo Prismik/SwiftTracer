@@ -83,10 +83,10 @@ enum Tests: String {
     }
 }
 
-func generateHistogram(pdfFunc: (Vec3) -> Float, sampleFunc: (Vec2) -> Vec3, nsp: Int, sampler: Sampler) -> (Array2d<Color>, Array2d<Color>, Array2d<Color>) {
+func generateHistogram(pdfFunc: (Vec3) -> Float, sampleFunc: (Vec2) -> Vec3, nsp: Int, sampler: Sampler) -> (PixelBuffer<Color>, PixelBuffer<Color>, PixelBuffer<Color>) {
     let imageSize = Vec2(512, 256)
     var integral: Float = 0
-    let pdf = Array2d(x: Int(imageSize.x), y: Int(imageSize.y), value: Float(0))
+    let pdf = PixelBuffer(x: Int(imageSize.x), y: Int(imageSize.y), value: Float(0))
     var nanOrInf = false
     for y in Progress(0 ..< Int(imageSize.y)) {
         for x in 0 ..< Int(imageSize.x) {
@@ -116,7 +116,7 @@ func generateHistogram(pdfFunc: (Vec3) -> Float, sampleFunc: (Vec2) -> Vec3, nsp
     integral /= Float(nsp)
     
     // compute histogram
-    let histogram = Array2d(x: Int(imageSize.x), y: Int(imageSize.y), value: Float(0))
+    let histogram = Array2d(width: Int(imageSize.x), height: Int(imageSize.y), value: Float(0))
     let normalisation: Float = 1 / (.pi * 2 * .pi * Float(nsp))
     for _ in Progress(0 ..< Int(imageSize.y)) {
         for _ in 0 ..< Int(imageSize.x) {
@@ -180,9 +180,9 @@ func generateHistogram(pdfFunc: (Vec3) -> Float, sampleFunc: (Vec2) -> Vec3, nsp
         return c0 + t * e
     }
 
-    let histogramImage = Array2d(x: Int(imageSize.x), y: Int(imageSize.y), value: Color())
-    let pdfImage = Array2d(x: Int(imageSize.x), y: Int(imageSize.y), value: Color())
-    let diffImage = Array2d(x: Int(imageSize.x), y: Int(imageSize.y), value: Color())
+    let histogramImage = PixelBuffer(width: Int(imageSize.x), height: Int(imageSize.y), value: Color())
+    let pdfImage = PixelBuffer(width: Int(imageSize.x), height: Int(imageSize.y), value: Color())
+    let diffImage = PixelBuffer(width: Int(imageSize.x), height: Int(imageSize.y), value: Color())
     var difference: Float = 0
     for y in 0 ..< Int(imageSize.y) {
         for x in 0 ..< Int(imageSize.x) {

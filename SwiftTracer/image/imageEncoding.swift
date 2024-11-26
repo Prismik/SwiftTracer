@@ -55,8 +55,8 @@ struct HDRPixel {
 }
 
 protocol ImageEncoding {
-    func read(file: URL) -> Array2d<Color>?
-    func write(img: Array2d<Color>, to destination: URL) -> Bool
+    func read(file: URL) -> PixelBuffer?
+    func write(img: PixelBuffer, to destination: URL) -> Bool
 }
 
 enum EncodingIdentifier {

@@ -25,7 +25,7 @@ final class DirectIntegrator: Integrator {
         self.strategy = strategy
     }
 
-    func render(scene: Scene, sampler: Sampler) -> Array2d<Color> {
+    func render(scene: Scene, sampler: Sampler) -> PixelBuffer {
         return MonteCarloIntegrator.render(integrator: self, scene: scene, sampler: sampler)
     }
 }
