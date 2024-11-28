@@ -98,11 +98,12 @@ struct AnyIntegrator: Decodable {
             let spc = try params.decode(Int.self, forKey: .samplesPerChain)
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
             let integrator = (try? params.decode(AnyIntegrator.self, forKey: .integrator))?.wrapped as? SamplerIntegrator
-            
+            let heatmap = try params.decodeIfPresent(Bool.self, forKey: .heatmap) ?? false
             self.wrapped = PssmltIntegrator(
                 samplesPerChain: spc,
                 initSamplesCount: isc,
-                integrator: integrator ?? PathIntegrator(minDepth: 0, maxDepth: 16)
+                integrator: integrator ?? PathIntegrator(minDepth: 0, maxDepth: 16),
+                heatmap: heatmap
             )
         case .gdpt:
             let params = try container.nestedContainer(keyedBy: GdptIntegrator.CodingKeys.self, forKey: .params)

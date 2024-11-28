@@ -16,6 +16,7 @@ final class PssmltIntegrator: Integrator {
         case initSamplesCount
         /// Underlying integrator used to render the pixels.
         case integrator
+        case heatmap
     }
     
     internal struct StateMCMC {
@@ -39,7 +40,7 @@ final class PssmltIntegrator: Integrator {
         }
 
         // TODO inout not necessary with current way weights are built
-        func add(state: inout StateMCMC) {
+        func add(state: inout StateMCMC, heatmap: inout Heatmap?) {
             let w = state.targetFunction == 0
                 ? 0
                 : state.weight / state.targetFunction
@@ -47,6 +48,7 @@ final class PssmltIntegrator: Integrator {
             let y = Int(state.pos.y)
             img[x, y] += state.contrib * w
             state.weight = 0
+            heatmap?.increment(at: state.pos)
         }
     }
     
@@ -67,11 +69,13 @@ final class PssmltIntegrator: Integrator {
     private var b: Float = 0
     private var cdf = DistributionOneDimention(count: 0)
     private var seeds: [(Float, UInt64)] = []
-
-    init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator) {
+    private var heatmap: Heatmap?
+    
+    init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator, heatmap: Bool) {
         self.nspc = samplesPerChain
         self.isc = initSamplesCount
         self.integrator = integrator
+        self.heatmap = heatmap ? Heatmap(floor: Color(0, 0, 1), ceil: Color(1, 1, 0)) : nil
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 
@@ -115,6 +119,10 @@ final class PssmltIntegrator: Integrator {
         print("b => \(b)")
 
         image.scale(by: b / average)
+        
+        if let img = heatmap?.generate(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y)) {
+            _ = Image(encoding: .png).write(img: img, to: "\(identifier)_heatmap.png")
+        }
         return image
     }
     
@@ -208,17 +216,17 @@ final class PssmltIntegrator: Integrator {
             proposedState.weight += acceptProbability
             
             if acceptProbability == 1 || acceptProbability > Float.random(in: 0 ... 1) {
-                chain.add(state: &state)
+                chain.add(state: &state, heatmap: &heatmap)
                 sampler.accept()
                 state = proposedState
             } else {
-                chain.add(state: &proposedState)
+                chain.add(state: &proposedState, heatmap: &heatmap)
                 sampler.reject()
             }
         }
         
         // Flush the last state
-        chain.add(state: &state)
+        chain.add(state: &state, heatmap: &heatmap)
         chain.img.scale(by: 1.0 / Float(nspc))
         image.merge(with: chain.img)
         stats.small.combine(with: sampler.smallStats)

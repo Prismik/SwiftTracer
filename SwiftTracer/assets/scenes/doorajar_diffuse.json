@@ -25,19 +25,17 @@
     },
     "sampler": {
         "type": "independent",
-        "nspp": 2
+        "nspp": 6
     },
     "integrator": {
-        "type": "path",
+        "type": "convergence",
         "params": {
             "samplesPerChain": 1000,
             "initSamplesCount": 100000,
-            "mis": false,
+            "mis": true,
             "timeout": 1800,
-            "heatmap": true,
-            "strategy": "emitter",
             "integrator": {
-                "type": "path",
+                "type": "gdpt",
                 "params": {
                     "samplesPerChain": 1000,
                     "initSamplesCount": 100000,
