@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import Collections
 import Progress
 
 protocol GradientStateMCMC {
     var pos: Vec2 { get }
     var weight: Float { get set }
     var targetFunction: Float { get }
-    var offsets: [Vec2] { get }
+    var offsets: OrderedSet<Vec2> { get }
     var delta: [Color] { get }
     var shiftContrib: [Color] { get }
     var contrib: Color { get }
@@ -54,20 +55,23 @@ final class GdmltIntegrator: Integrator {
         let delta: [Color]
         let shiftContrib: [Color]
         let directLight: Color
-        let offsets = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+        let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
         init(contrib: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2) {
-            self.contrib = contrib
+            if contrib.luminance > 100 {
+                self.contrib = contrib / contrib.luminance
+            } else {
+                self.contrib = contrib
+            }
             self.pos = pos
-            self.shiftContrib = shiftContribs
+            self.shiftContrib = shiftContribs.map {
+                if $0.luminance > 100 { $0 / $0.luminance } else { $0 }
+            }
             self.directLight = directLight
             let offsets = self.offsets // Weird quirk about accessing self.delta
             self.delta = gradients.enumerated().map({ (i, gradient) in
                 let forward = offsets[i].sum() > 0
-                let nz: Float = contrib != .zero && shiftContribs[i] != .zero
-                    ? 0.5
-                    : 1
-                return if forward { gradient * nz } else { gradient * nz * -1 }
+                return if forward { gradient } else { gradient * -1 }
             })
 
             let gradientLuminance: Float = offsets.enumerated().reduce(into: 0) { (acc, pair) in
@@ -105,7 +109,7 @@ final class GdmltIntegrator: Integrator {
         var weight: Float = 0
         var targetFunction: Float = 0
         let delta: [Color]
-        let offsets: [Vec2]
+        let offsets: OrderedSet<Vec2>
 
         private static let shifts: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
@@ -327,7 +331,6 @@ extension GdmltIntegrator: GradientDomainIntegrator {
     /// Computes the normalization factor
     private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [StartupSeed]) {
         var seeds: [StartupSeed] = []
-        var totalValid = isc
         let b = (0 ..< isc).map { _ in
             let currentSeed = sampler.rng.state
             
@@ -339,12 +342,10 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                     targetFunction: s.targetFunction
                 )
                 seeds.append(values)
-            } else {
-                totalValid -= 1
             }
 
             return validSample ? s.contrib.luminance : 0
-        }.reduce(0, +) / Float(totalValid)
+        }.reduce(0, +) / Float(isc * 4)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
@@ -385,7 +386,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         let id = (Float(i) + 0.5) / Float(nbChains)
         let i = cdf.sampleDiscrete(id)
         let seed = seeds[i]
-        let sampler = PSSMLTSampler(nbSamples: nspp)
+        let sampler = PSSMLTSampler(nbSamples: nspp, largeStepRatio: 0.5)
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.value
         

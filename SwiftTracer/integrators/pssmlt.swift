@@ -142,7 +142,7 @@ final class PssmltIntegrator: Integrator {
             }
 
             return validSample ? s.targetFunction : 0
-        }.reduce(0, +) / Float(totalValid)
+        }.reduce(0, +) / Float(isc)
         
         guard b.isFinite, !b.isNaN, !b.isZero else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
