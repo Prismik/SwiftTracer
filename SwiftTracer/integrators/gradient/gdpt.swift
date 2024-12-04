@@ -25,6 +25,7 @@ final class GdptIntegrator: Integrator {
     private let reconstructor: Reconstructing
     private var successfulShifts: Int = 0
     private var failedShifts: Int = 0
+    private let sanitize: Bool = true
 
     init(mapper: ShiftMapping, reconstructor: Reconstructing, maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
         self.mapper = mapper
@@ -150,7 +151,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
 
                     let base = Vec2(Float(x), Float(y)) + sampler.next2()
                     let newResult = mapper.shift(pixel: base, sampler: sampler, params: ShiftMappingParams(offsets: nil))
-                    if newResult.main.luminance > 100 {
+                    if sanitize && newResult.main.luminance > 100 {
                         img[lx+1, ly+1] += newResult.main / newResult.main.luminance
                     } else {
                         img[lx+1, ly+1] += newResult.main
@@ -162,7 +163,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
                         let yShift = ly + 1 + Int(offset.y)
                         
                         if (0 ..< img.width).contains(xShift) && (0 ..< img.height).contains(yShift) {
-                            if newResult.radiances[i].luminance > 100 {
+                            if sanitize && newResult.radiances[i].luminance > 100 {
                                 img[xShift, yShift] += newResult.radiances[i] / newResult.radiances[i].luminance
                             } else {
                                 img[xShift, yShift] += newResult.radiances[i]

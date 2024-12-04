@@ -79,7 +79,7 @@ final class GdmltIntegrator: Integrator {
                 acc += delta[i].abs.luminance
             }
             
-            let luminance = contrib.abs.luminance + directLight.abs.luminance
+            let luminance = self.contrib.abs.luminance + directLight.abs.luminance
             self.targetFunction = gradientLuminance + alpha * 0.25 * luminance
         }
         
@@ -344,7 +344,8 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                 seeds.append(values)
             }
 
-            return validSample ? s.contrib.luminance : 0
+            let shiftLuminance = s.shiftContrib.reduce(Color(), +).luminance
+            return validSample ? s.contrib.luminance + shiftLuminance: 0
         }.reduce(0, +) / Float(isc * 4)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
