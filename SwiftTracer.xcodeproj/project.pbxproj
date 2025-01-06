@@ -43,6 +43,8 @@
 		1923B0B02CF125F10025245C /* heatmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1923B0AE2CF125E50025245C /* heatmap.swift */; };
 		1923B0B12CF125F10025245C /* heatmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1923B0AE2CF125E50025245C /* heatmap.swift */; };
 		1923B0B22CF125F10025245C /* heatmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1923B0AE2CF125E50025245C /* heatmap.swift */; };
+		1923B0B42CF798D00025245C /* doorajar_diffuse.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1923B0B32CF798D00025245C /* doorajar_diffuse.json */; };
+		1923B0B52CF798D00025245C /* doorajar_diffuse.json in Resources */ = {isa = PBXBuildFile; fileRef = 1923B0B32CF798D00025245C /* doorajar_diffuse.json */; };
 		193E42502BFE5EA300D96A37 /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193E424F2BFE5EA300D96A37 /* camera.swift */; };
 		193E42522BFE737F00D96A37 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		193E42532BFE738F00D96A37 /* ray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7222BF82CE800981204 /* ray.swift */; };
@@ -169,6 +171,8 @@
 		196ECD582C0B80350052DEA6 /* mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196ECD572C0B80350052DEA6 /* mesh.swift */; };
 		19737CED2C27457900F49204 /* SwiftWavefront in Frameworks */ = {isa = PBXBuildFile; productRef = 19737CEC2C27457900F49204 /* SwiftWavefront */; };
 		19737CF12C2B478D00F49204 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19737CF02C2B478D00F49204 /* Documentation.docc */; };
+		197A10B12D2C39D9000ACF3B /* environmentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197A10B02D2C39B0000ACF3B /* environmentMap.swift */; };
+		197A10B22D2C39D9000ACF3B /* environmentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197A10B02D2C39B0000ACF3B /* environmentMap.swift */; };
 		1982F6B32C9B8757000FF286 /* PNG in Frameworks */ = {isa = PBXBuildFile; productRef = 1982F6B22C9B8757000FF286 /* PNG */; };
 		1986951F2C2F367A00EEF672 /* constantEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1986951E2C2F367A00EEF672 /* constantEnvironment.swift */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
@@ -303,6 +307,7 @@
 				1923B0A52CED08D50025245C /* mitsuba_mat1.obj in CopyFiles */,
 				1923B0A62CED08D50025245C /* mitsuba_mat2.obj in CopyFiles */,
 				1923B0A72CED08D50025245C /* Plane_mat0.obj in CopyFiles */,
+				1923B0B42CF798D00025245C /* doorajar_diffuse.json in CopyFiles */,
 				1923B0A82CED08D50025245C /* floor.obj in CopyFiles */,
 				1923B0A92CED08D50025245C /* plate1.obj in CopyFiles */,
 				1923B0AA2CED08D50025245C /* plate2.obj in CopyFiles */,
@@ -340,6 +345,7 @@
 		19165ACF2CE7B984005E8FB0 /* replay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = replay.swift; sourceTree = "<group>"; };
 		1917635D2C20E927007688D4 /* spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = spot.swift; sourceTree = "<group>"; };
 		1923B0AE2CF125E50025245C /* heatmap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = heatmap.swift; sourceTree = "<group>"; };
+		1923B0B32CF798D00025245C /* doorajar_diffuse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = doorajar_diffuse.json; sourceTree = "<group>"; };
 		193E424F2BFE5EA300D96A37 /* camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = camera.swift; sourceTree = "<group>"; };
 		194480992CA8A5C1002A90C6 /* rng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rng.swift; sourceTree = "<group>"; };
 		1944809B2CA8AD30002A90C6 /* distribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = distribution.swift; sourceTree = "<group>"; };
@@ -386,6 +392,7 @@
 		196ECD552C0B7FC30052DEA6 /* triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = triangle.swift; sourceTree = "<group>"; };
 		196ECD572C0B80350052DEA6 /* mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mesh.swift; sourceTree = "<group>"; };
 		19737CF02C2B478D00F49204 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
+		197A10B02D2C39B0000ACF3B /* environmentMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = environmentMap.swift; sourceTree = "<group>"; };
 		1982F6B42C9B9A17000FF286 /* sun.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sun.png; sourceTree = "<group>"; };
 		1982F6B72C9BA2B9000FF286 /* chest_rough.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chest_rough.png; sourceTree = "<group>"; };
 		1982F6B82C9BA2B9000FF286 /* chest_blend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chest_blend.png; sourceTree = "<group>"; };
@@ -637,6 +644,7 @@
 			isa = PBXGroup;
 			children = (
 				1945A9BD2CDA767D008E72BD /* doorajar.json */,
+				1923B0B32CF798D00025245C /* doorajar_diffuse.json */,
 				196094BC2CB2FD7F009FDAC4 /* cornelBox.json */,
 			);
 			path = scenes;
@@ -707,6 +715,7 @@
 			children = (
 				19E9589C2C1C906400F63FA5 /* samplers */,
 				19C0A7172C08FB1B00A7A0FD /* area.swift */,
+				197A10B02D2C39B0000ACF3B /* environmentMap.swift */,
 				19E958962C1BD19E00F63FA5 /* point.swift */,
 				19E958982C1BD1AD00F63FA5 /* light.swift */,
 				1917635D2C20E927007688D4 /* spot.swift */,
@@ -985,6 +994,7 @@
 				1945A9D72CDA781B008E72BD /* Mesh010.obj in Resources */,
 				1945A9DB2CDA781B008E72BD /* Mesh014.obj in Resources */,
 				1945A9DC2CDA781B008E72BD /* Mesh013.obj in Resources */,
+				1923B0B52CF798D00025245C /* doorajar_diffuse.json in Resources */,
 				1945A9DD2CDA781B008E72BD /* Mesh004.obj in Resources */,
 				1945A9DE2CDA781B008E72BD /* Mesh002.obj in Resources */,
 				1945A9E12CDA781B008E72BD /* Mesh000.obj in Resources */,
@@ -1118,6 +1128,7 @@
 				194480A32CA8C835002A90C6 /* shape.swift in Sources */,
 				194480AD2CA8C8D8002A90C6 /* diffuse.swift in Sources */,
 				1945AA0E2CDDA618008E72BD /* imageEncoding.swift in Sources */,
+				197A10B12D2C39D9000ACF3B /* environmentMap.swift in Sources */,
 				194480B02CA8C8DE002A90C6 /* blend.swift in Sources */,
 				194480BC2CA8C924002A90C6 /* uv.swift in Sources */,
 				194480C32CA8C9DF002A90C6 /* bvh.swift in Sources */,
@@ -1200,6 +1211,7 @@
 				19E9589E2C1C907C00F63FA5 /* uniform.swift in Sources */,
 				19E958992C1BD1AD00F63FA5 /* light.swift in Sources */,
 				19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */,
+				197A10B22D2C39D9000ACF3B /* environmentMap.swift in Sources */,
 				19BBA71A2BF7D32F00981204 /* transform.swift in Sources */,
 				1945AA182CDE6E60008E72BD /* convergence.swift in Sources */,
 				1944809C2CA8AD30002A90C6 /* distribution.swift in Sources */,
