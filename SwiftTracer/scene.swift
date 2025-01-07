@@ -22,7 +22,9 @@ final class Scene {
     let sampler: Sampler
     let integrator: Integrator
 
-    init(root: ShapeAggregate, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, sampler: Sampler, integrator: Integrator) {
+    private var environmentMap: EnvironmentMapLight?
+
+    init(root: ShapeAggregate, lightSampler: LightSampler, materials: [String: Material], camera: Camera, background: Color, sampler: Sampler, integrator: Integrator, environmentMap: EnvironmentMapLight?) {
         self.root = root
         self.materials = materials
         self.camera = camera
@@ -30,6 +32,7 @@ final class Scene {
         self.lightSampler = lightSampler
         self.sampler = sampler
         self.integrator = integrator
+        self.environmentMap = environmentMap
     }
     
     func hit(r: Ray) -> Intersection? {
@@ -84,6 +87,12 @@ final class Scene {
         
         integrator.preprocess(scene: self, sampler: sampler)
     }
+    
+    func environment(ray: Ray) -> Color {
+        guard let envmap = environmentMap else { return background }
+        
+        return envmap.Le(ray: ray)
+    }
 }
 
 extension Scene: Decodable {
@@ -116,8 +125,13 @@ extension Scene: Decodable {
             materials[m.name] = m.wrapped
         }
         var lights: [String: Light] = [:]
+        var envmap: EnvironmentMapLight?
         for l in anyLights {
-            lights[l.name] = l.wrapped
+            let wrapped = l.wrapped
+            lights[l.name] = wrapped
+            if let envMapLight = wrapped as? EnvironmentMapLight {
+                envmap = envMapLight
+            }
         }
 
         let root: ShapeAggregate
@@ -170,7 +184,8 @@ extension Scene: Decodable {
             camera: camera,
             background: background,
             sampler: sampler,
-            integrator: integrator
+            integrator: integrator,
+            environmentMap: envmap
         )
     }
 }

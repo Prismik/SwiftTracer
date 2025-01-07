@@ -132,8 +132,9 @@ struct AnyLight: Decodable {
         case .area:
             let radiance = try container.decode(Texture.self, forKey: .radiance)
             self.wrapped = AreaLight(texture: radiance)
-        default:
-            fatalError() // Not implemented
+        case .infinite:
+            let radiance = try container.decode(Texture.self, forKey: .radiance)
+            self.wrapped = EnvironmentMapLight(texture: radiance)
         }
     }
 }

@@ -43,6 +43,24 @@ enum Utils {
             sc.1 * imageSize.y / .pi
         )
     }
+    
+    /// Solves a quadratic equation, returning optional whenever no roots can be found.
+    static func solve(a: Float, b: Float, c: Float) -> (Float, Float)? {
+        let discriminant = b * b - 4 * a * c
+        switch(discriminant) {
+        case let x where x.isLess(than: 0): // No roots
+            return nil
+        default:
+            let rootDiscriminant = discriminant.sqrt()
+            let q = b < 0
+                ? -0.5 * (b - rootDiscriminant)
+                : -0.5 * (b + rootDiscriminant)
+            
+            let x0 = q / a
+            let x1 = c / q
+            return if x0 > x1 { (x1, x0) } else { (x0, x1) }
+        }
+    }
 }
 
 extension RandomAccessCollection where Element: Comparable {

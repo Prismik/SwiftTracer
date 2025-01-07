@@ -54,7 +54,7 @@ extension DirectIntegrator: SamplerIntegrator {
     }
     
     private func mis(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
-        guard let intersection = scene.hit(r: ray) else { return scene.background }
+        guard let intersection = scene.hit(r: ray) else { return scene.environment(ray: ray) }
 
         let p = intersection.p
         let uv = intersection.uv
@@ -100,14 +100,14 @@ extension DirectIntegrator: SamplerIntegrator {
                     * light.L(p: newIntersection.p, n: newIntersection.n, uv: newIntersection.uv, wo: newWo)
             }
         } else {
-            contribution += direction.weight * scene.background
+            contribution += direction.weight * scene.environment(ray: newRay)
         }
         
         return contribution
     }
     
     private func emitter(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
-        guard let intersection = scene.hit(r: ray) else { return scene.background }
+        guard let intersection = scene.hit(r: ray) else { return scene.environment(ray: ray) }
 
         let p = intersection.p
         let uv = intersection.uv
@@ -131,7 +131,7 @@ extension DirectIntegrator: SamplerIntegrator {
     }
     
     private func eval(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
-        guard let intersection = scene.hit(r: ray) else { return scene.background }
+        guard let intersection = scene.hit(r: ray) else { return scene.environment(ray: ray) }
 
         let p = intersection.p
         let uv = intersection.uv
@@ -154,7 +154,7 @@ extension DirectIntegrator: SamplerIntegrator {
         let eval = intersection.shape.material.evaluate(wo: wo, wi: direction.wi, uv: uv, p: p)
         let pdf = intersection.shape.material.pdf(wo: wo, wi: direction.wi, uv: uv, p: p)
     
-        guard let newIts = scene.hit(r: newRay) else { return (eval / pdf) * scene.background }
+        guard let newIts = scene.hit(r: newRay) else { return (eval / pdf) * scene.environment(ray: newRay) }
         let localFrame = Frame(n: newIts.n)
         let localWo = localFrame.toLocal(v: -newRay.d).normalized()
         return newIts.hasEmission
@@ -163,7 +163,7 @@ extension DirectIntegrator: SamplerIntegrator {
     }
 
     private func bsdf(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
-        guard let intersection = scene.hit(r: ray) else { return scene.background }
+        guard let intersection = scene.hit(r: ray) else { return scene.environment(ray: ray) }
 
         let p = intersection.p
         let uv = intersection.uv
@@ -178,7 +178,7 @@ extension DirectIntegrator: SamplerIntegrator {
         guard let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: sample) else { return .zero }
         let wi = frame.toWorld(v: direction.wi).normalized()
         let newRay = Ray(origin: intersection.p, direction: wi)
-        guard let newIts = scene.hit(r: newRay) else { return direction.weight * scene.background }
+        guard let newIts = scene.hit(r: newRay) else { return direction.weight * scene.environment(ray: newRay) }
         let localFrame = Frame(n: newIts.n)
         let localWo = localFrame.toLocal(v: -newRay.d).normalized()
         return newIts.hasEmission

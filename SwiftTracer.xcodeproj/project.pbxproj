@@ -173,6 +173,10 @@
 		19737CF12C2B478D00F49204 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19737CF02C2B478D00F49204 /* Documentation.docc */; };
 		197A10B12D2C39D9000ACF3B /* environmentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197A10B02D2C39B0000ACF3B /* environmentMap.swift */; };
 		197A10B22D2C39D9000ACF3B /* environmentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197A10B02D2C39B0000ACF3B /* environmentMap.swift */; };
+		197A10B42D2DBA53000ACF3B /* envmap.json in Resources */ = {isa = PBXBuildFile; fileRef = 197A10B32D2DBA3D000ACF3B /* envmap.json */; };
+		197A10B82D2DBB21000ACF3B /* envmap.png in Resources */ = {isa = PBXBuildFile; fileRef = 197A10B72D2DBB21000ACF3B /* envmap.png */; };
+		197A10B92D2DC022000ACF3B /* envmap.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 197A10B32D2DBA3D000ACF3B /* envmap.json */; };
+		197A10BA2D2DC022000ACF3B /* envmap.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 197A10B72D2DBB21000ACF3B /* envmap.png */; };
 		1982F6B32C9B8757000FF286 /* PNG in Frameworks */ = {isa = PBXBuildFile; productRef = 1982F6B22C9B8757000FF286 /* PNG */; };
 		1986951F2C2F367A00EEF672 /* constantEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1986951E2C2F367A00EEF672 /* constantEnvironment.swift */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
@@ -294,6 +298,8 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				197A10B92D2DC022000ACF3B /* envmap.json in CopyFiles */,
+				197A10BA2D2DC022000ACF3B /* envmap.png in CopyFiles */,
 				1923B09B2CED08D50025245C /* Mesh001.obj in CopyFiles */,
 				1923B09C2CED08D50025245C /* Mesh005.obj in CopyFiles */,
 				1923B09D2CED08D50025245C /* Mesh006.obj in CopyFiles */,
@@ -393,6 +399,8 @@
 		196ECD572C0B80350052DEA6 /* mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mesh.swift; sourceTree = "<group>"; };
 		19737CF02C2B478D00F49204 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		197A10B02D2C39B0000ACF3B /* environmentMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = environmentMap.swift; sourceTree = "<group>"; };
+		197A10B32D2DBA3D000ACF3B /* envmap.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = envmap.json; sourceTree = "<group>"; };
+		197A10B72D2DBB21000ACF3B /* envmap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = envmap.png; sourceTree = "<group>"; };
 		1982F6B42C9B9A17000FF286 /* sun.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sun.png; sourceTree = "<group>"; };
 		1982F6B72C9BA2B9000FF286 /* chest_rough.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chest_rough.png; sourceTree = "<group>"; };
 		1982F6B82C9BA2B9000FF286 /* chest_blend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chest_blend.png; sourceTree = "<group>"; };
@@ -625,6 +633,7 @@
 		1999D05D2C0FDED400358201 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				197A10B72D2DBB21000ACF3B /* envmap.png */,
 				1945A9BF2CDA7808008E72BD /* cherry-wood-texture.jpg */,
 				1945A9C02CDA7808008E72BD /* Good Textures_005844.jpg */,
 				1945A9C12CDA7808008E72BD /* landscape-with-a-lake.jpg */,
@@ -643,6 +652,7 @@
 		1999D05E2C0FDF6200358201 /* scenes */ = {
 			isa = PBXGroup;
 			children = (
+				197A10B32D2DBA3D000ACF3B /* envmap.json */,
 				1945A9BD2CDA767D008E72BD /* doorajar.json */,
 				1923B0B32CF798D00025245C /* doorajar_diffuse.json */,
 				196094BC2CB2FD7F009FDAC4 /* cornelBox.json */,
@@ -992,8 +1002,10 @@
 			files = (
 				1945A9BE2CDA7687008E72BD /* doorajar.json in Resources */,
 				1945A9D72CDA781B008E72BD /* Mesh010.obj in Resources */,
+				197A10B42D2DBA53000ACF3B /* envmap.json in Resources */,
 				1945A9DB2CDA781B008E72BD /* Mesh014.obj in Resources */,
 				1945A9DC2CDA781B008E72BD /* Mesh013.obj in Resources */,
+				197A10B82D2DBB21000ACF3B /* envmap.png in Resources */,
 				1923B0B52CF798D00025245C /* doorajar_diffuse.json in Resources */,
 				1945A9DD2CDA781B008E72BD /* Mesh004.obj in Resources */,
 				1945A9DE2CDA781B008E72BD /* Mesh002.obj in Resources */,

@@ -12,6 +12,8 @@ final class ShapeGroup: ShapeAggregate {
     var aabbs: [AABB] = []
     var lightIndexes: [Int] = []
     var material: Material!
+    
+    private var bounds: AABB = AABB()
     unowned var light: Light!
 
     func hit(r: Ray) -> Intersection? {
@@ -29,8 +31,10 @@ final class ShapeGroup: ShapeAggregate {
     }
 
     func add(shape: Shape) {
-        aabbs.append(shape.aabb())
+        let shapeAabb = shape.aabb()
+        aabbs.append(shapeAabb)
         shapes.append(shape)
+        bounds = bounds.merge(with: shapeAabb)
     }
     
     func build() { }
@@ -40,7 +44,7 @@ final class ShapeGroup: ShapeAggregate {
 // Extending group as a shape so we can wrap a mesh into a shape group temporarily during decoding
 extension ShapeGroup: Shape {
     func aabb() -> AABB {
-        fatalError("Invalid call of aabb on ShapeGroup! Call on triangles instead.")
+        return self.bounds
     }
     
     func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
