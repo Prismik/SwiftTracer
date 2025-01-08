@@ -133,8 +133,9 @@ struct AnyLight: Decodable {
             let radiance = try container.decode(Texture.self, forKey: .radiance)
             self.wrapped = AreaLight(texture: radiance)
         case .infinite:
+            let transform = try container.decodeIfPresent(Transform.self, forKey: .transform) ?? Transform(m: Mat4.identity())
             let radiance = try container.decode(Texture.self, forKey: .radiance)
-            self.wrapped = EnvironmentMapLight(texture: radiance)
+            self.wrapped = EnvironmentMapLight(transform: transform, texture: radiance)
         }
     }
 }

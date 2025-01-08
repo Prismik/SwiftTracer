@@ -10,6 +10,7 @@ import Foundation
 final class EnvironmentMapLight: Light {
     var category: LightCategory = .infinite
     let texture: Texture
+    let transform: Transform
 
     let distribution: DistributionTwoDimension
     
@@ -25,7 +26,8 @@ final class EnvironmentMapLight: Light {
         return values
     }
 
-    init(texture: Texture) {
+    init(transform: Transform, texture: Texture) {
+        self.transform = transform
         self.texture = texture
         
         guard case .textureMap(let values, _, _, _) = texture else {
@@ -74,9 +76,9 @@ final class EnvironmentMapLight: Light {
             pdf = basePdf / .pi.pow(2) * sinTheta
         }
         
-        guard let t = intersect(r: Ray(origin: context.p, direction: d)) else { return nil }
+        guard let t = intersect(r: Ray(origin: context.p, direction: transform.vector(d))) else { return nil }
         let p = context.p + d * t
-        let n = (sceneCenter - p).normalized()
+        let n = transform.normal((sceneCenter - p).normalized())
         
         // value must be divided by pdf outside of this
         return LightSample(
@@ -90,7 +92,7 @@ final class EnvironmentMapLight: Light {
     
     func pdfLi(context: LightSample.Context, y: Point3) -> Float {
         let wi = (y - context.p).normalized()
-        let (phi, theta) = Utils.sphericalCoordinatesFrom(direction: wi)
+        let (phi, theta) = Utils.sphericalCoordinatesFrom(direction: transform.vector(wi))
         let pdf = distribution.pdf(uv: Vec2(
             phi * Float(pixelBuffer.width),
             theta * Float(pixelBuffer.height)
@@ -108,11 +110,18 @@ final class EnvironmentMapLight: Light {
     
     func Le(ray: Ray) -> Color {
         // Conversion between ray direction and coordinates centered at zero?
-        let (u, v) = Utils.sphericalCoordinatesFrom(direction: ray.d)
+        let uv = coordinates(d: transform.vector(ray.d))
         
-        return texture.get(uv: Vec2(u, v), p: .zero)
+        return texture.get(uv: uv, p: .zero)
     }
     
+    private func coordinates(d: Vec3) -> Vec2 {
+        let p = atan2f(d.y, d.x)
+        let x = (p < 0 ? p + 2 * .pi : p) / .pi * 0.5
+        let y = d.z.clamped(-1, 1).acos() / .pi
+        return Vec2(x, y)
+    }
+
     private func intersect(r: Ray) -> Float? {
         let dp = sceneCenter - r.o
         let a = r.d.lengthSquared

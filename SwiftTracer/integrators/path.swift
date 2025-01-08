@@ -47,7 +47,7 @@ final class PathIntegrator: Integrator {
     /// Recursively traces rays using MIS
     private func trace(intersection: Intersection?, ray: Ray, scene: Scene, sampler: Sampler, depth: Int) -> Color {
         guard ray.d.length.isFinite else { return .zero }
-        guard let intersection = intersection else { return scene.background }
+        guard let intersection = intersection else { return scene.environment(ray: ray) }
         var contribution = Color()
         let frame = Frame(n: intersection.n)
         let wo = frame.toLocal(v: -ray.d).normalized()
@@ -119,7 +119,7 @@ extension PathIntegrator: SamplerIntegrator {
     }
     
     private func pathMis(ray: Ray, scene: Scene, sampler: Sampler) -> Color {
-        guard let intersection = scene.hit(r: ray) else { return scene.background }
+        guard let intersection = scene.hit(r: ray) else { return scene.environment(ray: ray) }
         let frame = Frame(n: intersection.n)
         let wo = frame.toLocal(v: -ray.d).normalized()
         
@@ -153,7 +153,7 @@ extension PathIntegrator: SamplerIntegrator {
                     return .zero
                 }
             } else {
-                return throughput * scene.background
+                return throughput * scene.environment(ray: currentRay)
             }
         }
 

@@ -178,6 +178,7 @@ extension DirectIntegrator: SamplerIntegrator {
         guard let direction = intersection.shape.material.sample(wo: wo, uv: uv, p: p, sample: sample) else { return .zero }
         let wi = frame.toWorld(v: direction.wi).normalized()
         let newRay = Ray(origin: intersection.p, direction: wi)
+        // TODO Add weight with respect to envmap
         guard let newIts = scene.hit(r: newRay) else { return direction.weight * scene.environment(ray: newRay) }
         let localFrame = Frame(n: newIts.n)
         let localWo = localFrame.toLocal(v: -newRay.d).normalized()
