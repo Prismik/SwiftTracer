@@ -1,37 +1,41 @@
 //
-//  pssmlt.swift
+//  mala.swift
 //  SwiftTracer
 //
-//  Created by Francis Beauchamp on 2024-09-10.
+//  Created by Francis on 2025-01-20.
 //
 
+import Collections
 import Foundation
 import Progress
 
-final class PssmltIntegrator: Integrator {
+final class MalaIntegrator: Integrator {
     enum CodingKeys: String, CodingKey {
-        /// Number of samples that will be generated within each Markov chain.
+        case shiftMapping
         case samplesPerChain
-        /// Number of samples used for generating the normalization constant `b`.
         case initSamplesCount
-        /// Underlying integrator used to render the pixels.
-        case integrator
-        case heatmap
+        case step
     }
     
-    internal struct StateMCMC {
-        var pos: Vec2
+    let identifier = "mala"
+
+    internal struct StateMala {
         var contrib: Color
+        var u: Vec2
+        var pos: Vec2
+        var gradient: Vec2
         var weight: Float = 0
         var targetFunction: Float = 0
         
-        init(contrib: Color, pos: Vec2) {
+        init(contrib: Color, u: Vec2, pos: Vec2, gradient: Vec2, step: Float) {
             self.contrib = contrib
+            self.u = u
             self.pos = pos
+            self.gradient = gradient
             self.targetFunction = contrib.luminance
         }
     }
-
+    
     private class MarkovChain {
         private(set) var img: PixelBuffer
         
@@ -39,57 +43,63 @@ final class PssmltIntegrator: Integrator {
             img = PixelBuffer(width: x, height: y, value: .zero)
         }
 
-        // TODO inout not necessary with current way weights are built
-        func add(state: inout StateMCMC, heatmap: inout Heatmap?) {
+        func add(state: StateMala) {
             let w = state.targetFunction == 0
                 ? 0
                 : state.weight / state.targetFunction
             let x = Int(state.pos.x)
             let y = Int(state.pos.y)
             img[x, y] += state.contrib * w
-            state.weight = 0
-            heatmap?.increment(at: state.pos)
         }
     }
     
-    let identifier = "pssmlt"
+    private struct StartupSeed {
+        let value: UInt64
+        let targetFunction: Float
+    }
 
-    // TODO Allow to plug and play this thing
-    private let integrator: SamplerIntegrator
     /// Samples Per Chain
-    private let nspc: Int
+    private let spc: Int
     /// Initialization Samples Count
     private let isc: Int
+    /// Step increment for discrete Langevin diffusion
+    private let step: Float
     /// Samples per pixel (can derive total sample from this).
     private var nspp: Int = 10
-
-    private var result: PixelBuffer?
+    
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
-
     private var b: Float = 0
     private var cdf = DistributionOneDimention(count: 0)
-    private var seeds: [(Float, UInt64)] = []
-    private var heatmap: Heatmap?
+    private var seeds: [StartupSeed] = []
+    private var result: PixelBuffer?
     
-    init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator, heatmap: Bool) {
-        self.nspc = samplesPerChain
+    private let mapper: ShiftMapping
+    private let integrator: SamplerIntegrator
+    
+    private let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+
+    init(mapper: ShiftMapping, samplesPerChain: Int, initSamplesCount: Int, step: Float) {
+        self.mapper = mapper
+        self.spc = samplesPerChain
         self.isc = initSamplesCount
-        self.integrator = integrator
-        self.heatmap = heatmap ? Heatmap(floor: Color(0, 0, 1), ceil: Color(1, 1, 0)) : nil
+        self.step = step
+        
+        self.integrator = PathIntegrator(minDepth: 0, maxDepth: 16)
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 
     func preprocess(scene: Scene, sampler: any Sampler) {
+        mapper.initialize(scene: scene)
         let (b, cdf, seeds) = normalizationConstant(scene: scene, sampler: sampler)
         self.b = b
         self.cdf = cdf
         self.seeds = seeds
     }
-
+    
     func render(scene: Scene, sampler: any Sampler) -> PixelBuffer {
         self.nspp = sampler.nbSamples
         let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
-        let nbChains = totalSamples / nspc
+        let nbChains = totalSamples / spc
         
         print("Rendering pssmlt with \(integrator)")
         // Run chains in parallel
@@ -120,51 +130,33 @@ final class PssmltIntegrator: Integrator {
 
         image.scale(by: b / average)
         
-        if let img = heatmap?.generate(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y)) {
-            _ = Image(encoding: .png).write(img: img, to: "\(identifier)_heatmap.png")
-        }
         return image
     }
     
-    /// Computes the normalization factor
-    private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [(Float, UInt64)]) {
-        var seeds: [(Float, UInt64)] = []
-        var totalValid = isc
-        let b = (0 ..< isc).map { _ in
-            let currentSeed = sampler.rng.state
-            
-            let s = sample(scene: scene, sampler: sampler)
-            let validSample = s.targetFunction.isFinite && !s.targetFunction.isNaN && !s.targetFunction.isZero
-            if validSample {
-                seeds.append((s.targetFunction, currentSeed))
-            } else {
-                totalValid -= 1
-            }
-
-            return validSample ? s.targetFunction : 0
-        }.reduce(0, +) / Float(isc)
-        
-        guard b.isFinite, !b.isNaN, !b.isZero else { fatalError("Invalid computation of b") }
-        var cdf = DistributionOneDimention(count: seeds.count)
-        for s in seeds {
-            cdf.add(s.0)
-        }
-        
-        print("Seeds count => \(seeds.count)")
-        cdf.normalize()
-        return (b, cdf, seeds)
-    }
-    
-    private func sample(scene: Scene, sampler: Sampler) -> StateMCMC {
+    func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping) -> StateMala {
         let rng2 = sampler.next2()
+
         let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
         let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
-        let contrib = integrator.li(pixel: Vec2(Float(x), Float(y)), scene: scene, sampler: sampler)
-        return StateMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
+        let pixel = Vec2(Float(x), Float(y))
+        let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil))
+        
+        let dx = (result.radiances[1] - result.radiances[0]) * 0.5
+        let dy = (result.radiances[3] - result.radiances[2]) * 0.5
+        let gradient = Vec2(dx.luminance, dy.luminance)
+        ((sampler as? PSSMLTSampler)?.mutator as? MalaMutation)?.setup(step: step, gradient: gradient)
+        //mutator.setup(step: step, gradient: gradient)
+        return StateMala(
+            contrib: result.main + result.directLight,
+            u: rng2,
+            pos: pixel,
+            gradient: gradient,
+            step: step
+        )
     }
-
+    
     /// Create the async blocks responsible for rendering with a Markov Chain
-    private func chains(samples: Int, nbChains: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, increment: @escaping () -> Void) async -> PixelBuffer {
+    private func chains(samples: Int, nbChains: Int, seeds: [StartupSeed], cdf: DistributionOneDimention, scene: Scene, increment: @escaping () -> Void) async -> PixelBuffer {
         return await withTaskGroup(of: Void.self, returning: PixelBuffer.self) { group in
             let image = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: Color())
             var processed = 0
@@ -182,55 +174,96 @@ final class PssmltIntegrator: Integrator {
             return image
         }
     }
+
+    /// Computes the normalization factor
+    private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [StartupSeed]) {
+        var seeds: [StartupSeed] = []
+        let b = (0 ..< isc).map { _ in
+            let currentSeed = sampler.rng.state
+            
+            let s = sample(scene: scene, sampler: sampler, mapper: mapper)
+            let validSample = s.targetFunction.isFinite && !s.targetFunction.isNaN && !s.targetFunction.isZero
+            if validSample {
+                let values = StartupSeed(
+                    value: currentSeed,
+                    targetFunction: s.targetFunction
+                )
+                seeds.append(values)
+            }
+
+            // TODO Add shift contribs
+            return validSample ? s.contrib.luminance : 0
+        }.reduce(0, +) / Float(isc) // Float(isc * 4) <- when we will reuse primal with shifts
+        
+        guard b != 0 else { fatalError("Invalid computation of b") }
+        var cdf = DistributionOneDimention(count: seeds.count)
+        for s in seeds {
+            cdf.add(s.targetFunction)
+        }
+        
+        print("Seeds count => \(seeds.count)")
+        cdf.normalize()
+        return (b, cdf, seeds)
+    }
     
     /// Random walk rendering of MCMC
-    private func renderChain(i: Int, total: Int, seeds: [(Float, UInt64)], cdf: DistributionOneDimention, scene: Scene, into image: PixelBuffer) -> Void {
+    private func renderChain(i: Int, total: Int, seeds: [StartupSeed], cdf: DistributionOneDimention, scene: Scene, into image: PixelBuffer) -> Void {
         let id = (Float(i) + 0.5) / Float(total)
         let i = cdf.sampleDiscrete(id)
         let seed = seeds[i]
-        let sampler = PSSMLTSampler(nbSamples: nspp, mutator: KelemenMutation())
+        let mutator = MalaMutation()
+        let sampler = PSSMLTSampler(nbSamples: nspp, mutator: mutator)
+        mutator.sampler = sampler
         let previousSeed = sampler.rng.state
-        sampler.rng.state = seed.1
+        sampler.rng.state = seed.value
         
         let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
         sampler.step = .large
         
-        var state = self.sample(scene: scene, sampler: sampler)
-        guard state.targetFunction == seed.0 else { fatalError("Inconsistent seed-sample") }
+        var state = self.sample(scene: scene, sampler: sampler, mapper: mapper)
+        guard state.targetFunction == seed.targetFunction else { fatalError("Inconsistent seed-sample") }
         sampler.accept()
         
         sampler.rng.state = previousSeed
         
-        for _ in 0 ..< self.nspc {
+        for _ in 0 ..< self.spc {
             sampler.step = Float.random(in: 0 ... 1) < sampler.largeStepRatio
                 ? .large
                 : .small
             
-            var proposedState = self.sample(scene: scene, sampler: sampler)
-            let acceptProbability = proposedState.targetFunction < 0 || proposedState.contrib.hasNaN
-                ? 0
-                : min(1.0, proposedState.targetFunction / state.targetFunction)
+            var proposedState = self.sample(scene: scene, sampler: sampler, mapper: mapper)
+            let acceptProbability = acceptance(u: state, v: proposedState)
             
-            // This is veach style expectations; See if using Kelemen style wouldn't be more appropriate
             state.weight += 1.0 - acceptProbability
             proposedState.weight += acceptProbability
             
             if acceptProbability == 1 || acceptProbability > Float.random(in: 0 ... 1) {
-                chain.add(state: &state, heatmap: &heatmap)
+                chain.add(state: state)
                 sampler.accept()
                 state = proposedState
             } else {
-                chain.add(state: &proposedState, heatmap: &heatmap)
+                chain.add(state: proposedState)
                 sampler.reject()
             }
         }
         
         // Flush the last state
-        chain.add(state: &state, heatmap: &heatmap)
-        chain.img.scale(by: 1.0 / Float(nspc))
+        chain.add(state: state)
+        chain.img.scale(by: 1.0 / Float(spc))
         image.merge(with: chain.img)
         stats.small.combine(with: sampler.smallStats)
         stats.large.combine(with: sampler.largeStats)
+    }
+
+    private func transitionProbDensity(u: StateMala, v: StateMala) -> Float {
+        let q = -(u.u - v.u + step * v.gradient).lengthSquared / (4 * step)
+        return exp(q)
+    }
+    
+    private func acceptance(u: StateMala, v: StateMala) -> Float {
+        let num = v.targetFunction * transitionProbDensity(u: v, v: u)
+        let dem = u.targetFunction * transitionProbDensity(u: u, v: v)
+        return min(1, num / dem)
     }
 }
 

@@ -54,6 +54,16 @@ extension Vec2 {
         case x
         case y
     }
+    
+    
+    var length: Float {
+        return simd.length(self)
+    }
+    
+    var lengthSquared: Float {
+        let l = simd.length(self)
+        return l * l
+    }
 }
 
 extension Vec3: @retroactive AdditiveArithmetic where Scalar: BinaryFloatingPoint {

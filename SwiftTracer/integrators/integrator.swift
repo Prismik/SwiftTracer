@@ -16,6 +16,7 @@ enum IntegratorType: String, Decodable {
     case pssmlt
     case gdmlt
     case gdpt
+    case mala
     // The following integrators are used for generating validation images
     case timeboxed
     case convergence
@@ -118,6 +119,13 @@ struct AnyIntegrator: Decodable {
             let heatmap = try params.decodeIfPresent(Bool.self, forKey: .heatmap) ?? false
             let reconstructor = try params.decode(AnyReconstruction.self, forKey: .reconstruction)
             self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, heatmap: heatmap)
+        case .mala:
+            let params = try container.nestedContainer(keyedBy: MalaIntegrator.CodingKeys.self, forKey: .params)
+            let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
+            let spc = try params.decode(Int.self, forKey: .samplesPerChain)
+            let isc = try params.decode(Int.self, forKey: .initSamplesCount)
+            let step = try params.decode(Float.self, forKey: .step)
+            self.wrapped = MalaIntegrator(mapper: anyShiftMapping.wrapped, samplesPerChain: spc, initSamplesCount: isc, step: step)
         case .timeboxed:
             let params = try container.nestedContainer(keyedBy: TimeboxedIntegrator.CodingKeys.self, forKey: .params)
             let time = try params.decode(Int.self, forKey: .time)

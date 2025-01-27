@@ -8,46 +8,14 @@
 import Foundation
 
 final class PSSMLTSampler: Sampler {
+    enum CodingKeys: String, CodingKey {
+        case mutation
+    }
+
     struct Stats {
         var times: Int
         var accept: Int
         var reject: Int
-    }
-
-    enum Mutation {
-        case kelemen(sampler: Sampler, s2: Float, logRatio: Float)
-        case mitsuba(sampler: Sampler)
-        
-        func mutate(value: Float) -> Float {
-            var result = value
-            switch self {
-            case let .kelemen(sampler, s2, logRatio):
-                var rand = sampler.gen()
-                let add: Bool
-                if rand < 0.5 {
-                    add = true
-                    rand *= 2
-                } else {
-                    add = false
-                    rand = 2 * (rand - 0.5)
-                }
-                
-                let dv = s2 * exp(rand * logRatio)
-                if add {
-                    result += dv
-                    if result > 1 { result -= 1 }
-                } else {
-                    result -= dv
-                    if result < 0 { result += 1 }
-                }
-            case .mitsuba(let sampler):
-                let temp: Float = sqrt(-2 * log(1 - sampler.gen()))
-                let dv = temp * (2.0 * Float.pi * sampler.gen()).cos()
-                result = (result + 1e-2 * dv).modulo(1.0)
-            }
-            
-            return result
-        }
     }
 
     enum Step {
@@ -92,20 +60,19 @@ final class PSSMLTSampler: Sampler {
     private var u: [PrimarySample] = []
     private var backup: [(Int, PrimarySample)] = []
     
-    private let s1: Float = 1 / 1024
-    private let s2: Float = 1 / 64
-    private lazy var logRatio = -log(s2/s1)
-    private lazy var mutator: Mutation = .kelemen(sampler: self, s2: s2, logRatio: logRatio)
+    private(set) var mutator: PrimarySpaceMutation
     var smallStats = Stats(times: 0, accept: 0, reject: 0)
     var largeStats = Stats(times: 0, accept: 0, reject: 0)
 
-    init(nbSamples: Int, largeStepRatio: Float = 0.3) {
+    init(nbSamples: Int, largeStepRatio: Float = 0.3, mutator: PrimarySpaceMutation) {
         self.nbSamples = nbSamples
         self.largeStepRatio = largeStepRatio
+        self.mutator = mutator
+        self.mutator.sampler = self
     }
 
     func copy() -> PSSMLTSampler {
-        let copy = PSSMLTSampler(nbSamples: self.nbSamples, largeStepRatio: self.largeStepRatio)
+        let copy = PSSMLTSampler(nbSamples: self.nbSamples, largeStepRatio: self.largeStepRatio, mutator: mutator)
         copy.sampleIndex = sampleIndex
         copy.u = u
         copy.backup = backup
@@ -116,7 +83,7 @@ final class PSSMLTSampler: Sampler {
     }
     
     func new(nspp: Int) -> Self {
-        return .init(nbSamples: nspp, largeStepRatio: self.largeStepRatio)
+        return .init(nbSamples: nspp, largeStepRatio: self.largeStepRatio, mutator: mutator)
     }
 
     func accept() {
@@ -188,12 +155,12 @@ final class PSSMLTSampler: Sampler {
             
             while u[i].modify < time - 1 {
                 u[i].modify += 1
-                u[i].value = mutator.mutate(value: u[i].value)
+                u[i].value = mutator.mutate(u: u, i: i)
             }
             
             backup.append((i, u[i]))
             u[i].modify += 1
-            u[i].value = mutator.mutate(value: u[i].value)
+            u[i].value = mutator.mutate(u: u, i: i)
         }
         
         let value = u[i].value

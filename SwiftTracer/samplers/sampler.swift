@@ -16,6 +16,7 @@ struct AnySampler: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case type
+        case params
         case nspp
         case largeStepRatio
     }
@@ -29,9 +30,11 @@ struct AnySampler: Decodable {
             let nspp = try container.decodeIfPresent(Int.self, forKey: .nspp) ?? 10
             self.wrapped = IndependentSampler(nspp: nspp)
         case .pssmlt:
+            let params = try container.nestedContainer(keyedBy: PSSMLTSampler.CodingKeys.self, forKey: .params)
             let nspp = try container.decodeIfPresent(Int.self, forKey: .nspp) ?? 10
             let largeStepRatio = try container.decodeIfPresent(Float.self, forKey: .largeStepRatio) ?? 0.3
-            self.wrapped = PSSMLTSampler(nbSamples: nspp, largeStepRatio: largeStepRatio)
+            let mutator = try params.decode(AnyMutator.self, forKey: .mutation)
+            self.wrapped = PSSMLTSampler(nbSamples: nspp, largeStepRatio: largeStepRatio, mutator: mutator.wrapped)
         }
     }
 }
