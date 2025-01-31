@@ -222,7 +222,6 @@ final class GdmltIntegrator: Integrator {
     private var result: GradientDomainResult?
 
     private let strategy: StrategyGradientMCMC = .multi
-    private let integrator: SamplerIntegrator
     private let reconstructor: Reconstructing
     
     private let mutator: PrimarySpaceMutation = KelemenMutation(s1: 1 / 1024, s2: 1 / 64)
@@ -238,7 +237,6 @@ final class GdmltIntegrator: Integrator {
     private var heatmap: Heatmap?
     init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, heatmap: Bool) {
         self.mapper = mapper
-        self.integrator = PathIntegrator(minDepth: 0, maxDepth: 16)
         self.reconstructor = reconstructor
         var cdf = DistributionOneDimention(count: shifts.count)
         for _ in 0 ..< shifts.count {

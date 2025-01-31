@@ -61,8 +61,7 @@ extension Vec2 {
     }
     
     var lengthSquared: Float {
-        let l = simd.length(self)
-        return l * l
+        return simd.length_squared(self)
     }
 }
 
@@ -82,8 +81,7 @@ extension Vec3: @retroactive AdditiveArithmetic where Scalar: BinaryFloatingPoin
     }
     
     var lengthSquared: Float {
-        let l = simd.length(self)
-        return l * l
+        return simd.length_squared(self)
     }
     
     func dot(_ other: Vec3) -> Scalar {

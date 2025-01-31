@@ -26,13 +26,16 @@ final class MalaIntegrator: Integrator {
         var gradient: Vec2
         var weight: Float = 0
         var targetFunction: Float = 0
+        var shiftContrib: [Color]
+        let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
         
-        init(contrib: Color, u: Vec2, pos: Vec2, gradient: Vec2, step: Float) {
+        init(contrib: Color, shiftContrib: [Color], u: Vec2, pos: Vec2, gradient: Vec2, step: Float) {
             self.contrib = contrib
+            self.shiftContrib = shiftContrib
             self.u = u
             self.pos = pos
             self.gradient = gradient
-            self.targetFunction = contrib.luminance
+            self.targetFunction = contrib.abs.luminance
         }
     }
     
@@ -50,6 +53,17 @@ final class MalaIntegrator: Integrator {
             let x = Int(state.pos.x)
             let y = Int(state.pos.y)
             img[x, y] += state.contrib * w
+            
+            // Reuse primal
+            /*
+            for (i, offset) in state.offsets.enumerated() {
+                let x2 = Int(state.pos.x + offset.x)
+                let y2 = Int(state.pos.y + offset.y)
+                if (0 ..< img.width).contains(x2) && (0 ..< img.height).contains(y2) {
+                    img[x2, y2] += state.shiftContrib[i] * w
+                }
+            }
+            */
         }
     }
     
@@ -101,7 +115,7 @@ final class MalaIntegrator: Integrator {
         let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
         let nbChains = totalSamples / spc
         
-        print("Rendering pssmlt with \(integrator)")
+        print("Rendering mala with \(integrator)")
         // Run chains in parallel
         let gcd = DispatchGroup()
         gcd.enter()
@@ -140,14 +154,13 @@ final class MalaIntegrator: Integrator {
         let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
         let pixel = Vec2(Float(x), Float(y))
         let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil))
-        
         let dx = (result.radiances[1] - result.radiances[0]) * 0.5
         let dy = (result.radiances[3] - result.radiances[2]) * 0.5
         let gradient = Vec2(dx.luminance, dy.luminance)
         ((sampler as? PSSMLTSampler)?.mutator as? MalaMutation)?.setup(step: step, gradient: gradient)
-        //mutator.setup(step: step, gradient: gradient)
         return StateMala(
             contrib: result.main + result.directLight,
+            shiftContrib: result.radiances,
             u: rng2,
             pos: pixel,
             gradient: gradient,
@@ -175,24 +188,32 @@ final class MalaIntegrator: Integrator {
         }
     }
 
+    private func initSample(scene: Scene, sampler: Sampler) -> Float {
+        let rng2 = sampler.next2()
+        let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
+        let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
+        let contrib = integrator.li(pixel: Vec2(Float(x), Float(y)), scene: scene, sampler: sampler)
+        return contrib.luminance
+    }
+    
     /// Computes the normalization factor
     private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [StartupSeed]) {
         var seeds: [StartupSeed] = []
         let b = (0 ..< isc).map { _ in
             let currentSeed = sampler.rng.state
             
-            let s = sample(scene: scene, sampler: sampler, mapper: mapper)
-            let validSample = s.targetFunction.isFinite && !s.targetFunction.isNaN && !s.targetFunction.isZero
+            let s = initSample(scene: scene, sampler: sampler)
+            let validSample = s.isFinite && !s.isNaN && !s.isZero
             if validSample {
                 let values = StartupSeed(
                     value: currentSeed,
-                    targetFunction: s.targetFunction
+                    targetFunction: s
                 )
                 seeds.append(values)
             }
 
             // TODO Add shift contribs
-            return validSample ? s.contrib.luminance : 0
+            return validSample ? s : 0
         }.reduce(0, +) / Float(isc) // Float(isc * 4) <- when we will reuse primal with shifts
         
         guard b != 0 else { fatalError("Invalid computation of b") }
@@ -213,7 +234,6 @@ final class MalaIntegrator: Integrator {
         let seed = seeds[i]
         let mutator = MalaMutation()
         let sampler = PSSMLTSampler(nbSamples: nspp, mutator: mutator)
-        mutator.sampler = sampler
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.value
         
@@ -221,7 +241,7 @@ final class MalaIntegrator: Integrator {
         sampler.step = .large
         
         var state = self.sample(scene: scene, sampler: sampler, mapper: mapper)
-        guard state.targetFunction == seed.targetFunction else { fatalError("Inconsistent seed-sample") }
+        //guard state.targetFunction == seed.targetFunction else { fatalError("Inconsistent seed-sample") }
         sampler.accept()
         
         sampler.rng.state = previousSeed
@@ -232,7 +252,9 @@ final class MalaIntegrator: Integrator {
                 : .small
             
             var proposedState = self.sample(scene: scene, sampler: sampler, mapper: mapper)
-            let acceptProbability = acceptance(u: state, v: proposedState)
+            let acceptProbability = proposedState.targetFunction < 0 || proposedState.contrib.hasNaN
+                ? 0
+                : acceptance(u: state, v: proposedState)
             
             state.weight += 1.0 - acceptProbability
             proposedState.weight += acceptProbability
@@ -248,21 +270,24 @@ final class MalaIntegrator: Integrator {
         }
         
         // Flush the last state
+        let scale = 1 / Float(spc)
         chain.add(state: state)
-        chain.img.scale(by: 1.0 / Float(spc))
+        chain.img.scale(by: scale)
         image.merge(with: chain.img)
         stats.small.combine(with: sampler.smallStats)
         stats.large.combine(with: sampler.largeStats)
     }
 
+    // q(u|v)
     private func transitionProbDensity(u: StateMala, v: StateMala) -> Float {
-        let q = -(u.u - v.u + step * v.gradient).lengthSquared / (4 * step)
+        let q = -(u.u - v.u - step * v.gradient).lengthSquared / (4 * step)
         return exp(q)
     }
     
+    // a = min(1, π(v) q(u|v) / π(u) q(v|u))
     private func acceptance(u: StateMala, v: StateMala) -> Float {
-        let num = v.targetFunction * transitionProbDensity(u: v, v: u)
-        let dem = u.targetFunction * transitionProbDensity(u: u, v: v)
+        let num = v.targetFunction * transitionProbDensity(u: u, v: v)
+        let dem = u.targetFunction * transitionProbDensity(u: v, v: u)
         return min(1, num / dem)
     }
 }
