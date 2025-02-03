@@ -136,6 +136,7 @@ final class PSSMLTSampler: Sampler {
         Float.random(in: 0 ..< 100, using: &rng) / 100
     }
 
+    // Check for generating the N first dimension
     private func primarySpaceGen(i: Int) -> Float {
         while i >= u.count {
             u.append(PrimarySample(value: gen()))

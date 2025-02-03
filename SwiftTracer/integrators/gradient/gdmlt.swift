@@ -224,7 +224,6 @@ final class GdmltIntegrator: Integrator {
     private let strategy: StrategyGradientMCMC = .multi
     private let reconstructor: Reconstructing
     
-    private let mutator: PrimarySpaceMutation = KelemenMutation(s1: 1 / 1024, s2: 1 / 64)
     let mapper: any ShiftMapping
     private let shiftCdf: DistributionOneDimention
     private let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
@@ -387,7 +386,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         let id = (Float(i) + 0.5) / Float(nbChains)
         let i = cdf.sampleDiscrete(id)
         let seed = seeds[i]
-        let sampler = PSSMLTSampler(nbSamples: nspp, largeStepRatio: 0.5, mutator: mutator)
+        let sampler = PSSMLTSampler(nbSamples: nspp, largeStepRatio: 0.3, mutator: KelemenMutation())
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.value
         

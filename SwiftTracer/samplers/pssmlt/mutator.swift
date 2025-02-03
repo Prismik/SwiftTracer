@@ -116,7 +116,10 @@ final class MalaMutation: PrimarySpaceMutation {
     private var rng2: Vec2? = nil
     private var step: Float = 0.1
     
+    private var fallback: PrimarySpaceMutation = KelemenMutation()
+    
     func setup(step: Float, gradient: Vec2) {
+        self.fallback.sampler = sampler
         self.step = step
         self.gradients = [gradient.x, gradient.y]
         self.rng2 = nil
@@ -127,27 +130,21 @@ final class MalaMutation: PrimarySpaceMutation {
     }
     
     func mutate(u: [PSSMLTSampler.PrimarySample], i: Int) -> Float {
-        guard let gradient = gradients[safe: i] else {
-            let w: Float = gaussian(mean: u[i].value, sigma: step)
-            var result: Float = u[i].value + step.sqrt() * w
-            //if result > 1 { result -= 1 }
-            //if result < 0 { result += 1 }
+        guard let gradient = gradients[safe: i] else { return fallback.mutate(u: u, i: i) }
 
-            return result.modulo(1.0).abs()
-        }
-        let mean = u[i].value - 0.5 * step * gradient
+        let mean = u[i].value + 0.5 * step * gradient
         rng2 = rng2 ?? gaussian(mean: mean, sigma: step)
         let w = rng2?[i] ?? 0
         var result = mean + step.sqrt() * w
-        //if result > 1 { result -= 1 }
-        //if result < 0 { result += 1 }
-
-        return result.modulo(1.0).abs()
+        // Maybe check for bounds in x-y here and bounce back
+        result -= floor(result)
+        return result
     }
     
     /// Returns a 2D sample proportional to a gausian distribution with `mean` and `sigma` standard deviation.
     private func gaussian(mean: Float, sigma: Float) -> Vec2 {
         var u1: Float
+        // Perhaps add epsilon instead of repeat
         repeat {
             u1 = Float.random(in: 0 ... 1)
         } while (u1 == 0)
@@ -155,22 +152,9 @@ final class MalaMutation: PrimarySpaceMutation {
 
         let mag = sigma * (-2 * log(u1)).sqrt()
         
-        let z0: Float  = mag * (2 * .pi * u2).cos() + mean;
-        let z1: Float  = mag * (2 * .pi * u2).sin() + mean;
+        let z0: Float  = mag * (2 * .pi * u2).cos();
+        let z1: Float  = mag * (2 * .pi * u2).sin();
         
         return Vec2(z0, z1)
-    }
-    
-    /// Returns a 1D sample proportional to a gausian distribution with `mean` and `sigma` standard deviation.
-    private func gaussian(mean: Float, sigma: Float) -> Float {
-        var u1: Float
-        repeat {
-            u1 = Float.random(in: 0 ... 1)
-        } while (u1 == 0)
-        
-        let u2 = Float.random(in: 0 ... 1)
-        let z1 = (-2 * log(u1)).sqrt() * (2 * .pi * u2).cos()
-
-        return mean + z1 * sigma
     }
 }

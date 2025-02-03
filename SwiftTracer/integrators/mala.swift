@@ -46,7 +46,7 @@ final class MalaIntegrator: Integrator {
             img = PixelBuffer(width: x, height: y, value: .zero)
         }
 
-        func add(state: StateMala) {
+        func add(state: inout StateMala) {
             let w = state.targetFunction == 0
                 ? 0
                 : state.weight / state.targetFunction
@@ -54,6 +54,7 @@ final class MalaIntegrator: Integrator {
             let y = Int(state.pos.y)
             img[x, y] += state.contrib * w
             
+            state.weight = 0
             // Reuse primal
             /*
             for (i, offset) in state.offsets.enumerated() {
@@ -115,7 +116,7 @@ final class MalaIntegrator: Integrator {
         let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
         let nbChains = totalSamples / spc
         
-        print("Rendering mala with \(integrator)")
+        print("Rendering mala with \(mapper.identifier)")
         // Run chains in parallel
         let gcd = DispatchGroup()
         gcd.enter()
@@ -147,7 +148,7 @@ final class MalaIntegrator: Integrator {
         return image
     }
     
-    func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping) -> StateMala {
+    func sample(scene: Scene, sampler: Sampler) -> StateMala {
         let rng2 = sampler.next2()
 
         let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
@@ -159,7 +160,7 @@ final class MalaIntegrator: Integrator {
         let gradient = Vec2(dx.luminance, dy.luminance)
         ((sampler as? PSSMLTSampler)?.mutator as? MalaMutation)?.setup(step: step, gradient: gradient)
         return StateMala(
-            contrib: result.main + result.directLight,
+            contrib: (result.main + result.directLight),
             shiftContrib: result.radiances,
             u: rng2,
             pos: pixel,
@@ -197,23 +198,24 @@ final class MalaIntegrator: Integrator {
     }
     
     /// Computes the normalization factor
+    /// TODO Bring back shift mapping samples here and fix b
     private func normalizationConstant(scene: Scene, sampler: Sampler) -> (Float, DistributionOneDimention, [StartupSeed]) {
         var seeds: [StartupSeed] = []
         let b = (0 ..< isc).map { _ in
             let currentSeed = sampler.rng.state
             
-            let s = initSample(scene: scene, sampler: sampler)
-            let validSample = s.isFinite && !s.isNaN && !s.isZero
+            let s = sample(scene: scene, sampler: sampler)
+            let validSample = s.targetFunction.isFinite && !s.targetFunction.isNaN && !s.targetFunction.isZero
             if validSample {
                 let values = StartupSeed(
                     value: currentSeed,
-                    targetFunction: s
+                    targetFunction: s.targetFunction
                 )
                 seeds.append(values)
             }
 
             // TODO Add shift contribs
-            return validSample ? s : 0
+            return validSample ? s.targetFunction : 0
         }.reduce(0, +) / Float(isc) // Float(isc * 4) <- when we will reuse primal with shifts
         
         guard b != 0 else { fatalError("Invalid computation of b") }
@@ -240,7 +242,8 @@ final class MalaIntegrator: Integrator {
         let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
         sampler.step = .large
         
-        var state = self.sample(scene: scene, sampler: sampler, mapper: mapper)
+        var state = self.sample(scene: scene, sampler: sampler)
+        // Double check reusing the shift mapping
         //guard state.targetFunction == seed.targetFunction else { fatalError("Inconsistent seed-sample") }
         sampler.accept()
         
@@ -251,7 +254,7 @@ final class MalaIntegrator: Integrator {
                 ? .large
                 : .small
             
-            var proposedState = self.sample(scene: scene, sampler: sampler, mapper: mapper)
+            var proposedState = self.sample(scene: scene, sampler: sampler)
             let acceptProbability = proposedState.targetFunction < 0 || proposedState.contrib.hasNaN
                 ? 0
                 : acceptance(u: state, v: proposedState)
@@ -260,18 +263,18 @@ final class MalaIntegrator: Integrator {
             proposedState.weight += acceptProbability
             
             if acceptProbability == 1 || acceptProbability > Float.random(in: 0 ... 1) {
-                chain.add(state: state)
+                chain.add(state: &state)
                 sampler.accept()
                 state = proposedState
             } else {
-                chain.add(state: proposedState)
+                chain.add(state: &proposedState)
                 sampler.reject()
             }
         }
         
         // Flush the last state
         let scale = 1 / Float(spc)
-        chain.add(state: state)
+        chain.add(state: &state)
         chain.img.scale(by: scale)
         image.merge(with: chain.img)
         stats.small.combine(with: sampler.smallStats)
