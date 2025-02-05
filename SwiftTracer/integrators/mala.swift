@@ -129,10 +129,7 @@ final class MalaIntegrator: Integrator {
         gcd.wait()
         
         guard let image = result else { fatalError("No result image was returned in the async task") }
-        //let average = image.total / Float(image.size)
-        let average = image.reduce(into: .zero) { acc, cur in
-            acc += cur.sanitized.luminance
-        } / Float(image.size)
+        let average = image.total.luminance / Float(image.size)
         
         print("largeStepCount => \(stats.large.times)")
         print("smallStepCount => \(stats.small.times)")

@@ -292,7 +292,13 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         
         guard var result = result else { fatalError("No result image was returned in the async task") }
 
-        let combinedAvg = (result.primal.total.luminance + result.directLight.total.luminance) / Float(result.primal.size)
+        let average = result.primal.reduce(into: .zero) { acc, cur in
+            acc += cur.sanitized.luminance
+        } / Float(result.primal.size)
+        let directAverage = result.directLight.reduce(into: .zero) { acc, cur in
+            acc += cur.sanitized.luminance
+        } / Float(result.primal.size)
+        let combinedAvg = average + directAverage
         result.scale(by: b / combinedAvg)
         
         print("smallStepCount => \(stats.small.times)")
@@ -343,9 +349,8 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                 seeds.append(values)
             }
 
-            let shiftLuminance = s.shiftContrib.reduce(Color(), +).luminance
-            return validSample ? s.contrib.luminance + shiftLuminance: 0
-        }.reduce(0, +) / Float(isc * 4)
+            return validSample ? s.contrib.luminance: 0
+        }.reduce(0, +) / Float(isc)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
