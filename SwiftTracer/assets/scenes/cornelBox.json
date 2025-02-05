@@ -11,7 +11,7 @@
     "background": [0, 0, 0],
     "sampler": {
         "type": "independent",
-        "nspp": 24
+        "nspp": 10
     },
     "integrator": {
         "type": "gdmlt",
@@ -20,6 +20,7 @@
             "initSamplesCount": 100000,
             "mis": true,
             "strategy": "mis",
+            "step": 0.1,
             "shiftMapping": { "type": "pathReconnection" },
             "reconstruction": {
                 "type": "iterative",
@@ -27,7 +28,7 @@
             },
             "time": 90,
             "integrator": {
-                "type": "gdmlt",
+                "type": "path",
                 "params": {
                     "samplesPerChain": 1000,
                     "initSamplesCount": 100000,

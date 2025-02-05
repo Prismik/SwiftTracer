@@ -1,0 +1,1026 @@
+{
+    "camera": {
+        "transform": [
+            {
+                "angle": 180,
+                "axis": [0, 1, 0]
+            },
+            {
+                "matrix": [
+                    -0.988479, -0.00428443, 0.151294, -1.69049,
+                    9.42177e-010, 0.999599, 0.0283071, 1.27158,
+                    -0.151355, 0.027981, -0.988083, 5.88653,
+                    0, 0, 0, 1
+                ]
+            }
+        ],
+        "fov": 60,
+        "resolution": [1280, 720]
+    },
+    "accelerator": {
+        "builder": "sah"
+    },
+    "sampler": {
+        "type": "independent",
+        "nspp": 24
+    },
+    "integrator": {
+        "type": "path",
+        "params": {
+            "samplesPerChain": 1000,
+            "initSamplesCount": 100000,
+            "mis": false,
+            "timeout": 1800,
+            "heatmap": true,
+            "strategy": "emitter",
+            "integrator": {
+                "type": "path",
+                "params": {
+                    "samplesPerChain": 1000,
+                    "initSamplesCount": 100000,
+                    "mis": true,
+                    "strategy": "mis",
+                    "shiftMapping": { "type": "pathReconnection" },
+                    "reconstruction": {
+                        "type": "iterative",
+                        "maxIterations": 50
+                    }
+                }
+            }
+        }
+    },
+    "materials": [{
+        "name": "CeilingLightBSDF",
+        "type": "metal",
+        "roughness": 0.1,
+        "ks": 0.647814
+    }, {
+        "name": "BlackPlasticBSDF",
+        "type": "metal",
+        "roughness": 0.1,
+        "ks": 0.00631
+    }, {
+        "name": "Whiteboard3BSDF",
+        "type": "metal",
+        "roughness": 0.1,
+        "ks": 1
+    }, {
+        "name": "ChairWoodBSDF",
+        "type": "metal",
+        "roughness": 0.1,
+        "ks": {
+            "type": "texture",
+            "filename": "assets/wood2.jpg"
+        }
+    }, {
+        "name": "FluorescentTubeBSDF",
+        "type": "dielectric",
+        "eta_int": 1.5,
+        "ks": 0.612066
+    }, {
+        "name": "WindowFrameBSDF",
+        "type": "metal",
+        "roughness": 0.1,
+        "ks": 0.471008
+    }, {
+        "name": "ChairFrameBSDF",
+        "type": "metal",
+        "roughness": 0.1,
+        "ks": 0.751534
+    }, {
+        "name": "ChairStainlessBSDF",
+        "type": "metal",
+        "roughness": 0,
+        "ks": 1
+    }, {
+        "name": "WoodFrameBSDF",
+        "type": "diffuse",
+        "albedo": {
+            "type": "texture",
+            "filename": "assets/blackboard.jpg"
+        }
+    }, {
+        "name": "LecternBSDF",
+        "type": "diffuse",
+        "albedo": {
+            "type": "texture",
+            "filename": "assets/wood1.jpg"
+        }
+    }, {
+        "name": "BlackBSDF",
+        "type": "diffuse",
+        "albedo": 0.00631
+    }, {
+        "name": "HallwayBSDF",
+        "type": "diffuse",
+        "albedo": [0.784314, 0.784314, 0.784314]
+    }, {
+        "name": "BookshelfBSDF",
+        "type": "diffuse",
+        "albedo": [0.491301, 0.305177, 0.8]
+    }, {
+        "name": "RedPencilBSDF",
+        "type": "diffuse",
+        "albedo": [0.626651, 0, 0]
+    }, {
+        "name": "GreenPencilBSDF",
+        "type": "diffuse",
+        "albedo": [0.145676, 0.64, 0]
+    }, {
+        "name": "BluePencilBSDF",
+        "type": "diffuse",
+        "albedo": [0, 0.030764, 0.8]
+    }, {
+        "name": "Whiteboard2BSDF",
+        "type": "diffuse",
+        "albedo": [0.79311, 0.79311, 0.79311]
+    }, {
+        "name": "StickyNote4BSDF",
+        "type": "diffuse",
+        "albedo": 0.612066
+    }, {
+        "name": "Boxes1BSDF",
+        "type": "diffuse",
+        "albedo": [0.64, 0.472188, 0.319233]
+    }, {
+        "name": "Boxes2BSDF",
+        "type": "diffuse",
+        "albedo": [0.8, 0.791642, 0.388399]
+    }, {
+        "name": "Bin2BSDF",
+        "type": "diffuse",
+        "albedo": [0.8, 0.717509, 0.190456]
+    }, {
+        "name": "StickyNote8BSDF",
+        "type": "diffuse",
+        "albedo": 0.612066
+    }, {
+        "name": "StickyNote7BSDF",
+        "type": "diffuse",
+        "albedo": 0.612066
+    }, {
+        "name": "WhiteboardBSDF",
+        "type": "diffuse",
+        "albedo": 1
+    }, {
+        "name": "StickyNote1BSDF",
+        "type": "diffuse",
+        "albedo": 0.612066
+    }, {
+        "name": "ProjectorScreenBSDF",
+        "type": "diffuse",
+        "albedo": 1
+    }, {
+        "name": "ChalkHolderBSDF",
+        "type": "diffuse",
+        "albedo": [0.8, 0.644901, 0.412119]
+    }, {
+        "name": "FlagBaseBSDF",
+        "type": "diffuse",
+        "albedo": [0.779661, 0.653162, 0.349188]
+    }, {
+        "name": "FlagWhiteBSDF",
+        "type": "diffuse",
+        "albedo": 1
+    }, {
+        "name": "FlagRedBSDF",
+        "type": "diffuse",
+        "albedo": [0.8, 0.008214, 0]
+    }, {
+        "name": "WallsBSDF",
+        "type": "diffuse",
+        "albedo": [0.654071, 0.67408, 0.8]
+    }, {
+        "name": "ProjectorBSDF",
+        "type": "diffuse",
+        "albedo": 0.00631
+    }, {
+        "name": "ScreenEndsBSDF",
+        "type": "diffuse",
+        "albedo": 0.028991
+    }, {
+        "name": "FoamEraserBSDF",
+        "type": "diffuse",
+        "albedo": 0.684615
+    }, {
+        "name": "FloorBSDF",
+        "type": "diffuse",
+        "albedo": [0.659224, 0.592438, 0.517401]
+    }, {
+        "name": "WhiteboardFrameBSDF",
+        "type": "diffuse",
+        "albedo": 0.056173
+    }, {
+        "name": "StickyNote3BSDF",
+        "type": "diffuse",
+        "albedo": 0.612066
+    }, {
+        "name": "StickyNote5BSDF",
+        "type": "diffuse",
+        "albedo": 0.612066
+    }, {
+        "name": "StickyNote6BSDF",
+        "type": "diffuse",
+        "albedo": 0.612066
+    }, {
+        "name": "SpeakersBSDF",
+        "type": "diffuse",
+        "albedo": 0.03598
+    }, {
+        "name": "WallBSDF",
+        "type": "diffuse",
+        "albedo": [0.450837, 0.453663, 0.499605]
+    }, {
+        "name": "Bin1BSDF",
+        "type": "diffuse",
+        "albedo": [0.327125, 0.578596, 0.280561]
+    }, {
+        "name": "StickyNote2BSDF",
+        "type": "diffuse",
+        "albedo": 0.612066
+    }, {
+        "name": "RubberBSDF",
+        "type": "diffuse",
+        "albedo": [0.687031, 0.715465, 0.560499]
+    }],
+    "lights": [{
+        "name": "light",
+        "type": { "category": "infinite" },
+        "radiance": {
+            "type": "texture",
+            "filename": "assets/envmap.png"
+        },
+        "transform": [
+            {
+                "angle": -90,
+                "axis": [0, 1, 0]
+            },
+            {
+                "angle": -95,
+                "axis": [1, 0, 0]
+            }
+        ]
+    }],
+    "shapes": [{
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh036",
+        "material": "WallsBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh048",
+        "material": "FluorescentTubeBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh062",
+        "material": "CeilingLightBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh038",
+        "material": "FluorescentTubeBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh054",
+        "material": "BlackBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh077",
+        "material": "BlackBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh052",
+        "material": "BlackPlasticBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh061",
+        "material": "BlackBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh031",
+        "material": "ProjectorBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh030",
+        "material": "ProjectorBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh057",
+        "material": "BlackBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh023",
+        "material": "WallsBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh027",
+        "material": "WallsBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh047",
+        "material": "Bin2BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, -0.0734223],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh049",
+        "material": "Boxes1BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh022",
+        "material": "BlackBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh029",
+        "material": "BlackBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh033",
+        "material": "WhiteboardBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh040",
+        "material": "WallsBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh028",
+        "material": "BlackBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh076",
+        "material": "ProjectorScreenBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh050",
+        "material": "ScreenEndsBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh055",
+        "material": "FlagBaseBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh053",
+        "material": "FoamEraserBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh058",
+        "material": "ChalkHolderBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh060",
+        "material": "ChairWoodBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh063",
+        "material": "ChairStainlessBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh064",
+        "material": "ChairFrameBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh037",
+        "material": "ChairWoodBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh073",
+        "material": "ChairWoodBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh024",
+        "material": "ChairWoodBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh041",
+        "material": "ChairWoodBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh026",
+        "material": "RubberBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh069",
+        "material": "ChairWoodBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [11.6517, 0, 0, 0],
+            [0, 11.6517, 0, 0],
+            [0, 0, 11.6517, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh035",
+        "material": "FloorBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh043",
+        "material": "WoodFrameBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh072",
+        "material": "Whiteboard2BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh045",
+        "material": "StickyNote1BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh044",
+        "material": "StickyNote2BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh074",
+        "material": "RedPencilBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh070",
+        "material": "BluePencilBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh078",
+        "material": "GreenPencilBSDF"
+
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh021",
+        "material": "Whiteboard3BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh018",
+        "material": "WhiteboardFrameBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh017",
+        "material": "LecternBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh016",
+        "material": "LecternBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh015",
+        "material": "LecternBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh014",
+        "material": "HallwayBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh025",
+        "material": "WoodFrameBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh046",
+        "material": "Whiteboard2BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh012",
+        "material": "BluePencilBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh011",
+        "material": "GreenPencilBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh010",
+        "material": "GreenPencilBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh009",
+        "material": "GreenPencilBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh008",
+        "material": "BluePencilBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh059",
+        "material": "RedPencilBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh065",
+        "material": "BookshelfBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh032",
+        "material": "StickyNote3BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh007",
+        "material": "StickyNote4BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh075",
+        "material": "StickyNote5BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh071",
+        "material": "StickyNote6BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh039",
+        "material": "StickyNote7BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh006",
+        "material": "StickyNote8BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh051",
+        "material": "BlackBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh013",
+        "material": "FlagRedBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh005",
+        "material": "FlagWhiteBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh042",
+        "material": "WallsBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh003",
+        "material": "SpeakersBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh020",
+        "material": "FluorescentTubeBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh002",
+        "material": "CeilingLightBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh019",
+        "material": "WallBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh068",
+        "material": "WindowFrameBSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh001",
+        "material": "Bin1BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, -0.0734223],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh004",
+        "material": "Boxes1BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, -0.0734223],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh034",
+        "material": "Boxes2BSDF"
+    }, {
+        "type": "mesh",
+        "transform": [
+            [1, 0, 0, 0],
+            [0, 1, 0, -0.0734223],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ],
+        "filename": "classroom-Mesh000",
+        "material": "Boxes1BSDF"
+    }]
+}

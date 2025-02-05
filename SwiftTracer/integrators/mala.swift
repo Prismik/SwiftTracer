@@ -56,7 +56,6 @@ final class MalaIntegrator: Integrator {
             
             state.weight = 0
             // Reuse primal
-            /*
             for (i, offset) in state.offsets.enumerated() {
                 let x2 = Int(state.pos.x + offset.x)
                 let y2 = Int(state.pos.y + offset.y)
@@ -64,7 +63,6 @@ final class MalaIntegrator: Integrator {
                     img[x2, y2] += state.shiftContrib[i] * w
                 }
             }
-            */
         }
     }
     
@@ -214,9 +212,9 @@ final class MalaIntegrator: Integrator {
                 seeds.append(values)
             }
 
-            // TODO Add shift contribs
-            return validSample ? s.targetFunction : 0
-        }.reduce(0, +) / Float(isc) // Float(isc * 4) <- when we will reuse primal with shifts
+            let shiftLuminance = s.shiftContrib.reduce(Color(), +).luminance
+            return validSample ? s.contrib.luminance + shiftLuminance: 0
+        }.reduce(0, +) / Float(isc * 4)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
@@ -244,7 +242,7 @@ final class MalaIntegrator: Integrator {
         
         var state = self.sample(scene: scene, sampler: sampler)
         // Double check reusing the shift mapping
-        //guard state.targetFunction == seed.targetFunction else { fatalError("Inconsistent seed-sample") }
+        guard state.targetFunction == seed.targetFunction else { fatalError("Inconsistent seed-sample") }
         sampler.accept()
         
         sampler.rng.state = previousSeed
@@ -275,7 +273,7 @@ final class MalaIntegrator: Integrator {
         // Flush the last state
         let scale = 1 / Float(spc)
         chain.add(state: &state)
-        chain.img.scale(by: scale)
+        chain.img.scale(by: scale * 0.25)
         image.merge(with: chain.img)
         stats.small.combine(with: sampler.smallStats)
         stats.large.combine(with: sampler.largeStats)

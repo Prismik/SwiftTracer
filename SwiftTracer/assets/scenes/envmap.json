@@ -1,0 +1,101 @@
+{
+    "camera": {
+        "transform": [
+            {
+                "angle": 180,
+                "axis": [0, 1, 0]
+            },
+            {
+                "matrix": [
+                    -0.988479, -0.00428443, 0.151294, -1.69049,
+                    9.42177e-010, 0.999599, 0.0283071, 1.27158,
+                    -0.151355, 0.027981, -0.988083, 5.88653,
+                    0, 0, 0, 1
+                ]
+            }
+        ],
+        "fov": 60,
+        "resolution": [1280, 720]
+    },
+    "accelerator": {
+        "builder": "sah"
+    },
+    "sampler": {
+        "type": "independent",
+        "nspp": 2
+    },
+    "integrator": {
+        "type": "path",
+        "params": {
+            "samplesPerChain": 1000,
+            "initSamplesCount": 100000,
+            "mis": false,
+            "timeout": 1800,
+            "heatmap": true,
+            "strategy": "emitter",
+            "integrator": {
+                "type": "path",
+                "params": {
+                    "samplesPerChain": 1000,
+                    "initSamplesCount": 100000,
+                    "mis": true,
+                    "strategy": "mis",
+                    "shiftMapping": { "type": "pathReconnection" },
+                    "reconstruction": {
+                        "type": "iterative",
+                        "maxIterations": 50
+                    }
+                }
+            }
+        }
+    },
+    "materials": [{
+        "name": "metal",
+        "type": "metal",
+        "ks": 1,
+        "roughness": 0
+    }, {
+        "name": "white",
+        "type": "diffuse",
+        "albedo": 1
+    }],
+    "lights": [{
+        "name": "light",
+        "type": { "category": "infinite" },
+        "radiance": {
+            "type": "texture",
+            "filename": "assets/envmap.png"
+        },
+        "transform": [
+            {
+                "angle": 180,
+                "axis": [0, 1, 0]
+            },
+            {
+                "angle": 90,
+                "axis": [0, 0, 1]
+            }
+        ]
+    }],
+    "shapes": [
+        {
+            "type": "sphere",
+            "radius": 2,
+            "material": "metal"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "axis": [1, 0, 0],
+                    "angle": 90
+                },
+                {
+                    "translate": [0, 640, 0]
+                }
+            ],
+            "size": 900,
+            "material": "white"
+        }
+    ]
+}
