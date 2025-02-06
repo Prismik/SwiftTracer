@@ -114,174 +114,8 @@
 		196087D72D3EAACE000E98E2 /* mala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196087D52D3EAACC000E98E2 /* mala.swift */; };
 		196087DA2D42BAC6000E98E2 /* mutator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196087D92D42BAC2000E98E2 /* mutator.swift */; };
 		196087DB2D42BAC6000E98E2 /* mutator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196087D92D42BAC2000E98E2 /* mutator.swift */; };
-		1960882D2D515927000E98E2 /* classroom-Mesh033.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087FF2D515927000E98E2 /* classroom-Mesh033.obj */; };
-		1960882E2D515927000E98E2 /* classroom-Mesh037.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088032D515927000E98E2 /* classroom-Mesh037.obj */; };
-		1960882F2D515927000E98E2 /* classroom-Mesh046.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960880C2D515927000E98E2 /* classroom-Mesh046.obj */; };
-		196088302D515927000E98E2 /* classroom-Mesh019.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F12D515927000E98E2 /* classroom-Mesh019.obj */; };
-		196088312D515927000E98E2 /* classroom-Mesh016.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087EE2D515927000E98E2 /* classroom-Mesh016.obj */; };
-		196088322D515927000E98E2 /* classroom-Mesh067.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088212D515927000E98E2 /* classroom-Mesh067.obj */; };
-		196088332D515927000E98E2 /* classroom-Mesh017.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087EF2D515927000E98E2 /* classroom-Mesh017.obj */; };
-		196088342D515927000E98E2 /* classroom-Mesh052.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088122D515927000E98E2 /* classroom-Mesh052.obj */; };
-		196088352D515927000E98E2 /* classroom-Mesh050.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088102D515927000E98E2 /* classroom-Mesh050.obj */; };
-		196088362D515927000E98E2 /* classroom-Mesh051.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088112D515927000E98E2 /* classroom-Mesh051.obj */; };
-		196088372D515927000E98E2 /* classroom-Mesh010.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E82D515927000E98E2 /* classroom-Mesh010.obj */; };
-		196088382D515927000E98E2 /* classroom-Mesh062.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960881C2D515927000E98E2 /* classroom-Mesh062.obj */; };
-		196088392D515927000E98E2 /* classroom-Mesh039.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088052D515927000E98E2 /* classroom-Mesh039.obj */; };
-		1960883A2D515927000E98E2 /* classroom-Mesh072.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088262D515927000E98E2 /* classroom-Mesh072.obj */; };
-		1960883B2D515927000E98E2 /* classroom-Mesh038.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088042D515927000E98E2 /* classroom-Mesh038.obj */; };
-		1960883C2D515927000E98E2 /* classroom-Mesh003.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E12D515927000E98E2 /* classroom-Mesh003.obj */; };
-		1960883D2D515927000E98E2 /* classroom-Mesh055.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088152D515927000E98E2 /* classroom-Mesh055.obj */; };
-		1960883E2D515927000E98E2 /* classroom-Mesh074.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088282D515927000E98E2 /* classroom-Mesh074.obj */; };
-		1960883F2D515927000E98E2 /* classroom-Mesh004.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E22D515927000E98E2 /* classroom-Mesh004.obj */; };
-		196088402D515927000E98E2 /* classroom-Mesh068.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088222D515927000E98E2 /* classroom-Mesh068.obj */; };
-		196088412D515927000E98E2 /* classroom-Mesh057.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088172D515927000E98E2 /* classroom-Mesh057.obj */; };
-		196088422D515927000E98E2 /* classroom-Mesh000.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087DE2D515927000E98E2 /* classroom-Mesh000.obj */; };
-		196088432D515927000E98E2 /* classroom-Mesh058.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088182D515927000E98E2 /* classroom-Mesh058.obj */; };
-		196088442D515927000E98E2 /* classroom-Mesh021.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F32D515927000E98E2 /* classroom-Mesh021.obj */; };
-		196088452D515927000E98E2 /* classroom-Mesh007.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E52D515927000E98E2 /* classroom-Mesh007.obj */; };
-		196088462D515927000E98E2 /* classroom-Mesh002.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E02D515927000E98E2 /* classroom-Mesh002.obj */; };
-		196088472D515927000E98E2 /* classroom-Mesh027.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F92D515927000E98E2 /* classroom-Mesh027.obj */; };
-		196088482D515927000E98E2 /* classroom-Mesh066.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088202D515927000E98E2 /* classroom-Mesh066.obj */; };
-		196088492D515927000E98E2 /* classroom-Mesh069.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088232D515927000E98E2 /* classroom-Mesh069.obj */; };
-		1960884A2D515927000E98E2 /* classroom-Mesh015.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087ED2D515927000E98E2 /* classroom-Mesh015.obj */; };
-		1960884B2D515927000E98E2 /* classroom-Mesh020.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F22D515927000E98E2 /* classroom-Mesh020.obj */; };
-		1960884C2D515927000E98E2 /* classroom-Mesh034.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088002D515927000E98E2 /* classroom-Mesh034.obj */; };
-		1960884D2D515927000E98E2 /* classroom-Mesh070.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088242D515927000E98E2 /* classroom-Mesh070.obj */; };
-		1960884E2D515927000E98E2 /* classroom-Mesh044.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960880A2D515927000E98E2 /* classroom-Mesh044.obj */; };
-		1960884F2D515927000E98E2 /* classroom-Mesh030.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087FC2D515927000E98E2 /* classroom-Mesh030.obj */; };
-		196088502D515927000E98E2 /* classroom-Mesh035.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088012D515927000E98E2 /* classroom-Mesh035.obj */; };
-		196088512D515927000E98E2 /* classroom-Mesh061.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960881B2D515927000E98E2 /* classroom-Mesh061.obj */; };
-		196088522D515927000E98E2 /* classroom-Mesh073.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088272D515927000E98E2 /* classroom-Mesh073.obj */; };
-		196088532D515927000E98E2 /* classroom-Mesh049.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960880F2D515927000E98E2 /* classroom-Mesh049.obj */; };
-		196088542D515927000E98E2 /* classroom-Mesh008.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E62D515927000E98E2 /* classroom-Mesh008.obj */; };
-		196088552D515927000E98E2 /* classroom-Mesh005.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E32D515927000E98E2 /* classroom-Mesh005.obj */; };
-		196088562D515927000E98E2 /* classroom-Mesh060.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960881A2D515927000E98E2 /* classroom-Mesh060.obj */; };
-		196088572D515927000E98E2 /* classroom-Mesh018.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F02D515927000E98E2 /* classroom-Mesh018.obj */; };
-		196088582D515927000E98E2 /* classroom-Mesh032.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087FE2D515927000E98E2 /* classroom-Mesh032.obj */; };
-		196088592D515927000E98E2 /* classroom-Mesh014.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087EC2D515927000E98E2 /* classroom-Mesh014.obj */; };
-		1960885A2D515927000E98E2 /* classroom-Mesh040.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088062D515927000E98E2 /* classroom-Mesh040.obj */; };
-		1960885B2D515927000E98E2 /* classroom-Mesh012.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087EA2D515927000E98E2 /* classroom-Mesh012.obj */; };
-		1960885C2D515927000E98E2 /* classroom-Mesh024.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F62D515927000E98E2 /* classroom-Mesh024.obj */; };
-		1960885D2D515927000E98E2 /* classroom-Mesh048.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960880E2D515927000E98E2 /* classroom-Mesh048.obj */; };
-		1960885E2D515927000E98E2 /* classroom-Mesh054.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088142D515927000E98E2 /* classroom-Mesh054.obj */; };
-		1960885F2D515927000E98E2 /* classroom-Mesh031.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087FD2D515927000E98E2 /* classroom-Mesh031.obj */; };
-		196088602D515927000E98E2 /* classroom-Mesh063.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960881D2D515927000E98E2 /* classroom-Mesh063.obj */; };
-		196088612D515927000E98E2 /* classroom-Mesh025.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F72D515927000E98E2 /* classroom-Mesh025.obj */; };
-		196088622D515927000E98E2 /* classroom-Mesh056.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088162D515927000E98E2 /* classroom-Mesh056.obj */; };
-		196088632D515927000E98E2 /* classroom-Mesh036.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088022D515927000E98E2 /* classroom-Mesh036.obj */; };
-		196088642D515927000E98E2 /* classroom-Mesh009.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E72D515927000E98E2 /* classroom-Mesh009.obj */; };
-		196088652D515927000E98E2 /* classroom-Mesh023.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F52D515927000E98E2 /* classroom-Mesh023.obj */; };
-		196088662D515927000E98E2 /* classroom-Mesh064.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960881E2D515927000E98E2 /* classroom-Mesh064.obj */; };
-		196088672D515927000E98E2 /* classroom-Mesh022.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F42D515927000E98E2 /* classroom-Mesh022.obj */; };
-		196088682D515927000E98E2 /* classroom-Mesh045.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960880B2D515927000E98E2 /* classroom-Mesh045.obj */; };
-		196088692D515927000E98E2 /* classroom-Mesh011.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E92D515927000E98E2 /* classroom-Mesh011.obj */; };
-		1960886A2D515927000E98E2 /* classroom-Mesh026.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087F82D515927000E98E2 /* classroom-Mesh026.obj */; };
-		1960886B2D515927000E98E2 /* classroom-Mesh053.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088132D515927000E98E2 /* classroom-Mesh053.obj */; };
-		1960886C2D515927000E98E2 /* classroom-Mesh071.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088252D515927000E98E2 /* classroom-Mesh071.obj */; };
-		1960886D2D515927000E98E2 /* classroom-Mesh075.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088292D515927000E98E2 /* classroom-Mesh075.obj */; };
-		1960886E2D515927000E98E2 /* classroom-Mesh076.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960882A2D515927000E98E2 /* classroom-Mesh076.obj */; };
-		1960886F2D515927000E98E2 /* classroom-Mesh006.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087E42D515927000E98E2 /* classroom-Mesh006.obj */; };
-		196088702D515927000E98E2 /* classroom-Mesh029.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087FB2D515927000E98E2 /* classroom-Mesh029.obj */; };
-		196088712D515927000E98E2 /* classroom-Mesh047.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960880D2D515927000E98E2 /* classroom-Mesh047.obj */; };
-		196088722D515927000E98E2 /* classroom-Mesh059.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088192D515927000E98E2 /* classroom-Mesh059.obj */; };
-		196088732D515927000E98E2 /* classroom-Mesh077.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960882B2D515927000E98E2 /* classroom-Mesh077.obj */; };
-		196088742D515927000E98E2 /* classroom-Mesh001.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087DF2D515927000E98E2 /* classroom-Mesh001.obj */; };
-		196088752D515927000E98E2 /* classroom-Mesh013.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087EB2D515927000E98E2 /* classroom-Mesh013.obj */; };
-		196088762D515927000E98E2 /* classroom-Mesh042.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088082D515927000E98E2 /* classroom-Mesh042.obj */; };
-		196088772D515927000E98E2 /* classroom-Mesh041.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088072D515927000E98E2 /* classroom-Mesh041.obj */; };
-		196088782D515927000E98E2 /* classroom-Mesh065.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960881F2D515927000E98E2 /* classroom-Mesh065.obj */; };
-		196088792D515927000E98E2 /* classroom-Mesh043.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196088092D515927000E98E2 /* classroom-Mesh043.obj */; };
-		1960887A2D515927000E98E2 /* classroom-Mesh028.obj in Resources */ = {isa = PBXBuildFile; fileRef = 196087FA2D515927000E98E2 /* classroom-Mesh028.obj */; };
-		1960887B2D515927000E98E2 /* classroom-Mesh078.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1960882C2D515927000E98E2 /* classroom-Mesh078.obj */; };
 		1960887E2D5159D9000E98E2 /* classroom.json in Resources */ = {isa = PBXBuildFile; fileRef = 1960887D2D5159D1000E98E2 /* classroom.json */; };
-		196088832D52F06C000E98E2 /* spaichingen_hill_2k.exr in Resources */ = {isa = PBXBuildFile; fileRef = 196088802D52F06C000E98E2 /* spaichingen_hill_2k.exr */; };
-		196088842D52F06C000E98E2 /* wood1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 196088812D52F06C000E98E2 /* wood1.jpg */; };
-		196088852D52F06C000E98E2 /* wood2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 196088822D52F06C000E98E2 /* wood2.jpg */; };
-		196088862D52F06C000E98E2 /* blackboard.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1960887F2D52F06C000E98E2 /* blackboard.jpg */; };
-		196088872D52F23C000E98E2 /* classroom-Mesh000.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087DE2D515927000E98E2 /* classroom-Mesh000.obj */; };
-		196088882D52F23C000E98E2 /* classroom-Mesh001.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087DF2D515927000E98E2 /* classroom-Mesh001.obj */; };
-		196088892D52F23C000E98E2 /* classroom-Mesh002.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E02D515927000E98E2 /* classroom-Mesh002.obj */; };
-		1960888A2D52F23C000E98E2 /* classroom-Mesh003.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E12D515927000E98E2 /* classroom-Mesh003.obj */; };
-		1960888B2D52F23C000E98E2 /* classroom-Mesh004.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E22D515927000E98E2 /* classroom-Mesh004.obj */; };
-		1960888C2D52F23C000E98E2 /* classroom-Mesh005.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E32D515927000E98E2 /* classroom-Mesh005.obj */; };
-		1960888D2D52F23C000E98E2 /* classroom-Mesh006.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E42D515927000E98E2 /* classroom-Mesh006.obj */; };
-		1960888E2D52F23C000E98E2 /* classroom-Mesh007.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E52D515927000E98E2 /* classroom-Mesh007.obj */; };
-		1960888F2D52F23C000E98E2 /* classroom-Mesh008.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E62D515927000E98E2 /* classroom-Mesh008.obj */; };
-		196088902D52F23C000E98E2 /* classroom-Mesh009.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E72D515927000E98E2 /* classroom-Mesh009.obj */; };
-		196088912D52F23C000E98E2 /* classroom-Mesh010.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E82D515927000E98E2 /* classroom-Mesh010.obj */; };
-		196088922D52F23C000E98E2 /* classroom-Mesh011.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087E92D515927000E98E2 /* classroom-Mesh011.obj */; };
-		196088932D52F23C000E98E2 /* classroom-Mesh012.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087EA2D515927000E98E2 /* classroom-Mesh012.obj */; };
-		196088942D52F23C000E98E2 /* classroom-Mesh013.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087EB2D515927000E98E2 /* classroom-Mesh013.obj */; };
-		196088952D52F23C000E98E2 /* classroom-Mesh014.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087EC2D515927000E98E2 /* classroom-Mesh014.obj */; };
-		196088962D52F23C000E98E2 /* classroom-Mesh015.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087ED2D515927000E98E2 /* classroom-Mesh015.obj */; };
-		196088972D52F23C000E98E2 /* classroom-Mesh016.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087EE2D515927000E98E2 /* classroom-Mesh016.obj */; };
-		196088982D52F23C000E98E2 /* classroom-Mesh017.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087EF2D515927000E98E2 /* classroom-Mesh017.obj */; };
-		196088992D52F23C000E98E2 /* classroom-Mesh018.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F02D515927000E98E2 /* classroom-Mesh018.obj */; };
-		1960889A2D52F23C000E98E2 /* classroom-Mesh019.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F12D515927000E98E2 /* classroom-Mesh019.obj */; };
-		1960889B2D52F23C000E98E2 /* classroom-Mesh020.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F22D515927000E98E2 /* classroom-Mesh020.obj */; };
-		1960889C2D52F23C000E98E2 /* classroom-Mesh021.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F32D515927000E98E2 /* classroom-Mesh021.obj */; };
-		1960889D2D52F23C000E98E2 /* classroom-Mesh022.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F42D515927000E98E2 /* classroom-Mesh022.obj */; };
-		1960889E2D52F23C000E98E2 /* classroom-Mesh023.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F52D515927000E98E2 /* classroom-Mesh023.obj */; };
-		1960889F2D52F23C000E98E2 /* classroom-Mesh024.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F62D515927000E98E2 /* classroom-Mesh024.obj */; };
-		196088A02D52F23C000E98E2 /* classroom-Mesh025.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F72D515927000E98E2 /* classroom-Mesh025.obj */; };
-		196088A12D52F23C000E98E2 /* classroom-Mesh026.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F82D515927000E98E2 /* classroom-Mesh026.obj */; };
-		196088A22D52F23C000E98E2 /* classroom-Mesh027.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087F92D515927000E98E2 /* classroom-Mesh027.obj */; };
-		196088A32D52F23C000E98E2 /* classroom-Mesh028.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087FA2D515927000E98E2 /* classroom-Mesh028.obj */; };
-		196088A42D52F23C000E98E2 /* classroom-Mesh029.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087FB2D515927000E98E2 /* classroom-Mesh029.obj */; };
-		196088A52D52F23C000E98E2 /* classroom-Mesh030.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087FC2D515927000E98E2 /* classroom-Mesh030.obj */; };
-		196088A62D52F23C000E98E2 /* classroom-Mesh031.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087FD2D515927000E98E2 /* classroom-Mesh031.obj */; };
-		196088A72D52F23C000E98E2 /* classroom-Mesh032.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087FE2D515927000E98E2 /* classroom-Mesh032.obj */; };
-		196088A82D52F23C000E98E2 /* classroom-Mesh033.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196087FF2D515927000E98E2 /* classroom-Mesh033.obj */; };
-		196088A92D52F23C000E98E2 /* classroom-Mesh034.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088002D515927000E98E2 /* classroom-Mesh034.obj */; };
-		196088AA2D52F23C000E98E2 /* classroom-Mesh035.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088012D515927000E98E2 /* classroom-Mesh035.obj */; };
-		196088AB2D52F23C000E98E2 /* classroom-Mesh036.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088022D515927000E98E2 /* classroom-Mesh036.obj */; };
-		196088AC2D52F23C000E98E2 /* classroom-Mesh037.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088032D515927000E98E2 /* classroom-Mesh037.obj */; };
-		196088AD2D52F23C000E98E2 /* classroom-Mesh038.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088042D515927000E98E2 /* classroom-Mesh038.obj */; };
-		196088AE2D52F23C000E98E2 /* classroom-Mesh039.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088052D515927000E98E2 /* classroom-Mesh039.obj */; };
-		196088AF2D52F23C000E98E2 /* classroom-Mesh040.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088062D515927000E98E2 /* classroom-Mesh040.obj */; };
-		196088B02D52F23C000E98E2 /* classroom-Mesh041.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088072D515927000E98E2 /* classroom-Mesh041.obj */; };
-		196088B12D52F23C000E98E2 /* classroom-Mesh042.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088082D515927000E98E2 /* classroom-Mesh042.obj */; };
-		196088B22D52F23C000E98E2 /* classroom-Mesh043.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088092D515927000E98E2 /* classroom-Mesh043.obj */; };
-		196088B32D52F23C000E98E2 /* classroom-Mesh044.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960880A2D515927000E98E2 /* classroom-Mesh044.obj */; };
-		196088B42D52F23C000E98E2 /* classroom-Mesh045.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960880B2D515927000E98E2 /* classroom-Mesh045.obj */; };
-		196088B52D52F23C000E98E2 /* classroom-Mesh046.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960880C2D515927000E98E2 /* classroom-Mesh046.obj */; };
-		196088B62D52F23C000E98E2 /* classroom-Mesh047.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960880D2D515927000E98E2 /* classroom-Mesh047.obj */; };
-		196088B72D52F23C000E98E2 /* classroom-Mesh048.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960880E2D515927000E98E2 /* classroom-Mesh048.obj */; };
-		196088B82D52F23C000E98E2 /* classroom-Mesh049.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960880F2D515927000E98E2 /* classroom-Mesh049.obj */; };
-		196088B92D52F23C000E98E2 /* classroom-Mesh050.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088102D515927000E98E2 /* classroom-Mesh050.obj */; };
-		196088BA2D52F23C000E98E2 /* classroom-Mesh051.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088112D515927000E98E2 /* classroom-Mesh051.obj */; };
-		196088BB2D52F23C000E98E2 /* classroom-Mesh052.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088122D515927000E98E2 /* classroom-Mesh052.obj */; };
-		196088BC2D52F23C000E98E2 /* classroom-Mesh053.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088132D515927000E98E2 /* classroom-Mesh053.obj */; };
-		196088BD2D52F23C000E98E2 /* classroom-Mesh054.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088142D515927000E98E2 /* classroom-Mesh054.obj */; };
-		196088BE2D52F23C000E98E2 /* classroom-Mesh055.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088152D515927000E98E2 /* classroom-Mesh055.obj */; };
-		196088BF2D52F23C000E98E2 /* classroom-Mesh056.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088162D515927000E98E2 /* classroom-Mesh056.obj */; };
-		196088C02D52F23C000E98E2 /* classroom-Mesh057.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088172D515927000E98E2 /* classroom-Mesh057.obj */; };
-		196088C12D52F23C000E98E2 /* classroom-Mesh058.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088182D515927000E98E2 /* classroom-Mesh058.obj */; };
-		196088C22D52F23C000E98E2 /* classroom-Mesh059.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088192D515927000E98E2 /* classroom-Mesh059.obj */; };
-		196088C32D52F23C000E98E2 /* classroom-Mesh060.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960881A2D515927000E98E2 /* classroom-Mesh060.obj */; };
-		196088C42D52F23C000E98E2 /* classroom-Mesh061.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960881B2D515927000E98E2 /* classroom-Mesh061.obj */; };
-		196088C52D52F23C000E98E2 /* classroom-Mesh062.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960881C2D515927000E98E2 /* classroom-Mesh062.obj */; };
-		196088C62D52F23C000E98E2 /* classroom-Mesh063.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960881D2D515927000E98E2 /* classroom-Mesh063.obj */; };
-		196088C72D52F23C000E98E2 /* classroom-Mesh064.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960881E2D515927000E98E2 /* classroom-Mesh064.obj */; };
-		196088C82D52F23C000E98E2 /* classroom-Mesh065.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960881F2D515927000E98E2 /* classroom-Mesh065.obj */; };
-		196088C92D52F23C000E98E2 /* classroom-Mesh066.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088202D515927000E98E2 /* classroom-Mesh066.obj */; };
-		196088CA2D52F23C000E98E2 /* classroom-Mesh067.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088212D515927000E98E2 /* classroom-Mesh067.obj */; };
-		196088CB2D52F23C000E98E2 /* classroom-Mesh068.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088222D515927000E98E2 /* classroom-Mesh068.obj */; };
-		196088CC2D52F23C000E98E2 /* classroom-Mesh069.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088232D515927000E98E2 /* classroom-Mesh069.obj */; };
-		196088CD2D52F23C000E98E2 /* classroom-Mesh070.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088242D515927000E98E2 /* classroom-Mesh070.obj */; };
-		196088CE2D52F23C000E98E2 /* classroom-Mesh071.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088252D515927000E98E2 /* classroom-Mesh071.obj */; };
-		196088CF2D52F23C000E98E2 /* classroom-Mesh072.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088262D515927000E98E2 /* classroom-Mesh072.obj */; };
-		196088D02D52F23C000E98E2 /* classroom-Mesh073.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088272D515927000E98E2 /* classroom-Mesh073.obj */; };
-		196088D12D52F23C000E98E2 /* classroom-Mesh074.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088282D515927000E98E2 /* classroom-Mesh074.obj */; };
-		196088D22D52F23C000E98E2 /* classroom-Mesh075.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088292D515927000E98E2 /* classroom-Mesh075.obj */; };
-		196088D32D52F23C000E98E2 /* classroom-Mesh076.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960882A2D515927000E98E2 /* classroom-Mesh076.obj */; };
-		196088D42D52F23C000E98E2 /* classroom-Mesh077.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960882B2D515927000E98E2 /* classroom-Mesh077.obj */; };
-		196088D52D52F23C000E98E2 /* classroom-Mesh078.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960882C2D515927000E98E2 /* classroom-Mesh078.obj */; };
 		196088D62D52F247000E98E2 /* classroom.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960887D2D5159D1000E98E2 /* classroom.json */; };
-		196088D72D52F247000E98E2 /* blackboard.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960887F2D52F06C000E98E2 /* blackboard.jpg */; };
-		196088D82D52F247000E98E2 /* spaichingen_hill_2k.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088802D52F06C000E98E2 /* spaichingen_hill_2k.exr */; };
-		196088D92D52F247000E98E2 /* wood1.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088812D52F06C000E98E2 /* wood1.jpg */; };
-		196088DA2D52F247000E98E2 /* wood2.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196088822D52F06C000E98E2 /* wood2.jpg */; };
 		196094BD2CB2FD7F009FDAC4 /* cornelBox.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196094BC2CB2FD7F009FDAC4 /* cornelBox.json */; };
 		196094BF2CB46638009FDAC4 /* gdpt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094BE2CB46636009FDAC4 /* gdpt.swift */; };
 		196094C02CB46638009FDAC4 /* gdpt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094BE2CB46636009FDAC4 /* gdpt.swift */; };
@@ -321,6 +155,8 @@
 		197A10BA2D2DC022000ACF3B /* envmap.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 197A10B72D2DBB21000ACF3B /* envmap.png */; };
 		1982F6B32C9B8757000FF286 /* PNG in Frameworks */ = {isa = PBXBuildFile; productRef = 1982F6B22C9B8757000FF286 /* PNG */; };
 		1986951F2C2F367A00EEF672 /* constantEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1986951E2C2F367A00EEF672 /* constantEnvironment.swift */; };
+		198B95672D553C5A003DB0CF /* gdmala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198B95662D553C58003DB0CF /* gdmala.swift */; };
+		198B95682D553C5A003DB0CF /* gdmala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198B95662D553C58003DB0CF /* gdmala.swift */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
 		1999D0502C0E48F400358201 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D04F2C0E48C500358201 /* cube.obj */; };
 		1999D0522C0F853000358201 /* uv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0512C0F853000358201 /* uv.swift */; };
@@ -440,89 +276,6 @@
 			dstSubfolderSpec = 7;
 			files = (
 				196088D62D52F247000E98E2 /* classroom.json in CopyFiles */,
-				196088D72D52F247000E98E2 /* blackboard.jpg in CopyFiles */,
-				196088D82D52F247000E98E2 /* spaichingen_hill_2k.exr in CopyFiles */,
-				196088D92D52F247000E98E2 /* wood1.jpg in CopyFiles */,
-				196088DA2D52F247000E98E2 /* wood2.jpg in CopyFiles */,
-				196088872D52F23C000E98E2 /* classroom-Mesh000.obj in CopyFiles */,
-				196088882D52F23C000E98E2 /* classroom-Mesh001.obj in CopyFiles */,
-				196088892D52F23C000E98E2 /* classroom-Mesh002.obj in CopyFiles */,
-				1960888A2D52F23C000E98E2 /* classroom-Mesh003.obj in CopyFiles */,
-				1960888B2D52F23C000E98E2 /* classroom-Mesh004.obj in CopyFiles */,
-				1960888C2D52F23C000E98E2 /* classroom-Mesh005.obj in CopyFiles */,
-				1960888D2D52F23C000E98E2 /* classroom-Mesh006.obj in CopyFiles */,
-				1960888E2D52F23C000E98E2 /* classroom-Mesh007.obj in CopyFiles */,
-				1960888F2D52F23C000E98E2 /* classroom-Mesh008.obj in CopyFiles */,
-				196088902D52F23C000E98E2 /* classroom-Mesh009.obj in CopyFiles */,
-				196088912D52F23C000E98E2 /* classroom-Mesh010.obj in CopyFiles */,
-				196088922D52F23C000E98E2 /* classroom-Mesh011.obj in CopyFiles */,
-				196088932D52F23C000E98E2 /* classroom-Mesh012.obj in CopyFiles */,
-				196088942D52F23C000E98E2 /* classroom-Mesh013.obj in CopyFiles */,
-				196088952D52F23C000E98E2 /* classroom-Mesh014.obj in CopyFiles */,
-				196088962D52F23C000E98E2 /* classroom-Mesh015.obj in CopyFiles */,
-				196088972D52F23C000E98E2 /* classroom-Mesh016.obj in CopyFiles */,
-				196088982D52F23C000E98E2 /* classroom-Mesh017.obj in CopyFiles */,
-				196088992D52F23C000E98E2 /* classroom-Mesh018.obj in CopyFiles */,
-				1960889A2D52F23C000E98E2 /* classroom-Mesh019.obj in CopyFiles */,
-				1960889B2D52F23C000E98E2 /* classroom-Mesh020.obj in CopyFiles */,
-				1960889C2D52F23C000E98E2 /* classroom-Mesh021.obj in CopyFiles */,
-				1960889D2D52F23C000E98E2 /* classroom-Mesh022.obj in CopyFiles */,
-				1960889E2D52F23C000E98E2 /* classroom-Mesh023.obj in CopyFiles */,
-				1960889F2D52F23C000E98E2 /* classroom-Mesh024.obj in CopyFiles */,
-				196088A02D52F23C000E98E2 /* classroom-Mesh025.obj in CopyFiles */,
-				196088A12D52F23C000E98E2 /* classroom-Mesh026.obj in CopyFiles */,
-				196088A22D52F23C000E98E2 /* classroom-Mesh027.obj in CopyFiles */,
-				196088A32D52F23C000E98E2 /* classroom-Mesh028.obj in CopyFiles */,
-				196088A42D52F23C000E98E2 /* classroom-Mesh029.obj in CopyFiles */,
-				196088A52D52F23C000E98E2 /* classroom-Mesh030.obj in CopyFiles */,
-				196088A62D52F23C000E98E2 /* classroom-Mesh031.obj in CopyFiles */,
-				196088A72D52F23C000E98E2 /* classroom-Mesh032.obj in CopyFiles */,
-				196088A82D52F23C000E98E2 /* classroom-Mesh033.obj in CopyFiles */,
-				196088A92D52F23C000E98E2 /* classroom-Mesh034.obj in CopyFiles */,
-				196088AA2D52F23C000E98E2 /* classroom-Mesh035.obj in CopyFiles */,
-				196088AB2D52F23C000E98E2 /* classroom-Mesh036.obj in CopyFiles */,
-				196088AC2D52F23C000E98E2 /* classroom-Mesh037.obj in CopyFiles */,
-				196088AD2D52F23C000E98E2 /* classroom-Mesh038.obj in CopyFiles */,
-				196088AE2D52F23C000E98E2 /* classroom-Mesh039.obj in CopyFiles */,
-				196088AF2D52F23C000E98E2 /* classroom-Mesh040.obj in CopyFiles */,
-				196088B02D52F23C000E98E2 /* classroom-Mesh041.obj in CopyFiles */,
-				196088B12D52F23C000E98E2 /* classroom-Mesh042.obj in CopyFiles */,
-				196088B22D52F23C000E98E2 /* classroom-Mesh043.obj in CopyFiles */,
-				196088B32D52F23C000E98E2 /* classroom-Mesh044.obj in CopyFiles */,
-				196088B42D52F23C000E98E2 /* classroom-Mesh045.obj in CopyFiles */,
-				196088B52D52F23C000E98E2 /* classroom-Mesh046.obj in CopyFiles */,
-				196088B62D52F23C000E98E2 /* classroom-Mesh047.obj in CopyFiles */,
-				196088B72D52F23C000E98E2 /* classroom-Mesh048.obj in CopyFiles */,
-				196088B82D52F23C000E98E2 /* classroom-Mesh049.obj in CopyFiles */,
-				196088B92D52F23C000E98E2 /* classroom-Mesh050.obj in CopyFiles */,
-				196088BA2D52F23C000E98E2 /* classroom-Mesh051.obj in CopyFiles */,
-				196088BB2D52F23C000E98E2 /* classroom-Mesh052.obj in CopyFiles */,
-				196088BC2D52F23C000E98E2 /* classroom-Mesh053.obj in CopyFiles */,
-				196088BD2D52F23C000E98E2 /* classroom-Mesh054.obj in CopyFiles */,
-				196088BE2D52F23C000E98E2 /* classroom-Mesh055.obj in CopyFiles */,
-				196088BF2D52F23C000E98E2 /* classroom-Mesh056.obj in CopyFiles */,
-				196088C02D52F23C000E98E2 /* classroom-Mesh057.obj in CopyFiles */,
-				196088C12D52F23C000E98E2 /* classroom-Mesh058.obj in CopyFiles */,
-				196088C22D52F23C000E98E2 /* classroom-Mesh059.obj in CopyFiles */,
-				196088C32D52F23C000E98E2 /* classroom-Mesh060.obj in CopyFiles */,
-				196088C42D52F23C000E98E2 /* classroom-Mesh061.obj in CopyFiles */,
-				196088C52D52F23C000E98E2 /* classroom-Mesh062.obj in CopyFiles */,
-				196088C62D52F23C000E98E2 /* classroom-Mesh063.obj in CopyFiles */,
-				196088C72D52F23C000E98E2 /* classroom-Mesh064.obj in CopyFiles */,
-				196088C82D52F23C000E98E2 /* classroom-Mesh065.obj in CopyFiles */,
-				196088C92D52F23C000E98E2 /* classroom-Mesh066.obj in CopyFiles */,
-				196088CA2D52F23C000E98E2 /* classroom-Mesh067.obj in CopyFiles */,
-				196088CB2D52F23C000E98E2 /* classroom-Mesh068.obj in CopyFiles */,
-				196088CC2D52F23C000E98E2 /* classroom-Mesh069.obj in CopyFiles */,
-				196088CD2D52F23C000E98E2 /* classroom-Mesh070.obj in CopyFiles */,
-				196088CE2D52F23C000E98E2 /* classroom-Mesh071.obj in CopyFiles */,
-				196088CF2D52F23C000E98E2 /* classroom-Mesh072.obj in CopyFiles */,
-				196088D02D52F23C000E98E2 /* classroom-Mesh073.obj in CopyFiles */,
-				196088D12D52F23C000E98E2 /* classroom-Mesh074.obj in CopyFiles */,
-				196088D22D52F23C000E98E2 /* classroom-Mesh075.obj in CopyFiles */,
-				196088D32D52F23C000E98E2 /* classroom-Mesh076.obj in CopyFiles */,
-				196088D42D52F23C000E98E2 /* classroom-Mesh077.obj in CopyFiles */,
-				196088D52D52F23C000E98E2 /* classroom-Mesh078.obj in CopyFiles */,
 				197A10B92D2DC022000ACF3B /* envmap.json in CopyFiles */,
 				197A10BA2D2DC022000ACF3B /* envmap.png in CopyFiles */,
 				1923B09B2CED08D50025245C /* Mesh001.obj in CopyFiles */,
@@ -596,90 +349,7 @@
 		194D901F2C90D63400D05F58 /* pssmltSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pssmltSampler.swift; sourceTree = "<group>"; };
 		196087D52D3EAACC000E98E2 /* mala.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mala.swift; sourceTree = "<group>"; };
 		196087D92D42BAC2000E98E2 /* mutator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mutator.swift; sourceTree = "<group>"; };
-		196087DE2D515927000E98E2 /* classroom-Mesh000.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh000.obj"; sourceTree = "<group>"; };
-		196087DF2D515927000E98E2 /* classroom-Mesh001.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh001.obj"; sourceTree = "<group>"; };
-		196087E02D515927000E98E2 /* classroom-Mesh002.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh002.obj"; sourceTree = "<group>"; };
-		196087E12D515927000E98E2 /* classroom-Mesh003.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh003.obj"; sourceTree = "<group>"; };
-		196087E22D515927000E98E2 /* classroom-Mesh004.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh004.obj"; sourceTree = "<group>"; };
-		196087E32D515927000E98E2 /* classroom-Mesh005.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh005.obj"; sourceTree = "<group>"; };
-		196087E42D515927000E98E2 /* classroom-Mesh006.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh006.obj"; sourceTree = "<group>"; };
-		196087E52D515927000E98E2 /* classroom-Mesh007.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh007.obj"; sourceTree = "<group>"; };
-		196087E62D515927000E98E2 /* classroom-Mesh008.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh008.obj"; sourceTree = "<group>"; };
-		196087E72D515927000E98E2 /* classroom-Mesh009.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh009.obj"; sourceTree = "<group>"; };
-		196087E82D515927000E98E2 /* classroom-Mesh010.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh010.obj"; sourceTree = "<group>"; };
-		196087E92D515927000E98E2 /* classroom-Mesh011.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh011.obj"; sourceTree = "<group>"; };
-		196087EA2D515927000E98E2 /* classroom-Mesh012.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh012.obj"; sourceTree = "<group>"; };
-		196087EB2D515927000E98E2 /* classroom-Mesh013.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh013.obj"; sourceTree = "<group>"; };
-		196087EC2D515927000E98E2 /* classroom-Mesh014.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh014.obj"; sourceTree = "<group>"; };
-		196087ED2D515927000E98E2 /* classroom-Mesh015.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh015.obj"; sourceTree = "<group>"; };
-		196087EE2D515927000E98E2 /* classroom-Mesh016.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh016.obj"; sourceTree = "<group>"; };
-		196087EF2D515927000E98E2 /* classroom-Mesh017.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh017.obj"; sourceTree = "<group>"; };
-		196087F02D515927000E98E2 /* classroom-Mesh018.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh018.obj"; sourceTree = "<group>"; };
-		196087F12D515927000E98E2 /* classroom-Mesh019.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh019.obj"; sourceTree = "<group>"; };
-		196087F22D515927000E98E2 /* classroom-Mesh020.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh020.obj"; sourceTree = "<group>"; };
-		196087F32D515927000E98E2 /* classroom-Mesh021.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh021.obj"; sourceTree = "<group>"; };
-		196087F42D515927000E98E2 /* classroom-Mesh022.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh022.obj"; sourceTree = "<group>"; };
-		196087F52D515927000E98E2 /* classroom-Mesh023.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh023.obj"; sourceTree = "<group>"; };
-		196087F62D515927000E98E2 /* classroom-Mesh024.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh024.obj"; sourceTree = "<group>"; };
-		196087F72D515927000E98E2 /* classroom-Mesh025.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh025.obj"; sourceTree = "<group>"; };
-		196087F82D515927000E98E2 /* classroom-Mesh026.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh026.obj"; sourceTree = "<group>"; };
-		196087F92D515927000E98E2 /* classroom-Mesh027.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh027.obj"; sourceTree = "<group>"; };
-		196087FA2D515927000E98E2 /* classroom-Mesh028.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh028.obj"; sourceTree = "<group>"; };
-		196087FB2D515927000E98E2 /* classroom-Mesh029.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh029.obj"; sourceTree = "<group>"; };
-		196087FC2D515927000E98E2 /* classroom-Mesh030.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh030.obj"; sourceTree = "<group>"; };
-		196087FD2D515927000E98E2 /* classroom-Mesh031.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh031.obj"; sourceTree = "<group>"; };
-		196087FE2D515927000E98E2 /* classroom-Mesh032.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh032.obj"; sourceTree = "<group>"; };
-		196087FF2D515927000E98E2 /* classroom-Mesh033.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh033.obj"; sourceTree = "<group>"; };
-		196088002D515927000E98E2 /* classroom-Mesh034.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh034.obj"; sourceTree = "<group>"; };
-		196088012D515927000E98E2 /* classroom-Mesh035.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh035.obj"; sourceTree = "<group>"; };
-		196088022D515927000E98E2 /* classroom-Mesh036.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh036.obj"; sourceTree = "<group>"; };
-		196088032D515927000E98E2 /* classroom-Mesh037.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh037.obj"; sourceTree = "<group>"; };
-		196088042D515927000E98E2 /* classroom-Mesh038.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh038.obj"; sourceTree = "<group>"; };
-		196088052D515927000E98E2 /* classroom-Mesh039.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh039.obj"; sourceTree = "<group>"; };
-		196088062D515927000E98E2 /* classroom-Mesh040.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh040.obj"; sourceTree = "<group>"; };
-		196088072D515927000E98E2 /* classroom-Mesh041.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh041.obj"; sourceTree = "<group>"; };
-		196088082D515927000E98E2 /* classroom-Mesh042.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh042.obj"; sourceTree = "<group>"; };
-		196088092D515927000E98E2 /* classroom-Mesh043.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh043.obj"; sourceTree = "<group>"; };
-		1960880A2D515927000E98E2 /* classroom-Mesh044.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh044.obj"; sourceTree = "<group>"; };
-		1960880B2D515927000E98E2 /* classroom-Mesh045.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh045.obj"; sourceTree = "<group>"; };
-		1960880C2D515927000E98E2 /* classroom-Mesh046.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh046.obj"; sourceTree = "<group>"; };
-		1960880D2D515927000E98E2 /* classroom-Mesh047.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh047.obj"; sourceTree = "<group>"; };
-		1960880E2D515927000E98E2 /* classroom-Mesh048.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh048.obj"; sourceTree = "<group>"; };
-		1960880F2D515927000E98E2 /* classroom-Mesh049.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh049.obj"; sourceTree = "<group>"; };
-		196088102D515927000E98E2 /* classroom-Mesh050.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh050.obj"; sourceTree = "<group>"; };
-		196088112D515927000E98E2 /* classroom-Mesh051.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh051.obj"; sourceTree = "<group>"; };
-		196088122D515927000E98E2 /* classroom-Mesh052.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh052.obj"; sourceTree = "<group>"; };
-		196088132D515927000E98E2 /* classroom-Mesh053.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh053.obj"; sourceTree = "<group>"; };
-		196088142D515927000E98E2 /* classroom-Mesh054.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh054.obj"; sourceTree = "<group>"; };
-		196088152D515927000E98E2 /* classroom-Mesh055.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh055.obj"; sourceTree = "<group>"; };
-		196088162D515927000E98E2 /* classroom-Mesh056.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh056.obj"; sourceTree = "<group>"; };
-		196088172D515927000E98E2 /* classroom-Mesh057.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh057.obj"; sourceTree = "<group>"; };
-		196088182D515927000E98E2 /* classroom-Mesh058.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh058.obj"; sourceTree = "<group>"; };
-		196088192D515927000E98E2 /* classroom-Mesh059.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh059.obj"; sourceTree = "<group>"; };
-		1960881A2D515927000E98E2 /* classroom-Mesh060.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh060.obj"; sourceTree = "<group>"; };
-		1960881B2D515927000E98E2 /* classroom-Mesh061.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh061.obj"; sourceTree = "<group>"; };
-		1960881C2D515927000E98E2 /* classroom-Mesh062.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh062.obj"; sourceTree = "<group>"; };
-		1960881D2D515927000E98E2 /* classroom-Mesh063.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh063.obj"; sourceTree = "<group>"; };
-		1960881E2D515927000E98E2 /* classroom-Mesh064.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh064.obj"; sourceTree = "<group>"; };
-		1960881F2D515927000E98E2 /* classroom-Mesh065.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh065.obj"; sourceTree = "<group>"; };
-		196088202D515927000E98E2 /* classroom-Mesh066.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh066.obj"; sourceTree = "<group>"; };
-		196088212D515927000E98E2 /* classroom-Mesh067.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh067.obj"; sourceTree = "<group>"; };
-		196088222D515927000E98E2 /* classroom-Mesh068.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh068.obj"; sourceTree = "<group>"; };
-		196088232D515927000E98E2 /* classroom-Mesh069.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh069.obj"; sourceTree = "<group>"; };
-		196088242D515927000E98E2 /* classroom-Mesh070.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh070.obj"; sourceTree = "<group>"; };
-		196088252D515927000E98E2 /* classroom-Mesh071.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh071.obj"; sourceTree = "<group>"; };
-		196088262D515927000E98E2 /* classroom-Mesh072.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh072.obj"; sourceTree = "<group>"; };
-		196088272D515927000E98E2 /* classroom-Mesh073.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh073.obj"; sourceTree = "<group>"; };
-		196088282D515927000E98E2 /* classroom-Mesh074.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh074.obj"; sourceTree = "<group>"; };
-		196088292D515927000E98E2 /* classroom-Mesh075.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh075.obj"; sourceTree = "<group>"; };
-		1960882A2D515927000E98E2 /* classroom-Mesh076.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh076.obj"; sourceTree = "<group>"; };
-		1960882B2D515927000E98E2 /* classroom-Mesh077.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh077.obj"; sourceTree = "<group>"; };
-		1960882C2D515927000E98E2 /* classroom-Mesh078.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh078.obj"; sourceTree = "<group>"; };
 		1960887D2D5159D1000E98E2 /* classroom.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = classroom.json; sourceTree = "<group>"; };
-		1960887F2D52F06C000E98E2 /* blackboard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blackboard.jpg; sourceTree = "<group>"; };
-		196088802D52F06C000E98E2 /* spaichingen_hill_2k.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = spaichingen_hill_2k.exr; sourceTree = "<group>"; };
-		196088812D52F06C000E98E2 /* wood1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wood1.jpg; sourceTree = "<group>"; };
-		196088822D52F06C000E98E2 /* wood2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wood2.jpg; sourceTree = "<group>"; };
 		196094BC2CB2FD7F009FDAC4 /* cornelBox.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBox.json; sourceTree = "<group>"; };
 		196094BE2CB46636009FDAC4 /* gdpt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gdpt.swift; sourceTree = "<group>"; };
 		196094C22CB5A0FD009FDAC4 /* shiftMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shiftMapping.swift; sourceTree = "<group>"; };
@@ -696,6 +366,7 @@
 		197A10B32D2DBA3D000ACF3B /* envmap.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = envmap.json; sourceTree = "<group>"; };
 		197A10B72D2DBB21000ACF3B /* envmap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = envmap.png; sourceTree = "<group>"; };
 		1986951E2C2F367A00EEF672 /* constantEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constantEnvironment.swift; sourceTree = "<group>"; };
+		198B95662D553C58003DB0CF /* gdmala.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gdmala.swift; sourceTree = "<group>"; };
 		1999D0462C0E3F5200358201 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
 		1999D04F2C0E48C500358201 /* cube.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
 		1999D0512C0F853000358201 /* uv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = uv.swift; sourceTree = "<group>"; };
@@ -831,95 +502,10 @@
 			path = pssmlt;
 			sourceTree = "<group>";
 		};
-		196087DD2D51587D000E98E2 /* classroom */ = {
-			isa = PBXGroup;
-			children = (
-				196087DE2D515927000E98E2 /* classroom-Mesh000.obj */,
-				196087DF2D515927000E98E2 /* classroom-Mesh001.obj */,
-				196087E02D515927000E98E2 /* classroom-Mesh002.obj */,
-				196087E12D515927000E98E2 /* classroom-Mesh003.obj */,
-				196087E22D515927000E98E2 /* classroom-Mesh004.obj */,
-				196087E32D515927000E98E2 /* classroom-Mesh005.obj */,
-				196087E42D515927000E98E2 /* classroom-Mesh006.obj */,
-				196087E52D515927000E98E2 /* classroom-Mesh007.obj */,
-				196087E62D515927000E98E2 /* classroom-Mesh008.obj */,
-				196087E72D515927000E98E2 /* classroom-Mesh009.obj */,
-				196087E82D515927000E98E2 /* classroom-Mesh010.obj */,
-				196087E92D515927000E98E2 /* classroom-Mesh011.obj */,
-				196087EA2D515927000E98E2 /* classroom-Mesh012.obj */,
-				196087EB2D515927000E98E2 /* classroom-Mesh013.obj */,
-				196087EC2D515927000E98E2 /* classroom-Mesh014.obj */,
-				196087ED2D515927000E98E2 /* classroom-Mesh015.obj */,
-				196087EE2D515927000E98E2 /* classroom-Mesh016.obj */,
-				196087EF2D515927000E98E2 /* classroom-Mesh017.obj */,
-				196087F02D515927000E98E2 /* classroom-Mesh018.obj */,
-				196087F12D515927000E98E2 /* classroom-Mesh019.obj */,
-				196087F22D515927000E98E2 /* classroom-Mesh020.obj */,
-				196087F32D515927000E98E2 /* classroom-Mesh021.obj */,
-				196087F42D515927000E98E2 /* classroom-Mesh022.obj */,
-				196087F52D515927000E98E2 /* classroom-Mesh023.obj */,
-				196087F62D515927000E98E2 /* classroom-Mesh024.obj */,
-				196087F72D515927000E98E2 /* classroom-Mesh025.obj */,
-				196087F82D515927000E98E2 /* classroom-Mesh026.obj */,
-				196087F92D515927000E98E2 /* classroom-Mesh027.obj */,
-				196087FA2D515927000E98E2 /* classroom-Mesh028.obj */,
-				196087FB2D515927000E98E2 /* classroom-Mesh029.obj */,
-				196087FC2D515927000E98E2 /* classroom-Mesh030.obj */,
-				196087FD2D515927000E98E2 /* classroom-Mesh031.obj */,
-				196087FE2D515927000E98E2 /* classroom-Mesh032.obj */,
-				196087FF2D515927000E98E2 /* classroom-Mesh033.obj */,
-				196088002D515927000E98E2 /* classroom-Mesh034.obj */,
-				196088012D515927000E98E2 /* classroom-Mesh035.obj */,
-				196088022D515927000E98E2 /* classroom-Mesh036.obj */,
-				196088032D515927000E98E2 /* classroom-Mesh037.obj */,
-				196088042D515927000E98E2 /* classroom-Mesh038.obj */,
-				196088052D515927000E98E2 /* classroom-Mesh039.obj */,
-				196088062D515927000E98E2 /* classroom-Mesh040.obj */,
-				196088072D515927000E98E2 /* classroom-Mesh041.obj */,
-				196088082D515927000E98E2 /* classroom-Mesh042.obj */,
-				196088092D515927000E98E2 /* classroom-Mesh043.obj */,
-				1960880A2D515927000E98E2 /* classroom-Mesh044.obj */,
-				1960880B2D515927000E98E2 /* classroom-Mesh045.obj */,
-				1960880C2D515927000E98E2 /* classroom-Mesh046.obj */,
-				1960880D2D515927000E98E2 /* classroom-Mesh047.obj */,
-				1960880E2D515927000E98E2 /* classroom-Mesh048.obj */,
-				1960880F2D515927000E98E2 /* classroom-Mesh049.obj */,
-				196088102D515927000E98E2 /* classroom-Mesh050.obj */,
-				196088112D515927000E98E2 /* classroom-Mesh051.obj */,
-				196088122D515927000E98E2 /* classroom-Mesh052.obj */,
-				196088132D515927000E98E2 /* classroom-Mesh053.obj */,
-				196088142D515927000E98E2 /* classroom-Mesh054.obj */,
-				196088152D515927000E98E2 /* classroom-Mesh055.obj */,
-				196088162D515927000E98E2 /* classroom-Mesh056.obj */,
-				196088172D515927000E98E2 /* classroom-Mesh057.obj */,
-				196088182D515927000E98E2 /* classroom-Mesh058.obj */,
-				196088192D515927000E98E2 /* classroom-Mesh059.obj */,
-				1960881A2D515927000E98E2 /* classroom-Mesh060.obj */,
-				1960881B2D515927000E98E2 /* classroom-Mesh061.obj */,
-				1960881C2D515927000E98E2 /* classroom-Mesh062.obj */,
-				1960881D2D515927000E98E2 /* classroom-Mesh063.obj */,
-				1960881E2D515927000E98E2 /* classroom-Mesh064.obj */,
-				1960881F2D515927000E98E2 /* classroom-Mesh065.obj */,
-				196088202D515927000E98E2 /* classroom-Mesh066.obj */,
-				196088212D515927000E98E2 /* classroom-Mesh067.obj */,
-				196088222D515927000E98E2 /* classroom-Mesh068.obj */,
-				196088232D515927000E98E2 /* classroom-Mesh069.obj */,
-				196088242D515927000E98E2 /* classroom-Mesh070.obj */,
-				196088252D515927000E98E2 /* classroom-Mesh071.obj */,
-				196088262D515927000E98E2 /* classroom-Mesh072.obj */,
-				196088272D515927000E98E2 /* classroom-Mesh073.obj */,
-				196088282D515927000E98E2 /* classroom-Mesh074.obj */,
-				196088292D515927000E98E2 /* classroom-Mesh075.obj */,
-				1960882A2D515927000E98E2 /* classroom-Mesh076.obj */,
-				1960882B2D515927000E98E2 /* classroom-Mesh077.obj */,
-				1960882C2D515927000E98E2 /* classroom-Mesh078.obj */,
-			);
-			path = classroom;
-			sourceTree = "<group>";
-		};
 		196094C12CB5A0F5009FDAC4 /* gradient */ = {
 			isa = PBXGroup;
 			children = (
+				198B95662D553C58003DB0CF /* gdmala.swift */,
 				19E1E5F22CC5A50C00A1F259 /* reconstruct.swift */,
 				19E1E5EF2CC2D24900A1F259 /* gdmlt.swift */,
 				196094C22CB5A0FD009FDAC4 /* shiftMapping.swift */,
@@ -962,7 +548,6 @@
 		1999D05C2C0FDEC600358201 /* mesh */ = {
 			isa = PBXGroup;
 			children = (
-				196087DD2D51587D000E98E2 /* classroom */,
 				1945A9C52CDA781B008E72BD /* Mesh000.obj */,
 				1945A9C62CDA781B008E72BD /* Mesh001.obj */,
 				1945A9C72CDA781B008E72BD /* Mesh002.obj */,
@@ -990,10 +575,6 @@
 			isa = PBXGroup;
 			children = (
 				197A10B72D2DBB21000ACF3B /* envmap.png */,
-				1960887F2D52F06C000E98E2 /* blackboard.jpg */,
-				196088802D52F06C000E98E2 /* spaichingen_hill_2k.exr */,
-				196088812D52F06C000E98E2 /* wood1.jpg */,
-				196088822D52F06C000E98E2 /* wood2.jpg */,
 				1945A9BF2CDA7808008E72BD /* cherry-wood-texture.jpg */,
 				1945A9C02CDA7808008E72BD /* Good Textures_005844.jpg */,
 				1945A9C12CDA7808008E72BD /* landscape-with-a-lake.jpg */,
@@ -1354,90 +935,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1960882D2D515927000E98E2 /* classroom-Mesh033.obj in Resources */,
-				1960882E2D515927000E98E2 /* classroom-Mesh037.obj in Resources */,
-				1960882F2D515927000E98E2 /* classroom-Mesh046.obj in Resources */,
-				196088302D515927000E98E2 /* classroom-Mesh019.obj in Resources */,
-				196088312D515927000E98E2 /* classroom-Mesh016.obj in Resources */,
-				196088322D515927000E98E2 /* classroom-Mesh067.obj in Resources */,
-				196088332D515927000E98E2 /* classroom-Mesh017.obj in Resources */,
-				196088342D515927000E98E2 /* classroom-Mesh052.obj in Resources */,
-				196088352D515927000E98E2 /* classroom-Mesh050.obj in Resources */,
-				196088362D515927000E98E2 /* classroom-Mesh051.obj in Resources */,
-				196088372D515927000E98E2 /* classroom-Mesh010.obj in Resources */,
-				196088382D515927000E98E2 /* classroom-Mesh062.obj in Resources */,
-				196088392D515927000E98E2 /* classroom-Mesh039.obj in Resources */,
-				1960883A2D515927000E98E2 /* classroom-Mesh072.obj in Resources */,
-				196088832D52F06C000E98E2 /* spaichingen_hill_2k.exr in Resources */,
-				196088842D52F06C000E98E2 /* wood1.jpg in Resources */,
-				196088852D52F06C000E98E2 /* wood2.jpg in Resources */,
-				196088862D52F06C000E98E2 /* blackboard.jpg in Resources */,
-				1960883B2D515927000E98E2 /* classroom-Mesh038.obj in Resources */,
-				1960883C2D515927000E98E2 /* classroom-Mesh003.obj in Resources */,
-				1960883D2D515927000E98E2 /* classroom-Mesh055.obj in Resources */,
-				1960883E2D515927000E98E2 /* classroom-Mesh074.obj in Resources */,
-				1960883F2D515927000E98E2 /* classroom-Mesh004.obj in Resources */,
-				196088402D515927000E98E2 /* classroom-Mesh068.obj in Resources */,
-				196088412D515927000E98E2 /* classroom-Mesh057.obj in Resources */,
-				196088422D515927000E98E2 /* classroom-Mesh000.obj in Resources */,
-				196088432D515927000E98E2 /* classroom-Mesh058.obj in Resources */,
-				196088442D515927000E98E2 /* classroom-Mesh021.obj in Resources */,
-				196088452D515927000E98E2 /* classroom-Mesh007.obj in Resources */,
-				196088462D515927000E98E2 /* classroom-Mesh002.obj in Resources */,
-				196088472D515927000E98E2 /* classroom-Mesh027.obj in Resources */,
-				196088482D515927000E98E2 /* classroom-Mesh066.obj in Resources */,
-				196088492D515927000E98E2 /* classroom-Mesh069.obj in Resources */,
-				1960884A2D515927000E98E2 /* classroom-Mesh015.obj in Resources */,
-				1960884B2D515927000E98E2 /* classroom-Mesh020.obj in Resources */,
-				1960884C2D515927000E98E2 /* classroom-Mesh034.obj in Resources */,
-				1960884D2D515927000E98E2 /* classroom-Mesh070.obj in Resources */,
-				1960884E2D515927000E98E2 /* classroom-Mesh044.obj in Resources */,
-				1960884F2D515927000E98E2 /* classroom-Mesh030.obj in Resources */,
-				196088502D515927000E98E2 /* classroom-Mesh035.obj in Resources */,
-				196088512D515927000E98E2 /* classroom-Mesh061.obj in Resources */,
-				196088522D515927000E98E2 /* classroom-Mesh073.obj in Resources */,
-				196088532D515927000E98E2 /* classroom-Mesh049.obj in Resources */,
-				196088542D515927000E98E2 /* classroom-Mesh008.obj in Resources */,
-				196088552D515927000E98E2 /* classroom-Mesh005.obj in Resources */,
-				196088562D515927000E98E2 /* classroom-Mesh060.obj in Resources */,
-				196088572D515927000E98E2 /* classroom-Mesh018.obj in Resources */,
-				196088582D515927000E98E2 /* classroom-Mesh032.obj in Resources */,
-				196088592D515927000E98E2 /* classroom-Mesh014.obj in Resources */,
-				1960885A2D515927000E98E2 /* classroom-Mesh040.obj in Resources */,
-				1960885B2D515927000E98E2 /* classroom-Mesh012.obj in Resources */,
-				1960885C2D515927000E98E2 /* classroom-Mesh024.obj in Resources */,
-				1960885D2D515927000E98E2 /* classroom-Mesh048.obj in Resources */,
-				1960885E2D515927000E98E2 /* classroom-Mesh054.obj in Resources */,
-				1960885F2D515927000E98E2 /* classroom-Mesh031.obj in Resources */,
-				196088602D515927000E98E2 /* classroom-Mesh063.obj in Resources */,
-				196088612D515927000E98E2 /* classroom-Mesh025.obj in Resources */,
-				196088622D515927000E98E2 /* classroom-Mesh056.obj in Resources */,
-				196088632D515927000E98E2 /* classroom-Mesh036.obj in Resources */,
-				196088642D515927000E98E2 /* classroom-Mesh009.obj in Resources */,
-				196088652D515927000E98E2 /* classroom-Mesh023.obj in Resources */,
 				1960887E2D5159D9000E98E2 /* classroom.json in Resources */,
-				196088662D515927000E98E2 /* classroom-Mesh064.obj in Resources */,
-				196088672D515927000E98E2 /* classroom-Mesh022.obj in Resources */,
-				196088682D515927000E98E2 /* classroom-Mesh045.obj in Resources */,
-				196088692D515927000E98E2 /* classroom-Mesh011.obj in Resources */,
-				1960886A2D515927000E98E2 /* classroom-Mesh026.obj in Resources */,
-				1960886B2D515927000E98E2 /* classroom-Mesh053.obj in Resources */,
-				1960886C2D515927000E98E2 /* classroom-Mesh071.obj in Resources */,
-				1960886D2D515927000E98E2 /* classroom-Mesh075.obj in Resources */,
-				1960886E2D515927000E98E2 /* classroom-Mesh076.obj in Resources */,
-				1960886F2D515927000E98E2 /* classroom-Mesh006.obj in Resources */,
-				196088702D515927000E98E2 /* classroom-Mesh029.obj in Resources */,
-				196088712D515927000E98E2 /* classroom-Mesh047.obj in Resources */,
-				196088722D515927000E98E2 /* classroom-Mesh059.obj in Resources */,
-				196088732D515927000E98E2 /* classroom-Mesh077.obj in Resources */,
-				196088742D515927000E98E2 /* classroom-Mesh001.obj in Resources */,
-				196088752D515927000E98E2 /* classroom-Mesh013.obj in Resources */,
-				196088762D515927000E98E2 /* classroom-Mesh042.obj in Resources */,
-				196088772D515927000E98E2 /* classroom-Mesh041.obj in Resources */,
-				196088782D515927000E98E2 /* classroom-Mesh065.obj in Resources */,
-				196088792D515927000E98E2 /* classroom-Mesh043.obj in Resources */,
-				1960887A2D515927000E98E2 /* classroom-Mesh028.obj in Resources */,
-				1960887B2D515927000E98E2 /* classroom-Mesh078.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1576,6 +1074,7 @@
 				193E42532BFE738F00D96A37 /* ray.swift in Sources */,
 				196087D72D3EAACE000E98E2 /* mala.swift in Sources */,
 				193E42522BFE737F00D96A37 /* transform.swift in Sources */,
+				198B95682D553C5A003DB0CF /* gdmala.swift in Sources */,
 				194480BB2CA8C922002A90C6 /* normal.swift in Sources */,
 				194480AF2CA8C8DC002A90C6 /* dielectric.swift in Sources */,
 				194480A82CA8C8AA002A90C6 /* shapeGroup.swift in Sources */,
@@ -1634,6 +1133,7 @@
 				19E808422B2B6F2600A37D37 /* vector.swift in Sources */,
 				196ECD562C0B7FC30052DEA6 /* triangle.swift in Sources */,
 				1999D0522C0F853000358201 /* uv.swift in Sources */,
+				198B95672D553C5A003DB0CF /* gdmala.swift in Sources */,
 				1923B0B22CF125F10025245C /* heatmap.swift in Sources */,
 				19E1E5F42CC5A51200A1F259 /* reconstruct.swift in Sources */,
 				19EFB3BA2C00EBCF005CC488 /* quad.swift in Sources */,
