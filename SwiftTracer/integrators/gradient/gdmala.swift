@@ -6,6 +6,8 @@
 //
 
 import Collections
+import Foundation
+import Progress
 
 final class GdmalaIntegrator: Integrator {
     enum CodingKeys: String, CodingKey {
@@ -20,23 +22,36 @@ final class GdmalaIntegrator: Integrator {
         let contrib: Color
         let pos: Vec2
         var weight: Float = 0
-        let targetFunction: Float
+        var targetFunction: Float = 0
         let shiftContrib: [Color]
         let directLight: Color
         let delta: [Color]
         let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
         
         init(contrib: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2) {
-            self.contrib = contrib
+            if contrib.luminance > 100 {
+                self.contrib = contrib / contrib.luminance
+            } else {
+                self.contrib = contrib
+            }
             self.pos = pos
+            self.shiftContrib = shiftContribs.map {
+                if $0.luminance > 100 { $0 / $0.luminance } else { $0 }
+            }
             self.directLight = directLight
-            self.shiftContrib = shiftContribs
             let offsets = self.offsets // Weird quirk about accessing self.delta
             self.delta = gradients.enumerated().map({ (i, gradient) in
                 let forward = offsets[i].sum() > 0
                 return if forward { gradient } else { gradient * -1 }
             })
-            self.targetFunction = 0
+
+            let gradientLuminance: Float = offsets.enumerated().reduce(into: 0) { (acc, pair) in
+                let (i, _) = pair
+                acc += delta[i].abs.luminance
+            }
+            
+            let luminance = self.contrib.abs.luminance + directLight.abs.luminance
+            self.targetFunction = gradientLuminance + alpha * 0.25 * luminance
         }
     }
     
@@ -151,9 +166,9 @@ final class GdmalaIntegrator: Integrator {
             }
 
             let shiftLuminance = s.shiftContrib.reduce(Color(), +).luminance
-            return validSample ? s.contrib.luminance + shiftLuminance: 0
-            //return validSample ? s.contrib.luminance: 0
-        }.reduce(0, +) / Float(isc * 4)
+            //return validSample ? s.contrib.luminance + shiftLuminance: 0
+            return validSample ? s.contrib.luminance: 0
+        }.reduce(0, +) / Float(isc)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
@@ -172,8 +187,27 @@ final class GdmalaIntegrator: Integrator {
         let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
         let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
         let pixel = Vec2(Float(x), Float(y))
+        
         let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil))
+        let kernelTargets: [Float] = self.shifts.map {
+            let kernelResult = mapper.shift(pixel: pixel + $0, sampler: sampler, params: ShiftMappingParams(offsets: nil))
+            let kernelState = KernelGradientState(
+                contrib: kernelResult.main,
+                pos: pixel,
+                directLight: kernelResult.directLight,
+                shiftContribs: kernelResult.radiances,
+                gradients: kernelResult.gradients
+            )
+            return kernelState.targetFunction
+        }
 
+        // TODO Compute the gradient of TF, which will be the variation of kernel TF with respect to dx and dy
+
+        let dx = (kernelTargets[1] - kernelTargets[0]) * 0.5
+        let dy = (kernelTargets[3] - kernelTargets[2]) * 0.5
+        
+        let gradient = Vec2(dx, dy)
+        ((sampler as? PSSMLTSampler)?.mutator as? MalaMutation)?.setup(step: step, gradient: gradient)
         return KernelGradientState(
             contrib: result.main,
             pos: pixel,
@@ -216,18 +250,45 @@ extension GdmalaIntegrator: GradientDomainIntegrator {
     }
     
     func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
-        let img = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
-        let primal = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
-        let dx = PixelBuffer(width: img.width, height: img.height, value: .zero)
-        let dy = PixelBuffer(width: img.width, height: img.height, value: .zero)
-        let directLight = PixelBuffer(width: img.width, height: img.height, value: .zero)
+        self.nspp = sampler.nbSamples
+        let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
+        let nbChains = totalSamples / nspc
+        
+        print("GDMala Rendering with \(mapper.identifier)...")
+        let gcd = DispatchGroup()
+        gcd.enter()
+        Task {
+            defer { gcd.leave() }
+            var progress = ProgressBar(count: nbChains, printer: Printer())
+            let result = await chains(samples: totalSamples, nbChains: nbChains, scene: scene) { progress.next() }
+            self.result = result
+        }
+        gcd.wait()
+        
+        guard var result = result else { fatalError("No result image was returned in the async task") }
+        
+        let average = result.primal.reduce(into: .zero) { acc, cur in
+            acc += cur.sanitized.luminance
+        } / Float(result.primal.size)
+        let directAverage = result.directLight.reduce(into: .zero) { acc, cur in
+            acc += cur.sanitized.luminance
+        } / Float(result.primal.size)
+        let combinedAvg = average + directAverage
+        result.scale(by: b / combinedAvg)
+        
+        print("smallStepCount => \(stats.small.times)")
+        print("largeStepCount => \(stats.large.times)")
+        print("smallStepAcceptRatio => \(Float(stats.small.accept) / Float(stats.small.accept + stats.small.reject))")
+        print("largeStepAcceptRatio => \(Float(stats.large.accept) / Float(stats.large.accept + stats.large.reject))")
+        print("Average luminance => \(combinedAvg)")
+        print("b => \(b)")
         
         return GradientDomainResult(
-            primal: primal,
-            directLight: directLight,
-            img: img,
-            dx: dx,
-            dy: dy
+            primal: result.primal,
+            directLight: result.directLight,
+            img: result.img,
+            dx: result.dx,
+            dy: result.dy
         )
     }
     

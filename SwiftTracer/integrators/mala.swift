@@ -27,23 +27,27 @@ final class MalaIntegrator: Integrator {
         var weight: Float = 0
         var targetFunction: Float = 0
         var shiftContrib: [Color]
+        var directLight: Color
         let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
         
-        init(contrib: Color, shiftContrib: [Color], u: Vec2, pos: Vec2, gradient: Vec2, step: Float) {
+        init(contrib: Color, direct: Color, shiftContrib: [Color], u: Vec2, pos: Vec2, gradient: Vec2, step: Float) {
             self.contrib = contrib
+            self.directLight = direct
             self.shiftContrib = shiftContrib
             self.u = u
             self.pos = pos
             self.gradient = gradient
-            self.targetFunction = contrib.abs.luminance
+            self.targetFunction = contrib.abs.luminance + directLight.abs.luminance
         }
     }
     
     private class MarkovChain {
         private(set) var img: PixelBuffer
-        
+        private(set) var directLight: PixelBuffer
+
         init(x: Int, y: Int) {
             img = PixelBuffer(width: x, height: y, value: .zero)
+            directLight = PixelBuffer(width: x, height: y, value: .zero)
         }
 
         func add(state: inout StateMala) {
@@ -53,6 +57,7 @@ final class MalaIntegrator: Integrator {
             let x = Int(state.pos.x)
             let y = Int(state.pos.y)
             img[x, y] += state.contrib * w
+            directLight[x, y] += state.directLight * w
             
             state.weight = 0
             // Reuse primal
@@ -155,7 +160,8 @@ final class MalaIntegrator: Integrator {
         let gradient = Vec2(dx.luminance, dy.luminance)
         ((sampler as? PSSMLTSampler)?.mutator as? MalaMutation)?.setup(step: step, gradient: gradient)
         return StateMala(
-            contrib: (result.main + result.directLight),
+            contrib: result.main,
+            direct: result.directLight,
             shiftContrib: result.radiances,
             u: rng2,
             pos: pixel,
@@ -210,7 +216,7 @@ final class MalaIntegrator: Integrator {
             }
 
             let shiftLuminance = s.shiftContrib.reduce(Color(), +).luminance
-            return validSample ? s.contrib.luminance + shiftLuminance: 0
+            return validSample ? s.directLight.luminance + s.contrib.luminance + shiftLuminance: 0
         }.reduce(0, +) / Float(isc * 4)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
@@ -271,7 +277,9 @@ final class MalaIntegrator: Integrator {
         let scale = 1 / Float(spc)
         chain.add(state: &state)
         chain.img.scale(by: scale * 0.25)
+        chain.directLight.scale(by: scale)
         image.merge(with: chain.img)
+        image.merge(with: chain.directLight)
         stats.small.combine(with: sampler.smallStats)
         stats.large.combine(with: sampler.largeStats)
     }
