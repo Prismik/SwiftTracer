@@ -216,8 +216,8 @@ final class MalaIntegrator: Integrator {
             }
 
             let shiftLuminance = s.shiftContrib.reduce(Color(), +).luminance
-            return validSample ? s.directLight.luminance + s.contrib.luminance + shiftLuminance: 0
-        }.reduce(0, +) / Float(isc * 4)
+            return validSample ? s.contrib.luminance: 0
+        }.reduce(0, +) / Float(isc)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
