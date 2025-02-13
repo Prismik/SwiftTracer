@@ -21,6 +21,7 @@ final class MalaIntegrator: Integrator {
 
     internal struct StateMala {
         var contrib: Color
+        var contribPrime: Color
         var u: Vec2
         var pos: Vec2
         var gradient: Vec2
@@ -30,8 +31,9 @@ final class MalaIntegrator: Integrator {
         var directLight: Color
         let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
         
-        init(contrib: Color, direct: Color, shiftContrib: [Color], u: Vec2, pos: Vec2, gradient: Vec2, step: Float) {
+        init(contrib: Color, contribPrime: Color, direct: Color, shiftContrib: [Color], u: Vec2, pos: Vec2, gradient: Vec2, step: Float) {
             self.contrib = contrib
+            self.contribPrime = contribPrime + direct
             self.directLight = direct
             self.shiftContrib = shiftContrib
             self.u = u
@@ -158,9 +160,13 @@ final class MalaIntegrator: Integrator {
         let dx = (result.radiances[1] - result.radiances[0]) * 0.5
         let dy = (result.radiances[3] - result.radiances[2]) * 0.5
         let gradient = Vec2(dx.luminance, dy.luminance)
+        if dx.hasNaN || dy.hasNaN {
+            print("NaN encountered")
+        }
         ((sampler as? PSSMLTSampler)?.mutator as? MalaMutation)?.setup(step: step, gradient: gradient)
         return StateMala(
             contrib: result.main,
+            contribPrime: result.mainPrime,
             direct: result.directLight,
             shiftContrib: result.radiances,
             u: rng2,
@@ -216,8 +222,8 @@ final class MalaIntegrator: Integrator {
             }
 
             let shiftLuminance = s.shiftContrib.reduce(Color(), +).luminance
-            return validSample ? s.contrib.luminance: 0
-        }.reduce(0, +) / Float(isc)
+            return validSample ? s.contribPrime.luminance + shiftLuminance : 0
+        }.reduce(0, +) / Float(isc * 4)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)

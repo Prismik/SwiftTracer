@@ -33,12 +33,15 @@ struct AnyShiftMappingOperator: Decodable {
 
 struct ShiftResult {
     var main: Color
+    /// Main contribution without the MIS from shifts
+    var mainPrime: Color
     var directLight: Color
     var radiances: [Color]
     var gradients: [Color]
     
     init() {
         main = .zero
+        mainPrime = .zero
         directLight = .zero
         radiances = Array(repeating: .zero, count: 4)
         gradients = Array(repeating: .zero, count: 4)
@@ -339,6 +342,7 @@ final class PathReconnection: ShiftMapping {
             assert(weight.isFinite)
             assert(weight >= 0 && weight <= 1)
             li.main += mainContrib * weight
+            li.mainPrime += mainContrib * mainWeightNum / mainWeightDem
             li.radiances[i] += result.shiftContrib * weight
             li.gradients[i] += (result.shiftContrib - mainContrib) * weight
         }
@@ -355,6 +359,15 @@ final class PathReconnection: ShiftMapping {
         let mainPrevIts = main.its
         guard let newIts = scene.hit(r: main.ray) else { return nil }
         main.its = newIts
+        
+        // Check if metal -> check if roughness is above treshold
+        let prevRoughness: Float = (mainPrevIts.shape.material as? Metal)?.roughness.get(uv: mainPrevIts.uv, p: mainPrevIts.p) ?? 1.0
+        let prevDelta = mainPrevIts.shape.material?.hasDelta(uv: mainPrevIts.uv, p: mainPrevIts.p) ?? false
+        let currentRoughness: Float = (newIts.shape.material as? Metal)?.roughness.get(uv: newIts.uv, p: newIts.p) ?? 1.0
+        let currentDelta = newIts.shape.material?.hasDelta(uv: newIts.uv, p: newIts.p) ?? false
+        let treshold: Float = 0.3
+        let prevRough = prevRoughness > treshold && !prevDelta
+        let connectable = prevRoughness > treshold && !prevDelta && currentRoughness > treshold && !currentDelta
         
         // Check if the bsdf bounces to a light source
         let bounceLight: Light?  = if main.its.hasEmission { main.its.shape.light } else { nil }
@@ -410,33 +423,60 @@ final class PathReconnection: ShiftMapping {
             case .fresh(let s):
                 guard !s.its.hasEmission && s.its.p.visible(from: main.its.p, within: scene) else { result = (0.0, .zero, .dead); break }
                 
-                let frame = Frame(n: s.its.n)
-                let shiftDirectionOutGlobal = (main.its.p - s.its.p).normalized()
-                let shiftDirectionOutLocal = frame.toLocal(v: shiftDirectionOutGlobal).normalized()
+                let shiftRough = !s.its.shape.material.hasDelta(uv: s.its.uv, p: s.its.p)
+                    && (s.its.shape.material as? Metal)?.roughness.get(uv: s.its.uv, p: s.its.p) ?? 1.0 > treshold
                 
-                let jacobian = (main.its.n.dot(-shiftDirectionOutGlobal) * main.its.t.pow(2)).abs()
+                // Current surface and next one are considered rough (diffuse or metal with roughness above treshold)
+                if connectable {
+                    let frame = Frame(n: s.its.n)
+                    let shiftDirectionOutGlobal = (main.its.p - s.its.p).normalized()
+                    let shiftDirectionOutLocal = frame.toLocal(v: shiftDirectionOutGlobal).normalized()
+                    
+                    let jacobian = (main.its.n.dot(-shiftDirectionOutGlobal) * main.its.t.pow(2)).abs()
                     / (main.its.n.dot(-main.ray.d) * (s.its.p - main.its.p).lengthSquared).abs()
-                assert(jacobian.isFinite)
-                assert(jacobian >= 0)
-                
-                let shiftBsdfValue = s.its.shape.material.evaluate(wo: frame.toLocal(v: -s.ray.d), wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
-                let shiftBsdfPdf = s.its.shape.material.pdf(wo: frame.toLocal(v: -s.ray.d), wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
-                let newThroughput = s.throughput * shiftBsdfValue * (jacobian / mainSampledBsdf.pdf)
-                let newPdf = s.pdf * shiftBsdfPdf * jacobian
-                let pair: (shiftLightRadiance: Color, shiftLightPdf: Float) = bounceLight.map { _ in
-                    guard bounceLightPdf != 0 else { return (.zero, 0) }
-                    let ctx = LightSample.Context(p: s.its.p, n: s.its.n, ns: s.its.n)
-                    let pdf = main.its.shape.light.pdfLi(context: ctx, y: main.its.p)
-                    return (shiftLightRadiance: bounceLightRadiance, shiftLightPdf: pdf)
-                } ?? (.zero, 0)
-                
-                let shiftWeightDem = (s.pdf / mainPdfPrev) * (shiftBsdfPdf + pair.shiftLightPdf)
-                let shiftContrib = newThroughput * pair.shiftLightRadiance
-                result = (
-                    shiftWeightDem,
-                    shiftContrib,
-                    .connectedRecently(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
-                )
+                    assert(jacobian.isFinite)
+                    assert(jacobian >= 0)
+                    
+                    let shiftBsdfValue = s.its.shape.material.evaluate(wo: frame.toLocal(v: -s.ray.d), wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
+                    let shiftBsdfPdf = s.its.shape.material.pdf(wo: frame.toLocal(v: -s.ray.d), wi: shiftDirectionOutLocal, uv: s.its.uv, p: s.its.p)
+                    let newThroughput = s.throughput * shiftBsdfValue * (jacobian / mainSampledBsdf.pdf)
+                    let newPdf = s.pdf * shiftBsdfPdf * jacobian
+                    let pair: (shiftLightRadiance: Color, shiftLightPdf: Float) = bounceLight.map { _ in
+                        guard bounceLightPdf != 0 else { return (.zero, 0) }
+                        let ctx = LightSample.Context(p: s.its.p, n: s.its.n, ns: s.its.n)
+                        let pdf = main.its.shape.light.pdfLi(context: ctx, y: main.its.p)
+                        return (shiftLightRadiance: bounceLightRadiance, shiftLightPdf: pdf)
+                    } ?? (.zero, 0)
+                    
+                    let shiftWeightDem = (s.pdf / mainPdfPrev) * (shiftBsdfPdf + pair.shiftLightPdf)
+                    let shiftContrib = newThroughput * pair.shiftLightRadiance
+                    result = (
+                        shiftWeightDem,
+                        shiftContrib,
+                        .connectedRecently(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
+                    )
+                } else {
+                    let success = !shiftRough && !prevRough
+                    let jacobian: Float = 1.0
+                    if success {
+                        let frame = Frame(n: s.its.n)
+                        let newThroughput = s.throughput * jacobian * s.its.shape.material.evaluate(wo: .zero, wi: .zero, uv: s.its.uv, p: s.its.p)
+                        let newPdf = s.pdf * jacobian * s.its.shape.material.pdf(wo: .zero, wi: .zero, uv: s.its.uv, p: s.its.p)
+                        let shiftDirectionOutGlobal = frame.toWorld(v: .zero)
+                        let ray = Ray(origin: s.its.p, direction: shiftDirectionOutGlobal)
+                        guard let newShiftIts = scene.hit(r: ray) else { result = (0, .zero, .dead); break }
+                        
+                        let shiftEmitterRadiance: Color = newShiftIts.hasEmission
+                            ? newShiftIts.shape.light.L(p: s.its.p, n: s.its.n, uv: s.its.uv, wo: shiftDirectionOutGlobal)
+                            : .zero
+                        let newState: RayState = .fresh(data: RayState.Data(pdf: newPdf, ray: ray, its: newShiftIts, throughput: newThroughput))
+                        
+                        result = (s.pdf, newThroughput * shiftEmitterRadiance, newState)
+                    } else {
+                        result = (0, .zero, .dead)
+                    }
+
+                }
             }
             
             let lightDem = bounceLightPdf == 0 ? 1 : bounceLightPdf
@@ -445,6 +485,7 @@ final class PathReconnection: ShiftMapping {
             assert(weight.isFinite)
             assert(weight >= 0 && weight <= 1)
             li.main += mainBsdfContrib * weight / lightDem
+            li.mainPrime += mainBsdfContrib * mainSampledBsdf.pdf / mainWeightDem
             li.radiances[i] += result.contrib * weight / lightDem
             li.gradients[i] += (result.contrib / lightDem - mainBsdfContrib / lightDem) * weight
             return result.state

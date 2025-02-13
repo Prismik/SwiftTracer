@@ -17,6 +17,7 @@ protocol GradientStateMCMC {
     var delta: [Color] { get }
     var shiftContrib: [Color] { get }
     var contrib: Color { get }
+    var contribPrime: Color { get }
     var directLight: Color { get }
 }
 
@@ -49,6 +50,7 @@ final class GdmltIntegrator: Integrator {
     
     internal struct MultiStateMCMC: GradientStateMCMC {
         let contrib: Color
+        let contribPrime: Color
         var pos: Vec2
         var weight: Float = 0
         var targetFunction: Float = 0
@@ -57,11 +59,17 @@ final class GdmltIntegrator: Integrator {
         let directLight: Color
         let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
-        init(contrib: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2) {
+        init(contrib: Color, contribPrime: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2) {
             if contrib.luminance > 100 {
                 self.contrib = contrib / contrib.luminance
             } else {
                 self.contrib = contrib
+            }
+            
+            if contribPrime.luminance > 100 {
+                self.contribPrime = (contribPrime / contribPrime.luminance) + directLight
+            } else {
+                self.contribPrime = contribPrime + directLight
             }
             self.pos = pos
             self.shiftContrib = shiftContribs.map {
@@ -93,6 +101,7 @@ final class GdmltIntegrator: Integrator {
 
             return MultiStateMCMC(
                 contrib: result.main,
+                contribPrime: result.mainPrime,
                 pos: pixel,
                 directLight: result.directLight,
                 shiftContribs: result.radiances,
@@ -104,6 +113,7 @@ final class GdmltIntegrator: Integrator {
     internal struct SingleStateMCMC: GradientStateMCMC {
         var pos: Vec2
         var contrib: Color
+        let contribPrime: Color
         let shiftContrib: [Color]
         let directLight: Color
         var weight: Float = 0
@@ -113,8 +123,9 @@ final class GdmltIntegrator: Integrator {
 
         private static let shifts: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
 
-        init(contrib: Color, pos: Vec2, offset: Vec2, directLight: Color, shiftContrib: Color, gradient: Color, alpha: Float = 0.2) {
+        init(contrib: Color, contribPrime: Color, pos: Vec2, offset: Vec2, directLight: Color, shiftContrib: Color, gradient: Color, alpha: Float = 0.2) {
             self.contrib = contrib
+            self.contribPrime = contribPrime
             self.pos = pos
             self.offsets = [offset]
             self.shiftContrib = [shiftContrib]
@@ -143,6 +154,7 @@ final class GdmltIntegrator: Integrator {
             
             return SingleStateMCMC(
                 contrib: result.main,
+                contribPrime: result.mainPrime,
                 pos: pixel,
                 offset: shifts[id],
                 directLight: result.directLight,
@@ -350,8 +362,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
             }
 
             let shiftLuminance = s.shiftContrib.reduce(Color(), +).luminance
-            return validSample ? s.contrib.luminance + shiftLuminance: 0
-            //return validSample ? s.contrib.luminance: 0
+            return validSample ? s.contribPrime.luminance + shiftLuminance : 0
         }.reduce(0, +) / Float(isc * 4)
         
         guard b != 0 else { fatalError("Invalid computation of b") }

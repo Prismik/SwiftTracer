@@ -68,7 +68,7 @@ final class ConvergenceIntegrator: Integrator {
             
             if let gradientIntegrator = integrator as? GradientDomainIntegrator {
                 let recontsruction = gradientIntegrator.reconstruct(using: accumulatedResult)
-                guard Image(encoding: .exr).write(img: recontsruction.img, to: "\(integrator.identifier)-\(gradientIntegrator.mapper.identifier)_\(iteration).exr") else {
+                guard Image(encoding: .exr).write(img: recontsruction.img, to: "\(integrator.identifier)_\(iteration).exr") else {
                     fatalError("Error in saving convergence image")
                 }
             } else {

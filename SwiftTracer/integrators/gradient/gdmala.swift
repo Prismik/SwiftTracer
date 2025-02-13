@@ -112,7 +112,7 @@ final class GdmalaIntegrator: Integrator {
         let targetFunction: Float
     }
     
-    let identifier = "gdmlt"
+    let identifier = "gdmala"
     let mapper: any ShiftMapping
     
     /// Samples Per Chain
