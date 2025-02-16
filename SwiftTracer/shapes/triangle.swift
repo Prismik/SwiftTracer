@@ -82,6 +82,7 @@ final class Triangle: Shape {
         
         let pvec = r.d.cross(edge2)
         let det = edge1.dot(pvec)
+        let backface = det < -epsilon
         guard det.abs() >= epsilon else { return nil }
         
         let invDet: Float = 1 / det
@@ -114,7 +115,7 @@ final class Triangle: Shape {
         return Intersection(
             t: t,
             p: p,
-            n: n,
+            n: backface ? n * -1 : n,
             tan: Vec3(),
             bitan: Vec3(),
             uv: uv(coordinates: (1 - u - v, u, v)),

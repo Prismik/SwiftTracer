@@ -83,15 +83,7 @@ final class PathIntegrator: Integrator {
 
                 contribution += (weight * bsdfWeight)
                     * light.L(p: newIntersection.p, n: newIntersection.n, uv: newIntersection.uv, wo: newWo)
-                
-                if contribution.hasNaN {
-                    print("nan found in explicit light")
-                }
             }
-        }
-        
-        if bsdfWeight.hasNaN {
-            print("nan found in bsdf")
         }
 
         return depth == maxDepth || (its?.hasEmission == true && depth >= minDepth)

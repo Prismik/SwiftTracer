@@ -13,7 +13,11 @@ final class Quad: Shape {
     var material: Material!
     unowned var light: Light!
 
-    var area: Float { return halfSize.x * halfSize.y * 4 }
+    var area: Float {
+        let dx = transform.vector(Vec3(halfSize.x * 2, 0, 0))
+        let dy = transform.vector(Vec3(0, halfSize.y * 2, 0))
+        return dx.length * dy.length
+    }
     
 
     init(halfSize: Vec2, transform: Transform) {
