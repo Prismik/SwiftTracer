@@ -157,6 +157,36 @@
 		1986951F2C2F367A00EEF672 /* constantEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1986951E2C2F367A00EEF672 /* constantEnvironment.swift */; };
 		198B95672D553C5A003DB0CF /* gdmala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198B95662D553C58003DB0CF /* gdmala.swift */; };
 		198B95682D553C5A003DB0CF /* gdmala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198B95662D553C58003DB0CF /* gdmala.swift */; };
+		198B956C2D5E5EC4003DB0CF /* bidir.json in Resources */ = {isa = PBXBuildFile; fileRef = 198B956B2D5E5EC1003DB0CF /* bidir.json */; };
+		198B956D2D5E64AF003DB0CF /* bidir.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B956B2D5E5EC1003DB0CF /* bidir.json */; };
+		198B957A2D5E6501003DB0CF /* bidir-Mesh010.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95782D5E6501003DB0CF /* bidir-Mesh010.obj */; };
+		198B957B2D5E6501003DB0CF /* bidir-Mesh000.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B956E2D5E6501003DB0CF /* bidir-Mesh000.obj */; };
+		198B957C2D5E6501003DB0CF /* bidir-Mesh006.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95742D5E6501003DB0CF /* bidir-Mesh006.obj */; };
+		198B957D2D5E6501003DB0CF /* bidir-Mesh004.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95722D5E6501003DB0CF /* bidir-Mesh004.obj */; };
+		198B957E2D5E6501003DB0CF /* bidir-Mesh011.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95792D5E6501003DB0CF /* bidir-Mesh011.obj */; };
+		198B957F2D5E6501003DB0CF /* bidir-Mesh002.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95702D5E6501003DB0CF /* bidir-Mesh002.obj */; };
+		198B95802D5E6501003DB0CF /* bidir-Mesh008.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95762D5E6501003DB0CF /* bidir-Mesh008.obj */; };
+		198B95812D5E6501003DB0CF /* bidir-Mesh001.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B956F2D5E6501003DB0CF /* bidir-Mesh001.obj */; };
+		198B95822D5E6501003DB0CF /* bidir-Mesh007.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95752D5E6501003DB0CF /* bidir-Mesh007.obj */; };
+		198B95832D5E6501003DB0CF /* bidir-Mesh003.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95712D5E6501003DB0CF /* bidir-Mesh003.obj */; };
+		198B95842D5E6501003DB0CF /* bidir-Mesh005.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95732D5E6501003DB0CF /* bidir-Mesh005.obj */; };
+		198B95852D5E6501003DB0CF /* bidir-Mesh009.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95772D5E6501003DB0CF /* bidir-Mesh009.obj */; };
+		198B95862D5E650A003DB0CF /* bidir-Mesh000.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B956E2D5E6501003DB0CF /* bidir-Mesh000.obj */; };
+		198B95872D5E650A003DB0CF /* bidir-Mesh001.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B956F2D5E6501003DB0CF /* bidir-Mesh001.obj */; };
+		198B95882D5E650A003DB0CF /* bidir-Mesh002.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95702D5E6501003DB0CF /* bidir-Mesh002.obj */; };
+		198B95892D5E650A003DB0CF /* bidir-Mesh003.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95712D5E6501003DB0CF /* bidir-Mesh003.obj */; };
+		198B958A2D5E650A003DB0CF /* bidir-Mesh004.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95722D5E6501003DB0CF /* bidir-Mesh004.obj */; };
+		198B958B2D5E650A003DB0CF /* bidir-Mesh005.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95732D5E6501003DB0CF /* bidir-Mesh005.obj */; };
+		198B958C2D5E650A003DB0CF /* bidir-Mesh006.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95742D5E6501003DB0CF /* bidir-Mesh006.obj */; };
+		198B958D2D5E650A003DB0CF /* bidir-Mesh007.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95752D5E6501003DB0CF /* bidir-Mesh007.obj */; };
+		198B958E2D5E650A003DB0CF /* bidir-Mesh008.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95762D5E6501003DB0CF /* bidir-Mesh008.obj */; };
+		198B958F2D5E650A003DB0CF /* bidir-Mesh009.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95772D5E6501003DB0CF /* bidir-Mesh009.obj */; };
+		198B95902D5E650A003DB0CF /* bidir-Mesh010.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95782D5E6501003DB0CF /* bidir-Mesh010.obj */; };
+		198B95912D5E650A003DB0CF /* bidir-Mesh011.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95792D5E6501003DB0CF /* bidir-Mesh011.obj */; };
+		198B95962D6D201A003DB0CF /* materials.json in Resources */ = {isa = PBXBuildFile; fileRef = 198B95952D6D2014003DB0CF /* materials.json */; };
+		198B95972D6D21B9003DB0CF /* materials.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95952D6D2014003DB0CF /* materials.json */; };
+		198B95992D6D22DF003DB0CF /* sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95982D6D22D9003DB0CF /* sphere.obj */; };
+		198B959A2D6D23F3003DB0CF /* sphere.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95982D6D22D9003DB0CF /* sphere.obj */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
 		1999D0502C0E48F400358201 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D04F2C0E48C500358201 /* cube.obj */; };
 		1999D0522C0F853000358201 /* uv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D0512C0F853000358201 /* uv.swift */; };
@@ -275,6 +305,21 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				198B959A2D6D23F3003DB0CF /* sphere.obj in CopyFiles */,
+				198B95972D6D21B9003DB0CF /* materials.json in CopyFiles */,
+				198B95862D5E650A003DB0CF /* bidir-Mesh000.obj in CopyFiles */,
+				198B95872D5E650A003DB0CF /* bidir-Mesh001.obj in CopyFiles */,
+				198B95882D5E650A003DB0CF /* bidir-Mesh002.obj in CopyFiles */,
+				198B95892D5E650A003DB0CF /* bidir-Mesh003.obj in CopyFiles */,
+				198B958A2D5E650A003DB0CF /* bidir-Mesh004.obj in CopyFiles */,
+				198B958B2D5E650A003DB0CF /* bidir-Mesh005.obj in CopyFiles */,
+				198B958C2D5E650A003DB0CF /* bidir-Mesh006.obj in CopyFiles */,
+				198B958D2D5E650A003DB0CF /* bidir-Mesh007.obj in CopyFiles */,
+				198B958E2D5E650A003DB0CF /* bidir-Mesh008.obj in CopyFiles */,
+				198B958F2D5E650A003DB0CF /* bidir-Mesh009.obj in CopyFiles */,
+				198B95902D5E650A003DB0CF /* bidir-Mesh010.obj in CopyFiles */,
+				198B95912D5E650A003DB0CF /* bidir-Mesh011.obj in CopyFiles */,
+				198B956D2D5E64AF003DB0CF /* bidir.json in CopyFiles */,
 				196088D62D52F247000E98E2 /* classroom.json in CopyFiles */,
 				197A10B92D2DC022000ACF3B /* envmap.json in CopyFiles */,
 				197A10BA2D2DC022000ACF3B /* envmap.png in CopyFiles */,
@@ -367,6 +412,21 @@
 		197A10B72D2DBB21000ACF3B /* envmap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = envmap.png; sourceTree = "<group>"; };
 		1986951E2C2F367A00EEF672 /* constantEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constantEnvironment.swift; sourceTree = "<group>"; };
 		198B95662D553C58003DB0CF /* gdmala.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gdmala.swift; sourceTree = "<group>"; };
+		198B956B2D5E5EC1003DB0CF /* bidir.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bidir.json; sourceTree = "<group>"; };
+		198B956E2D5E6501003DB0CF /* bidir-Mesh000.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh000.obj"; sourceTree = "<group>"; };
+		198B956F2D5E6501003DB0CF /* bidir-Mesh001.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh001.obj"; sourceTree = "<group>"; };
+		198B95702D5E6501003DB0CF /* bidir-Mesh002.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh002.obj"; sourceTree = "<group>"; };
+		198B95712D5E6501003DB0CF /* bidir-Mesh003.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh003.obj"; sourceTree = "<group>"; };
+		198B95722D5E6501003DB0CF /* bidir-Mesh004.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh004.obj"; sourceTree = "<group>"; };
+		198B95732D5E6501003DB0CF /* bidir-Mesh005.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh005.obj"; sourceTree = "<group>"; };
+		198B95742D5E6501003DB0CF /* bidir-Mesh006.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh006.obj"; sourceTree = "<group>"; };
+		198B95752D5E6501003DB0CF /* bidir-Mesh007.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh007.obj"; sourceTree = "<group>"; };
+		198B95762D5E6501003DB0CF /* bidir-Mesh008.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh008.obj"; sourceTree = "<group>"; };
+		198B95772D5E6501003DB0CF /* bidir-Mesh009.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh009.obj"; sourceTree = "<group>"; };
+		198B95782D5E6501003DB0CF /* bidir-Mesh010.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh010.obj"; sourceTree = "<group>"; };
+		198B95792D5E6501003DB0CF /* bidir-Mesh011.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh011.obj"; sourceTree = "<group>"; };
+		198B95952D6D2014003DB0CF /* materials.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = materials.json; sourceTree = "<group>"; };
+		198B95982D6D22D9003DB0CF /* sphere.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = sphere.obj; sourceTree = "<group>"; };
 		1999D0462C0E3F5200358201 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
 		1999D04F2C0E48C500358201 /* cube.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
 		1999D0512C0F853000358201 /* uv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = uv.swift; sourceTree = "<group>"; };
@@ -548,6 +608,19 @@
 		1999D05C2C0FDEC600358201 /* mesh */ = {
 			isa = PBXGroup;
 			children = (
+				198B95982D6D22D9003DB0CF /* sphere.obj */,
+				198B956E2D5E6501003DB0CF /* bidir-Mesh000.obj */,
+				198B956F2D5E6501003DB0CF /* bidir-Mesh001.obj */,
+				198B95702D5E6501003DB0CF /* bidir-Mesh002.obj */,
+				198B95712D5E6501003DB0CF /* bidir-Mesh003.obj */,
+				198B95722D5E6501003DB0CF /* bidir-Mesh004.obj */,
+				198B95732D5E6501003DB0CF /* bidir-Mesh005.obj */,
+				198B95742D5E6501003DB0CF /* bidir-Mesh006.obj */,
+				198B95752D5E6501003DB0CF /* bidir-Mesh007.obj */,
+				198B95762D5E6501003DB0CF /* bidir-Mesh008.obj */,
+				198B95772D5E6501003DB0CF /* bidir-Mesh009.obj */,
+				198B95782D5E6501003DB0CF /* bidir-Mesh010.obj */,
+				198B95792D5E6501003DB0CF /* bidir-Mesh011.obj */,
 				1945A9C52CDA781B008E72BD /* Mesh000.obj */,
 				1945A9C62CDA781B008E72BD /* Mesh001.obj */,
 				1945A9C72CDA781B008E72BD /* Mesh002.obj */,
@@ -585,6 +658,8 @@
 		1999D05E2C0FDF6200358201 /* scenes */ = {
 			isa = PBXGroup;
 			children = (
+				198B95952D6D2014003DB0CF /* materials.json */,
+				198B956B2D5E5EC1003DB0CF /* bidir.json */,
 				1960887D2D5159D1000E98E2 /* classroom.json */,
 				197A10B32D2DBA3D000ACF3B /* envmap.json */,
 				1945A9BD2CDA767D008E72BD /* doorajar.json */,
@@ -935,7 +1010,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				198B956C2D5E5EC4003DB0CF /* bidir.json in Resources */,
 				1960887E2D5159D9000E98E2 /* classroom.json in Resources */,
+				198B957A2D5E6501003DB0CF /* bidir-Mesh010.obj in Resources */,
+				198B957B2D5E6501003DB0CF /* bidir-Mesh000.obj in Resources */,
+				198B957C2D5E6501003DB0CF /* bidir-Mesh006.obj in Resources */,
+				198B957D2D5E6501003DB0CF /* bidir-Mesh004.obj in Resources */,
+				198B957E2D5E6501003DB0CF /* bidir-Mesh011.obj in Resources */,
+				198B957F2D5E6501003DB0CF /* bidir-Mesh002.obj in Resources */,
+				198B95802D5E6501003DB0CF /* bidir-Mesh008.obj in Resources */,
+				198B95812D5E6501003DB0CF /* bidir-Mesh001.obj in Resources */,
+				198B95992D6D22DF003DB0CF /* sphere.obj in Resources */,
+				198B95962D6D201A003DB0CF /* materials.json in Resources */,
+				198B95822D5E6501003DB0CF /* bidir-Mesh007.obj in Resources */,
+				198B95832D5E6501003DB0CF /* bidir-Mesh003.obj in Resources */,
+				198B95842D5E6501003DB0CF /* bidir-Mesh005.obj in Resources */,
+				198B95852D5E6501003DB0CF /* bidir-Mesh009.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,7 +18,7 @@ final class Scene {
     let materials: [String: Material]
     let camera: Camera
     let background: Color
-    let lightSampler: LightSampler
+    var lightSampler: LightSampler
     let sampler: Sampler
     let integrator: Integrator
 
@@ -42,15 +42,16 @@ final class Scene {
     
     /// Samples a light source in the scene.
     func sample(context: LightSample.Context, s: Vec2) -> LightSample? {
+        if lightSampler.scene == nil { lightSampler.scene = self }
         // TODO Rework the sample like in bvh
-        guard let source = lightSampler.sample(sample: s.x) else { return nil }
+        guard let source = lightSampler.sample(context: context, sample: s.x) else { return nil }
         var updated = s
         updated.x = source.s
         guard let sample = source.light.sampleLi(context: context, sample: updated) else { return nil }
         guard sample.p.visible(from: context.p, within: self) else { return nil }
         
         // TODO Check the appropriate computations for source.prob
-        return LightSample(L: sample.L / source.prob, wi: sample.wi, p: sample.p, n: sample.n, pdf: source.prob * sample.pdf)
+        return LightSample(L: sample.L * source.prob, wi: sample.wi, p: sample.p, n: sample.n, pdf: sample.pdf)
     }
     
     func render() -> [PixelBuffer] {
@@ -134,7 +135,7 @@ extension Scene: Decodable {
             }
         }
 
-        let root: ShapeAggregate
+        var root: ShapeAggregate
         if let bvh = accelerator {
             root = bvh
         } else {
@@ -198,5 +199,9 @@ extension Point3 {
         dist -= 0.0002 // epsilon
         let r = Ray(origin: self, direction: d).with(max: dist)
         return scene.hit(r: r) == nil
+    }
+    
+    func visible(from shape: Shape, within scene: Scene) -> Bool {
+        return false
     }
 }

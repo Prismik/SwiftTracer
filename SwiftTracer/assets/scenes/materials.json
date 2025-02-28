@@ -1,0 +1,304 @@
+{
+    "camera": {
+        "transform": {
+            "from": [0, 20, 1600],
+            "at": [0, -4, 0],
+            "up": [0, 1, 0]
+        },
+        "fov": 25,
+        "resolution": [900, 400]
+    },
+    "sampler": {
+        "type": "independent",
+        "nspp": 128
+    },
+    "background": [0, 0, 0],
+    "accelerator": {
+        "builder": "sah"
+    },
+    "integrator": {
+        "type": "path",
+        "params": {
+            "samplesPerChain": 1000,
+            "initSamplesCount": 100000,
+            "mis": true,
+            "maxDepth": 0,
+            "strategy": "mis",
+            "step": 0.05,
+            "targetFunction": "gradient",
+            "kernel": "shifted",
+            "normalization": 0.16258244,
+            "shiftMapping": { "type": "pathReconnection" },
+            "reconstruction": {
+                "type": "iterative",
+                "maxIterations": 50
+            },
+            "timeout": 300,
+            "integrator": {
+                "type": "gdmala",
+                "params": {
+                    "samplesPerChain": 1000,
+                    "initSamplesCount": 100000,
+                    "mis": true,
+                    "strategy": "mis",
+                    "step": 0.05,
+                    "targetFunction": "luminance",
+                    "kernel": "shifted",
+                    "normalization": 0.16258244,
+                    "shiftMapping": { "type": "pathReconnection" },
+                    "reconstruction": {
+                        "type": "iterative",
+                        "maxIterations": 50
+                    }
+                }
+            }
+        }
+    },
+    "lights": [
+        {
+            "name": "light",
+            "type": {
+                "category": "area"
+            },
+            "radiance": 1
+        }
+    ],
+    "materials": [
+      {
+        "type": "diffuse",
+        "name": "white",
+        "albedo": [ 0.73, 0.73, 0.73 ]
+      },
+      {
+        "type": "diffuse",
+        "name": "red",
+        "albedo": [ 0.65, 0.05, 0.05 ]
+      },
+      {
+        "type": "diffuse",
+        "name": "green",
+        "albedo": [ 0.12, 0.45, 0.15 ]
+      },
+      {
+        "type": "diffuse",
+        "name": "mat0",
+        "albedo": [ 0.73, 0.1, 0.1 ]
+      },
+      {
+        "name": "mat1",
+        "type" : "metal",
+        "roughness": 0.4,
+        "ks": [ 0.1, 0.73, 0.1 ]
+      },
+      {
+        "type": "blend",
+        "name": "mat2",
+        "m2" : {
+            "type" : "diffuse",
+            "albedo": [ 0.1, 0.1, 0.73 ]
+        },
+        "m1" : {
+            "type" : "metal",
+            "roughness": 0.2,
+            "ks": [ 0.9, 0.9, 0.9 ]
+        }
+      },
+      {
+        "type": "blend",
+        "name": "mat3",
+        "m1" : {
+            "type" : "diffuse",
+            "albedo": [ 0.73, 0.1, 0.73 ]
+        },
+        "m2" : {
+            "type" : "metal",
+            "ks": [ 0.9, 0.9, 0.9 ]
+        }
+      },
+      {
+        "type": "dielectric",
+        "name": "mat4"
+      },
+      {
+        "type": "metal",
+        "name": "mat5"
+      }
+    ],
+    "shapes": [
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "translate": [0, 0, -277.5]
+                }
+            ],
+            "size": [1300, 555],
+            "material": "white"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "axis": [1, 0, 0],
+                    "angle": 90
+                }, {
+                    "translate": [0, 277.5, 0]
+                }
+            ],
+            "size": [1300, 2555],
+            "material": "white"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "axis": [1, 0, 0],
+                    "angle": -90
+                }, {
+                    "translate": [0, -277.5, 0]
+                }
+            ],
+            "size": [1300, 2555],
+            "material": "white"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "axis": [0, 1, 0],
+                    "angle": 90
+                }, {
+                    "translate": [-650, 0, 0]
+                }
+            ],
+            "size": [2555, 2555],
+            "material": "green"
+        }, {
+            "type": "quad",
+            "transform": [
+                {
+                    "axis": [0, 1, 0],
+                    "angle": -90
+                }, {
+                    "translate": [650, 0, 0]
+                }
+            ],
+            "size": [2555, 2555],
+            "material": "red"
+        }, {
+            "type": "quad",
+            "transform": [
+                {
+                    "axis": [1, 0, 0],
+                    "angle": 90
+                }, {
+                    "translate": [0, 277, 0]
+                }
+            ],
+            "size": [1000, 500],
+            "light": "light"
+        }, {
+            "type": "mesh",
+            "transform": [
+                {
+                    "matrix": [
+                        100, 0, 0, 0,
+                        0, 100, 0, 0,
+                        0, 0, 100, 0,
+                        0, 0, 0, 1
+                    ]
+                },
+                {
+                    "translate": [-500, -177.5, -200]
+                }
+            ],
+            "filename": "sphere",
+            "material": "mat5"
+        }, {
+            "type": "mesh",
+            "transform": [
+                {
+                    "matrix": [
+                        100, 0, 0, 0,
+                        0, 100, 0, 0,
+                        0, 0, 100, 0,
+                        0, 0, 0, 1
+                    ]
+                },
+                {
+                    "translate": [-300, -177.5, -120]
+                }
+            ],
+            "filename": "sphere",
+            "material": "mat4"
+        }, {
+            "type": "mesh",
+            "transform": [
+                {
+                    "matrix": [
+                        100, 0, 0, 0,
+                        0, 100, 0, 0,
+                        0, 0, 100, 0,
+                        0, 0, 0, 1
+                    ]
+                },
+                {
+                    "translate": [-100, -177.5, -40]
+                }
+            ],
+            "filename": "sphere",
+            "material": "mat3"
+        }, {
+            "type": "mesh",
+            "transform": [
+                {
+                    "matrix": [
+                        100, 0, 0, 0,
+                        0, 100, 0, 0,
+                        0, 0, 100, 0,
+                        0, 0, 0, 1
+                    ]
+                },
+                {
+                    "translate": [100, -177.5, 40],
+                }
+            ],
+            "filename": "sphere",
+            "material": "mat2"
+        }, {
+            "type": "mesh",
+            "transform": [
+                {
+                    "matrix": [
+                        100, 0, 0, 0,
+                        0, 100, 0, 0,
+                        0, 0, 100, 0,
+                        0, 0, 0, 1
+                    ]
+                },
+                {
+                    "translate": [300, -177.5, 120]
+                }
+            ],
+            "filename": "sphere",
+            "material": "mat1"
+        }, {
+            "type": "mesh",
+            "transform": [
+                {
+                    "matrix": [
+                        100, 0, 0, 0,
+                        0, 100, 0, 0,
+                        0, 0, 100, 0,
+                        0, 0, 0, 1
+                    ]
+                },
+                {
+                    "translate": [500, -177.5, 200]
+                }
+            ],
+            "filename": "sphere",
+            "material": "mat0"
+        }
+    ]
+}

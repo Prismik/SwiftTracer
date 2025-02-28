@@ -10,7 +10,7 @@ import Foundation
 /// Recursive bvh builder
 private protocol Builder {
     var maxGroupSize: Int { get }
-    func build(for bvh: BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int)
+    func build(for bvh: inout BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int)
 }
 
 fileprivate struct CachedShapeAabb {
@@ -18,7 +18,7 @@ fileprivate struct CachedShapeAabb {
     let shape: Shape
 }
 
-final class BVH {
+struct BVH {
     //MARK: Builders
     enum BuilderType: String, Decodable {
         case median
@@ -48,7 +48,7 @@ final class BVH {
             self.maxGroupSize = maxGroupSize
         }
     
-        func build(for bvh: BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int) {
+        func build(for bvh: inout BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int) {
             let nodesCount = bvh.nodes.count
             let node = bvh.nodes[nodeIndex]
             let first = node.firstPrimitive
@@ -63,17 +63,17 @@ final class BVH {
                     ? count / 2
                     : count / 2 + 1
                 let rightCount = count / 2
-                node.toNode(left: nodesCount)
+                bvh.nodes[nodeIndex].toNode(left: nodesCount)
                 
                 // Left + Right
                 bvh.nodes.append(BVH.Node(firstPrimitive: first, primitiveCount: leftCount, aabbs: &cachedAabbs))
                 bvh.nodes.append(BVH.Node(firstPrimitive: first + leftCount, primitiveCount: rightCount, aabbs: &cachedAabbs))
                 if leftCount > maxGroupSize {
-                    build(for: bvh, nodeIndex: nodesCount, cachedAabbs: &cachedAabbs, depth: depth + 1)
+                    build(for: &bvh, nodeIndex: nodesCount, cachedAabbs: &cachedAabbs, depth: depth + 1)
                 }
                 
                 if rightCount > maxGroupSize {
-                    build(for: bvh, nodeIndex: nodesCount + 1, cachedAabbs: &cachedAabbs, depth: depth + 1)
+                    build(for: &bvh, nodeIndex: nodesCount + 1, cachedAabbs: &cachedAabbs, depth: depth + 1)
                 }
             }
         }
@@ -86,7 +86,7 @@ final class BVH {
             self.maxGroupSize = maxGroupSize
         }
         
-        func build(for bvh: BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int) {
+        func build(for bvh: inout BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int) {
             let nodesCount = bvh.nodes.count
             let node = bvh.nodes[nodeIndex]
             let first = node.firstPrimitive
@@ -111,17 +111,17 @@ final class BVH {
                     leftCount = count / 2
                 }
                 let rightCount = count - leftCount
-                node.toNode(left: nodesCount)
+                bvh.nodes[nodeIndex].toNode(left: nodesCount)
                 
                 // Left + Right
                 bvh.nodes.append(BVH.Node(firstPrimitive: first, primitiveCount: leftCount, aabbs: &cachedAabbs))
                 bvh.nodes.append(BVH.Node(firstPrimitive: first + leftCount, primitiveCount: rightCount, aabbs: &cachedAabbs))
                 if leftCount > maxGroupSize {
-                    build(for: bvh, nodeIndex: nodesCount, cachedAabbs: &cachedAabbs, depth: depth + 1)
+                    build(for: &bvh, nodeIndex: nodesCount, cachedAabbs: &cachedAabbs, depth: depth + 1)
                 }
                 
                 if rightCount > maxGroupSize {
-                    build(for: bvh, nodeIndex: nodesCount + 1, cachedAabbs: &cachedAabbs, depth: depth + 1)
+                    build(for: &bvh, nodeIndex: nodesCount + 1, cachedAabbs: &cachedAabbs, depth: depth + 1)
                 }
             }
         }
@@ -140,7 +140,7 @@ final class BVH {
             self.maxGroupSize = maxGroupSize
         }
         
-        func build(for bvh: BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int) {
+        func build(for bvh: inout BVH, nodeIndex: Int, cachedAabbs: inout [CachedShapeAabb], depth: Int) {
             let nodesCount = bvh.nodes.count
             let node = bvh.nodes[nodeIndex]
             let first = node.firstPrimitive
@@ -160,7 +160,7 @@ final class BVH {
                     a.aabb.center()[params.axis] < b.aabb.center()[params.axis]
                 }
                 
-                node.toNode(left: nodesCount)
+                bvh.nodes[nodeIndex].toNode(left: nodesCount)
                 let leftCount = params.position == count - 1
                     ? params.position
                     : params.position + 1
@@ -169,13 +169,9 @@ final class BVH {
                 // Left + Right
                 bvh.nodes.append(BVH.Node(firstPrimitive: first, primitiveCount: leftCount, aabbs: &cachedAabbs))
                 bvh.nodes.append(BVH.Node(firstPrimitive: first + leftCount, primitiveCount: rightCount, aabbs: &cachedAabbs))
-                if leftCount > maxGroupSize {
-                    build(for: bvh, nodeIndex: nodesCount, cachedAabbs: &cachedAabbs, depth: depth + 1)
-                }
                 
-                if rightCount > maxGroupSize {
-                    build(for: bvh, nodeIndex: nodesCount + 1, cachedAabbs: &cachedAabbs, depth: depth + 1)
-                }
+                build(for: &bvh, nodeIndex: nodesCount, cachedAabbs: &cachedAabbs, depth: depth + 1)
+                build(for: &bvh, nodeIndex: nodesCount + 1, cachedAabbs: &cachedAabbs, depth: depth + 1)
             }
         }
         
@@ -229,7 +225,7 @@ final class BVH {
     }
 
     //MARK: Node
-    private class Node {
+    private struct Node {
         enum Info {
             case leaf(firstPrimitive: Int, primitiveCount: Int)
             case node(left: Int)
@@ -267,7 +263,7 @@ final class BVH {
             self.info = .leaf(firstPrimitive: firstPrimitive, primitiveCount: primitiveCount)
         }
         
-        func toNode(left: Int) {
+        mutating func toNode(left: Int) {
             self.info = .node(left: left)
         }
     }
@@ -391,11 +387,11 @@ extension BVH: ShapeAggregate {
         }
     }
     
-    func add(shape: Shape) {
+    mutating func add(shape: Shape) {
         shapes.append(shape)
     }
     
-    func build() {
+    mutating func build() {
         guard nodes.isEmpty else {
             return print("WARNING! Trying to rebuild an already built BVH")
         }
@@ -404,7 +400,7 @@ extension BVH: ShapeAggregate {
             CachedShapeAabb(aabb: $0.aabb(), shape: $0)
         }
         nodes.append(Node(firstPrimitive: 0, primitiveCount: cachedAabbs.count, aabbs: &cachedAabbs))
-        builder.build(for: self, nodeIndex: 0, cachedAabbs: &cachedAabbs, depth: 0)
+        builder.build(for: &self, nodeIndex: 0, cachedAabbs: &cachedAabbs, depth: 0)
         
         shapes = cachedAabbs.map { $0.shape }
     }
@@ -416,7 +412,7 @@ extension BVH: Decodable {
         case nodeSize
     }
 
-    convenience init(from decoder: any Decoder) throws {
+    init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let builder = try container.decodeIfPresent(BuilderType.self, forKey: .builder) ?? .sah
         let nodeSize = try container.decodeIfPresent(Int.self, forKey: .nodeSize) ?? 2

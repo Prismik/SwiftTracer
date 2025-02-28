@@ -293,7 +293,7 @@ final class PathReconnection: ShiftMapping {
 
         let mainWeightNum = lightSample.pdf
         let mainWeightDem = lightSample.pdf + mainBsdfPdf
-        let mainContrib = main.throughput * mainBsdfEval * lightSample.L  / lightSample.pdf
+        let mainContrib = main.throughput * mainBsdfEval * lightSample.L / lightSample.pdf
         let mainGeometrySquaredLength = (main.its.p - lightSample.p).lengthSquared
         let mainGeometryCosLight = lightSample.n.dot(lightSample.wi)
         // Compute shift maps
@@ -355,6 +355,7 @@ final class PathReconnection: ShiftMapping {
         guard !main.its.hasEmission, let mainSampledBsdf = main.its.shape.material.sample(wo: wo, uv: main.its.uv, p: main.its.p, sample: sampler.next2()) else { return nil }
         
         let mainDirectionOutGlobal = frame.toWorld(v: mainSampledBsdf.wi).normalized()
+        let mainPrevWi = frame.toWorld(v: main.its.p - main.ray.o).normalized()
         main.ray = Ray(origin: main.its.p, direction: mainDirectionOutGlobal)
         let mainPrevIts = main.its
         guard let newIts = scene.hit(r: main.ray) else { return nil }
@@ -456,13 +457,30 @@ final class PathReconnection: ShiftMapping {
                         .connectedRecently(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
                     )
                 } else {
+                    let frame = Frame(n: s.its.n)
+                    let prevFrame = Frame(n: mainPrevIts.n)
                     let success = !shiftRough && !prevRough
+                    let shiftWo: Vec3
+                    let tanSpaceMainWi = mainPrevWi
+                    let tanSpaceMainWo = mainSampledBsdf.wi
+                    let tanSpaceShiftWi = frame.toWorld(v: s.its.p - s.ray.o).normalized()
+                    if tanSpaceMainWi.z * tanSpaceMainWo.z < 0 {
+                        shiftWo = .zero
+                    } else {
+                        // Reflect
+                        let tanSpaceHvMain = (tanSpaceMainWo + tanSpaceMainWi).normalized()
+                        let tanSpaceShiftWo = tanSpaceMainWi // reflect
+                        let woDotH = tanSpaceShiftWo.dot(tanSpaceHvMain) / tanSpaceMainWo.dot(tanSpaceHvMain)
+                        shiftWo = tanSpaceShiftWo
+                    }
+                    //let wo: Vec3
+                    
                     let jacobian: Float = 1.0
                     if success {
-                        let frame = Frame(n: s.its.n)
-                        let newThroughput = s.throughput * jacobian * s.its.shape.material.evaluate(wo: .zero, wi: .zero, uv: s.its.uv, p: s.its.p)
-                        let newPdf = s.pdf * jacobian * s.its.shape.material.pdf(wo: .zero, wi: .zero, uv: s.its.uv, p: s.its.p)
-                        let shiftDirectionOutGlobal = frame.toWorld(v: .zero)
+                        
+                        let newThroughput = s.throughput * jacobian * s.its.shape.material.evaluate(wo: shiftWo, wi: .zero, uv: s.its.uv, p: s.its.p)
+                        let newPdf = s.pdf * jacobian * s.its.shape.material.pdf(wo: shiftWo, wi: .zero, uv: s.its.uv, p: s.its.p)
+                        let shiftDirectionOutGlobal = frame.toWorld(v: shiftWo).normalized()
                         let ray = Ray(origin: s.its.p, direction: shiftDirectionOutGlobal)
                         guard let newShiftIts = scene.hit(r: ray) else { result = (0, .zero, .dead); break }
                         

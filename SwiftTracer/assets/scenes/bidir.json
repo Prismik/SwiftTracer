@@ -1,0 +1,329 @@
+{
+    "camera": {
+        "transform": [
+            {
+                "angle": 180,
+                "axis": [0, 1, 0]
+            },
+            {
+                "matrix": [
+                    -0.00500708, -0.00467005, -0.999977, 16.2155,
+                   0, 0.999989, -0.00467011, 4.05167,
+                   0.999987, -2.34659e-005, -0.00502464, 0.0114864,
+                    0, 0, 0, 1
+                ]
+            },
+        ],
+        "fov": 35,
+        "resolution": [1024, 1024]
+    },
+    "accelerator": {
+        "builder": "sah"
+    },
+    "background": [0, 0, 0],
+    "sampler": {
+        "type": "independent",
+        "nspp": 64
+    },
+    "integrator": {
+        "type": "path",
+        "params": {
+            "samplesPerChain": 1000,
+            "initSamplesCount": 100000,
+            "mis": true,
+            "strategy": "mis",
+            "step": 0.05,
+            "maxDepth": 7,
+            "shiftMapping": { "type": "pathReconnection" },
+            "reconstruction": {
+                "type": "iterative",
+                "maxIterations": 50
+            },
+            "timeout": 1800,
+            "integrator": {
+                "type": "path",
+                "params": {
+                    "samplesPerChain": 1000,
+                    "initSamplesCount": 100000,
+                    "mis": true,
+                    "strategy": "mis",
+                    "step": 0.05,
+                    "maxDepth": 7,
+                    "shiftMapping": { "type": "pathReconnection" },
+                    "reconstruction": {
+                        "type": "iterative",
+                        "maxIterations": 50
+                    }
+                }
+            }
+        }
+    },
+    "materials": [
+        {
+            "name": "DiffuseBSDF",
+            "type": "diffuse",
+            "albedo": 0.5
+        },
+        {
+            "name": "GlassBSDF",
+            "type": "dielectric",
+            "eta_int": 1.5
+        },
+        {
+            "name": "LampBSDF",
+            "type": "metal",
+            "roughness": 0.25,
+            "ks": 1
+        },
+        {
+            "name": "WoodBSDF",
+            "type": "diffuse",
+            "albedo": [0.32963, 0.257976, 0.150292]
+        }
+    ],
+    "lights": [
+        {
+            "name": "Light002",
+            "type": { "category": "area" },
+            "radiance": 523
+        },
+        {
+            "name": "Light001",
+            "type": { "category": "area" },
+            "radiance": [12048, 8605, 6196]
+        }
+    ],
+    "shapes": [
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh007",
+            "material": "LampBSDF"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh004",
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                [-1.20536e-008, 0.275755, 1.20536e-008, -2.48161],
+                [0, -6.64767e-009, 0.152081, 6],
+                [0.275754, 1.20536e-008, 5.2688e-016, 2.5894],
+                [0, 0, 0, 1]
+            ],
+            "size": 2,
+            "light": "Light002"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                [-0.0101082, 0.067068, 0.00138972, -2.69082],
+                [-0.0610016, -0.0070995, -0.00842772, 5.10417],
+                [-0.0282857, -0.00865658, 0.0176788, -3.77057],
+                [0, 0, 0, 1]
+            ],
+            "size": 2,
+            "light": "Light001"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh001",
+            "material": "LampBSDF"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh005",
+            "material": "LampBSDF"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh008",
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh002",
+            "material": "GlassBSDF"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh011",
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh003",
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh009",
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh006",
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "mesh",
+            "transform": {
+                "matrix": [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ]
+            },
+            "filename": "bidir-Mesh000",
+            "material": "WoodBSDF"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "angle": 180,
+                    "axis": [0, 1, 0]
+                },
+                {
+                    "translate": [0, 4, 4]
+                }
+            ],
+            "size": 8,
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "angle": 90,
+                    "axis": [0, 1, 0]
+                },
+                {
+                    "translate": [-4, 4, 0]
+                }
+            ],
+            "size": 8,
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "translate": [0, 4, -4]
+                }
+            ],
+            "size": 8,
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "angle": 90,
+                    "axis": [1, 0, 0]
+                },
+                {
+                    "translate": [0, 8, 0]
+                }
+            ],
+            "size": 8,
+            "material": "DiffuseBSDF"
+        },
+        {
+            "type": "quad",
+            "transform": [
+                {
+                    "angle": -90,
+                    "axis": [1, 0, 0]
+                },
+                {
+                    "translate": [0, 0, 0]
+                }
+            ],
+            "size": 8,
+            "material": "DiffuseBSDF"
+        }
+    ]
+}

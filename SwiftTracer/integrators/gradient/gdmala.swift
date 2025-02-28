@@ -16,10 +16,24 @@ final class GdmalaIntegrator: Integrator {
         case initSamplesCount
         case reconstruction
         case step
+        case targetFunction
+        case kernel
+        case normalization
+    }
+    
+    enum TargetFunction: String, Decodable {
+        case gradient
+        case luminance
+    }
+    
+    enum Kernel: String, Decodable {
+        case simple
+        case shifted
     }
     
     struct KernelGradientState {
         let contrib: Color
+        let contribPrime: Color
         let pos: Vec2
         var weight: Float = 0
         var targetFunction: Float = 0
@@ -28,11 +42,16 @@ final class GdmalaIntegrator: Integrator {
         let delta: [Color]
         let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
         
-        init(contrib: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2) {
+        init(contrib: Color, contribPrime: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2, target: TargetFunction) {
             if contrib.luminance > 100 {
                 self.contrib = contrib / contrib.luminance
             } else {
                 self.contrib = contrib
+            }
+            if contribPrime.luminance > 100 {
+                self.contribPrime = (contribPrime / contribPrime.luminance) + directLight
+            } else {
+                self.contribPrime = contribPrime + directLight
             }
             self.pos = pos
             self.shiftContrib = shiftContribs.map {
@@ -51,7 +70,10 @@ final class GdmalaIntegrator: Integrator {
             }
             
             let luminance = self.contrib.abs.luminance + directLight.abs.luminance
-            self.targetFunction = gradientLuminance + alpha * 0.25 * luminance
+            self.targetFunction = switch target {
+                case .gradient: gradientLuminance + alpha * 0.25 * luminance
+                case .luminance: luminance
+            }
         }
     }
     
@@ -124,24 +146,28 @@ final class GdmalaIntegrator: Integrator {
     private let step: Float
     
     private var result: GradientDomainResult?
-
     private let reconstructor: Reconstructing
+    private let targetFunction: TargetFunction
+    private let kernel: Kernel
     
     private let shifts: [Vec2] = [Vec2(0, 1), Vec2(1, 0), Vec2(0, -1), Vec2(-1, 0)]
     
-    private var b: Float = 0
+    private var b: Float
     private var cdf = DistributionOneDimention(count: 0)
     private var seeds: [StartupSeed] = []
     
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
     
-    init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, step: Float) {
+    init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, step: Float, targetFunction: TargetFunction, kernel: Kernel, normalization: Float?) {
         self.mapper = mapper
         self.reconstructor = reconstructor
         self.nspc = samplesPerChain
         self.isc = initSamplesCount
         self.step = step
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
+        self.targetFunction = targetFunction
+        self.kernel = kernel
+        self.b = normalization ?? 0
     }
     
     func render(scene: Scene, sampler: any Sampler) -> PixelBuffer {
@@ -166,9 +192,8 @@ final class GdmalaIntegrator: Integrator {
             }
 
             let shiftLuminance = s.shiftContrib.reduce(Color(), +).luminance
-            //return validSample ? s.contrib.luminance + shiftLuminance: 0
-            return validSample ? s.contrib.luminance: 0
-        }.reduce(0, +) / Float(isc)
+            return validSample ? s.contribPrime.luminance + shiftLuminance : 0
+        }.reduce(0, +) / Float(isc * 4)
         
         guard b != 0 else { fatalError("Invalid computation of b") }
         var cdf = DistributionOneDimention(count: seeds.count)
@@ -188,32 +213,42 @@ final class GdmalaIntegrator: Integrator {
         let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
         let pixel = Vec2(Float(x), Float(y))
         
-        let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil))
-        let kernelTargets: [Float] = self.shifts.map {
-            let kernelResult = mapper.shift(pixel: pixel + $0, sampler: sampler, params: ShiftMappingParams(offsets: nil))
-            let kernelState = KernelGradientState(
-                contrib: kernelResult.main,
-                pos: pixel,
-                directLight: kernelResult.directLight,
-                shiftContribs: kernelResult.radiances,
-                gradients: kernelResult.gradients
-            )
-            return kernelState.targetFunction
+        let replaySampler = ReplaySampler(sampler: sampler, random: [])
+        let result = mapper.shift(pixel: pixel, sampler: replaySampler, params: ShiftMappingParams(offsets: nil))
+        let dx: Float
+        let dy: Float
+        if kernel == .shifted {
+            let kernelTargets: [Float] = self.shifts.map {
+                let kernelSampler = ReplaySampler(sampler: sampler, random: replaySampler.random)
+                let kernelResult = mapper.shift(pixel: pixel + $0, sampler: kernelSampler, params: ShiftMappingParams(offsets: nil))
+                let kernelState = KernelGradientState(
+                    contrib: kernelResult.main,
+                    contribPrime: kernelResult.mainPrime,
+                    pos: pixel,
+                    directLight: kernelResult.directLight,
+                    shiftContribs: kernelResult.radiances,
+                    gradients: kernelResult.gradients,
+                    target: targetFunction
+                )
+                return kernelState.targetFunction
+            }
+            
+            dx = (kernelTargets[1] - kernelTargets[0]) * 0.5
+            dy = (kernelTargets[3] - kernelTargets[2]) * 0.5
+        } else {
+            dx = (result.radiances[1] - result.radiances[0]).luminance * 0.5
+            dy = (result.radiances[3] - result.radiances[2]).luminance * 0.5
         }
-
-        // TODO Compute the gradient of TF, which will be the variation of kernel TF with respect to dx and dy
-
-        let dx = (kernelTargets[1] - kernelTargets[0]) * 0.5
-        let dy = (kernelTargets[3] - kernelTargets[2]) * 0.5
-        
         let gradient = Vec2(dx, dy)
         ((sampler as? PSSMLTSampler)?.mutator as? MalaMutation)?.setup(step: step, gradient: gradient)
         return KernelGradientState(
             contrib: result.main,
+            contribPrime: result.mainPrime,
             pos: pixel,
             directLight: result.directLight,
             shiftContribs: result.radiances,
-            gradients: result.gradients
+            gradients: result.gradients,
+            target: targetFunction
         )
     }
 }
@@ -222,7 +257,10 @@ extension GdmalaIntegrator: SamplerIntegrator {
     func preprocess(scene: Scene, sampler: any Sampler) {
         mapper.initialize(scene: scene)
         let (b, cdf, seeds) = normalizationConstant(scene: scene, sampler: sampler)
-        self.b = b
+        // If no normalization constant was provided, use the one calculated here
+        if self.b == 0 {
+            self.b = b
+        }
         self.cdf = cdf
         self.seeds = seeds
     }
@@ -254,7 +292,7 @@ extension GdmalaIntegrator: GradientDomainIntegrator {
         let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
         let nbChains = totalSamples / nspc
         
-        print("GDMala Rendering with \(mapper.identifier)...")
+        print("GDMala Rendering with \(mapper.identifier), \(targetFunction.rawValue) TF and \(kernel.rawValue) kernel...")
         let gcd = DispatchGroup()
         gcd.enter()
         Task {

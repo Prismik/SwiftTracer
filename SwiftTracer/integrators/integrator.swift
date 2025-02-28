@@ -118,8 +118,10 @@ struct AnyIntegrator: Decodable {
             let spc = try params.decode(Int.self, forKey: .samplesPerChain)
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
             let heatmap = try params.decodeIfPresent(Bool.self, forKey: .heatmap) ?? false
+            let targetFunction = try params.decodeIfPresent(GdmltIntegrator.TargetFunction.self, forKey: .targetFunction) ?? .gradient
             let reconstructor = try params.decode(AnyReconstruction.self, forKey: .reconstruction)
-            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, heatmap: heatmap)
+            let normalization = try params.decodeIfPresent(Float.self, forKey: .normalization)
+            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, heatmap: heatmap, targetFunction: targetFunction, normalization: normalization)
         case .gdmala:
             let params = try container.nestedContainer(keyedBy: GdmalaIntegrator.CodingKeys.self, forKey: .params)
             let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
@@ -127,7 +129,10 @@ struct AnyIntegrator: Decodable {
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
             let reconstructor = try params.decode(AnyReconstruction.self, forKey: .reconstruction)
             let step = try params.decode(Float.self, forKey: .step)
-            self.wrapped = GdmalaIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, step: step)
+            let targetFunction = try params.decodeIfPresent(GdmalaIntegrator.TargetFunction.self, forKey: .targetFunction) ?? .gradient
+            let kernel = try params.decodeIfPresent(GdmalaIntegrator.Kernel.self, forKey: .kernel) ?? .shifted
+            let normalization = try params.decodeIfPresent(Float.self, forKey: .normalization)
+            self.wrapped = GdmalaIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, step: step, targetFunction: targetFunction, kernel: kernel, normalization: normalization)
         case .mala:
             let params = try container.nestedContainer(keyedBy: MalaIntegrator.CodingKeys.self, forKey: .params)
             let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
