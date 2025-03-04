@@ -166,6 +166,6 @@ protocol Shape: AnyObject, Intersecting {
 
 protocol ShapeAggregate: Intersecting {
     func aabb() -> AABB
-    func add(shape: Shape)
-    func build()
+    mutating func add(shape: Shape)
+    mutating func build()
 }

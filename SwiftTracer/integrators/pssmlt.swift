@@ -34,9 +34,9 @@ final class PssmltIntegrator: Integrator {
 
     private class MarkovChain {
         private(set) var img: PixelBuffer
-        
-        init(x: Int, y: Int) {
-            img = PixelBuffer(width: x, height: y, value: .zero)
+
+        init(blank: PixelBuffer) {
+            img = PixelBuffer(copy: blank)
         }
 
         // TODO inout not necessary with current way weights are built
@@ -70,6 +70,7 @@ final class PssmltIntegrator: Integrator {
     private var cdf = DistributionOneDimention(count: 0)
     private var seeds: [(Float, UInt64)] = []
     private var heatmap: Heatmap?
+    private var blankBuffer: PixelBuffer!
     
     init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator, heatmap: Bool) {
         self.nspc = samplesPerChain
@@ -88,9 +89,11 @@ final class PssmltIntegrator: Integrator {
 
     func render(scene: Scene, sampler: any Sampler) -> PixelBuffer {
         self.nspp = sampler.nbSamples
-        let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
+        let x = Int(scene.camera.resolution.x)
+        let y = Int(scene.camera.resolution.y)
+        let totalSamples = nspp * x * y
         let nbChains = totalSamples / nspc
-        
+        self.blankBuffer = PixelBuffer(width: x, height: y, value: .zero)
         print("Rendering pssmlt with \(integrator)")
         // Run chains in parallel
         let gcd = DispatchGroup()
@@ -189,7 +192,7 @@ final class PssmltIntegrator: Integrator {
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.1
         
-        let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
+        let chain = MarkovChain(blank: blankBuffer)
         sampler.step = .large
         
         var state = self.sample(scene: scene, sampler: sampler)

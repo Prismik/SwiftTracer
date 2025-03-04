@@ -31,7 +31,7 @@ public class Ray {
     var t: Distance
     
     convenience init() {
-        self.init(origin: Point3(0, 0, 0), direction: Vec3())
+        self.init(origin: .zero, direction: .zero)
     }
 
     init(origin: Point3, direction: Vec3) {

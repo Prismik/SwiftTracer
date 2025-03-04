@@ -181,11 +181,11 @@ final class GdmltIntegrator: Integrator {
         private(set) var dy: PixelBuffer
         private(set) var directLight: PixelBuffer
         
-        init(x: Int, y: Int) {
-            self.img = PixelBuffer(width: x, height: y, value: .zero)
-            self.dx = PixelBuffer(width: x, height: y, value: .zero)
-            self.dy = PixelBuffer(width: x, height: y, value: .zero)
-            self.directLight = PixelBuffer(width: x, height: y, value: .zero)
+        init(blank: PixelBuffer) {
+            self.img = PixelBuffer(copy: blank)
+            self.dx = PixelBuffer(copy: blank)
+            self.dy = PixelBuffer(copy: blank)
+            self.directLight = PixelBuffer(copy: blank)
         }
 
         // TODO Rework this
@@ -258,6 +258,7 @@ final class GdmltIntegrator: Integrator {
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
     private var heatmap: Heatmap?
     private let targetFunction: TargetFunction
+    private var blankBuffer: PixelBuffer!
     
     init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, heatmap: Bool, targetFunction: TargetFunction, normalization: Float?) {
         self.mapper = mapper
@@ -305,9 +306,12 @@ extension GdmltIntegrator: SamplerIntegrator {
 extension GdmltIntegrator: GradientDomainIntegrator {
     func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
         self.nspp = sampler.nbSamples
-        let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
+        let x = Int(scene.camera.resolution.x)
+        let y = Int(scene.camera.resolution.y)
+        let totalSamples = nspp * x * y
         let nbChains = totalSamples / nspc
-        
+    
+        self.blankBuffer = PixelBuffer(width: x, height: y, value: .zero)
         print("GDMLT Rendering with \(mapper.identifier) and \(targetFunction.rawValue) TF...")
         let gcd = DispatchGroup()
         gcd.enter()
@@ -395,11 +399,11 @@ extension GdmltIntegrator: GradientDomainIntegrator {
     
     private func chains(samples: Int, nbChains: Int, scene: Scene, increment: @escaping () -> Void) async -> GradientDomainResult {
         return await withTaskGroup(of: Void.self, returning: GradientDomainResult.self) { group in
-            let img = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
-            let primal = PixelBuffer(width: Int(scene.camera.resolution.x), height: Int(scene.camera.resolution.y), value: .zero)
-            let dx = PixelBuffer(width: img.width, height: img.height, value: .zero)
-            let dy = PixelBuffer(width: img.width, height: img.height, value: .zero)
-            let directLight = PixelBuffer(width: img.width, height: img.height, value: .zero)
+            let img = PixelBuffer(copy: blankBuffer)
+            let primal = PixelBuffer(copy: blankBuffer)
+            let dx = PixelBuffer(copy: blankBuffer)
+            let dy = PixelBuffer(copy: blankBuffer)
+            let directLight = PixelBuffer(copy: blankBuffer)
             var result = GradientDomainResult(primal: primal, directLight: directLight, img: img, dx: dx, dy: dy)
             var processed = 0
             for i in 0 ..< nbChains {
@@ -426,7 +430,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         sampler.rng.state = seed.value
         
         // Reinitialize with appropriate sampler
-        let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
+        let chain = MarkovChain(blank: blankBuffer)
         sampler.step = .large
         
         var state = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf, target: targetFunction)

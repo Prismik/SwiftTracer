@@ -309,7 +309,6 @@ struct BVH {
     private var nodes: [BVH.Node]
     private var shapes: [Shape]
     private var lightIndexes: [Int]
-    unowned var light: Light!
 
     init(builderType: BuilderType, nodeSize: Int) {
         self.axisSelection = .roundRobin

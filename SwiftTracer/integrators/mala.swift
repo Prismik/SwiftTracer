@@ -47,9 +47,9 @@ final class MalaIntegrator: Integrator {
         private(set) var img: PixelBuffer
         private(set) var directLight: PixelBuffer
 
-        init(x: Int, y: Int) {
-            img = PixelBuffer(width: x, height: y, value: .zero)
-            directLight = PixelBuffer(width: x, height: y, value: .zero)
+        init(blank: PixelBuffer) {
+            self.img = PixelBuffer(copy: blank)
+            self.directLight = PixelBuffer(copy: blank)
         }
 
         func add(state: inout StateMala) {
@@ -97,6 +97,7 @@ final class MalaIntegrator: Integrator {
     private let integrator: SamplerIntegrator
     
     private let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+    private var blankBuffer: PixelBuffer!
 
     init(mapper: ShiftMapping, samplesPerChain: Int, initSamplesCount: Int, step: Float) {
         self.mapper = mapper
@@ -111,16 +112,20 @@ final class MalaIntegrator: Integrator {
     func preprocess(scene: Scene, sampler: any Sampler) {
         mapper.initialize(scene: scene)
         let (b, cdf, seeds) = normalizationConstant(scene: scene, sampler: sampler)
-        self.b = b
+        if self.b == 0 {
+            self.b = b
+        }
         self.cdf = cdf
         self.seeds = seeds
     }
     
     func render(scene: Scene, sampler: any Sampler) -> PixelBuffer {
         self.nspp = sampler.nbSamples
-        let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
+        let x = Int(scene.camera.resolution.x)
+        let y = Int(scene.camera.resolution.y)
+        let totalSamples = nspp * x * y
         let nbChains = totalSamples / spc
-        
+        self.blankBuffer = PixelBuffer(width: x, height: y, value: .zero)
         print("Rendering mala with \(mapper.identifier)")
         // Run chains in parallel
         let gcd = DispatchGroup()
@@ -246,7 +251,7 @@ final class MalaIntegrator: Integrator {
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.value
         
-        let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
+        let chain = MarkovChain(blank: blankBuffer)
         sampler.step = .large
         
         var state = self.sample(scene: scene, sampler: sampler)

@@ -183,7 +183,6 @@ class PixelBuffer {
         return copy
     }
 
-    // TODO Update total
     func scale(by factor: Float) {
         lock.withLock {
             self.storage = vDSP.multiply(factor, storage)
@@ -191,7 +190,6 @@ class PixelBuffer {
         }
     }
     
-    // TODO Update total
     func merge(with buffer: PixelBuffer) {
         lock.withLock {
             self.storage = vDSP.add(buffer.storage, self.storage)

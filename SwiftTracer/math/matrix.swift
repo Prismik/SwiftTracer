@@ -8,8 +8,15 @@
 import Foundation
 import simd
 
+typealias Mat2 = simd_float2x2
 typealias Mat3 = simd_float3x3
 typealias Mat4 = simd_float4x4
+
+extension Mat2 {
+    var diagonal: Vec2 {
+        return Vec2(self[0, 0], self[1, 1])
+    }
+}
 
 extension Mat3: Codable {
     public func encode(to encoder: Encoder) throws {

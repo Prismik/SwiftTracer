@@ -83,11 +83,11 @@ final class GdmalaIntegrator: Integrator {
         private(set) var dy: PixelBuffer
         private(set) var directLight: PixelBuffer
         
-        init(x: Int, y: Int) {
-            self.img = PixelBuffer(width: x, height: y, value: .zero)
-            self.dx = PixelBuffer(width: x, height: y, value: .zero)
-            self.dy = PixelBuffer(width: x, height: y, value: .zero)
-            self.directLight = PixelBuffer(width: x, height: y, value: .zero)
+        init(blank: PixelBuffer) {
+            self.img = PixelBuffer(copy: blank)
+            self.dx = PixelBuffer(copy: blank)
+            self.dy = PixelBuffer(copy: blank)
+            self.directLight = PixelBuffer(copy: blank)
         }
         
         private let offsets: [Vec2] = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
@@ -157,6 +157,7 @@ final class GdmalaIntegrator: Integrator {
     private var seeds: [StartupSeed] = []
     
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
+    private var blankBuffer: PixelBuffer!
     
     init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, step: Float, targetFunction: TargetFunction, kernel: Kernel, normalization: Float?) {
         self.mapper = mapper
@@ -289,8 +290,11 @@ extension GdmalaIntegrator: GradientDomainIntegrator {
     
     func render(scene: Scene, sampler: any Sampler) -> GradientDomainResult {
         self.nspp = sampler.nbSamples
-        let totalSamples = nspp * Int(scene.camera.resolution.x) * Int(scene.camera.resolution.y)
+        let x = Int(scene.camera.resolution.x)
+        let y = Int(scene.camera.resolution.y)
+        let totalSamples = nspp * x * y
         let nbChains = totalSamples / nspc
+        self.blankBuffer = PixelBuffer(width: x, height: y, value: .zero)
         
         print("GDMala Rendering with \(mapper.identifier), \(targetFunction.rawValue) TF and \(kernel.rawValue) kernel...")
         let gcd = DispatchGroup()
@@ -363,7 +367,7 @@ extension GdmalaIntegrator: GradientDomainIntegrator {
         sampler.rng.state = seed.value
         
         // Reinitialize with appropriate sampler
-        let chain = MarkovChain(x: Int(scene.camera.resolution.x), y: Int(scene.camera.resolution.y))
+        let chain = MarkovChain(blank: blankBuffer)
         sampler.step = .large
         
         var state = sample(scene: scene, sampler: sampler, mapper: mapper)

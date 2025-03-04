@@ -13,12 +13,7 @@ final class Triangle: Shape {
         set { mesh.material = newValue }
     }
     
-    var area: Float {
-        let (p0, p1, p2) = vertices
-        let edge1 = p1 - p0
-        let edge2 = p2 - p0
-        return edge1.cross(edge2).length / 2
-    }
+    let area: Float
     
     let faceId: Int
     
@@ -26,50 +21,66 @@ final class Triangle: Shape {
     let mesh: Mesh
     unowned var light: Light!
 
-    private var vertices: (Point3, Point3, Point3) {
-        let indexes = mesh.facePositionIndexes[faceId]
-        let p0 = mesh.positions[Int(indexes.x)]
-        let p1 = mesh.positions[Int(indexes.y)]
-        let p2 = mesh.positions[Int(indexes.z)]
-        
-        return (p0, p1, p2)
-    }
-
-    private var normals: (Vec3, Vec3, Vec3)? {
-        guard mesh.hasNormals else { return nil }
-        let indexes =  mesh.faceNormalIndexes[faceId]
-        let n0 = mesh.normals[Int(indexes.x)]
-        let n1 = mesh.normals[Int(indexes.y)]
-        let n2 = mesh.normals[Int(indexes.z)]
-        
-        return (n0, n1, n2)
-    }
-
-    private var tangents: (Vec3, Vec3, Vec3)? {
-        guard mesh.hasTangents else { return nil }
-        let indexes = mesh.faceTangentIndexes[faceId]
-        let t0 = mesh.tangents[Int(indexes.x)]
-        let t1 = mesh.tangents[Int(indexes.y)]
-        let t2 = mesh.tangents[Int(indexes.z)]
-        
-        return t0.length != 0 && t1.length != 0 && t2.length != 0
-            ? (t0, t1, t2)
-            : nil
-    }
-    
-    private var uvCoordinates: (Vec2, Vec2, Vec2)? {
-        guard mesh.hasUvs else { return nil }
-        let indexes =  mesh.faceUvIndexes[faceId]
-        let uv0 = mesh.uvs[Int(indexes.x)]
-        let uv1 = mesh.uvs[Int(indexes.y)]
-        let uv2 = mesh.uvs[Int(indexes.z)]
-        
-        return (uv0, uv1, uv2)
-    }
+    private let vertices: (Point3, Point3, Point3)
+    private let normals: (Vec3, Vec3, Vec3)?
+    private let tangents: (Vec3, Vec3, Vec3)?
+    private let uvCoordinates: (Vec2, Vec2, Vec2)?
+    private let edge1: Vec3
+    private let edge2: Vec3
 
     init(faceId: Int, mesh: Mesh) {
         self.faceId = faceId
         self.mesh = mesh
+        
+        // Vertices
+        let vertexIndexes = mesh.facePositionIndexes[faceId]
+        let p0 = mesh.positions[Int(vertexIndexes.x)]
+        let p1 = mesh.positions[Int(vertexIndexes.y)]
+        let p2 = mesh.positions[Int(vertexIndexes.z)]
+        self.vertices = (p0, p1, p2)
+        self.edge1 = p1 - p0
+        self.edge2 = p2 - p0
+    
+        // Normals
+        if mesh.hasNormals {
+            let normalIndexes =  mesh.faceNormalIndexes[faceId]
+            let n0 = mesh.normals[Int(normalIndexes.x)]
+            let n1 = mesh.normals[Int(normalIndexes.y)]
+            let n2 = mesh.normals[Int(normalIndexes.z)]
+            
+            self.normals = (n0, n1, n2)
+        } else {
+            self.normals = nil
+        }
+        
+        // Tangents
+        if mesh.hasTangents {
+            let tangentIndexes = mesh.faceTangentIndexes[faceId]
+            let t0 = mesh.tangents[Int(tangentIndexes.x)]
+            let t1 = mesh.tangents[Int(tangentIndexes.y)]
+            let t2 = mesh.tangents[Int(tangentIndexes.z)]
+            
+            self.tangents = t0.length != 0 && t1.length != 0 && t2.length != 0
+                ? (t0, t1, t2)
+                : nil
+        } else {
+            self.tangents = nil
+        }
+        
+        // UV Coordinates
+        if mesh.hasUvs {
+            let uvIndexes =  mesh.faceUvIndexes[faceId]
+            let uv0 = mesh.uvs[Int(uvIndexes.x)]
+            let uv1 = mesh.uvs[Int(uvIndexes.y)]
+            let uv2 = mesh.uvs[Int(uvIndexes.z)]
+            
+            self.uvCoordinates = (uv0, uv1, uv2)
+        } else {
+            self.uvCoordinates = nil
+        }
+        
+        // Area
+        self.area = edge1.cross(edge2).length / 2
     }
 
     func hit(r: Ray) -> Intersection? {
@@ -77,8 +88,6 @@ final class Triangle: Shape {
         
         let epsilon: Float = 0.0000001
         let (p0, p1, p2) = vertices
-        let edge1 = p1 - p0
-        let edge2 = p2 - p0
         
         let pvec = r.d.cross(edge2)
         let det = edge1.dot(pvec)
@@ -111,13 +120,12 @@ final class Triangle: Shape {
         
         // TODO Tangents + Bitangents
         
-        
         return Intersection(
             t: t,
             p: p,
             n: backface ? n * -1 : n,
-            tan: Vec3(),
-            bitan: Vec3(),
+            tan: .zero,
+            bitan: .zero,
             uv: uv(coordinates: (1 - u - v, u, v)),
             shape: self
         )
@@ -135,8 +143,6 @@ final class Triangle: Shape {
     
     func sampleDirect(p: Point3, sample: Vec2) -> EmitterSample {
         let (p0, p1, p2) = vertices
-        let edge1 = p1 - p0
-        let edge2 = p2 - p0
         let (u, v) = sample.sum() > 1
             ? (1 - sample.x, 1 - sample.y)
             : (sample.x, sample.y)

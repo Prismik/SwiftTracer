@@ -51,7 +51,6 @@ final class PSSMLTSampler: Sampler {
     
     var rng: RNG = RNG()
     var sampleIndex = 0
-    var replay: [Float] = []
     private var largeStepTime = 0
     
     /// Number of accepted mutations
@@ -165,7 +164,6 @@ final class PSSMLTSampler: Sampler {
         }
         
         let value = u[i].value
-        replay.append(value)
         return value
     }
 }

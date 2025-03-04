@@ -114,9 +114,7 @@
 		196087D72D3EAACE000E98E2 /* mala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196087D52D3EAACC000E98E2 /* mala.swift */; };
 		196087DA2D42BAC6000E98E2 /* mutator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196087D92D42BAC2000E98E2 /* mutator.swift */; };
 		196087DB2D42BAC6000E98E2 /* mutator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196087D92D42BAC2000E98E2 /* mutator.swift */; };
-		1960887E2D5159D9000E98E2 /* classroom.json in Resources */ = {isa = PBXBuildFile; fileRef = 1960887D2D5159D1000E98E2 /* classroom.json */; };
 		196088D62D52F247000E98E2 /* classroom.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1960887D2D5159D1000E98E2 /* classroom.json */; };
-		196094BD2CB2FD7F009FDAC4 /* cornelBox.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196094BC2CB2FD7F009FDAC4 /* cornelBox.json */; };
 		196094BF2CB46638009FDAC4 /* gdpt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094BE2CB46636009FDAC4 /* gdpt.swift */; };
 		196094C02CB46638009FDAC4 /* gdpt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094BE2CB46636009FDAC4 /* gdpt.swift */; };
 		196094C32CB5A100009FDAC4 /* shiftMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196094C22CB5A0FD009FDAC4 /* shiftMapping.swift */; };
@@ -157,20 +155,7 @@
 		1986951F2C2F367A00EEF672 /* constantEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1986951E2C2F367A00EEF672 /* constantEnvironment.swift */; };
 		198B95672D553C5A003DB0CF /* gdmala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198B95662D553C58003DB0CF /* gdmala.swift */; };
 		198B95682D553C5A003DB0CF /* gdmala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198B95662D553C58003DB0CF /* gdmala.swift */; };
-		198B956C2D5E5EC4003DB0CF /* bidir.json in Resources */ = {isa = PBXBuildFile; fileRef = 198B956B2D5E5EC1003DB0CF /* bidir.json */; };
 		198B956D2D5E64AF003DB0CF /* bidir.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B956B2D5E5EC1003DB0CF /* bidir.json */; };
-		198B957A2D5E6501003DB0CF /* bidir-Mesh010.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95782D5E6501003DB0CF /* bidir-Mesh010.obj */; };
-		198B957B2D5E6501003DB0CF /* bidir-Mesh000.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B956E2D5E6501003DB0CF /* bidir-Mesh000.obj */; };
-		198B957C2D5E6501003DB0CF /* bidir-Mesh006.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95742D5E6501003DB0CF /* bidir-Mesh006.obj */; };
-		198B957D2D5E6501003DB0CF /* bidir-Mesh004.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95722D5E6501003DB0CF /* bidir-Mesh004.obj */; };
-		198B957E2D5E6501003DB0CF /* bidir-Mesh011.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95792D5E6501003DB0CF /* bidir-Mesh011.obj */; };
-		198B957F2D5E6501003DB0CF /* bidir-Mesh002.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95702D5E6501003DB0CF /* bidir-Mesh002.obj */; };
-		198B95802D5E6501003DB0CF /* bidir-Mesh008.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95762D5E6501003DB0CF /* bidir-Mesh008.obj */; };
-		198B95812D5E6501003DB0CF /* bidir-Mesh001.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B956F2D5E6501003DB0CF /* bidir-Mesh001.obj */; };
-		198B95822D5E6501003DB0CF /* bidir-Mesh007.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95752D5E6501003DB0CF /* bidir-Mesh007.obj */; };
-		198B95832D5E6501003DB0CF /* bidir-Mesh003.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95712D5E6501003DB0CF /* bidir-Mesh003.obj */; };
-		198B95842D5E6501003DB0CF /* bidir-Mesh005.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95732D5E6501003DB0CF /* bidir-Mesh005.obj */; };
-		198B95852D5E6501003DB0CF /* bidir-Mesh009.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95772D5E6501003DB0CF /* bidir-Mesh009.obj */; };
 		198B95862D5E650A003DB0CF /* bidir-Mesh000.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B956E2D5E6501003DB0CF /* bidir-Mesh000.obj */; };
 		198B95872D5E650A003DB0CF /* bidir-Mesh001.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B956F2D5E6501003DB0CF /* bidir-Mesh001.obj */; };
 		198B95882D5E650A003DB0CF /* bidir-Mesh002.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95702D5E6501003DB0CF /* bidir-Mesh002.obj */; };
@@ -183,9 +168,7 @@
 		198B958F2D5E650A003DB0CF /* bidir-Mesh009.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95772D5E6501003DB0CF /* bidir-Mesh009.obj */; };
 		198B95902D5E650A003DB0CF /* bidir-Mesh010.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95782D5E6501003DB0CF /* bidir-Mesh010.obj */; };
 		198B95912D5E650A003DB0CF /* bidir-Mesh011.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95792D5E6501003DB0CF /* bidir-Mesh011.obj */; };
-		198B95962D6D201A003DB0CF /* materials.json in Resources */ = {isa = PBXBuildFile; fileRef = 198B95952D6D2014003DB0CF /* materials.json */; };
 		198B95972D6D21B9003DB0CF /* materials.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95952D6D2014003DB0CF /* materials.json */; };
-		198B95992D6D22DF003DB0CF /* sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 198B95982D6D22D9003DB0CF /* sphere.obj */; };
 		198B959A2D6D23F3003DB0CF /* sphere.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95982D6D22D9003DB0CF /* sphere.obj */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
 		1999D0502C0E48F400358201 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D04F2C0E48C500358201 /* cube.obj */; };
@@ -239,6 +222,7 @@
 		19C0A7112C08EECE00A7A0FD /* metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7102C08EECE00A7A0FD /* metal.swift */; };
 		19C0A7142C08F5EE00A7A0FD /* dielectric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7132C08F5EE00A7A0FD /* dielectric.swift */; };
 		19C0A7182C08FB1B00A7A0FD /* area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0A7172C08FB1B00A7A0FD /* area.swift */; };
+		19C9C2CC2D764D0D00B17B2C /* cornelbox.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 196094BC2CB2FD7F009FDAC4 /* cornelbox.json */; };
 		19E1E5F02CC2D24E00A1F259 /* gdmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E1E5EF2CC2D24900A1F259 /* gdmlt.swift */; };
 		19E1E5F12CC2D24E00A1F259 /* gdmlt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E1E5EF2CC2D24900A1F259 /* gdmlt.swift */; };
 		19E1E5F32CC5A51200A1F259 /* reconstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E1E5F22CC5A50C00A1F259 /* reconstruct.swift */; };
@@ -305,6 +289,7 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				19C9C2CC2D764D0D00B17B2C /* cornelbox.json in CopyFiles */,
 				198B959A2D6D23F3003DB0CF /* sphere.obj in CopyFiles */,
 				198B95972D6D21B9003DB0CF /* materials.json in CopyFiles */,
 				198B95862D5E650A003DB0CF /* bidir-Mesh000.obj in CopyFiles */,
@@ -345,7 +330,6 @@
 				1945A9F12CDA7834008E72BD /* Mesh010.obj in CopyFiles */,
 				1945A9F42CDA7834008E72BD /* Mesh013.obj in CopyFiles */,
 				1945A9F52CDA7834008E72BD /* Mesh014.obj in CopyFiles */,
-				196094BD2CB2FD7F009FDAC4 /* cornelBox.json in CopyFiles */,
 				1999D0502C0E48F400358201 /* cube.obj in CopyFiles */,
 				1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */,
 			);
@@ -395,7 +379,7 @@
 		196087D52D3EAACC000E98E2 /* mala.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mala.swift; sourceTree = "<group>"; };
 		196087D92D42BAC2000E98E2 /* mutator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mutator.swift; sourceTree = "<group>"; };
 		1960887D2D5159D1000E98E2 /* classroom.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = classroom.json; sourceTree = "<group>"; };
-		196094BC2CB2FD7F009FDAC4 /* cornelBox.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelBox.json; sourceTree = "<group>"; };
+		196094BC2CB2FD7F009FDAC4 /* cornelbox.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = cornelbox.json; sourceTree = "<group>"; };
 		196094BE2CB46636009FDAC4 /* gdpt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gdpt.swift; sourceTree = "<group>"; };
 		196094C22CB5A0FD009FDAC4 /* shiftMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shiftMapping.swift; sourceTree = "<group>"; };
 		196094C52CB5CD0B009FDAC4 /* paths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = paths.swift; sourceTree = "<group>"; };
@@ -664,7 +648,7 @@
 				197A10B32D2DBA3D000ACF3B /* envmap.json */,
 				1945A9BD2CDA767D008E72BD /* doorajar.json */,
 				1923B0B32CF798D00025245C /* doorajar_diffuse.json */,
-				196094BC2CB2FD7F009FDAC4 /* cornelBox.json */,
+				196094BC2CB2FD7F009FDAC4 /* cornelbox.json */,
 			);
 			path = scenes;
 			sourceTree = "<group>";
@@ -1010,22 +994,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				198B956C2D5E5EC4003DB0CF /* bidir.json in Resources */,
-				1960887E2D5159D9000E98E2 /* classroom.json in Resources */,
-				198B957A2D5E6501003DB0CF /* bidir-Mesh010.obj in Resources */,
-				198B957B2D5E6501003DB0CF /* bidir-Mesh000.obj in Resources */,
-				198B957C2D5E6501003DB0CF /* bidir-Mesh006.obj in Resources */,
-				198B957D2D5E6501003DB0CF /* bidir-Mesh004.obj in Resources */,
-				198B957E2D5E6501003DB0CF /* bidir-Mesh011.obj in Resources */,
-				198B957F2D5E6501003DB0CF /* bidir-Mesh002.obj in Resources */,
-				198B95802D5E6501003DB0CF /* bidir-Mesh008.obj in Resources */,
-				198B95812D5E6501003DB0CF /* bidir-Mesh001.obj in Resources */,
-				198B95992D6D22DF003DB0CF /* sphere.obj in Resources */,
-				198B95962D6D201A003DB0CF /* materials.json in Resources */,
-				198B95822D5E6501003DB0CF /* bidir-Mesh007.obj in Resources */,
-				198B95832D5E6501003DB0CF /* bidir-Mesh003.obj in Resources */,
-				198B95842D5E6501003DB0CF /* bidir-Mesh005.obj in Resources */,
-				198B95852D5E6501003DB0CF /* bidir-Mesh009.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
