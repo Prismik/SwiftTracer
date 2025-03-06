@@ -34,7 +34,7 @@ struct AnySampler: Decodable {
             let nspp = try container.decodeIfPresent(Int.self, forKey: .nspp) ?? 10
             let largeStepRatio = try container.decodeIfPresent(Float.self, forKey: .largeStepRatio) ?? 0.3
             let mutator = try params.decode(AnyMutator.self, forKey: .mutation)
-            self.wrapped = PSSMLTSampler(nbSamples: nspp, largeStepRatio: largeStepRatio, mutator: mutator.wrapped)
+            self.wrapped = PSSMLTSampler(nbSamples: nspp, largeStepRatio: largeStepRatio, mutator: mutator.wrapped.init())
         }
     }
 }

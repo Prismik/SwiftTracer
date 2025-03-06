@@ -139,7 +139,8 @@ struct AnyIntegrator: Decodable {
             let spc = try params.decode(Int.self, forKey: .samplesPerChain)
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
             let step = try params.decode(Float.self, forKey: .step)
-            self.wrapped = MalaIntegrator(mapper: anyShiftMapping.wrapped, samplesPerChain: spc, initSamplesCount: isc, step: step)
+            let mutator: PrimarySpaceMutation.Type = try params.decodeIfPresent(AnyMutator.self, forKey: .mutator)?.wrapped ?? MalaMutation.self
+            self.wrapped = MalaIntegrator(mapper: anyShiftMapping.wrapped, samplesPerChain: spc, initSamplesCount: isc, step: step, mutator: mutator)
         case .timeboxed:
             let params = try container.nestedContainer(keyedBy: TimeboxedIntegrator.CodingKeys.self, forKey: .params)
             let time = try params.decode(Int.self, forKey: .time)

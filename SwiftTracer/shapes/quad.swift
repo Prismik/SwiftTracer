@@ -40,9 +40,11 @@ final class Quad: Shape {
         // Check if the x and y component of the intersection point is inside the quad
         guard p.x.abs() <= halfSize.x && p.y.abs() <= halfSize.y else { return nil }
 
+        let planePoint = transform.point(Point3(p.x, p.y, 0))
         return Intersection(
             t: t,
-            p: transform.point(Point3(p.x, p.y, 0)), // Force the point to be on the plane
+            p: planePoint, // Force the point to be on the plane
+            wi: (r.o - planePoint).normalized(),
             n: transform.normal(Vec3.unit(.z)).normalized(),
             tan: transform.vector(Vec3.unit(.x)).normalized(),
             bitan: transform.vector(Vec3.unit(.y)).normalized(),

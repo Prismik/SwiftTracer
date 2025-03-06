@@ -123,6 +123,7 @@ final class Triangle: Shape {
         return Intersection(
             t: t,
             p: p,
+            wi: (r.o - p).normalized(),
             n: backface ? n * -1 : n,
             tan: .zero,
             bitan: .zero,

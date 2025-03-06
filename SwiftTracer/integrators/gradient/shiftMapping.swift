@@ -355,7 +355,6 @@ final class PathReconnection: ShiftMapping {
         guard !main.its.hasEmission, let mainSampledBsdf = main.its.shape.material.sample(wo: wo, uv: main.its.uv, p: main.its.p, sample: sampler.next2()) else { return nil }
         
         let mainDirectionOutGlobal = frame.toWorld(v: mainSampledBsdf.wi).normalized()
-        let mainPrevWi = frame.toWorld(v: main.its.p - main.ray.o).normalized()
         main.ray = Ray(origin: main.its.p, direction: mainDirectionOutGlobal)
         let mainPrevIts = main.its
         guard let newIts = scene.hit(r: main.ray) else { return nil }
@@ -389,9 +388,9 @@ final class PathReconnection: ShiftMapping {
         
         let mainBsdfContrib = main.throughput * bounceLightRadiance
         return offsets.enumerated().map { (i, o) in
-            let result: (weightDem: Float, contrib: Color, state: RayState)
+            let result: (weightDem: Float, contrib: Color, state: RayState, halfVector: Bool)
             switch o {
-            case .dead: result = (0, .zero, .dead)
+            case .dead: result = (0, .zero, .dead, false)
             case .connected(let s):
                 let newThroughput = s.throughput * mainSampledBsdf.weight
                 let newPdf = s.pdf * mainSampledBsdf.pdf
@@ -400,15 +399,16 @@ final class PathReconnection: ShiftMapping {
                 result = (
                     shiftWeightDem,
                     shiftContrib,
-                    .connected(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
+                    .connected(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput)),
+                    false
                 )
             case .connectedRecently(let s):
-                guard mainPrevIts.shape.material.hasDelta(uv: mainPrevIts.uv, p: mainPrevIts.p) == false else { result = (0.0, .zero, .dead); break }
+                guard mainPrevIts.shape.material.hasDelta(uv: mainPrevIts.uv, p: mainPrevIts.p) == false else { result = (0.0, .zero, .dead, false); break }
                 
                 let frame = Frame(n: mainPrevIts.n)
                 let shiftDirectionInGlobal = (s.its.p - main.ray.o).normalized()
                 let shiftDirectionInLocal = frame.toLocal(v: shiftDirectionInGlobal).normalized()
-                guard shiftDirectionInLocal.z > 0 else { result = (0.0, .zero, .dead); break }
+                guard shiftDirectionInLocal.z > 0 else { result = (0.0, .zero, .dead, false); break }
                 
                 let shiftBsdfPdf = mainPrevIts.shape.material.pdf(wo: shiftDirectionInLocal, wi: mainSampledBsdf.wi, uv: mainPrevIts.uv, p: mainPrevIts.p)
                 let shiftBsdfValue = mainPrevIts.shape.material.evaluate(wo: shiftDirectionInLocal, wi: mainSampledBsdf.wi, uv: mainPrevIts.uv, p: mainPrevIts.p)
@@ -419,10 +419,11 @@ final class PathReconnection: ShiftMapping {
                 result = (
                     shiftWeightDem,
                     shiftContrib,
-                    .connected(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
+                    .connected(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput)),
+                    false
                 )
             case .fresh(let s):
-                guard !s.its.hasEmission && s.its.p.visible(from: main.its.p, within: scene) else { result = (0.0, .zero, .dead); break }
+                guard !s.its.hasEmission && s.its.p.visible(from: main.its.p, within: scene) else { result = (0.0, .zero, .dead, false); break }
                 
                 let shiftRough = !s.its.shape.material.hasDelta(uv: s.its.uv, p: s.its.p)
                     && (s.its.shape.material as? Metal)?.roughness.get(uv: s.its.uv, p: s.its.p) ?? 1.0 > treshold
@@ -454,51 +455,59 @@ final class PathReconnection: ShiftMapping {
                     result = (
                         shiftWeightDem,
                         shiftContrib,
-                        .connectedRecently(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput))
+                        .connectedRecently(data: RayState.Data(pdf: newPdf, ray: s.ray, its: s.its, throughput: newThroughput)),
+                        false
                     )
                 } else {
                     let frame = Frame(n: s.its.n)
-                    let prevFrame = Frame(n: mainPrevIts.n)
-                    let success = !shiftRough && !prevRough
+                    let shiftSuccess: Bool
                     let shiftWo: Vec3
-                    let tanSpaceMainWi = mainPrevWi
+                    let tanSpaceMainWi = mainPrevIts.wi
                     let tanSpaceMainWo = mainSampledBsdf.wi
-                    let tanSpaceShiftWi = frame.toWorld(v: s.its.p - s.ray.o).normalized()
+                    let tanSpaceShiftWi = s.its.wi
                     if tanSpaceMainWi.z * tanSpaceMainWo.z < 0 {
+                        // For now, always handled as such
                         shiftWo = .zero
+                        shiftSuccess = false
                     } else {
                         // Reflect
                         let tanSpaceHvMain = (tanSpaceMainWo + tanSpaceMainWi).normalized()
-                        let tanSpaceShiftWo = tanSpaceMainWi // reflect
-                        let woDotH = tanSpaceShiftWo.dot(tanSpaceHvMain) / tanSpaceMainWo.dot(tanSpaceHvMain)
-                        shiftWo = tanSpaceShiftWo
+                        shiftWo = -tanSpaceShiftWi + tanSpaceHvMain * 2 * tanSpaceShiftWi.dot(tanSpaceHvMain)
+                        shiftSuccess = true
                     }
-                    //let wo: Vec3
                     
+                    let success = !shiftRough && !prevRough && shiftSuccess
                     let jacobian: Float = 1.0
                     if success {
+                        let newThroughput = s.throughput * jacobian * s.its.shape.material.evaluate(wo: shiftWo, wi: s.its.wi, uv: s.its.uv, p: s.its.p)
                         
-                        let newThroughput = s.throughput * jacobian * s.its.shape.material.evaluate(wo: shiftWo, wi: .zero, uv: s.its.uv, p: s.its.p)
-                        let newPdf = s.pdf * jacobian * s.its.shape.material.pdf(wo: shiftWo, wi: .zero, uv: s.its.uv, p: s.its.p)
+                        if newThroughput.luminance.isInfinite || newThroughput.luminance.isNaN {
+                            print("Error in throughput calculation")
+                        }
+                        let newPdf = s.pdf * jacobian * s.its.shape.material.pdf(wo: shiftWo, wi: s.its.wi, uv: s.its.uv, p: s.its.p)
                         let shiftDirectionOutGlobal = frame.toWorld(v: shiftWo).normalized()
                         let ray = Ray(origin: s.its.p, direction: shiftDirectionOutGlobal)
-                        guard let newShiftIts = scene.hit(r: ray) else { result = (0, .zero, .dead); break }
+                        guard let newShiftIts = scene.hit(r: ray) else { result = (0, .zero, .dead, true); break }
                         
                         let shiftEmitterRadiance: Color = newShiftIts.hasEmission
                             ? newShiftIts.shape.light.L(p: s.its.p, n: s.its.n, uv: s.its.uv, wo: shiftDirectionOutGlobal)
                             : .zero
                         let newState: RayState = .fresh(data: RayState.Data(pdf: newPdf, ray: ray, its: newShiftIts, throughput: newThroughput))
                         
-                        result = (s.pdf, newThroughput * shiftEmitterRadiance, newState)
+                        if newPdf.isNaN || newPdf.isInfinite {
+                            print("Error in pdf calculation")
+                        }
+                        result = (newPdf, newThroughput * shiftEmitterRadiance, newState, true)
                     } else {
-                        result = (0, .zero, .dead)
+                        result = (0, .zero, .dead, true)
                     }
-
                 }
             }
             
             let lightDem = bounceLightPdf == 0 ? 1 : bounceLightPdf
-            let mainWeightDem = mainSampledBsdf.pdf + bounceLightPdf
+            let mainWeightDem: Float = result.halfVector
+                ? mainSampledBsdf.pdf
+                : mainSampledBsdf.pdf + bounceLightPdf
             let weight = mainSampledBsdf.pdf / (mainWeightDem + result.weightDem + 0.0000001)
             assert(weight.isFinite)
             assert(weight >= 0 && weight <= 1)

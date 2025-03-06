@@ -92,9 +92,11 @@ final class Sphere: Shape {
             vs = vt.cross(n)
         }
 
+        let transformedPoint = transform.point(p)
         return Intersection(
             t: t,
             p: transform.point(p),
+            wi: (r.o - transformedPoint).normalized(),
             n: transform.normal(n).normalized(),
             tan: vs.normalized(),
             bitan: vt.normalized(),

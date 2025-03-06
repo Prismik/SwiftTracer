@@ -28,6 +28,9 @@ struct Intersection {
     /// Point of intersection
     let p: Point3
     
+    /// Incident vector
+    let wi: Vec3
+    
     /// Surface normal
     let n: Vec3
     

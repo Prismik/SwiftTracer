@@ -13,6 +13,7 @@ struct AnyMutator: Decodable {
         case kelemen
         case mitsuba
         case mala
+        case adaptiveMala = "adaptive_mala"
     }
     
     enum CodingKeys: String, CodingKey {
@@ -24,26 +25,27 @@ struct AnyMutator: Decodable {
         case step
     }
     
-    let wrapped: PrimarySpaceMutation
+    let wrapped: PrimarySpaceMutation.Type
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(TypeIdentifier.self, forKey: .type)
         switch type {
         case .kelemen:
-            let s1 = try container.decode(Float.self, forKey: .s1)
-            let s2 = try container.decode(Float.self, forKey: .s2)
-            
-            self.wrapped = KelemenMutation(s1: s1, s2: s2)
+            self.wrapped = KelemenMutation.self
         case .mitsuba:
-            self.wrapped = MitsubaMutation()
+            self.wrapped = MitsubaMutation.self
         case .mala:
-            self.wrapped = MalaMutation()
+            self.wrapped = MalaMutation.self
+        case .adaptiveMala:
+            self.wrapped = MalaAdamMutation.self
         }
     }
 }
 
 protocol PrimarySpaceMutation {
     var sampler: Sampler! { get set }
+
+    init()
 
     // Check if can be brought back as a simpler api
     //func mutate(value: Float) -> Float
@@ -57,6 +59,13 @@ final class KelemenMutation: PrimarySpaceMutation {
     private let s2: Float
     private let logRatio: Float
     
+    init() {
+        self.s1 = 1 / 1024
+        self.s2 = 1 / 64
+        
+        self.logRatio = -log(s2/s1)
+    }
+
     init(s1: Float = 1 / 1024, s2: Float = 1 / 64) {
         self.s1 = s1
         self.s2 = s2

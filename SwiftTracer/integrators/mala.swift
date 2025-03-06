@@ -15,6 +15,7 @@ final class MalaIntegrator: Integrator {
         case samplesPerChain
         case initSamplesCount
         case step
+        case mutator
     }
     
     let identifier = "mala"
@@ -95,17 +96,19 @@ final class MalaIntegrator: Integrator {
     
     private let mapper: ShiftMapping
     private let integrator: SamplerIntegrator
+    private let mutator: PrimarySpaceMutation.Type
     
     private let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
     private var blankBuffer: PixelBuffer!
 
-    init(mapper: ShiftMapping, samplesPerChain: Int, initSamplesCount: Int, step: Float) {
+    init(mapper: ShiftMapping, samplesPerChain: Int, initSamplesCount: Int, step: Float, mutator: PrimarySpaceMutation.Type) {
         self.mapper = mapper
         self.spc = samplesPerChain
         self.isc = initSamplesCount
         self.step = step
         
         self.integrator = PathIntegrator(minDepth: 0, maxDepth: 16)
+        self.mutator = mutator
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 
@@ -168,7 +171,18 @@ final class MalaIntegrator: Integrator {
         if dx.hasNaN || dy.hasNaN {
             print("NaN encountered")
         }
-        ((sampler as? PSSMLTSampler)?.mutator as? MalaMutation)?.setup(step: step, gradient: gradient)
+        
+        // TODO More elegant way of setting up parameter based mutations
+        if let s = sampler as? PSSMLTSampler {
+            if let m = s.mutator as? MalaMutation {
+                m.setup(step: step, gradient: gradient)
+            }
+            
+            if let m = s.mutator as? MalaAdamMutation {
+                m.setup(step: step, gradient: gradient)
+            }
+        }
+        
         return StateMala(
             contrib: result.main,
             contribPrime: result.mainPrime,
@@ -246,7 +260,7 @@ final class MalaIntegrator: Integrator {
         let id = (Float(i) + 0.5) / Float(total)
         let i = cdf.sampleDiscrete(id)
         let seed = seeds[i]
-        let mutator = MalaMutation()
+        let mutator = mutator.init()
         let sampler = PSSMLTSampler(nbSamples: nspp, mutator: mutator)
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.value
