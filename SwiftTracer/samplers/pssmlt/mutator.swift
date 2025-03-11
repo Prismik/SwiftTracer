@@ -195,7 +195,7 @@ final class MalaAdamMutation: PrimarySpaceMutation {
     private var step: Float = 0.1
     private var delta: Float = 0.001
     private var decay: Decay = Decay()
-    private var adaptation: Adaptation = Adaptation(c1: 0.5, c2: 0.9)
+    private var adaptation: Adaptation = Adaptation(c1: 0.5, c2: 0.5)
     
     /// Accumulation matrix
     private var G = Vec2()
@@ -243,7 +243,7 @@ final class MalaAdamMutation: PrimarySpaceMutation {
         let (dx, dy) = (gradients[0], gradients[1])
         let g = Mat2(rows: [Vec2(dx, 0), Vec2(0, dy)])
         let diagonal = (g * g).diagonal
-        return decay.beta * G * (1 - decay.beta) * diagonal
+        return decay.beta * G + (1 - decay.beta) * diagonal
     }
     
     // M(t)

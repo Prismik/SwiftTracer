@@ -91,7 +91,6 @@ final class Triangle: Shape {
         
         let pvec = r.d.cross(edge2)
         let det = edge1.dot(pvec)
-        let backface = det < -epsilon
         guard det.abs() >= epsilon else { return nil }
         
         let invDet: Float = 1 / det
@@ -119,12 +118,14 @@ final class Triangle: Shape {
         }
         
         // TODO Tangents + Bitangents
-        
+
+        let wo = -r.d
+        let backface = wo.dot(n) < 0
         return Intersection(
             t: t,
             p: p,
             wi: (r.o - p).normalized(),
-            n: backface ? n * -1 : n,
+            n: backface ? -n : n,
             tan: .zero,
             bitan: .zero,
             uv: uv(coordinates: (1 - u - v, u, v)),
@@ -159,7 +160,10 @@ final class Triangle: Shape {
             + u * p1
             + v * p2
         
-        return EmitterSample(y: y, n: n, uv: uv(coordinates: (1 - u - v, u, v)), pdf: pdfDirect(shape: self, p: p, y: y, n: n), shape: self)
+        let d = p - y
+        let backface = d.dot(n) < 0
+        let gn = backface ? -n : n
+        return EmitterSample(y: y, n: gn, uv: uv(coordinates: (1 - u - v, u, v)), pdf: pdfDirect(shape: self, p: p, y: y, n: gn), shape: self)
     }
     
     func pdfDirect(shape: Shape, p: Point3, y: Point3, n: Vec3) -> Float {

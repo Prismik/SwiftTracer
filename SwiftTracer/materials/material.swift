@@ -15,6 +15,8 @@ struct SampledDirection {
     let wi: Vec3
     
     let pdf: Float
+    
+    let eta: Float
 }
 
 /// Box type for ``Material`` protocol that allows to decode materials in a type agnostic way.

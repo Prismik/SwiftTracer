@@ -38,7 +38,9 @@ final class Metal: Material {
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
         switch roughness {
         case let r where r.isZero:
-            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: specularWi.normalized(), pdf: 0)
+            let wi = specularWi.normalized()
+            let pdf = self.pdf(wo: wo, wi: wi, uv: uv, p : p)
+            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: wi, pdf: pdf, eta: 1)
         case let r where r > 0:
             let frame = Frame(n: specularWi)
             let n = power(roughness: roughness)
@@ -47,7 +49,7 @@ final class Metal: Material {
             guard lobe.z >= 0 else { return nil }
             let wi = lobe.normalized()
             let pdf = self.pdf(wo: wo, wi: wi, uv: uv, p : p)
-            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: lobe.normalized(), pdf: pdf) // TODO Not quite zero for that case
+            return SampledDirection(weight: ks.get(uv: uv, p: p), wi: lobe.normalized(), pdf: pdf, eta: 1) // TODO Not quite zero for that case
         default:
             return nil // Shouldn't happen
         }
@@ -57,7 +59,11 @@ final class Metal: Material {
         guard wo.z >= 0 && wi.z >= 0 else { return .zero }
         
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
-        guard roughness != 0 else { return .zero }
+        guard roughness != 0 else {
+            return reflectConditionMet(wi: wi, wo: wo)
+                ? ks.get(uv: uv, p: p)
+                : .zero
+        }
         
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
         let n = power(roughness: roughness)
@@ -70,7 +76,11 @@ final class Metal: Material {
         guard wo.z >= 0 && wi.z >= 0 else { return 0 }
 
         let roughness: Float = roughness.get(uv: uv, p: p).clamped(0, 1)
-        guard roughness != 0 else { return 0 }
+        guard roughness != 0 else {
+            return reflectConditionMet(wi: wi, wo: wo)
+                ? 1
+                : 0
+        }
 
         let specularWi = Vec3(-wo.x, -wo.y, wo.z)
         let n = power(roughness: roughness)
@@ -84,5 +94,9 @@ final class Metal: Material {
     
     private func power(roughness: Float) -> Float {
         return 2 / roughness.pow(2) - 2
+    }
+    
+    private func reflectConditionMet(wi: Vec3, wo: Vec3) -> Bool {
+        return (wi.z * wo.z - wi.x * wo.x - wi.y * wo.y - 1.0).abs() < 0.0001
     }
 }

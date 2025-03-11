@@ -28,7 +28,7 @@ final class Diffuse: Material {
         // Disregard samples where the weight results in a non finite number
         guard weight.isFinite else { return nil }
 
-        return SampledDirection(weight: weight, wi: wi, pdf: pdf)
+        return SampledDirection(weight: weight, wi: wi, pdf: pdf, eta: 1)
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {

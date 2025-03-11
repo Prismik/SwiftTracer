@@ -78,25 +78,47 @@ final class Dielectric: Material {
     func sample(wo: Vec3, uv: Vec2, p: Point3, sample: Vec2) -> SampledDirection? {
         let r = Refraction(material: self, wo: wo)
         if r.exterior.sin > 1 { // reflect
-            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: r.reflect(), pdf: 0)
+            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: r.reflect(), pdf: 1.0, eta: etaInterior)
         } else { // tentative refraction
             let rng = sample.x
-            let wi = rng < r.fresnel()
+            let f = r.fresnel()
+            let wi = rng < f
                 ? r.reflect()
                 : r.refract()
-            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: wi, pdf: 0)
+            let pdf = rng < f
+                ? f
+                : 1 - f
+            return SampledDirection(weight: texture.get(uv: uv, p: p), wi: wi, pdf: pdf, eta: etaInterior)
         }
     }
     
     func evaluate(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Color {
-        return .zero
+        let r = Refraction(material: self, wo: wo)
+        if wo.z >= 0 && wi.z >= 0 {
+            guard reflectConditionMet(wi: r.reflect(), wo: wo) else { return .zero }
+            return texture.get(uv: uv, p: p) * r.fresnel()
+        } else {
+            guard reflectConditionMet(wi: r.reflect(), wo: wo) else { return .zero }
+            return texture.get(uv: uv, p: p) * (1 - r.fresnel())
+        }
     }
     
     func pdf(wo: Vec3, wi: Vec3, uv: Vec2, p: Point3) -> Float {
-        return 0
+        let r = Refraction(material: self, wo: wo)
+        if wo.z >= 0 && wi.z >= 0 {
+            guard reflectConditionMet(wi: r.reflect(), wo: wo) else { return 0 }
+            return r.fresnel()
+        } else {
+            guard reflectConditionMet(wi: r.refract(), wo: wo) else { return 0 }
+            return 1 - r.fresnel()
+        }
     }
     
     func hasDelta(uv: Vec2, p: Point3) -> Bool {
         return true
+    }
+    
+    private func reflectConditionMet(wi: Vec3, wo: Vec3) -> Bool {
+        return (wi.z * wo.z - wi.x * wo.x - wi.y * wo.y - 1.0).abs() < 0.0001
     }
 }

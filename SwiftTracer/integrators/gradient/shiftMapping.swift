@@ -462,13 +462,35 @@ final class PathReconnection: ShiftMapping {
                     let frame = Frame(n: s.its.n)
                     let shiftSuccess: Bool
                     let shiftWo: Vec3
-                    let tanSpaceMainWi = mainPrevIts.wi
-                    let tanSpaceMainWo = mainSampledBsdf.wi
-                    let tanSpaceShiftWi = s.its.wi
+                    let tanSpaceMainWi: Vec3 = mainPrevIts.wi
+                    let tanSpaceMainWo: Vec3 = mainSampledBsdf.wi
+                    let tanSpaceShiftWi: Vec3 = s.its.wi
                     if tanSpaceMainWi.z * tanSpaceMainWo.z < 0 {
-                        // For now, always handled as such
-                        shiftWo = .zero
-                        shiftSuccess = false
+                        // Refract
+                        
+                        let mainEta: Float = mainSampledBsdf.eta
+                        let shiftEta: Float = (s.its.shape.material as? Dielectric)?.etaInterior ?? 1.0
+                        // TODO Make ETA of surfaces available; when either are equal to 1, fail the shift
+                        
+                        let tanSpaceHalfVectorUnorm: Vec3 = tanSpaceMainWi.z < 0
+                            ? -(tanSpaceMainWi * mainEta + tanSpaceMainWo)
+                            : -(tanSpaceMainWi + mainEta * tanSpaceMainWo)
+                        
+                        let tangentSpaceHalfVector: Vec3 = tanSpaceHalfVectorUnorm.normalized()
+                        
+                        let tanSpaceShiftWo: Vec3 = tanSpaceShiftWi.refract(n: tangentSpaceHalfVector, eta: shiftEta)
+                        
+                        if tanSpaceShiftWo.length != 0 {
+                            shiftWo = .zero
+                            shiftSuccess = false
+                        } else {
+                            // TODO Compute jacobian if necessary
+
+                            shiftWo = tanSpaceShiftWo
+                            shiftSuccess = true
+                        }
+                        
+                        
                     } else {
                         // Reflect
                         let tanSpaceHvMain = (tanSpaceMainWo + tanSpaceMainWi).normalized()

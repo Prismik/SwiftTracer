@@ -101,7 +101,15 @@ extension Vec3: @retroactive AdditiveArithmetic where Scalar: BinaryFloatingPoin
     }
     
     func reflect(n: Vec3) ->  Vec3 {
-        return Vec3()
+        return simd_reflect(self, n)
+    }
+    
+    func refract(n: Vec3, eta: Float) -> Vec3 {
+        return simd_refract(self, n, eta)
+    }
+    
+    func safeSqrt() -> Vec3 {
+        return Vec3(x.sqrt(), y.sqrt(), z.sqrt())
     }
 
     static func unit(_ axis: Axis) -> Vec3 {
