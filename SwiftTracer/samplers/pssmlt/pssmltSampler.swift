@@ -16,6 +16,8 @@ final class PSSMLTSampler: Sampler {
         var times: Int
         var accept: Int
         var reject: Int
+        
+        var acceptanceRate: Float { Float(accept) / Float(accept + reject) }
     }
 
     enum Step {

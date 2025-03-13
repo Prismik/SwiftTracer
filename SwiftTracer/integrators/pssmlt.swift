@@ -16,6 +16,8 @@ final class PssmltIntegrator: Integrator {
         case initSamplesCount
         /// Underlying integrator used to render the pixels.
         case integrator
+        /// Mutating strategy used in the sampler.
+        case mutator
         case heatmap
     }
     
@@ -71,12 +73,14 @@ final class PssmltIntegrator: Integrator {
     private var seeds: [(Float, UInt64)] = []
     private var heatmap: Heatmap?
     private var blankBuffer: PixelBuffer!
-    
-    init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator, heatmap: Bool) {
+    private let mutator: PrimarySpaceMutation.Type
+
+    init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator, heatmap: Bool, mutator: PrimarySpaceMutation.Type) {
         self.nspc = samplesPerChain
         self.isc = initSamplesCount
         self.integrator = integrator
         self.heatmap = heatmap ? Heatmap(floor: Color(0, 0, 1), ceil: Color(1, 1, 0)) : nil
+        self.mutator = mutator
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 
@@ -160,6 +164,12 @@ final class PssmltIntegrator: Integrator {
         let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
         let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
         let contrib = integrator.li(pixel: Vec2(Float(x), Float(y)), scene: scene, sampler: sampler)
+        
+        if let s = sampler as? PSSMLTSampler {
+            if let m = s.mutator as? StratifiedMutation {
+                m.setup(acceptance: 0.5 * stats.small.acceptanceRate, I: contrib.luminance, targetAcceptance: 0.65, b: b)
+            }
+        }
         return StateMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
     }
 

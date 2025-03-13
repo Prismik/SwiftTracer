@@ -14,6 +14,7 @@ struct AnyMutator: Decodable {
         case mitsuba
         case mala
         case adaptiveMala = "adaptive_mala"
+        case stratified
     }
     
     enum CodingKeys: String, CodingKey {
@@ -38,6 +39,8 @@ struct AnyMutator: Decodable {
             self.wrapped = MalaMutation.self
         case .adaptiveMala:
             self.wrapped = MalaAdamMutation.self
+        case .stratified:
+            self.wrapped = StratifiedMutation.self
         }
     }
 }
@@ -116,6 +119,43 @@ final class MitsubaMutation: PrimarySpaceMutation {
     
     func mutate(u: [PSSMLTSampler.PrimarySample], i: Int) -> Float {
         return mutate(value: u[i].value)
+    }
+}
+
+final class StratifiedMutation: PrimarySpaceMutation {
+    weak var sampler: Sampler!
+
+    private var k: Float = 0
+    private var t: Float = 1
+    private var alpha: Float = 1
+    private var beta: Float = 1
+    private var targetAcceptance: Float = 0.5
+    private var b: Float = 1
+
+    private let lambda: Float = 10
+    private let sMin: Float = 1 / 512
+    private let sMax: Float = 1 / 16
+    
+    init() {
+        self.targetAcceptance = 0.25
+        self.b = 1
+    }
+
+    func setup(acceptance: Float, I: Float, targetAcceptance: Float, b: Float) {
+        self.targetAcceptance = targetAcceptance
+        self.b = b
+        k += (lambda / t) * (targetAcceptance - acceptance)
+        alpha = k * I / b
+        beta = alpha / (exp(-alpha * sMin) - exp(-alpha * sMax))
+        t += 1
+    }
+    
+    func mutate(u: [PSSMLTSampler.PrimarySample], i: Int) -> Float {
+        let value = u[i].value
+        let rand = sampler.gen()
+        let s = log(exp(-alpha * sMin) - ((alpha * rand) / beta))
+        
+        return (value + s).modulo(1.0)
     }
 }
 

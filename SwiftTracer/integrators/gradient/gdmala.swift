@@ -35,6 +35,8 @@ final class GdmalaIntegrator: Integrator {
         let contrib: Color
         let contribPrime: Color
         let pos: Vec2
+        let u: Vec2
+        let gradient: Vec2
         var weight: Float = 0
         var targetFunction: Float = 0
         let shiftContrib: [Color]
@@ -42,7 +44,9 @@ final class GdmalaIntegrator: Integrator {
         let delta: [Color]
         let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
         
-        init(contrib: Color, contribPrime: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2, target: TargetFunction) {
+        init(contrib: Color, contribPrime: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2, target: TargetFunction, u: Vec2, gradient: Vec2) {
+            self.u = u
+            self.gradient = gradient
             if contrib.luminance > 100 {
                 self.contrib = contrib / contrib.luminance
             } else {
@@ -229,7 +233,9 @@ final class GdmalaIntegrator: Integrator {
                     directLight: kernelResult.directLight,
                     shiftContribs: kernelResult.radiances,
                     gradients: kernelResult.gradients,
-                    target: targetFunction
+                    target: targetFunction,
+                    u: rng2,
+                    gradient: .zero
                 )
                 return kernelState.targetFunction
             }
@@ -249,7 +255,9 @@ final class GdmalaIntegrator: Integrator {
             directLight: result.directLight,
             shiftContribs: result.radiances,
             gradients: result.gradients,
-            target: targetFunction
+            target: targetFunction,
+            u: rng2,
+            gradient: gradient
         )
     }
 }
@@ -384,7 +392,7 @@ extension GdmalaIntegrator: GradientDomainIntegrator {
             var proposedState = sample(scene: scene, sampler: sampler, mapper: mapper)
             let acceptProbability = proposedState.targetFunction < 0 || proposedState.contrib.hasNaN
                 ? 0
-                : min(1.0, proposedState.targetFunction / state.targetFunction)
+                : acceptance(u: state, v: proposedState)
             
             state.weight += 1.0 - acceptProbability
             proposedState.weight += acceptProbability
@@ -416,6 +424,19 @@ extension GdmalaIntegrator: GradientDomainIntegrator {
 
         stats.small.combine(with: sampler.smallStats)
         stats.large.combine(with: sampler.largeStats)
+    }
+    
+    // q(u|v)
+    private func transitionProbDensity(u: KernelGradientState, v: KernelGradientState) -> Float {
+        let q = -(u.u - v.u - step * v.gradient).lengthSquared / (4 * step)
+        return exp(q)
+    }
+    
+    // a = min(1, π(v) q(u|v) / π(u) q(v|u))
+    private func acceptance(u: KernelGradientState, v: KernelGradientState) -> Float {
+        let num = v.targetFunction * transitionProbDensity(u: u, v: v)
+        let dem = u.targetFunction * transitionProbDensity(u: v, v: u)
+        return min(1, num / dem)
     }
 }
 

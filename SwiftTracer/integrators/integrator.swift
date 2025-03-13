@@ -101,11 +101,13 @@ struct AnyIntegrator: Decodable {
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
             let integrator = (try? params.decode(AnyIntegrator.self, forKey: .integrator))?.wrapped as? SamplerIntegrator
             let heatmap = try params.decodeIfPresent(Bool.self, forKey: .heatmap) ?? false
+            let mutator: PrimarySpaceMutation.Type = try params.decodeIfPresent(AnyMutator.self, forKey: .mutator)?.wrapped ?? KelemenMutation.self
             self.wrapped = PssmltIntegrator(
                 samplesPerChain: spc,
                 initSamplesCount: isc,
                 integrator: integrator ?? PathIntegrator(minDepth: 0, maxDepth: 16),
-                heatmap: heatmap
+                heatmap: heatmap,
+                mutator: mutator
             )
         case .gdpt:
             let params = try container.nestedContainer(keyedBy: GdptIntegrator.CodingKeys.self, forKey: .params)
