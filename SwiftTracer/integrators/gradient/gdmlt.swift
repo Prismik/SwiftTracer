@@ -30,6 +30,7 @@ final class GdmltIntegrator: Integrator {
         case heatmap
         case targetFunction
         case normalization
+        case maxDepth
     }
 
     enum TargetFunction: String, Decodable {
@@ -47,10 +48,10 @@ final class GdmltIntegrator: Integrator {
             case .multi: return 0.25
             }
         }
-        func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention, target: TargetFunction) -> GradientStateMCMC {
+        func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention, target: TargetFunction, maxDepth: Int) -> GradientStateMCMC {
             return switch self {
-                case .multi: MultiStateMCMC.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: cdf, target: target)
-                case .single: SingleStateMCMC.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: cdf)
+                case .multi: MultiStateMCMC.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: cdf, target: target, maxDepth: maxDepth)
+                case .single: SingleStateMCMC.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: cdf, maxDepth: maxDepth)
             }
         }
     }
@@ -101,13 +102,13 @@ final class GdmltIntegrator: Integrator {
             }
         }
         
-        static func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention, target: TargetFunction) -> GradientStateMCMC {
+        static func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention, target: TargetFunction, maxDepth: Int) -> GradientStateMCMC {
             let rng2 = sampler.next2()
 
             let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
             let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
             let pixel = Vec2(Float(x), Float(y))
-            let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil))
+            let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil, maxDepth: maxDepth))
 
             return MultiStateMCMC(
                 contrib: result.main,
@@ -150,14 +151,14 @@ final class GdmltIntegrator: Integrator {
             self.targetFunction = gradientLuminance + alpha * (0.25 * luminance)
         }
         
-        static func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention) -> GradientStateMCMC {
+        static func sample(scene: Scene, sampler: Sampler, mapper: ShiftMapping, cdf: DistributionOneDimention, maxDepth: Int) -> GradientStateMCMC {
             let rng2 = sampler.next2()
 
             let id = cdf.sampleDiscrete(sampler.next())
             let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
             let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
             let pixel = Vec2(Float(x), Float(y))
-            let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: [shifts[id]]))
+            let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: [shifts[id]], maxDepth: maxDepth))
 
             let nz: Float = result.main != .zero && result.radiances[id] != .zero
                 ? 0.5
@@ -259,8 +260,9 @@ final class GdmltIntegrator: Integrator {
     private var heatmap: Heatmap?
     private let targetFunction: TargetFunction
     private var blankBuffer: PixelBuffer!
+    private let maxDepth: Int
     
-    init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, heatmap: Bool, targetFunction: TargetFunction, normalization: Float?) {
+    init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, heatmap: Bool, targetFunction: TargetFunction, normalization: Float?, maxDepth: Int) {
         self.mapper = mapper
         self.reconstructor = reconstructor
         var cdf = DistributionOneDimention(count: shifts.count)
@@ -273,6 +275,7 @@ final class GdmltIntegrator: Integrator {
         self.isc = initSamplesCount
         self.heatmap = heatmap ? Heatmap(floor: Color(0, 0, 1), ceil: Color(1, 1, 0)) : nil
         self.targetFunction = targetFunction
+        self.maxDepth = maxDepth
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
         self.b = normalization ?? 0
     }
@@ -372,7 +375,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         let b = (0 ..< isc).map { _ in
             let currentSeed = sampler.rng.state
             
-            let s = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf, target: targetFunction)
+            let s = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf, target: targetFunction, maxDepth: maxDepth)
             let validSample = s.targetFunction.isFinite && !s.targetFunction.isNaN && !s.targetFunction.isZero
             if validSample {
                 let values = StartupSeed(
@@ -433,7 +436,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
         let chain = MarkovChain(blank: blankBuffer)
         sampler.step = .large
         
-        var state = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf, target: targetFunction)
+        var state = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf, target: targetFunction, maxDepth: maxDepth)
         guard state.targetFunction == seed.targetFunction else { fatalError("Inconsistent seed-sample") }
         sampler.accept()
 
@@ -444,7 +447,7 @@ extension GdmltIntegrator: GradientDomainIntegrator {
                 ? .large
                 : .small
             
-            var proposedState = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf, target: targetFunction)
+            var proposedState = strategy.sample(scene: scene, sampler: sampler, mapper: mapper, cdf: shiftCdf, target: targetFunction, maxDepth: maxDepth)
             let acceptProbability = proposedState.targetFunction < 0 || proposedState.contrib.hasNaN
                 ? 0
                 : min(1.0, proposedState.targetFunction / state.targetFunction)

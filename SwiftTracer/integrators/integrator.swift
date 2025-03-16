@@ -102,18 +102,21 @@ struct AnyIntegrator: Decodable {
             let integrator = (try? params.decode(AnyIntegrator.self, forKey: .integrator))?.wrapped as? SamplerIntegrator
             let heatmap = try params.decodeIfPresent(Bool.self, forKey: .heatmap) ?? false
             let mutator: PrimarySpaceMutation.Type = try params.decodeIfPresent(AnyMutator.self, forKey: .mutator)?.wrapped ?? KelemenMutation.self
+            let maxDepth = try params.decodeIfPresent(Int.self, forKey: .maxDepth) ?? 16
             self.wrapped = PssmltIntegrator(
                 samplesPerChain: spc,
                 initSamplesCount: isc,
                 integrator: integrator ?? PathIntegrator(minDepth: 0, maxDepth: 16),
                 heatmap: heatmap,
-                mutator: mutator
+                mutator: mutator,
+                maxDepth: maxDepth
             )
         case .gdpt:
             let params = try container.nestedContainer(keyedBy: GdptIntegrator.CodingKeys.self, forKey: .params)
             let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
             let reconstructor = try params.decode(AnyReconstruction.self, forKey: .reconstruction)
-            self.wrapped = GdptIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, maxReconstructIterations: 40)
+            let maxDepth = try params.decodeIfPresent(Int.self, forKey: .maxDepth) ?? 16
+            self.wrapped = GdptIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, maxReconstructIterations: 40, maxDepth: maxDepth)
         case .gdmlt:
             let params = try container.nestedContainer(keyedBy: GdmltIntegrator.CodingKeys.self, forKey: .params)
             let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
@@ -123,7 +126,8 @@ struct AnyIntegrator: Decodable {
             let targetFunction = try params.decodeIfPresent(GdmltIntegrator.TargetFunction.self, forKey: .targetFunction) ?? .gradient
             let reconstructor = try params.decode(AnyReconstruction.self, forKey: .reconstruction)
             let normalization = try params.decodeIfPresent(Float.self, forKey: .normalization)
-            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, heatmap: heatmap, targetFunction: targetFunction, normalization: normalization)
+            let maxDepth = try params.decodeIfPresent(Int.self, forKey: .maxDepth) ?? 16
+            self.wrapped = GdmltIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, heatmap: heatmap, targetFunction: targetFunction, normalization: normalization, maxDepth: maxDepth)
         case .gdmala:
             let params = try container.nestedContainer(keyedBy: GdmalaIntegrator.CodingKeys.self, forKey: .params)
             let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
@@ -134,7 +138,8 @@ struct AnyIntegrator: Decodable {
             let targetFunction = try params.decodeIfPresent(GdmalaIntegrator.TargetFunction.self, forKey: .targetFunction) ?? .gradient
             let kernel = try params.decodeIfPresent(GdmalaIntegrator.Kernel.self, forKey: .kernel) ?? .shifted
             let normalization = try params.decodeIfPresent(Float.self, forKey: .normalization)
-            self.wrapped = GdmalaIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, step: step, targetFunction: targetFunction, kernel: kernel, normalization: normalization)
+            let maxDepth = try params.decodeIfPresent(Int.self, forKey: .maxDepth) ?? 16
+            self.wrapped = GdmalaIntegrator(mapper: anyShiftMapping.wrapped, reconstructor: reconstructor.wrapped, samplesPerChain: spc, initSamplesCount: isc, step: step, targetFunction: targetFunction, kernel: kernel, normalization: normalization, maxDepth: maxDepth)
         case .mala:
             let params = try container.nestedContainer(keyedBy: MalaIntegrator.CodingKeys.self, forKey: .params)
             let anyShiftMapping = try params.decode(AnyShiftMappingOperator.self, forKey: .shiftMapping)
@@ -142,7 +147,8 @@ struct AnyIntegrator: Decodable {
             let isc = try params.decode(Int.self, forKey: .initSamplesCount)
             let step = try params.decode(Float.self, forKey: .step)
             let mutator: PrimarySpaceMutation.Type = try params.decodeIfPresent(AnyMutator.self, forKey: .mutator)?.wrapped ?? MalaMutation.self
-            self.wrapped = MalaIntegrator(mapper: anyShiftMapping.wrapped, samplesPerChain: spc, initSamplesCount: isc, step: step, mutator: mutator)
+            let maxDepth = try params.decodeIfPresent(Int.self, forKey: .maxDepth) ?? 16
+            self.wrapped = MalaIntegrator(mapper: anyShiftMapping.wrapped, samplesPerChain: spc, initSamplesCount: isc, step: step, mutator: mutator, maxDepth: maxDepth)
         case .timeboxed:
             let params = try container.nestedContainer(keyedBy: TimeboxedIntegrator.CodingKeys.self, forKey: .params)
             let time = try params.decode(Int.self, forKey: .time)

@@ -63,6 +63,7 @@ protocol ShiftMapping {
 
 struct ShiftMappingParams {
     let offsets: Set<Vec2>?
+    let maxDepth: Int
 }
 
 enum RayState {
@@ -245,7 +246,7 @@ final class PathReconnection: ShiftMapping {
         let filteredOffsets = params.offsets.map { o in gradientOffsets.union(o) } ?? gradientOffsets
 
         // TODO
-        let maxDepth = 16
+        let maxDepth = params.maxDepth
         let minDepth = 0
         
         var li = ShiftResult()

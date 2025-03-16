@@ -19,6 +19,7 @@ final class GdmalaIntegrator: Integrator {
         case targetFunction
         case kernel
         case normalization
+        case maxDepth
     }
     
     enum TargetFunction: String, Decodable {
@@ -148,7 +149,8 @@ final class GdmalaIntegrator: Integrator {
     /// Samples per pixel (can derive total sample from this).
     private var nspp: Int = 10
     private let step: Float
-    
+    private let maxDepth: Int
+
     private var result: GradientDomainResult?
     private let reconstructor: Reconstructing
     private let targetFunction: TargetFunction
@@ -163,7 +165,7 @@ final class GdmalaIntegrator: Integrator {
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
     private var blankBuffer: PixelBuffer!
     
-    init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, step: Float, targetFunction: TargetFunction, kernel: Kernel, normalization: Float?) {
+    init(mapper: ShiftMapping, reconstructor: Reconstructing, samplesPerChain: Int, initSamplesCount: Int, step: Float, targetFunction: TargetFunction, kernel: Kernel, normalization: Float?, maxDepth: Int) {
         self.mapper = mapper
         self.reconstructor = reconstructor
         self.nspc = samplesPerChain
@@ -172,6 +174,7 @@ final class GdmalaIntegrator: Integrator {
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
         self.targetFunction = targetFunction
         self.kernel = kernel
+        self.maxDepth = maxDepth
         self.b = normalization ?? 0
     }
     
@@ -219,13 +222,13 @@ final class GdmalaIntegrator: Integrator {
         let pixel = Vec2(Float(x), Float(y))
         
         let replaySampler = ReplaySampler(sampler: sampler, random: [])
-        let result = mapper.shift(pixel: pixel, sampler: replaySampler, params: ShiftMappingParams(offsets: nil))
+        let result = mapper.shift(pixel: pixel, sampler: replaySampler, params: ShiftMappingParams(offsets: nil, maxDepth: maxDepth))
         let dx: Float
         let dy: Float
         if kernel == .shifted {
             let kernelTargets: [Float] = self.shifts.map {
                 let kernelSampler = ReplaySampler(sampler: sampler, random: replaySampler.random)
-                let kernelResult = mapper.shift(pixel: pixel + $0, sampler: kernelSampler, params: ShiftMappingParams(offsets: nil))
+                let kernelResult = mapper.shift(pixel: pixel + $0, sampler: kernelSampler, params: ShiftMappingParams(offsets: nil, maxDepth: maxDepth))
                 let kernelState = KernelGradientState(
                     contrib: kernelResult.main,
                     contribPrime: kernelResult.mainPrime,

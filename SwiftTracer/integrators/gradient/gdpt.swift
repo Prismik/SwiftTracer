@@ -27,7 +27,7 @@ final class GdptIntegrator: Integrator {
     private var failedShifts: Int = 0
     private let sanitize: Bool = true
 
-    init(mapper: ShiftMapping, reconstructor: Reconstructing, maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int = 16) {
+    init(mapper: ShiftMapping, reconstructor: Reconstructing, maxReconstructIterations: Int, minDepth: Int = 0, maxDepth: Int) {
         self.mapper = mapper
         self.reconstructor = reconstructor
         self.minDepth = minDepth
@@ -52,7 +52,7 @@ extension GdptIntegrator: SamplerIntegrator {
     }
     
     func li(pixel: Vec2, scene: Scene, sampler: Sampler) -> Color {
-        let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil))
+        let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil, maxDepth: maxDepth))
         return result.main
     }
 }
@@ -150,7 +150,7 @@ extension GdptIntegrator: GradientDomainIntegrator {
                     let y = ly + y
 
                     let base = Vec2(Float(x), Float(y)) + sampler.next2()
-                    let newResult = mapper.shift(pixel: base, sampler: sampler, params: ShiftMappingParams(offsets: nil))
+                    let newResult = mapper.shift(pixel: base, sampler: sampler, params: ShiftMappingParams(offsets: nil, maxDepth: maxDepth))
                     if sanitize && newResult.main.luminance > 100 {
                         img[lx+1, ly+1] += newResult.main / newResult.main.luminance
                     } else {

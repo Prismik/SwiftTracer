@@ -19,6 +19,7 @@ final class PssmltIntegrator: Integrator {
         /// Mutating strategy used in the sampler.
         case mutator
         case heatmap
+        case maxDepth
     }
     
     internal struct StateMCMC {
@@ -74,13 +75,15 @@ final class PssmltIntegrator: Integrator {
     private var heatmap: Heatmap?
     private var blankBuffer: PixelBuffer!
     private let mutator: PrimarySpaceMutation.Type
-
-    init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator, heatmap: Bool, mutator: PrimarySpaceMutation.Type) {
+    private let maxDepth: Int
+    
+    init(samplesPerChain: Int, initSamplesCount: Int, integrator: SamplerIntegrator, heatmap: Bool, mutator: PrimarySpaceMutation.Type, maxDepth: Int) {
         self.nspc = samplesPerChain
         self.isc = initSamplesCount
         self.integrator = integrator
         self.heatmap = heatmap ? Heatmap(floor: Color(0, 0, 1), ceil: Color(1, 1, 0)) : nil
         self.mutator = mutator
+        self.maxDepth = maxDepth
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 

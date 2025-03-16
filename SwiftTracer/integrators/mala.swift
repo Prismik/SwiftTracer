@@ -16,6 +16,7 @@ final class MalaIntegrator: Integrator {
         case initSamplesCount
         case step
         case mutator
+        case maxDepth
     }
     
     let identifier = "mala"
@@ -97,18 +98,19 @@ final class MalaIntegrator: Integrator {
     private let mapper: ShiftMapping
     private let integrator: SamplerIntegrator
     private let mutator: PrimarySpaceMutation.Type
+    private let maxDepth: Int
     
     private let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
     private var blankBuffer: PixelBuffer!
 
-    init(mapper: ShiftMapping, samplesPerChain: Int, initSamplesCount: Int, step: Float, mutator: PrimarySpaceMutation.Type) {
+    init(mapper: ShiftMapping, samplesPerChain: Int, initSamplesCount: Int, step: Float, mutator: PrimarySpaceMutation.Type, maxDepth: Int) {
         self.mapper = mapper
         self.spc = samplesPerChain
         self.isc = initSamplesCount
         self.step = step
-        
         self.integrator = PathIntegrator(minDepth: 0, maxDepth: 16)
         self.mutator = mutator
+        self.maxDepth = maxDepth
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
     }
 
@@ -164,7 +166,7 @@ final class MalaIntegrator: Integrator {
         let x = min(scene.camera.resolution.x * rng2.x, scene.camera.resolution.x - 1)
         let y = min(scene.camera.resolution.y * rng2.y, scene.camera.resolution.y - 1)
         let pixel = Vec2(Float(x), Float(y))
-        let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil))
+        let result = mapper.shift(pixel: pixel, sampler: sampler, params: ShiftMappingParams(offsets: nil, maxDepth: maxDepth))
         let dx = (result.radiances[1] - result.radiances[0]) * 0.5
         let dy = (result.radiances[3] - result.radiances[2]) * 0.5
         let gradient = Vec2(dx.luminance, dy.luminance)
