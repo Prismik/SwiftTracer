@@ -8,6 +8,7 @@
 import Foundation
 
 struct PFM: ImageEncoding {
+    // TODO add a pfm reader
     func read(file: URL) -> PixelBuffer? {
         let result = PixelBuffer()
         return result
