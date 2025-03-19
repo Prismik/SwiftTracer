@@ -12,6 +12,9 @@
                     -0.151355, 0.027981, -0.988083, 5.88653,
                     0, 0, 0, 1
                 ]
+            },
+            {
+                "translate": [0, 0, -2.7]
             }
         ],
         "fov": 60,
@@ -22,7 +25,7 @@
     },
     "sampler": {
         "type": "independent",
-        "nspp": 24
+        "nspp": 10000
     },
     "integrator": {
         "type": "path",
@@ -33,6 +36,7 @@
             "timeout": 1800,
             "heatmap": true,
             "strategy": "emitter",
+            "maxDepth": 17,
             "integrator": {
                 "type": "path",
                 "params": {
@@ -248,16 +252,28 @@
         "type": { "category": "infinite" },
         "radiance": {
             "type": "texture",
-            "filename": "assets/envmap.png"
+            "filename": "assets/envmap.exr"
         },
         "transform": [
             {
-                "angle": -90,
+                "angle": 180,
+                "axis": [1, 1, 0]
+            },
+            {
+                "angle": 90,
                 "axis": [0, 1, 0]
             },
             {
-                "angle": -95,
+                "angle": -125,
+                "axis": [0, 0, 1]
+            },
+            {
+                "angle": 2,
                 "axis": [1, 0, 0]
+            },
+            {
+                "angle": 1,
+                "axis": [0, 1, 0]
             }
         ]
     }],

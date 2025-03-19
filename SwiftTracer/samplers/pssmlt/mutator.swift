@@ -151,11 +151,27 @@ final class StratifiedMutation: PrimarySpaceMutation {
     }
     
     func mutate(u: [PSSMLTSampler.PrimarySample], i: Int) -> Float {
-        let value = u[i].value
-        let rand = sampler.gen()
+        var result = u[i].value
+        var rand = sampler.gen()
+        let add: Bool
+        if rand < 0.5 {
+            add = true
+            rand *= 2
+        } else {
+            add = false
+            rand = 2 * (rand - 0.5)
+        }
+
         let s = log(exp(-alpha * sMin) - ((alpha * rand) / beta))
-        
-        return (value + s).modulo(1.0)
+        if add {
+            result += s
+            if result > 1 { result -= 1 }
+        } else {
+            result -= s
+            if result < 0 { result += 1 }
+        }
+
+        return result
     }
 }
 
