@@ -11,25 +11,26 @@
     "background": [0, 0, 0],
     "sampler": {
         "type": "independent",
-        "nspp": 8
+        "nspp": 50
     },
     "integrator": {
-        "type": "mala",
+        "type": "gdmala",
         "params": {
             "samplesPerChain": 1000,
             "initSamplesCount": 100000,
-            "mis": false,
+            "mis": true,
             "strategy": "mis",
             "step": 0.05,
+            "timeout": 600,
             "targetFunction": "gradient",
             "kernel": "simple",
+            "mutator": { "type": "mala" },
             "normalization": 0.16258244,
             "shiftMapping": { "type": "pathReconnection" },
             "reconstruction": {
                 "type": "iterative",
                 "maxIterations": 50
             },
-            "timeout": 300,
             "integrator": {
                 "type": "path",
                 "params": {
@@ -38,8 +39,9 @@
                     "mis": true,
                     "strategy": "mis",
                     "step": 0.05,
-                    "targetFunction": "luminance",
-                    "kernel": "shifted",
+                    "targetFunction": "gradient",
+                    "kernel": "simple",
+                    "mutator": { "type": "mala" },
                     "normalization": 0.16258244,
                     "shiftMapping": { "type": "pathReconnection" },
                     "reconstruction": {

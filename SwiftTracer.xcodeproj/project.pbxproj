@@ -150,24 +150,14 @@
 		197A10B12D2C39D9000ACF3B /* environmentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197A10B02D2C39B0000ACF3B /* environmentMap.swift */; };
 		197A10B22D2C39D9000ACF3B /* environmentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197A10B02D2C39B0000ACF3B /* environmentMap.swift */; };
 		197A10B92D2DC022000ACF3B /* envmap.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 197A10B32D2DBA3D000ACF3B /* envmap.json */; };
-		197A10BA2D2DC022000ACF3B /* envmap.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 197A10B72D2DBB21000ACF3B /* envmap.png */; };
 		1982F6B32C9B8757000FF286 /* PNG in Frameworks */ = {isa = PBXBuildFile; productRef = 1982F6B22C9B8757000FF286 /* PNG */; };
 		1986951F2C2F367A00EEF672 /* constantEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1986951E2C2F367A00EEF672 /* constantEnvironment.swift */; };
 		198B95672D553C5A003DB0CF /* gdmala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198B95662D553C58003DB0CF /* gdmala.swift */; };
 		198B95682D553C5A003DB0CF /* gdmala.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198B95662D553C58003DB0CF /* gdmala.swift */; };
 		198B956D2D5E64AF003DB0CF /* bidir.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B956B2D5E5EC1003DB0CF /* bidir.json */; };
-		198B95862D5E650A003DB0CF /* bidir-Mesh000.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B956E2D5E6501003DB0CF /* bidir-Mesh000.obj */; };
-		198B95872D5E650A003DB0CF /* bidir-Mesh001.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B956F2D5E6501003DB0CF /* bidir-Mesh001.obj */; };
-		198B95882D5E650A003DB0CF /* bidir-Mesh002.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95702D5E6501003DB0CF /* bidir-Mesh002.obj */; };
-		198B95892D5E650A003DB0CF /* bidir-Mesh003.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95712D5E6501003DB0CF /* bidir-Mesh003.obj */; };
-		198B958A2D5E650A003DB0CF /* bidir-Mesh004.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95722D5E6501003DB0CF /* bidir-Mesh004.obj */; };
-		198B958B2D5E650A003DB0CF /* bidir-Mesh005.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95732D5E6501003DB0CF /* bidir-Mesh005.obj */; };
-		198B958C2D5E650A003DB0CF /* bidir-Mesh006.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95742D5E6501003DB0CF /* bidir-Mesh006.obj */; };
 		198B958D2D5E650A003DB0CF /* bidir-Mesh007.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95752D5E6501003DB0CF /* bidir-Mesh007.obj */; };
 		198B958E2D5E650A003DB0CF /* bidir-Mesh008.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95762D5E6501003DB0CF /* bidir-Mesh008.obj */; };
-		198B958F2D5E650A003DB0CF /* bidir-Mesh009.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95772D5E6501003DB0CF /* bidir-Mesh009.obj */; };
 		198B95902D5E650A003DB0CF /* bidir-Mesh010.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95782D5E6501003DB0CF /* bidir-Mesh010.obj */; };
-		198B95912D5E650A003DB0CF /* bidir-Mesh011.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95792D5E6501003DB0CF /* bidir-Mesh011.obj */; };
 		198B95972D6D21B9003DB0CF /* materials.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95952D6D2014003DB0CF /* materials.json */; };
 		198B959A2D6D23F3003DB0CF /* sphere.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 198B95982D6D22D9003DB0CF /* sphere.obj */; };
 		1999D04D2C0E3F5900358201 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1999D0462C0E3F5200358201 /* teapot.obj */; };
@@ -207,6 +197,98 @@
 		1999D0D52C17A12200358201 /* blend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1999D08B2C10F37D00358201 /* blend.swift */; };
 		1999D0D62C17A24B00358201 /* image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EFB3CA2C03B88B005CC488 /* image.swift */; };
 		1999D0D92C17AC2F00358201 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 1999D0D82C17AC2F00358201 /* Progress */; };
+		19B3597D2D8798F400FFC282 /* bidir-Mesh000.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359652D8798D800FFC282 /* bidir-Mesh000.obj */; };
+		19B3597E2D8798F400FFC282 /* bidir-Mesh001.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359662D8798D800FFC282 /* bidir-Mesh001.obj */; };
+		19B3597F2D8798F400FFC282 /* bidir-Mesh002.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359672D8798D800FFC282 /* bidir-Mesh002.obj */; };
+		19B359802D8798F400FFC282 /* bidir-Mesh003.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359682D8798D800FFC282 /* bidir-Mesh003.obj */; };
+		19B359812D8798F400FFC282 /* bidir-Mesh004.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359692D8798D800FFC282 /* bidir-Mesh004.obj */; };
+		19B359822D8798F400FFC282 /* bidir-Mesh005.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B3596A2D8798D800FFC282 /* bidir-Mesh005.obj */; };
+		19B359832D8798F400FFC282 /* bidir-Mesh006.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B3596B2D8798D800FFC282 /* bidir-Mesh006.obj */; };
+		19B359842D8798F400FFC282 /* bidir-Mesh009.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B3596E2D8798D800FFC282 /* bidir-Mesh009.obj */; };
+		19B359852D8798F400FFC282 /* bidir-Mesh011.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359702D8798D800FFC282 /* bidir-Mesh011.obj */; };
+		19B35A032D8B363D00FFC282 /* envmap.exr in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359D42D8B361400FFC282 /* envmap.exr */; };
+		19B35A042D8B363D00FFC282 /* blackboard.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359D62D8B362300FFC282 /* blackboard.jpg */; };
+		19B35A052D8B363D00FFC282 /* wood1.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359D72D8B362300FFC282 /* wood1.jpg */; };
+		19B35A062D8B363D00FFC282 /* wood2.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B359D82D8B362300FFC282 /* wood2.jpg */; };
+		19B35B3D2D8B375500FFC282 /* classroom-Mesh000.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35A9F2D8B374300FFC282 /* classroom-Mesh000.obj */; };
+		19B35B3E2D8B375500FFC282 /* classroom-Mesh001.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA02D8B374300FFC282 /* classroom-Mesh001.obj */; };
+		19B35B3F2D8B375500FFC282 /* classroom-Mesh002.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA12D8B374300FFC282 /* classroom-Mesh002.obj */; };
+		19B35B402D8B375500FFC282 /* classroom-Mesh003.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA22D8B374300FFC282 /* classroom-Mesh003.obj */; };
+		19B35B412D8B375500FFC282 /* classroom-Mesh004.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA32D8B374300FFC282 /* classroom-Mesh004.obj */; };
+		19B35B422D8B375500FFC282 /* classroom-Mesh005.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA42D8B374300FFC282 /* classroom-Mesh005.obj */; };
+		19B35B432D8B375500FFC282 /* classroom-Mesh006.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA52D8B374300FFC282 /* classroom-Mesh006.obj */; };
+		19B35B442D8B375500FFC282 /* classroom-Mesh007.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA62D8B374300FFC282 /* classroom-Mesh007.obj */; };
+		19B35B452D8B375500FFC282 /* classroom-Mesh008.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA72D8B374300FFC282 /* classroom-Mesh008.obj */; };
+		19B35B462D8B375500FFC282 /* classroom-Mesh009.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA82D8B374300FFC282 /* classroom-Mesh009.obj */; };
+		19B35B472D8B375500FFC282 /* classroom-Mesh010.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AA92D8B374300FFC282 /* classroom-Mesh010.obj */; };
+		19B35B482D8B375500FFC282 /* classroom-Mesh011.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AAA2D8B374300FFC282 /* classroom-Mesh011.obj */; };
+		19B35B492D8B375500FFC282 /* classroom-Mesh012.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AAB2D8B374300FFC282 /* classroom-Mesh012.obj */; };
+		19B35B4A2D8B375500FFC282 /* classroom-Mesh013.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AAC2D8B374300FFC282 /* classroom-Mesh013.obj */; };
+		19B35B4B2D8B375500FFC282 /* classroom-Mesh014.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AAD2D8B374300FFC282 /* classroom-Mesh014.obj */; };
+		19B35B4C2D8B375500FFC282 /* classroom-Mesh015.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AAE2D8B374300FFC282 /* classroom-Mesh015.obj */; };
+		19B35B4D2D8B375500FFC282 /* classroom-Mesh016.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AAF2D8B374300FFC282 /* classroom-Mesh016.obj */; };
+		19B35B4E2D8B375500FFC282 /* classroom-Mesh017.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB02D8B374300FFC282 /* classroom-Mesh017.obj */; };
+		19B35B4F2D8B375500FFC282 /* classroom-Mesh018.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB12D8B374300FFC282 /* classroom-Mesh018.obj */; };
+		19B35B502D8B375500FFC282 /* classroom-Mesh019.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB22D8B374300FFC282 /* classroom-Mesh019.obj */; };
+		19B35B512D8B375500FFC282 /* classroom-Mesh020.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB32D8B374300FFC282 /* classroom-Mesh020.obj */; };
+		19B35B522D8B375500FFC282 /* classroom-Mesh021.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB42D8B374300FFC282 /* classroom-Mesh021.obj */; };
+		19B35B532D8B375500FFC282 /* classroom-Mesh022.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB52D8B374300FFC282 /* classroom-Mesh022.obj */; };
+		19B35B542D8B375500FFC282 /* classroom-Mesh023.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB62D8B374300FFC282 /* classroom-Mesh023.obj */; };
+		19B35B552D8B375500FFC282 /* classroom-Mesh024.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB72D8B374300FFC282 /* classroom-Mesh024.obj */; };
+		19B35B562D8B375500FFC282 /* classroom-Mesh025.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB82D8B374300FFC282 /* classroom-Mesh025.obj */; };
+		19B35B572D8B375500FFC282 /* classroom-Mesh026.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AB92D8B374300FFC282 /* classroom-Mesh026.obj */; };
+		19B35B582D8B375500FFC282 /* classroom-Mesh027.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ABA2D8B374300FFC282 /* classroom-Mesh027.obj */; };
+		19B35B592D8B375500FFC282 /* classroom-Mesh028.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ABB2D8B374300FFC282 /* classroom-Mesh028.obj */; };
+		19B35B5A2D8B375500FFC282 /* classroom-Mesh029.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ABC2D8B374300FFC282 /* classroom-Mesh029.obj */; };
+		19B35B5B2D8B375500FFC282 /* classroom-Mesh030.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ABD2D8B374300FFC282 /* classroom-Mesh030.obj */; };
+		19B35B5C2D8B375500FFC282 /* classroom-Mesh031.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ABE2D8B374300FFC282 /* classroom-Mesh031.obj */; };
+		19B35B5D2D8B375500FFC282 /* classroom-Mesh032.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ABF2D8B374300FFC282 /* classroom-Mesh032.obj */; };
+		19B35B5E2D8B375500FFC282 /* classroom-Mesh033.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC02D8B374300FFC282 /* classroom-Mesh033.obj */; };
+		19B35B5F2D8B375500FFC282 /* classroom-Mesh034.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC12D8B374300FFC282 /* classroom-Mesh034.obj */; };
+		19B35B602D8B375500FFC282 /* classroom-Mesh035.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC22D8B374300FFC282 /* classroom-Mesh035.obj */; };
+		19B35B612D8B375500FFC282 /* classroom-Mesh036.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC32D8B374300FFC282 /* classroom-Mesh036.obj */; };
+		19B35B622D8B375500FFC282 /* classroom-Mesh037.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC42D8B374300FFC282 /* classroom-Mesh037.obj */; };
+		19B35B632D8B375500FFC282 /* classroom-Mesh038.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC52D8B374300FFC282 /* classroom-Mesh038.obj */; };
+		19B35B642D8B375500FFC282 /* classroom-Mesh039.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC62D8B374300FFC282 /* classroom-Mesh039.obj */; };
+		19B35B652D8B375500FFC282 /* classroom-Mesh040.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC72D8B374300FFC282 /* classroom-Mesh040.obj */; };
+		19B35B662D8B375500FFC282 /* classroom-Mesh041.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC82D8B374300FFC282 /* classroom-Mesh041.obj */; };
+		19B35B672D8B375500FFC282 /* classroom-Mesh042.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AC92D8B374300FFC282 /* classroom-Mesh042.obj */; };
+		19B35B682D8B375500FFC282 /* classroom-Mesh043.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ACA2D8B374300FFC282 /* classroom-Mesh043.obj */; };
+		19B35B692D8B375500FFC282 /* classroom-Mesh044.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ACB2D8B374300FFC282 /* classroom-Mesh044.obj */; };
+		19B35B6A2D8B375500FFC282 /* classroom-Mesh045.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ACC2D8B374300FFC282 /* classroom-Mesh045.obj */; };
+		19B35B6B2D8B375500FFC282 /* classroom-Mesh046.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ACD2D8B374300FFC282 /* classroom-Mesh046.obj */; };
+		19B35B6C2D8B375500FFC282 /* classroom-Mesh047.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ACE2D8B374300FFC282 /* classroom-Mesh047.obj */; };
+		19B35B6D2D8B375500FFC282 /* classroom-Mesh048.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ACF2D8B374300FFC282 /* classroom-Mesh048.obj */; };
+		19B35B6E2D8B375500FFC282 /* classroom-Mesh049.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD02D8B374300FFC282 /* classroom-Mesh049.obj */; };
+		19B35B6F2D8B375500FFC282 /* classroom-Mesh050.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD12D8B374300FFC282 /* classroom-Mesh050.obj */; };
+		19B35B702D8B375500FFC282 /* classroom-Mesh051.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD22D8B374300FFC282 /* classroom-Mesh051.obj */; };
+		19B35B712D8B375500FFC282 /* classroom-Mesh052.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD32D8B374300FFC282 /* classroom-Mesh052.obj */; };
+		19B35B722D8B375500FFC282 /* classroom-Mesh053.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD42D8B374300FFC282 /* classroom-Mesh053.obj */; };
+		19B35B732D8B375500FFC282 /* classroom-Mesh054.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD52D8B374300FFC282 /* classroom-Mesh054.obj */; };
+		19B35B742D8B375500FFC282 /* classroom-Mesh055.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD62D8B374300FFC282 /* classroom-Mesh055.obj */; };
+		19B35B752D8B375500FFC282 /* classroom-Mesh056.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD72D8B374300FFC282 /* classroom-Mesh056.obj */; };
+		19B35B762D8B375500FFC282 /* classroom-Mesh057.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD82D8B374300FFC282 /* classroom-Mesh057.obj */; };
+		19B35B772D8B375500FFC282 /* classroom-Mesh058.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AD92D8B374300FFC282 /* classroom-Mesh058.obj */; };
+		19B35B782D8B375500FFC282 /* classroom-Mesh059.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ADA2D8B374300FFC282 /* classroom-Mesh059.obj */; };
+		19B35B792D8B375500FFC282 /* classroom-Mesh060.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ADB2D8B374300FFC282 /* classroom-Mesh060.obj */; };
+		19B35B7A2D8B375500FFC282 /* classroom-Mesh061.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ADC2D8B374300FFC282 /* classroom-Mesh061.obj */; };
+		19B35B7B2D8B375500FFC282 /* classroom-Mesh062.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ADD2D8B374300FFC282 /* classroom-Mesh062.obj */; };
+		19B35B7C2D8B375500FFC282 /* classroom-Mesh063.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ADE2D8B374300FFC282 /* classroom-Mesh063.obj */; };
+		19B35B7D2D8B375500FFC282 /* classroom-Mesh064.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35ADF2D8B374300FFC282 /* classroom-Mesh064.obj */; };
+		19B35B7E2D8B375500FFC282 /* classroom-Mesh065.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE02D8B374300FFC282 /* classroom-Mesh065.obj */; };
+		19B35B7F2D8B375500FFC282 /* classroom-Mesh066.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE12D8B374300FFC282 /* classroom-Mesh066.obj */; };
+		19B35B802D8B375500FFC282 /* classroom-Mesh067.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE22D8B374300FFC282 /* classroom-Mesh067.obj */; };
+		19B35B812D8B375500FFC282 /* classroom-Mesh068.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE32D8B374300FFC282 /* classroom-Mesh068.obj */; };
+		19B35B822D8B375500FFC282 /* classroom-Mesh069.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE42D8B374300FFC282 /* classroom-Mesh069.obj */; };
+		19B35B832D8B375500FFC282 /* classroom-Mesh070.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE52D8B374300FFC282 /* classroom-Mesh070.obj */; };
+		19B35B842D8B375500FFC282 /* classroom-Mesh071.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE62D8B374300FFC282 /* classroom-Mesh071.obj */; };
+		19B35B852D8B375500FFC282 /* classroom-Mesh072.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE72D8B374300FFC282 /* classroom-Mesh072.obj */; };
+		19B35B862D8B375500FFC282 /* classroom-Mesh073.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE82D8B374300FFC282 /* classroom-Mesh073.obj */; };
+		19B35B872D8B375500FFC282 /* classroom-Mesh074.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AE92D8B374300FFC282 /* classroom-Mesh074.obj */; };
+		19B35B882D8B375500FFC282 /* classroom-Mesh075.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AEA2D8B374300FFC282 /* classroom-Mesh075.obj */; };
+		19B35B892D8B375500FFC282 /* classroom-Mesh076.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AEB2D8B374300FFC282 /* classroom-Mesh076.obj */; };
+		19B35B8A2D8B375500FFC282 /* classroom-Mesh077.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AEC2D8B374300FFC282 /* classroom-Mesh077.obj */; };
+		19B35B8B2D8B375500FFC282 /* classroom-Mesh078.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19B35AED2D8B374300FFC282 /* classroom-Mesh078.obj */; };
 		19BBA71A2BF7D32F00981204 /* transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7192BF7D32F00981204 /* transform.swift */; };
 		19BBA71D2BF7D3A400981204 /* matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA71C2BF7D3A400981204 /* matrix.swift */; };
 		19BBA7232BF82CE800981204 /* ray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBA7222BF82CE800981204 /* ray.swift */; };
@@ -289,25 +371,107 @@
 			dstPath = assets;
 			dstSubfolderSpec = 7;
 			files = (
+				19B35B3D2D8B375500FFC282 /* classroom-Mesh000.obj in CopyFiles */,
+				19B35B3E2D8B375500FFC282 /* classroom-Mesh001.obj in CopyFiles */,
+				19B35B3F2D8B375500FFC282 /* classroom-Mesh002.obj in CopyFiles */,
+				19B35B402D8B375500FFC282 /* classroom-Mesh003.obj in CopyFiles */,
+				19B35B412D8B375500FFC282 /* classroom-Mesh004.obj in CopyFiles */,
+				19B35B422D8B375500FFC282 /* classroom-Mesh005.obj in CopyFiles */,
+				19B35B432D8B375500FFC282 /* classroom-Mesh006.obj in CopyFiles */,
+				19B35B442D8B375500FFC282 /* classroom-Mesh007.obj in CopyFiles */,
+				19B35B452D8B375500FFC282 /* classroom-Mesh008.obj in CopyFiles */,
+				19B35B462D8B375500FFC282 /* classroom-Mesh009.obj in CopyFiles */,
+				19B35B472D8B375500FFC282 /* classroom-Mesh010.obj in CopyFiles */,
+				19B35B482D8B375500FFC282 /* classroom-Mesh011.obj in CopyFiles */,
+				19B35B492D8B375500FFC282 /* classroom-Mesh012.obj in CopyFiles */,
+				19B35B4A2D8B375500FFC282 /* classroom-Mesh013.obj in CopyFiles */,
+				19B35B4B2D8B375500FFC282 /* classroom-Mesh014.obj in CopyFiles */,
+				19B35B4C2D8B375500FFC282 /* classroom-Mesh015.obj in CopyFiles */,
+				19B35B4D2D8B375500FFC282 /* classroom-Mesh016.obj in CopyFiles */,
+				19B35B4E2D8B375500FFC282 /* classroom-Mesh017.obj in CopyFiles */,
+				19B35B4F2D8B375500FFC282 /* classroom-Mesh018.obj in CopyFiles */,
+				19B35B502D8B375500FFC282 /* classroom-Mesh019.obj in CopyFiles */,
+				19B35B512D8B375500FFC282 /* classroom-Mesh020.obj in CopyFiles */,
+				19B35B522D8B375500FFC282 /* classroom-Mesh021.obj in CopyFiles */,
+				19B35B532D8B375500FFC282 /* classroom-Mesh022.obj in CopyFiles */,
+				19B35B542D8B375500FFC282 /* classroom-Mesh023.obj in CopyFiles */,
+				19B35B552D8B375500FFC282 /* classroom-Mesh024.obj in CopyFiles */,
+				19B35B562D8B375500FFC282 /* classroom-Mesh025.obj in CopyFiles */,
+				19B35B572D8B375500FFC282 /* classroom-Mesh026.obj in CopyFiles */,
+				19B35B582D8B375500FFC282 /* classroom-Mesh027.obj in CopyFiles */,
+				19B35B592D8B375500FFC282 /* classroom-Mesh028.obj in CopyFiles */,
+				19B35B5A2D8B375500FFC282 /* classroom-Mesh029.obj in CopyFiles */,
+				19B35B5B2D8B375500FFC282 /* classroom-Mesh030.obj in CopyFiles */,
+				19B35B5C2D8B375500FFC282 /* classroom-Mesh031.obj in CopyFiles */,
+				19B35B5D2D8B375500FFC282 /* classroom-Mesh032.obj in CopyFiles */,
+				19B35B5E2D8B375500FFC282 /* classroom-Mesh033.obj in CopyFiles */,
+				19B35B5F2D8B375500FFC282 /* classroom-Mesh034.obj in CopyFiles */,
+				19B35B602D8B375500FFC282 /* classroom-Mesh035.obj in CopyFiles */,
+				19B35B612D8B375500FFC282 /* classroom-Mesh036.obj in CopyFiles */,
+				19B35B622D8B375500FFC282 /* classroom-Mesh037.obj in CopyFiles */,
+				19B35B632D8B375500FFC282 /* classroom-Mesh038.obj in CopyFiles */,
+				19B35B642D8B375500FFC282 /* classroom-Mesh039.obj in CopyFiles */,
+				19B35B652D8B375500FFC282 /* classroom-Mesh040.obj in CopyFiles */,
+				19B35B662D8B375500FFC282 /* classroom-Mesh041.obj in CopyFiles */,
+				19B35B672D8B375500FFC282 /* classroom-Mesh042.obj in CopyFiles */,
+				19B35B682D8B375500FFC282 /* classroom-Mesh043.obj in CopyFiles */,
+				19B35B692D8B375500FFC282 /* classroom-Mesh044.obj in CopyFiles */,
+				19B35B6A2D8B375500FFC282 /* classroom-Mesh045.obj in CopyFiles */,
+				19B35B6B2D8B375500FFC282 /* classroom-Mesh046.obj in CopyFiles */,
+				19B35B6C2D8B375500FFC282 /* classroom-Mesh047.obj in CopyFiles */,
+				19B35B6D2D8B375500FFC282 /* classroom-Mesh048.obj in CopyFiles */,
+				19B35B6E2D8B375500FFC282 /* classroom-Mesh049.obj in CopyFiles */,
+				19B35B6F2D8B375500FFC282 /* classroom-Mesh050.obj in CopyFiles */,
+				19B35B702D8B375500FFC282 /* classroom-Mesh051.obj in CopyFiles */,
+				19B35B712D8B375500FFC282 /* classroom-Mesh052.obj in CopyFiles */,
+				19B35B722D8B375500FFC282 /* classroom-Mesh053.obj in CopyFiles */,
+				19B35B732D8B375500FFC282 /* classroom-Mesh054.obj in CopyFiles */,
+				19B35B742D8B375500FFC282 /* classroom-Mesh055.obj in CopyFiles */,
+				19B35B752D8B375500FFC282 /* classroom-Mesh056.obj in CopyFiles */,
+				19B35B762D8B375500FFC282 /* classroom-Mesh057.obj in CopyFiles */,
+				19B35B772D8B375500FFC282 /* classroom-Mesh058.obj in CopyFiles */,
+				19B35B782D8B375500FFC282 /* classroom-Mesh059.obj in CopyFiles */,
+				19B35B792D8B375500FFC282 /* classroom-Mesh060.obj in CopyFiles */,
+				19B35B7A2D8B375500FFC282 /* classroom-Mesh061.obj in CopyFiles */,
+				19B35B7B2D8B375500FFC282 /* classroom-Mesh062.obj in CopyFiles */,
+				19B35B7C2D8B375500FFC282 /* classroom-Mesh063.obj in CopyFiles */,
+				19B35B7D2D8B375500FFC282 /* classroom-Mesh064.obj in CopyFiles */,
+				19B35B7E2D8B375500FFC282 /* classroom-Mesh065.obj in CopyFiles */,
+				19B35B7F2D8B375500FFC282 /* classroom-Mesh066.obj in CopyFiles */,
+				19B35B802D8B375500FFC282 /* classroom-Mesh067.obj in CopyFiles */,
+				19B35B812D8B375500FFC282 /* classroom-Mesh068.obj in CopyFiles */,
+				19B35B822D8B375500FFC282 /* classroom-Mesh069.obj in CopyFiles */,
+				19B35B832D8B375500FFC282 /* classroom-Mesh070.obj in CopyFiles */,
+				19B35B842D8B375500FFC282 /* classroom-Mesh071.obj in CopyFiles */,
+				19B35B852D8B375500FFC282 /* classroom-Mesh072.obj in CopyFiles */,
+				19B35B862D8B375500FFC282 /* classroom-Mesh073.obj in CopyFiles */,
+				19B35B872D8B375500FFC282 /* classroom-Mesh074.obj in CopyFiles */,
+				19B35B882D8B375500FFC282 /* classroom-Mesh075.obj in CopyFiles */,
+				19B35B892D8B375500FFC282 /* classroom-Mesh076.obj in CopyFiles */,
+				19B35B8A2D8B375500FFC282 /* classroom-Mesh077.obj in CopyFiles */,
+				19B35B8B2D8B375500FFC282 /* classroom-Mesh078.obj in CopyFiles */,
+				19B35A032D8B363D00FFC282 /* envmap.exr in CopyFiles */,
+				19B35A042D8B363D00FFC282 /* blackboard.jpg in CopyFiles */,
+				19B35A052D8B363D00FFC282 /* wood1.jpg in CopyFiles */,
+				19B35A062D8B363D00FFC282 /* wood2.jpg in CopyFiles */,
+				19B3597D2D8798F400FFC282 /* bidir-Mesh000.obj in CopyFiles */,
+				19B3597E2D8798F400FFC282 /* bidir-Mesh001.obj in CopyFiles */,
+				19B3597F2D8798F400FFC282 /* bidir-Mesh002.obj in CopyFiles */,
+				19B359802D8798F400FFC282 /* bidir-Mesh003.obj in CopyFiles */,
+				19B359812D8798F400FFC282 /* bidir-Mesh004.obj in CopyFiles */,
+				19B359822D8798F400FFC282 /* bidir-Mesh005.obj in CopyFiles */,
+				19B359832D8798F400FFC282 /* bidir-Mesh006.obj in CopyFiles */,
+				19B359842D8798F400FFC282 /* bidir-Mesh009.obj in CopyFiles */,
+				19B359852D8798F400FFC282 /* bidir-Mesh011.obj in CopyFiles */,
 				19C9C2CC2D764D0D00B17B2C /* cornelbox.json in CopyFiles */,
 				198B959A2D6D23F3003DB0CF /* sphere.obj in CopyFiles */,
 				198B95972D6D21B9003DB0CF /* materials.json in CopyFiles */,
-				198B95862D5E650A003DB0CF /* bidir-Mesh000.obj in CopyFiles */,
-				198B95872D5E650A003DB0CF /* bidir-Mesh001.obj in CopyFiles */,
-				198B95882D5E650A003DB0CF /* bidir-Mesh002.obj in CopyFiles */,
-				198B95892D5E650A003DB0CF /* bidir-Mesh003.obj in CopyFiles */,
-				198B958A2D5E650A003DB0CF /* bidir-Mesh004.obj in CopyFiles */,
-				198B958B2D5E650A003DB0CF /* bidir-Mesh005.obj in CopyFiles */,
-				198B958C2D5E650A003DB0CF /* bidir-Mesh006.obj in CopyFiles */,
 				198B958D2D5E650A003DB0CF /* bidir-Mesh007.obj in CopyFiles */,
 				198B958E2D5E650A003DB0CF /* bidir-Mesh008.obj in CopyFiles */,
-				198B958F2D5E650A003DB0CF /* bidir-Mesh009.obj in CopyFiles */,
 				198B95902D5E650A003DB0CF /* bidir-Mesh010.obj in CopyFiles */,
-				198B95912D5E650A003DB0CF /* bidir-Mesh011.obj in CopyFiles */,
 				198B956D2D5E64AF003DB0CF /* bidir.json in CopyFiles */,
 				196088D62D52F247000E98E2 /* classroom.json in CopyFiles */,
 				197A10B92D2DC022000ACF3B /* envmap.json in CopyFiles */,
-				197A10BA2D2DC022000ACF3B /* envmap.png in CopyFiles */,
 				1923B09B2CED08D50025245C /* Mesh001.obj in CopyFiles */,
 				1923B09C2CED08D50025245C /* Mesh005.obj in CopyFiles */,
 				1923B09D2CED08D50025245C /* Mesh006.obj in CopyFiles */,
@@ -393,22 +557,12 @@
 		19737CF02C2B478D00F49204 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		197A10B02D2C39B0000ACF3B /* environmentMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = environmentMap.swift; sourceTree = "<group>"; };
 		197A10B32D2DBA3D000ACF3B /* envmap.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = envmap.json; sourceTree = "<group>"; };
-		197A10B72D2DBB21000ACF3B /* envmap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = envmap.png; sourceTree = "<group>"; };
 		1986951E2C2F367A00EEF672 /* constantEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constantEnvironment.swift; sourceTree = "<group>"; };
 		198B95662D553C58003DB0CF /* gdmala.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gdmala.swift; sourceTree = "<group>"; };
 		198B956B2D5E5EC1003DB0CF /* bidir.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bidir.json; sourceTree = "<group>"; };
-		198B956E2D5E6501003DB0CF /* bidir-Mesh000.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh000.obj"; sourceTree = "<group>"; };
-		198B956F2D5E6501003DB0CF /* bidir-Mesh001.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh001.obj"; sourceTree = "<group>"; };
-		198B95702D5E6501003DB0CF /* bidir-Mesh002.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh002.obj"; sourceTree = "<group>"; };
-		198B95712D5E6501003DB0CF /* bidir-Mesh003.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh003.obj"; sourceTree = "<group>"; };
-		198B95722D5E6501003DB0CF /* bidir-Mesh004.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh004.obj"; sourceTree = "<group>"; };
-		198B95732D5E6501003DB0CF /* bidir-Mesh005.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh005.obj"; sourceTree = "<group>"; };
-		198B95742D5E6501003DB0CF /* bidir-Mesh006.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh006.obj"; sourceTree = "<group>"; };
 		198B95752D5E6501003DB0CF /* bidir-Mesh007.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh007.obj"; sourceTree = "<group>"; };
 		198B95762D5E6501003DB0CF /* bidir-Mesh008.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh008.obj"; sourceTree = "<group>"; };
-		198B95772D5E6501003DB0CF /* bidir-Mesh009.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh009.obj"; sourceTree = "<group>"; };
 		198B95782D5E6501003DB0CF /* bidir-Mesh010.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh010.obj"; sourceTree = "<group>"; };
-		198B95792D5E6501003DB0CF /* bidir-Mesh011.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh011.obj"; sourceTree = "<group>"; };
 		198B95952D6D2014003DB0CF /* materials.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = materials.json; sourceTree = "<group>"; };
 		198B95982D6D22D9003DB0CF /* sphere.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = sphere.obj; sourceTree = "<group>"; };
 		1999D0462C0E3F5200358201 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
@@ -420,6 +574,98 @@
 		1999D0AF2C1797A000358201 /* histogram */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = histogram; sourceTree = BUILT_PRODUCTS_DIR; };
 		1999D0B12C1797A000358201 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		1999D0BA2C17987F00358201 /* metal.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = metal.json; sourceTree = "<group>"; };
+		19B359652D8798D800FFC282 /* bidir-Mesh000.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh000.obj"; sourceTree = "<group>"; };
+		19B359662D8798D800FFC282 /* bidir-Mesh001.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh001.obj"; sourceTree = "<group>"; };
+		19B359672D8798D800FFC282 /* bidir-Mesh002.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh002.obj"; sourceTree = "<group>"; };
+		19B359682D8798D800FFC282 /* bidir-Mesh003.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh003.obj"; sourceTree = "<group>"; };
+		19B359692D8798D800FFC282 /* bidir-Mesh004.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh004.obj"; sourceTree = "<group>"; };
+		19B3596A2D8798D800FFC282 /* bidir-Mesh005.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh005.obj"; sourceTree = "<group>"; };
+		19B3596B2D8798D800FFC282 /* bidir-Mesh006.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh006.obj"; sourceTree = "<group>"; };
+		19B3596E2D8798D800FFC282 /* bidir-Mesh009.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh009.obj"; sourceTree = "<group>"; };
+		19B359702D8798D800FFC282 /* bidir-Mesh011.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bidir-Mesh011.obj"; sourceTree = "<group>"; };
+		19B359D42D8B361400FFC282 /* envmap.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = envmap.exr; sourceTree = "<group>"; };
+		19B359D62D8B362300FFC282 /* blackboard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blackboard.jpg; sourceTree = "<group>"; };
+		19B359D72D8B362300FFC282 /* wood1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wood1.jpg; sourceTree = "<group>"; };
+		19B359D82D8B362300FFC282 /* wood2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wood2.jpg; sourceTree = "<group>"; };
+		19B35A9F2D8B374300FFC282 /* classroom-Mesh000.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh000.obj"; sourceTree = "<group>"; };
+		19B35AA02D8B374300FFC282 /* classroom-Mesh001.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh001.obj"; sourceTree = "<group>"; };
+		19B35AA12D8B374300FFC282 /* classroom-Mesh002.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh002.obj"; sourceTree = "<group>"; };
+		19B35AA22D8B374300FFC282 /* classroom-Mesh003.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh003.obj"; sourceTree = "<group>"; };
+		19B35AA32D8B374300FFC282 /* classroom-Mesh004.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh004.obj"; sourceTree = "<group>"; };
+		19B35AA42D8B374300FFC282 /* classroom-Mesh005.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh005.obj"; sourceTree = "<group>"; };
+		19B35AA52D8B374300FFC282 /* classroom-Mesh006.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh006.obj"; sourceTree = "<group>"; };
+		19B35AA62D8B374300FFC282 /* classroom-Mesh007.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh007.obj"; sourceTree = "<group>"; };
+		19B35AA72D8B374300FFC282 /* classroom-Mesh008.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh008.obj"; sourceTree = "<group>"; };
+		19B35AA82D8B374300FFC282 /* classroom-Mesh009.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh009.obj"; sourceTree = "<group>"; };
+		19B35AA92D8B374300FFC282 /* classroom-Mesh010.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh010.obj"; sourceTree = "<group>"; };
+		19B35AAA2D8B374300FFC282 /* classroom-Mesh011.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh011.obj"; sourceTree = "<group>"; };
+		19B35AAB2D8B374300FFC282 /* classroom-Mesh012.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh012.obj"; sourceTree = "<group>"; };
+		19B35AAC2D8B374300FFC282 /* classroom-Mesh013.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh013.obj"; sourceTree = "<group>"; };
+		19B35AAD2D8B374300FFC282 /* classroom-Mesh014.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh014.obj"; sourceTree = "<group>"; };
+		19B35AAE2D8B374300FFC282 /* classroom-Mesh015.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh015.obj"; sourceTree = "<group>"; };
+		19B35AAF2D8B374300FFC282 /* classroom-Mesh016.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh016.obj"; sourceTree = "<group>"; };
+		19B35AB02D8B374300FFC282 /* classroom-Mesh017.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh017.obj"; sourceTree = "<group>"; };
+		19B35AB12D8B374300FFC282 /* classroom-Mesh018.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh018.obj"; sourceTree = "<group>"; };
+		19B35AB22D8B374300FFC282 /* classroom-Mesh019.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh019.obj"; sourceTree = "<group>"; };
+		19B35AB32D8B374300FFC282 /* classroom-Mesh020.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh020.obj"; sourceTree = "<group>"; };
+		19B35AB42D8B374300FFC282 /* classroom-Mesh021.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh021.obj"; sourceTree = "<group>"; };
+		19B35AB52D8B374300FFC282 /* classroom-Mesh022.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh022.obj"; sourceTree = "<group>"; };
+		19B35AB62D8B374300FFC282 /* classroom-Mesh023.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh023.obj"; sourceTree = "<group>"; };
+		19B35AB72D8B374300FFC282 /* classroom-Mesh024.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh024.obj"; sourceTree = "<group>"; };
+		19B35AB82D8B374300FFC282 /* classroom-Mesh025.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh025.obj"; sourceTree = "<group>"; };
+		19B35AB92D8B374300FFC282 /* classroom-Mesh026.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh026.obj"; sourceTree = "<group>"; };
+		19B35ABA2D8B374300FFC282 /* classroom-Mesh027.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh027.obj"; sourceTree = "<group>"; };
+		19B35ABB2D8B374300FFC282 /* classroom-Mesh028.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh028.obj"; sourceTree = "<group>"; };
+		19B35ABC2D8B374300FFC282 /* classroom-Mesh029.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh029.obj"; sourceTree = "<group>"; };
+		19B35ABD2D8B374300FFC282 /* classroom-Mesh030.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh030.obj"; sourceTree = "<group>"; };
+		19B35ABE2D8B374300FFC282 /* classroom-Mesh031.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh031.obj"; sourceTree = "<group>"; };
+		19B35ABF2D8B374300FFC282 /* classroom-Mesh032.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh032.obj"; sourceTree = "<group>"; };
+		19B35AC02D8B374300FFC282 /* classroom-Mesh033.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh033.obj"; sourceTree = "<group>"; };
+		19B35AC12D8B374300FFC282 /* classroom-Mesh034.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh034.obj"; sourceTree = "<group>"; };
+		19B35AC22D8B374300FFC282 /* classroom-Mesh035.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh035.obj"; sourceTree = "<group>"; };
+		19B35AC32D8B374300FFC282 /* classroom-Mesh036.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh036.obj"; sourceTree = "<group>"; };
+		19B35AC42D8B374300FFC282 /* classroom-Mesh037.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh037.obj"; sourceTree = "<group>"; };
+		19B35AC52D8B374300FFC282 /* classroom-Mesh038.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh038.obj"; sourceTree = "<group>"; };
+		19B35AC62D8B374300FFC282 /* classroom-Mesh039.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh039.obj"; sourceTree = "<group>"; };
+		19B35AC72D8B374300FFC282 /* classroom-Mesh040.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh040.obj"; sourceTree = "<group>"; };
+		19B35AC82D8B374300FFC282 /* classroom-Mesh041.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh041.obj"; sourceTree = "<group>"; };
+		19B35AC92D8B374300FFC282 /* classroom-Mesh042.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh042.obj"; sourceTree = "<group>"; };
+		19B35ACA2D8B374300FFC282 /* classroom-Mesh043.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh043.obj"; sourceTree = "<group>"; };
+		19B35ACB2D8B374300FFC282 /* classroom-Mesh044.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh044.obj"; sourceTree = "<group>"; };
+		19B35ACC2D8B374300FFC282 /* classroom-Mesh045.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh045.obj"; sourceTree = "<group>"; };
+		19B35ACD2D8B374300FFC282 /* classroom-Mesh046.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh046.obj"; sourceTree = "<group>"; };
+		19B35ACE2D8B374300FFC282 /* classroom-Mesh047.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh047.obj"; sourceTree = "<group>"; };
+		19B35ACF2D8B374300FFC282 /* classroom-Mesh048.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh048.obj"; sourceTree = "<group>"; };
+		19B35AD02D8B374300FFC282 /* classroom-Mesh049.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh049.obj"; sourceTree = "<group>"; };
+		19B35AD12D8B374300FFC282 /* classroom-Mesh050.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh050.obj"; sourceTree = "<group>"; };
+		19B35AD22D8B374300FFC282 /* classroom-Mesh051.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh051.obj"; sourceTree = "<group>"; };
+		19B35AD32D8B374300FFC282 /* classroom-Mesh052.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh052.obj"; sourceTree = "<group>"; };
+		19B35AD42D8B374300FFC282 /* classroom-Mesh053.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh053.obj"; sourceTree = "<group>"; };
+		19B35AD52D8B374300FFC282 /* classroom-Mesh054.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh054.obj"; sourceTree = "<group>"; };
+		19B35AD62D8B374300FFC282 /* classroom-Mesh055.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh055.obj"; sourceTree = "<group>"; };
+		19B35AD72D8B374300FFC282 /* classroom-Mesh056.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh056.obj"; sourceTree = "<group>"; };
+		19B35AD82D8B374300FFC282 /* classroom-Mesh057.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh057.obj"; sourceTree = "<group>"; };
+		19B35AD92D8B374300FFC282 /* classroom-Mesh058.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh058.obj"; sourceTree = "<group>"; };
+		19B35ADA2D8B374300FFC282 /* classroom-Mesh059.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh059.obj"; sourceTree = "<group>"; };
+		19B35ADB2D8B374300FFC282 /* classroom-Mesh060.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh060.obj"; sourceTree = "<group>"; };
+		19B35ADC2D8B374300FFC282 /* classroom-Mesh061.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh061.obj"; sourceTree = "<group>"; };
+		19B35ADD2D8B374300FFC282 /* classroom-Mesh062.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh062.obj"; sourceTree = "<group>"; };
+		19B35ADE2D8B374300FFC282 /* classroom-Mesh063.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh063.obj"; sourceTree = "<group>"; };
+		19B35ADF2D8B374300FFC282 /* classroom-Mesh064.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh064.obj"; sourceTree = "<group>"; };
+		19B35AE02D8B374300FFC282 /* classroom-Mesh065.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh065.obj"; sourceTree = "<group>"; };
+		19B35AE12D8B374300FFC282 /* classroom-Mesh066.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh066.obj"; sourceTree = "<group>"; };
+		19B35AE22D8B374300FFC282 /* classroom-Mesh067.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh067.obj"; sourceTree = "<group>"; };
+		19B35AE32D8B374300FFC282 /* classroom-Mesh068.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh068.obj"; sourceTree = "<group>"; };
+		19B35AE42D8B374300FFC282 /* classroom-Mesh069.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh069.obj"; sourceTree = "<group>"; };
+		19B35AE52D8B374300FFC282 /* classroom-Mesh070.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh070.obj"; sourceTree = "<group>"; };
+		19B35AE62D8B374300FFC282 /* classroom-Mesh071.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh071.obj"; sourceTree = "<group>"; };
+		19B35AE72D8B374300FFC282 /* classroom-Mesh072.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh072.obj"; sourceTree = "<group>"; };
+		19B35AE82D8B374300FFC282 /* classroom-Mesh073.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh073.obj"; sourceTree = "<group>"; };
+		19B35AE92D8B374300FFC282 /* classroom-Mesh074.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh074.obj"; sourceTree = "<group>"; };
+		19B35AEA2D8B374300FFC282 /* classroom-Mesh075.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh075.obj"; sourceTree = "<group>"; };
+		19B35AEB2D8B374300FFC282 /* classroom-Mesh076.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh076.obj"; sourceTree = "<group>"; };
+		19B35AEC2D8B374300FFC282 /* classroom-Mesh077.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh077.obj"; sourceTree = "<group>"; };
+		19B35AED2D8B374300FFC282 /* classroom-Mesh078.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "classroom-Mesh078.obj"; sourceTree = "<group>"; };
 		19BBA7192BF7D32F00981204 /* transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transform.swift; sourceTree = "<group>"; };
 		19BBA71C2BF7D3A400981204 /* matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = matrix.swift; sourceTree = "<group>"; };
 		19BBA7222BF82CE800981204 /* ray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ray.swift; sourceTree = "<group>"; };
@@ -592,19 +838,89 @@
 		1999D05C2C0FDEC600358201 /* mesh */ = {
 			isa = PBXGroup;
 			children = (
+				19B35A9F2D8B374300FFC282 /* classroom-Mesh000.obj */,
+				19B35AA02D8B374300FFC282 /* classroom-Mesh001.obj */,
+				19B35AA12D8B374300FFC282 /* classroom-Mesh002.obj */,
+				19B35AA22D8B374300FFC282 /* classroom-Mesh003.obj */,
+				19B35AA32D8B374300FFC282 /* classroom-Mesh004.obj */,
+				19B35AA42D8B374300FFC282 /* classroom-Mesh005.obj */,
+				19B35AA52D8B374300FFC282 /* classroom-Mesh006.obj */,
+				19B35AA62D8B374300FFC282 /* classroom-Mesh007.obj */,
+				19B35AA72D8B374300FFC282 /* classroom-Mesh008.obj */,
+				19B35AA82D8B374300FFC282 /* classroom-Mesh009.obj */,
+				19B35AA92D8B374300FFC282 /* classroom-Mesh010.obj */,
+				19B35AAA2D8B374300FFC282 /* classroom-Mesh011.obj */,
+				19B35AAB2D8B374300FFC282 /* classroom-Mesh012.obj */,
+				19B35AAC2D8B374300FFC282 /* classroom-Mesh013.obj */,
+				19B35AAD2D8B374300FFC282 /* classroom-Mesh014.obj */,
+				19B35AAE2D8B374300FFC282 /* classroom-Mesh015.obj */,
+				19B35AAF2D8B374300FFC282 /* classroom-Mesh016.obj */,
+				19B35AB02D8B374300FFC282 /* classroom-Mesh017.obj */,
+				19B35AB12D8B374300FFC282 /* classroom-Mesh018.obj */,
+				19B35AB22D8B374300FFC282 /* classroom-Mesh019.obj */,
+				19B35AB32D8B374300FFC282 /* classroom-Mesh020.obj */,
+				19B35AB42D8B374300FFC282 /* classroom-Mesh021.obj */,
+				19B35AB52D8B374300FFC282 /* classroom-Mesh022.obj */,
+				19B35AB62D8B374300FFC282 /* classroom-Mesh023.obj */,
+				19B35AB72D8B374300FFC282 /* classroom-Mesh024.obj */,
+				19B35AB82D8B374300FFC282 /* classroom-Mesh025.obj */,
+				19B35AB92D8B374300FFC282 /* classroom-Mesh026.obj */,
+				19B35ABA2D8B374300FFC282 /* classroom-Mesh027.obj */,
+				19B35ABB2D8B374300FFC282 /* classroom-Mesh028.obj */,
+				19B35ABC2D8B374300FFC282 /* classroom-Mesh029.obj */,
+				19B35ABD2D8B374300FFC282 /* classroom-Mesh030.obj */,
+				19B35ABE2D8B374300FFC282 /* classroom-Mesh031.obj */,
+				19B35ABF2D8B374300FFC282 /* classroom-Mesh032.obj */,
+				19B35AC02D8B374300FFC282 /* classroom-Mesh033.obj */,
+				19B35AC12D8B374300FFC282 /* classroom-Mesh034.obj */,
+				19B35AC22D8B374300FFC282 /* classroom-Mesh035.obj */,
+				19B35AC32D8B374300FFC282 /* classroom-Mesh036.obj */,
+				19B35AC42D8B374300FFC282 /* classroom-Mesh037.obj */,
+				19B35AC52D8B374300FFC282 /* classroom-Mesh038.obj */,
+				19B35AC62D8B374300FFC282 /* classroom-Mesh039.obj */,
+				19B35AC72D8B374300FFC282 /* classroom-Mesh040.obj */,
+				19B35AC82D8B374300FFC282 /* classroom-Mesh041.obj */,
+				19B35AC92D8B374300FFC282 /* classroom-Mesh042.obj */,
+				19B35ACA2D8B374300FFC282 /* classroom-Mesh043.obj */,
+				19B35ACB2D8B374300FFC282 /* classroom-Mesh044.obj */,
+				19B35ACC2D8B374300FFC282 /* classroom-Mesh045.obj */,
+				19B35ACD2D8B374300FFC282 /* classroom-Mesh046.obj */,
+				19B35ACE2D8B374300FFC282 /* classroom-Mesh047.obj */,
+				19B35ACF2D8B374300FFC282 /* classroom-Mesh048.obj */,
+				19B35AD02D8B374300FFC282 /* classroom-Mesh049.obj */,
+				19B35AD12D8B374300FFC282 /* classroom-Mesh050.obj */,
+				19B35AD22D8B374300FFC282 /* classroom-Mesh051.obj */,
+				19B35AD32D8B374300FFC282 /* classroom-Mesh052.obj */,
+				19B35AD42D8B374300FFC282 /* classroom-Mesh053.obj */,
+				19B35AD52D8B374300FFC282 /* classroom-Mesh054.obj */,
+				19B35AD62D8B374300FFC282 /* classroom-Mesh055.obj */,
+				19B35AD72D8B374300FFC282 /* classroom-Mesh056.obj */,
+				19B35AD82D8B374300FFC282 /* classroom-Mesh057.obj */,
+				19B35AD92D8B374300FFC282 /* classroom-Mesh058.obj */,
+				19B35ADA2D8B374300FFC282 /* classroom-Mesh059.obj */,
+				19B35ADB2D8B374300FFC282 /* classroom-Mesh060.obj */,
+				19B35ADC2D8B374300FFC282 /* classroom-Mesh061.obj */,
+				19B35ADD2D8B374300FFC282 /* classroom-Mesh062.obj */,
+				19B35ADE2D8B374300FFC282 /* classroom-Mesh063.obj */,
+				19B35ADF2D8B374300FFC282 /* classroom-Mesh064.obj */,
+				19B35AE02D8B374300FFC282 /* classroom-Mesh065.obj */,
+				19B35AE12D8B374300FFC282 /* classroom-Mesh066.obj */,
+				19B35AE22D8B374300FFC282 /* classroom-Mesh067.obj */,
+				19B35AE32D8B374300FFC282 /* classroom-Mesh068.obj */,
+				19B35AE42D8B374300FFC282 /* classroom-Mesh069.obj */,
+				19B35AE52D8B374300FFC282 /* classroom-Mesh070.obj */,
+				19B35AE62D8B374300FFC282 /* classroom-Mesh071.obj */,
+				19B35AE72D8B374300FFC282 /* classroom-Mesh072.obj */,
+				19B35AE82D8B374300FFC282 /* classroom-Mesh073.obj */,
+				19B35AE92D8B374300FFC282 /* classroom-Mesh074.obj */,
+				19B35AEA2D8B374300FFC282 /* classroom-Mesh075.obj */,
+				19B35AEB2D8B374300FFC282 /* classroom-Mesh076.obj */,
+				19B35AEC2D8B374300FFC282 /* classroom-Mesh077.obj */,
+				19B35AED2D8B374300FFC282 /* classroom-Mesh078.obj */,
 				198B95982D6D22D9003DB0CF /* sphere.obj */,
-				198B956E2D5E6501003DB0CF /* bidir-Mesh000.obj */,
-				198B956F2D5E6501003DB0CF /* bidir-Mesh001.obj */,
-				198B95702D5E6501003DB0CF /* bidir-Mesh002.obj */,
-				198B95712D5E6501003DB0CF /* bidir-Mesh003.obj */,
-				198B95722D5E6501003DB0CF /* bidir-Mesh004.obj */,
-				198B95732D5E6501003DB0CF /* bidir-Mesh005.obj */,
-				198B95742D5E6501003DB0CF /* bidir-Mesh006.obj */,
 				198B95752D5E6501003DB0CF /* bidir-Mesh007.obj */,
 				198B95762D5E6501003DB0CF /* bidir-Mesh008.obj */,
-				198B95772D5E6501003DB0CF /* bidir-Mesh009.obj */,
 				198B95782D5E6501003DB0CF /* bidir-Mesh010.obj */,
-				198B95792D5E6501003DB0CF /* bidir-Mesh011.obj */,
 				1945A9C52CDA781B008E72BD /* Mesh000.obj */,
 				1945A9C62CDA781B008E72BD /* Mesh001.obj */,
 				1945A9C72CDA781B008E72BD /* Mesh002.obj */,
@@ -624,6 +940,15 @@
 				1945A9D52CDA781B008E72BD /* Mesh016.obj */,
 				1999D0462C0E3F5200358201 /* teapot.obj */,
 				1999D04F2C0E48C500358201 /* cube.obj */,
+				19B359652D8798D800FFC282 /* bidir-Mesh000.obj */,
+				19B359662D8798D800FFC282 /* bidir-Mesh001.obj */,
+				19B359672D8798D800FFC282 /* bidir-Mesh002.obj */,
+				19B359682D8798D800FFC282 /* bidir-Mesh003.obj */,
+				19B359692D8798D800FFC282 /* bidir-Mesh004.obj */,
+				19B3596A2D8798D800FFC282 /* bidir-Mesh005.obj */,
+				19B3596B2D8798D800FFC282 /* bidir-Mesh006.obj */,
+				19B3596E2D8798D800FFC282 /* bidir-Mesh009.obj */,
+				19B359702D8798D800FFC282 /* bidir-Mesh011.obj */,
 			);
 			path = mesh;
 			sourceTree = "<group>";
@@ -631,8 +956,11 @@
 		1999D05D2C0FDED400358201 /* textures */ = {
 			isa = PBXGroup;
 			children = (
-				197A10B72D2DBB21000ACF3B /* envmap.png */,
+				19B359D42D8B361400FFC282 /* envmap.exr */,
 				1945A9BF2CDA7808008E72BD /* cherry-wood-texture.jpg */,
+				19B359D62D8B362300FFC282 /* blackboard.jpg */,
+				19B359D72D8B362300FFC282 /* wood1.jpg */,
+				19B359D82D8B362300FFC282 /* wood2.jpg */,
 				1945A9C02CDA7808008E72BD /* Good Textures_005844.jpg */,
 				1945A9C12CDA7808008E72BD /* landscape-with-a-lake.jpg */,
 			);

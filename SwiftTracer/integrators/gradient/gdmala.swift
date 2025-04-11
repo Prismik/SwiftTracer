@@ -44,8 +44,9 @@ final class GdmalaIntegrator: Integrator {
         let directLight: Color
         let delta: [Color]
         let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+        var acceptanceTerm: Vec2 = .zero
         
-        init(contrib: Color, contribPrime: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2, target: TargetFunction, u: Vec2, gradient: Vec2) {
+        init(contrib: Color, contribPrime: Color, pos: Vec2, directLight: Color, shiftContribs: [Color], gradients: [Color], alpha: Float = 0.2, target: TargetFunction, u: Vec2, gradient: Vec2, acceptanceTerm: Vec2) {
             self.u = u
             self.gradient = gradient
             if contrib.luminance > 100 {
@@ -79,6 +80,7 @@ final class GdmalaIntegrator: Integrator {
                 case .gradient: gradientLuminance + alpha * 0.25 * luminance
                 case .luminance: luminance
             }
+            self.acceptanceTerm = acceptanceTerm
         }
     }
     
@@ -238,7 +240,8 @@ final class GdmalaIntegrator: Integrator {
                     gradients: kernelResult.gradients,
                     target: targetFunction,
                     u: rng2,
-                    gradient: .zero
+                    gradient: .zero,
+                    acceptanceTerm: .zero
                 )
                 return kernelState.targetFunction
             }
@@ -250,7 +253,19 @@ final class GdmalaIntegrator: Integrator {
             dy = (result.radiances[3] - result.radiances[2]).luminance * 0.5
         }
         let gradient = Vec2(dx, dy)
-        ((sampler as? PSSMLTSampler)?.mutator as? MalaMutation)?.setup(step: step, gradient: gradient)
+        // TODO More elegant way of setting up parameter based mutations
+        var acceptanceTerm: Vec2 = .zero
+        if let s = sampler as? PSSMLTSampler {
+            if let m = s.mutator as? MalaMutation {
+                m.setup(step: step, gradient: gradient)
+                acceptanceTerm = m.acceptanceTerm
+            }
+            
+            if let m = s.mutator as? MalaAdamMutation {
+                m.setup(step: step, gradient: gradient)
+                acceptanceTerm = m.acceptanceTerm
+            }
+        }
         return KernelGradientState(
             contrib: result.main,
             contribPrime: result.mainPrime,
@@ -260,7 +275,8 @@ final class GdmalaIntegrator: Integrator {
             gradients: result.gradients,
             target: targetFunction,
             u: rng2,
-            gradient: gradient
+            gradient: gradient,
+            acceptanceTerm: acceptanceTerm
         )
     }
 }
@@ -431,7 +447,7 @@ extension GdmalaIntegrator: GradientDomainIntegrator {
     
     // q(u|v)
     private func transitionProbDensity(u: KernelGradientState, v: KernelGradientState) -> Float {
-        let q = -(u.u - v.u - step * v.gradient).lengthSquared / (4 * step)
+        let q = -(u.u - v.u - v.acceptanceTerm).lengthSquared / (4 * step)
         return exp(q)
     }
     

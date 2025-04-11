@@ -17,6 +17,7 @@ final class MalaIntegrator: Integrator {
         case step
         case mutator
         case maxDepth
+        case normalization
     }
     
     let identifier = "mala"
@@ -32,16 +33,29 @@ final class MalaIntegrator: Integrator {
         var shiftContrib: [Color]
         var directLight: Color
         let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
+        let acceptanceTerm: Vec2
         
-        init(contrib: Color, contribPrime: Color, direct: Color, shiftContrib: [Color], u: Vec2, pos: Vec2, gradient: Vec2, step: Float) {
-            self.contrib = contrib
-            self.contribPrime = contribPrime + direct
+        init(contrib: Color, contribPrime: Color, direct: Color, shiftContrib: [Color], u: Vec2, pos: Vec2, gradient: Vec2, step: Float, acceptanceTerm: Vec2) {
+            if contrib.luminance > 100 {
+                self.contrib = contrib / contrib.luminance
+            } else {
+                self.contrib = contrib
+            }
+            
+            if contribPrime.luminance > 100 {
+                self.contribPrime = (contribPrime / contribPrime.luminance) + direct
+            } else {
+                self.contribPrime = contribPrime + direct
+            }
             self.directLight = direct
-            self.shiftContrib = shiftContrib
+            self.shiftContrib = shiftContrib.map {
+                if $0.luminance * 4 > 100 { $0 / $0.luminance } else { $0 }
+            }
             self.u = u
             self.pos = pos
             self.gradient = gradient
-            self.targetFunction = contrib.abs.luminance + directLight.abs.luminance
+            self.targetFunction = self.contrib.abs.luminance + directLight.abs.luminance
+            self.acceptanceTerm = acceptanceTerm
         }
     }
     
@@ -90,7 +104,7 @@ final class MalaIntegrator: Integrator {
     private var nspp: Int = 10
     
     private var stats: (small: PSSMLTSampler.Stats, large: PSSMLTSampler.Stats)
-    private var b: Float = 0
+    private var b: Float
     private var cdf = DistributionOneDimention(count: 0)
     private var seeds: [StartupSeed] = []
     private var result: PixelBuffer?
@@ -103,7 +117,7 @@ final class MalaIntegrator: Integrator {
     private let offsets: OrderedSet = [-Vec2(1, 0), Vec2(1, 0), -Vec2(0, 1), Vec2(0, 1)]
     private var blankBuffer: PixelBuffer!
 
-    init(mapper: ShiftMapping, samplesPerChain: Int, initSamplesCount: Int, step: Float, mutator: PrimarySpaceMutation.Type, maxDepth: Int) {
+    init(mapper: ShiftMapping, samplesPerChain: Int, initSamplesCount: Int, step: Float, mutator: PrimarySpaceMutation.Type, maxDepth: Int, normalization: Float?) {
         self.mapper = mapper
         self.spc = samplesPerChain
         self.isc = initSamplesCount
@@ -112,6 +126,7 @@ final class MalaIntegrator: Integrator {
         self.mutator = mutator
         self.maxDepth = maxDepth
         self.stats = (.init(times: 0, accept: 0, reject: 0), .init(times: 0, accept: 0, reject: 0))
+        self.b = normalization ?? 0
     }
 
     func preprocess(scene: Scene, sampler: any Sampler) {
@@ -170,18 +185,18 @@ final class MalaIntegrator: Integrator {
         let dx = (result.radiances[1] - result.radiances[0]) * 0.5
         let dy = (result.radiances[3] - result.radiances[2]) * 0.5
         let gradient = Vec2(dx.luminance, dy.luminance)
-        if dx.hasNaN || dy.hasNaN {
-            print("NaN encountered")
-        }
-        
+
         // TODO More elegant way of setting up parameter based mutations
+        var acceptanceTerm: Vec2 = .zero
         if let s = sampler as? PSSMLTSampler {
             if let m = s.mutator as? MalaMutation {
                 m.setup(step: step, gradient: gradient)
+                acceptanceTerm = m.acceptanceTerm
             }
             
             if let m = s.mutator as? MalaAdamMutation {
                 m.setup(step: step, gradient: gradient)
+                acceptanceTerm = m.acceptanceTerm
             }
         }
         
@@ -193,7 +208,8 @@ final class MalaIntegrator: Integrator {
             u: rng2,
             pos: pixel,
             gradient: gradient,
-            step: step
+            step: step,
+            acceptanceTerm: acceptanceTerm
         )
     }
     
@@ -312,8 +328,9 @@ final class MalaIntegrator: Integrator {
     }
 
     // q(u|v)
+    // GaussianLogPdf in langevin-MCMC
     private func transitionProbDensity(u: StateMala, v: StateMala) -> Float {
-        let q = -(u.u - v.u - step * v.gradient).lengthSquared / (4 * step)
+        let q = -(u.u - v.u - v.acceptanceTerm).lengthSquared / (4 * step)
         return exp(q)
     }
     

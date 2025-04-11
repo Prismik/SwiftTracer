@@ -26,6 +26,7 @@ final class PathIntegrator: Integrator {
     }
 
     func render(scene: Scene, sampler: Sampler) -> PixelBuffer {
+        print("Using \(maxDepth) path length")
         return MonteCarloIntegrator.render(integrator: self, scene: scene, sampler: sampler)
     }
     

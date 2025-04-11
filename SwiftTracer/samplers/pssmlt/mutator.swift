@@ -48,6 +48,7 @@ struct AnyMutator: Decodable {
 protocol PrimarySpaceMutation {
     var sampler: Sampler! { get set }
 
+    var acceptanceTerm: Vec2 { get }
     init()
 
     // Check if can be brought back as a simpler api
@@ -57,7 +58,8 @@ protocol PrimarySpaceMutation {
 
 final class KelemenMutation: PrimarySpaceMutation {
     weak var sampler: Sampler!
-    
+
+    let acceptanceTerm: Vec2 = .zero
     private let s1: Float
     private let s2: Float
     private let logRatio: Float
@@ -91,12 +93,14 @@ final class KelemenMutation: PrimarySpaceMutation {
         let dv = s2 * exp(rand * logRatio)
         if add {
             result += dv
-            if result > 1 { result -= 1 }
+            if result >= 1 { result -= 1 }
         } else {
             result -= dv
             if result < 0 { result += 1 }
         }
         
+        // Dirty fix to prevent 1.0 value from being generated
+        if result == 1.0 { result = 0 }
         return result
     }
     
@@ -107,7 +111,8 @@ final class KelemenMutation: PrimarySpaceMutation {
 
 final class MitsubaMutation: PrimarySpaceMutation {
     weak var sampler: Sampler!
-
+    let acceptanceTerm: Vec2 = .zero
+    
     func mutate(value: Float) -> Float {
         var result = value
         let temp: Float = sqrt(-2 * log(1 - sampler.gen()))
@@ -124,7 +129,8 @@ final class MitsubaMutation: PrimarySpaceMutation {
 
 final class StratifiedMutation: PrimarySpaceMutation {
     weak var sampler: Sampler!
-
+    let acceptanceTerm: Vec2 = .zero
+    
     private var k: Float = 0
     private var t: Float = 1
     private var alpha: Float = 1
@@ -177,7 +183,8 @@ final class StratifiedMutation: PrimarySpaceMutation {
 
 final class MalaMutation: PrimarySpaceMutation {
     weak var sampler: Sampler!
-
+    var acceptanceTerm: Vec2 { step * Vec2(gradients[0], gradients[1]) }
+    
     private var gradients: [Float] = [0, 0]
     private var rng2: Vec2? = nil
     private var step: Float = 0.1
@@ -244,6 +251,8 @@ final class MalaAdamMutation: PrimarySpaceMutation {
     }
 
     var sampler: (any Sampler)!
+    //var acceptanceTerm: Vec2 { step * M * m }
+    var acceptanceTerm: Vec2 { step * m }
     
     private var fallback: PrimarySpaceMutation = KelemenMutation()
     private var gradients: [Float] = [0, 0]

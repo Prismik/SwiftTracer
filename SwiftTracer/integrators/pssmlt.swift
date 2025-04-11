@@ -29,9 +29,9 @@ final class PssmltIntegrator: Integrator {
         var targetFunction: Float = 0
         
         init(contrib: Color, pos: Vec2) {
-            self.contrib = contrib
+            self.contrib = contrib.sanitized
             self.pos = pos
-            self.targetFunction = contrib.luminance
+            self.targetFunction = contrib.sanitized.luminance
         }
     }
 
@@ -170,7 +170,7 @@ final class PssmltIntegrator: Integrator {
         
         if let s = sampler as? PSSMLTSampler {
             if let m = s.mutator as? StratifiedMutation {
-                m.setup(acceptance: 0.5 * stats.small.acceptanceRate, I: contrib.luminance, targetAcceptance: 0.65, b: b)
+                m.setup(acceptance: 0.5 * stats.small.acceptanceRate, I: contrib.sanitized.luminance, targetAcceptance: 0.65, b: b)
             }
         }
         return StateMCMC(contrib: contrib, pos: Vec2(Float(x), Float(y)))
@@ -201,7 +201,7 @@ final class PssmltIntegrator: Integrator {
         let id = (Float(i) + 0.5) / Float(total)
         let i = cdf.sampleDiscrete(id)
         let seed = seeds[i]
-        let sampler = PSSMLTSampler(nbSamples: nspp, mutator: KelemenMutation())
+        let sampler = PSSMLTSampler(nbSamples: nspp, largeStepRatio: 0.5, mutator: KelemenMutation())
         let previousSeed = sampler.rng.state
         sampler.rng.state = seed.1
         
