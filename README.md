@@ -17,7 +17,10 @@ You can have a look at the [documentation](https://prismik.github.io/SwiftTracer
 
 ## Publication
 
-- <a href="https://github.com/Prismik/SwiftTracer/blob/main/publication/Rapport_final_beauchamp-francis.pdf" target="_blank">Langevin Monte Carlo with finite différence</a>
+<a href="https://github.com/Prismik/SwiftTracer/blob/main/publication/Rapport_final_beauchamp-francis.pdf" target="_blank">Langevin Monte Carlo with finite différence</a>
+
+This project led by Adrien Gruson studies the problems related to anisotropic interactions in the domain of ray-traced rendering and proposes to use finite differences to evaluate the image gradient, giving rise to Gradient Domain MALA (GDMALA). Unlike other approaches, our method supports anisotropic mutations without resorting to an auto differentiation system.
+
 
 # What is not (yet) available
 
