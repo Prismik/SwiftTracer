@@ -15,6 +15,13 @@ This is my work in progress implementation of a physically based rendering engin
 
 You can have a look at the [documentation](https://prismik.github.io/SwiftTracer/documentation/swifttracer/), where you'll find more details on the supported bsdf, as well as the formalism to build json scenes.
 
+## Materials
+
+| Diffuse | Smooth metal | ... |
+|---------|--------------|-----|
+|![out-diffuse](https://github.com/user-attachments/assets/49de27d1-8812-4712-abc3-5390c8d24733) | ![out-metal](https://github.com/user-attachments/assets/58bd5fc1-47d6-41b9-812e-250f5c99c439) |
+
+
 ## Publication
 
 <a href="https://github.com/Prismik/SwiftTracer/blob/main/publication/Rapport_final_beauchamp-francis.pdf" target="_blank">Langevin Monte Carlo with finite différence</a>
