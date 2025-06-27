@@ -5,6 +5,9 @@
 ![Platform](https://badgen.net/badge/platform/macos?list=%7C)
 ![Language](https://img.shields.io/badge/Swift-5.x-green?logo=swift)
 
+![out](https://github.com/user-attachments/assets/75f7bca6-8cbd-4da9-95f3-391c663f2e20)
+
+
 </div>
 
 This is my work in progress implementation of a physically based rendering engine that is inspired by PBRT, Mitsuba and many other contributors in the field.
