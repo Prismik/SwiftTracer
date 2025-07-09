@@ -22,8 +22,7 @@ You can have a look at the [documentation](https://prismik.github.io/SwiftTracer
 
 | Diffuse | Smooth metal | Smooth glass | ... |
 |---------|--------------|-----|----|
-|![out-diffuse](https://github.com/user-attachments/assets/49de27d1-8812-4712-abc3-5390c8d24733) | ![out-metal](https://github.com/user-attachments/assets/58bd5fc1-47d6-41b9-812e-250f5c99c439) | ![out-glass](https://github.com/user-attachments/assets/1a29938e-d617-440a-bcca-ec41fc0a12e6) 
-| 
+|![out-diffuse](https://github.com/user-attachments/assets/49de27d1-8812-4712-abc3-5390c8d24733) | ![out-metal](https://github.com/user-attachments/assets/58bd5fc1-47d6-41b9-812e-250f5c99c439) | ![out-glass](https://github.com/user-attachments/assets/1a29938e-d617-440a-bcca-ec41fc0a12e6) | 
 
 
 ## Publication
