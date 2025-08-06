@@ -20,9 +20,10 @@ You can have a look at the [documentation](https://prismik.github.io/SwiftTracer
 
 ## Materials
 
-| Diffuse | Smooth metal | Rough metal | Smooth glass | ... |
+| Diffuse | Smooth metal | Rough metal | Smooth glass | Blend |
 |---------|--------------|-------------|--------------|-----|
-|![out-diffuse](https://github.com/user-attachments/assets/49de27d1-8812-4712-abc3-5390c8d24733) | <img width="512" height="512" alt="out-metal" src="https://github.com/user-attachments/assets/1d67e26d-628f-4421-a045-30118b0db612" /> | <img width="512" height="512" alt="out-metal-rough" src="https://github.com/user-attachments/assets/99c6b56b-fa8e-412e-a558-f210157b7a30" /> | ![out-glass](https://github.com/user-attachments/assets/1a29938e-d617-440a-bcca-ec41fc0a12e6) | 
+|![out-diffuse](https://github.com/user-attachments/assets/49de27d1-8812-4712-abc3-5390c8d24733) | <img width="512" height="512" alt="out-metal" src="https://github.com/user-attachments/assets/1d67e26d-628f-4421-a045-30118b0db612" /> | <img width="512" height="512" alt="out-metal-rough" src="https://github.com/user-attachments/assets/99c6b56b-fa8e-412e-a558-f210157b7a30" /> | ![out-glass](https://github.com/user-attachments/assets/1a29938e-d617-440a-bcca-ec41fc0a12e6) | <img width="512" height="512" alt="out-blend" src="https://github.com/user-attachments/assets/ea5afb58-604e-4a06-8592-8d8c95635f09" />
+ |
 
 
 ## Publication
